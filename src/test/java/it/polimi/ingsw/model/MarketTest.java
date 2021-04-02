@@ -20,8 +20,8 @@ class MarketTest {
     }
     @Test
     public void testInitialize() {
-        m1.initilizeMarket();
-        m2.initilizeMarket();
+        m1.initializeMarket();
+        m2.initializeMarket();
         assertNotEquals(m1,m2);
     }
     @Test
