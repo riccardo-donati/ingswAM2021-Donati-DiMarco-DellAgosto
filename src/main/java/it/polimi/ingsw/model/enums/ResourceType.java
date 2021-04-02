@@ -7,5 +7,10 @@ public enum ResourceType {
     BLUE,
     RED,
     WHITE,
-    UNKNOWN
+    UNKNOWN,
+    EMPTY,
+
+
+
+
 }
