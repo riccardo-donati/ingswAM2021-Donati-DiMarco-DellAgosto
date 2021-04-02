@@ -26,7 +26,7 @@ public class Market {
     /**
      * Randomizing the order of the marbles
      */
-    public void initilizeMarket(){
+    public void initializeMarket(){
         Random ran=new Random();
 
         for(int r=0;r<NROW;r++){
