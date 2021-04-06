@@ -41,6 +41,8 @@ public class PopeFavor {
      */
     public boolean checkInside(Integer position){
         return position >= initialPos && position <= finalPos;
+        //questa funzione non potrebbe direttamente modificare lo stato attuale della PopeFavorList?
+        //perché devo passare attraverso un bool che delega qualcun'altro al cambiamento dello stato?
     }
 
     /**

@@ -8,6 +8,7 @@ public class LeaderCard {
 
     private List<Requirement> requirements = new ArrayList<>();
     private List<SpecialAbility> specialAbilities = new ArrayList<>();
+    private Integer points;
 
     /**
      * requirements list getter
@@ -23,6 +24,14 @@ public class LeaderCard {
      */
     public List<SpecialAbility> getSpecialAbilities() {
         return specialAbilities;
+    }
+
+    /**
+     * getter of the relative leader card's points
+     * @return returns leader card's victory points
+     */
+    public Integer getPoints(){
+        return points;
     }
 
     /**

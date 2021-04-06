@@ -34,7 +34,11 @@ public class FaithPath {
      * @param move express how much the player position has to move forward
      */
     public void addToPosition(Integer move) {
-        position += move;
+        if(position + move > 24) {
+            position = 24;
+            //notify endgame
+        }
+        else position += move;
     }
 
     /**
@@ -45,7 +49,7 @@ public class FaithPath {
         Integer curr = 0;
         for (Map.Entry<Integer,Integer> entry : pointsPosition.entrySet()){
             if(position >= entry.getKey())
-                curr += entry.getValue();
+                curr = entry.getValue();
         }
 
         for (PopeFavor pf : popeFavorList){
@@ -62,6 +66,14 @@ public class FaithPath {
      */
     public Integer getPosition() {
         return position;
+    }
+
+    /**
+     * getter of the Pope Favor list
+     * @return the list of all the pope favor cards
+     */
+    public List<PopeFavor> getPopeFavorList() {
+        return popeFavorList;
     }
 
     /**
