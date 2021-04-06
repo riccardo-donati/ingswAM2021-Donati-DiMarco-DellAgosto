@@ -1,7 +1,10 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.model.interfaces.BoardObserver;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,20 +12,23 @@ import java.util.List;
 import java.util.Map;
 
 public class Warehouse {
-    private static final Integer DIM=6;
-
-    private ResourceType[] maindepot;
-    private List<LeaderDeposit> extradepots;
+    private List<Deposit> maindepot;
+    private List<Deposit> extradepots;
     private Map<ResourceType,Integer> pendingResources;
+    private List<BoardObserver> observers=new ArrayList<>();
 
     /**
      * initializing the maindepot with empty resourcetypes and
      * the map with the 4 resourcetype we want
      */
     public Warehouse(){
-        maindepot=new ResourceType[DIM];
-        for(int i=0;i<DIM;i++){
-            maindepot[i]=ResourceType.EMPTY;
+        maindepot=new ArrayList<>();
+        try {
+            maindepot.add(new Deposit(ResourceType.EMPTY,1));
+            maindepot.add(new Deposit(ResourceType.EMPTY,2));
+            maindepot.add(new Deposit(ResourceType.EMPTY,3));
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
         }
         extradepots=new ArrayList<>();
         pendingResources=new HashMap<>();
@@ -46,21 +52,30 @@ public class Warehouse {
     }
 
     /**
+     * get of maindepot
+     * @return
+     */
+    public List<Deposit> getMaindepot() {
+        return maindepot;
+    }
+
+    /**
      * counts the points generated from the resources in the warehouse and in the leaderdeposits
      * @return the points
      */
     public Integer countWarehousePoints(){
-        Integer nres=0;
-        for(int i=0;i<DIM;i++){
-            if(maindepot[i]!=ResourceType.EMPTY) nres++;
-        }
-        for(LeaderDeposit ld : extradepots){
-            for(int i=0;i<ld.getSpace().length;i++){
-                if(ld.getSpace()[i]!=ResourceType.EMPTY) nres++;
+        int resCont=0;
+        for(Deposit d : maindepot){
+            for(int i=0;i<d.getDimension();i++){
+                if(d.getSpace()[i]!=ResourceType.EMPTY) resCont++;
             }
         }
-        Integer points=nres/5;
-        return points;
+        for(Deposit d : extradepots){
+            for(int i=0;i<d.getDimension();i++){
+                if(d.getSpace()[i]!=ResourceType.EMPTY) resCont++;
+            }
+        }
+        return resCont/5;
     }
 
     /**
@@ -72,7 +87,7 @@ public class Warehouse {
         if(res==ResourceType.RED || res==ResourceType.EMPTY || res==ResourceType.UNKNOWN || res==ResourceType.WHITE){
             throw new IllegalResourceException();
         }else{
-            extradepots.add(new LeaderDeposit(res));
+            extradepots.add(new Deposit(res,2));
         }
     }
 
@@ -80,11 +95,127 @@ public class Warehouse {
      *
      * @return the list extradepots
      */
-    public List<LeaderDeposit> getExtradepots() {
+    public List<Deposit> getExtradepots() {
         return extradepots;
     }
 
-    public void addPendingResourcer(){
-        //da mettere l'algoritmo per aggiungere le risorse
+    /**
+     * add a resource from pending to a deposit
+     * @param id is the id of the deposit
+     * @param res is the type of the resource
+     */
+    public void addResourceInDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException {
+        Integer n=pendingResources.get(res);
+        if(n==null)throw new IllegalResourceException("No such resource in pending");
+        if(n>0) {
+            if (id <= 3) {
+                maindepot.get(id - 1).addResource(res);
+            } else if (id > 3) {
+                extradepots.get(id - 4).addResource(res);
+            }
+            pendingResources.replace(res,n-1);
+        }
+        else{
+            throw new IllegalResourceException("No pending resource of this type");
+        }
+    }
+
+    /**
+     * move a resource from a deposit to another
+     * @param id1 is the id of the from deposit
+     * @param id2 is the id of the to deposit
+     */
+    public void moveResource(Integer id1,Integer id2) throws FullSpaceException, IllegalResourceException, NonEmptyException {
+        Deposit d1=null;
+        Deposit d2=null;
+        if(id1<=3) d1=maindepot.get(id1-1);
+        else if(id1>3) d1=extradepots.get(id1-4);
+        if(id2<=3) d2=maindepot.get(id2-1);
+        else if(id2>3) d2=extradepots.get(id2-4);
+
+        int cont1=0;
+        int cont2=0;
+        for(int i=0;i<d1.getDimension();i++){
+            if(d1.getSpace()[i]!=ResourceType.EMPTY) cont1++;
+        }
+        for(int i=0;i<d2.getDimension();i++){
+            if(d2.getSpace()[i]!=ResourceType.EMPTY) cont2++;
+        }
+        //swap only if they have just 1 resource
+        if(cont1==1 && cont2==1){
+            ResourceType r1=d1.removeResource();
+            ResourceType r2=d2.removeResource();
+            d1.changeType(r2);
+            d2.changeType(r1);
+            d1.addResource(r2);
+            d2.addResource(r1);
+
+        }
+        //if the second deposit has 0 resource or the second is the same type of the first --> move
+        if(cont1>0 && cont2==0 || cont1>0 && cont2>0 && d1.getType()==d2.getType()){
+            ResourceType r1=d1.getType();
+            d2.addResource(r1);
+            d1.removeResource();
+
+        }
+
+    }
+
+    /**
+     * discard a pending resource
+     * @param res is the type of the resource i want to discard
+     * @throws IllegalResourceException
+     */
+    public void discardResource(ResourceType res) throws IllegalResourceException {
+        int n=pendingResources.get(res);
+        if(n>0){
+            pendingResources.replace(res,n-1);
+            notifyObservers();
+        }else{
+            throw new IllegalResourceException("No pending resource of this type");
+        }
+    }
+
+    /**
+     * register an observer to the list
+     * @param obs
+     */
+    public void addObserver(BoardObserver obs){
+        observers.add(obs);
+    }
+
+    /**
+     * notify the registered obsrvers
+     */
+    public void notifyObservers(){
+        for(BoardObserver o : observers){
+            //o.updateDiscard(); DA IMPLEMENTARE
+        }
+    }
+
+    /**
+     * visualize in console the state of the warehouse, useful for debugging
+     */
+    public void visualize(){
+        System.out.println("PENDING");
+        for (Map.Entry<ResourceType, Integer> entry : pendingResources.entrySet()) {
+            System.out.println(entry.getKey() + "|" + entry.getValue());
+        }
+        System.out.println("--------\nMAIN:");
+        for(Deposit d : maindepot){
+            System.out.print(d.getId()+"["+d.getType()+"]||");
+            for(int i=0;i<d.getDimension();i++){
+                System.out.print(d.getSpace()[i]+"|");
+            }
+            System.out.println("\n");
+        }
+        System.out.println("--------\nEXTRA");
+        for(Deposit d : extradepots){
+            System.out.print(d.getId()+"["+d.getType()+"]||");
+            for(int i=0;i<d.getDimension();i++){
+                System.out.print(d.getSpace()[i]+"|");
+            }
+            System.out.println("\n");
+        }
     }
 }
