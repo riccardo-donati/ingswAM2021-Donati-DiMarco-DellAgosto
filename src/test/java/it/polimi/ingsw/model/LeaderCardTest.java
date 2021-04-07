@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.ResourceType;
 import org.junit.jupiter.api.Test;
 
 import static it.polimi.ingsw.model.enums.Color.YELLOW;
@@ -19,7 +20,7 @@ class LeaderCardTest {
      @Test
     public void testAbilitiesList() {
         assertTrue(lc1.getSpecialAbilities().isEmpty());
-        lc1.addSpecialAbility(new Discount());
+        lc1.addSpecialAbility(new Discount(ResourceType.BLUE));
         assertEquals(1, lc1.getSpecialAbilities().size());
         lc1.getSpecialAbilities().remove(0);
         assertTrue(lc1.getSpecialAbilities().isEmpty());
