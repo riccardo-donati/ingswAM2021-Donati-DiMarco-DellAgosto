@@ -2,13 +2,12 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
-import java.lang.Object;
 import java.util.*;
 
 public class FaithPath {
     private Integer position;
-    private Map<Integer, Integer> pointsPosition = new HashMap<>();
-    private List<PopeFavor> popeFavorList = new ArrayList<>();
+    private Map<Integer, Integer> pointsPosition;
+    private List<PopeFavor> popeFavorList;
     private List<BoardObserver> observer = new ArrayList<>();
 
     /**
@@ -16,6 +15,7 @@ public class FaithPath {
      */
     public FaithPath() {
         this.position = 0;
+        pointsPosition = new HashMap<>();
         pointsPosition.put(3,1);
         pointsPosition.put(6,2);
         pointsPosition.put(9,4);
@@ -24,6 +24,7 @@ public class FaithPath {
         pointsPosition.put(18,12);
         pointsPosition.put(21,16);
         pointsPosition.put(24,20);
+        popeFavorList = new ArrayList<>();
         popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 2, 5,8));
         popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 3, 13,16));
         popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 4, 19,24));
@@ -46,18 +47,21 @@ public class FaithPath {
      * @return the player's score
      */
     public Integer countFaithPoints(){
-        Integer curr = 0;
+        Integer curr = 0, max = 0;
+
         for (Map.Entry<Integer,Integer> entry : pointsPosition.entrySet()){
             if(position >= entry.getKey())
                 curr = entry.getValue();
+                if(curr > max)
+                    max = curr;
         }
 
         for (PopeFavor pf : popeFavorList){
             if (pf.getState() == PopeFavorState.ACTIVE)
-                curr += pf.getPoints();
+                max += pf.getPoints();
         }
         
-        return curr;
+        return max;
     }
 
     /**
@@ -88,5 +92,6 @@ public class FaithPath {
     public void addObserver(BoardObserver obs){
         observer.add(obs);
     }
+
 
 }

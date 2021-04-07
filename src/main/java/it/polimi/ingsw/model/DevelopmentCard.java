@@ -10,26 +10,34 @@ import java.util.List;
  * generators of the attributes of the class
  */
 public class DevelopmentCard {
-    private List<ResourceRequirement> costo = new ArrayList<>();
-    private Integer livello;
+    private List<ResourceRequirement> cost;
+    private Integer level;
     private Color color;
     private Production production;
     private Integer points;
+
+    public DevelopmentCard(List<ResourceRequirement> cost, Integer level, Color color, Production production, Integer points) {
+        this.cost = cost;
+        this.level = level;
+        this.color = color;
+        this.production = production;
+        this.points = points;
+    }
 
     /**
      * getter of the attribute Livello
      * @return the level of the relative card
      */
-    public Integer getLivello() {
-        return livello;
+    public Integer getLevel() {
+        return level;
     }
 
     /**
      * getter of the card's cost
      * @return how much and what resource is needed to buy that card
      */
-    public List<ResourceRequirement> getCosto() {
-        return costo;
+    public List<ResourceRequirement> getCost() {
+        return cost;
     }
 
     /**

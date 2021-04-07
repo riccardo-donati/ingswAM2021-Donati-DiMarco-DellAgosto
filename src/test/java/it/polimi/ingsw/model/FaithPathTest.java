@@ -1,7 +1,10 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.PopeFavorState;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -16,9 +19,12 @@ class FaithPathTest {
         assertEquals(0, faithPath.getPosition());
     }
 
-    @Test
+    @RepeatedTest(10)
     void testVictoryPointsWithoutPopeFavor() {
+        Random r = new Random();
+        faithPath.addToPosition(r.nextInt(25));
         int position = faithPath.getPosition();
+        System.out.println(position);
         if(position >= 0 && position <= 2)
             assertEquals(0, faithPath.countFaithPoints());
         else if(position >= 3 && position <= 5)
@@ -54,8 +60,14 @@ class FaithPathTest {
         //assertEquals(24, faithPath.getPosition());
     }
 
-
     @Test
     void countFaithPoints() {
+        List<PopeFavor> pope = faithPath.getPopeFavorList();
+        pope.get(0).changeState(PopeFavorState.DISCARDED);
+        pope.get(1).changeState(PopeFavorState.ACTIVE);
+        pope.get(2).changeState(PopeFavorState.ACTIVE);
+        faithPath.addToPosition(18);
+        int position = faithPath.getPosition();
+        assertEquals(19, faithPath.countFaithPoints());
     }
 }

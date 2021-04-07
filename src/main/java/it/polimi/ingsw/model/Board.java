@@ -1,47 +1,56 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
-import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.LeaderCard;
-import sun.jvm.hotspot.utilities.Observer;
+import it.polimi.ingsw.model.interfaces.BoardObserver;
 
 import java.util.*;
 
 public class Board {
-    private Map<ResourceType, Integer> strongbox = new HashMap<>();
+    private Map<ResourceType, Integer> strongbox;
     private Warehouse warehouse;
     private FaithPath faithpath;
     private Production baseProduction;
     private Map<Integer, Stack<DevelopmentCard>> slots;
-    private List<Observer> observer = new ArrayList<>();
+    private List<BoardObserver> observer = new ArrayList<>();
 
-    public Board(Map<ResourceType, Integer> strongbox, Warehouse warehouse, FaithPath faithpath, Production baseProduction, Map<Integer, Stack<DevelopmentCard>> slots ) {
+    public Board() {
+        strongbox = new HashMap<>();
         strongbox.put(ResourceType.BLUE, 0);
         strongbox.put(ResourceType.GREY, 0);
         strongbox.put(ResourceType.VIOLET, 0);
         strongbox.put(ResourceType.YELLOW, 0);
-        this.warehouse = warehouse;
-        this.faithpath = faithpath;
-        this.baseProduction = baseProduction;
-        this.slots = slots;
+        this.warehouse = new Warehouse();
+        this.faithpath = new FaithPath();
+        this.baseProduction = new Production();
+        slots = new HashMap<>();
+        slots.put(1, new Stack<>());
+        slots.put(2, new Stack<>());
+        slots.put(3, new Stack<>());
     }
 
     /**
      * the function gives a map with a resource type and the relative number ad adds it to the player's strogbox
      * previously initialized to 0, it increments the relative key in the map
-     * @param bought acquired resources from the market
+     * @param prod acquired resources from the production
      */
-    public void depositInStrogbox(Map<ResourceType, Integer> bought ){
-        for(ResourceType res : bought.keySet()) {                                   //per ogni risorsa nella mappa degli acquistati
-            for (Map.Entry<ResourceType, Integer> entry : strongbox.entrySet()) {   //per ogni elemento nella mappa dei posseduti
-                if (res.equals(entry.getKey())) {                                   //se il tipo corrisponde al tipo comprato
-                    Integer curr = entry.getValue() + bought.get(res);              //curr prende il valore attuale della risorsa e somma il valore comprato
-                    strongbox.put(res, curr);                                       //il nuovo valore del posseduto è curr
+    public void depositInStrongbox(Map<ResourceType, Integer> prod){
+        for(ResourceType res : prod.keySet()) {
+            for (Map.Entry<ResourceType, Integer> entry : strongbox.entrySet()) {
+                if (res.equals(entry.getKey())) {
+                    Integer curr = entry.getValue() + prod.get(res);
+                    strongbox.replace(res, curr);
                 }
             }
         }
+    }
+
+    /**
+     * getter of the board's strongbox
+     * @return the strongbox
+     */
+    public Map<ResourceType, Integer> getStrongBox(){
+        return strongbox;
     }
 
     /**
@@ -49,13 +58,32 @@ public class Board {
      * @param input 2 any kind of resources from the main depot in the warehouse
      * @param out one resource of any kind to store in the strongbox
      */
-    public void setBaseProduction(ResourceType[] input ,ResourceType out ){}
+    public void setBaseProduction(ResourceType[] input ,ResourceType out ){
+        Map<ResourceType, Integer> mapInput = new HashMap<>();
+        mapInput.put(ResourceType.YELLOW,0);
+        mapInput.put(ResourceType.BLUE, 0);
+        mapInput.put(ResourceType.GREY, 0);
+        mapInput.put(ResourceType.VIOLET, 0);
+
+        for (ResourceType resourceType : input) mapInput.replace(resourceType, mapInput.get(resourceType) + 1);
+
+        baseProduction.setInput(mapInput);
+
+        Map<ResourceType, Integer> mapOutput = new HashMap<>();
+        mapOutput.put(ResourceType.YELLOW,0);
+        mapOutput.put(ResourceType.BLUE, 0);
+        mapOutput.put(ResourceType.GREY, 0);
+        mapOutput.put(ResourceType.VIOLET, 0);
+
+        mapOutput.put(out,1);
+        baseProduction.setOutput(mapOutput);
+    }
 
     /**
      * add the observer in a list of observer
      * @param obs the observer that has to be added in the observer's list
      */
-    public void addObserver(Observer obs){observer.add(obs);}
+    public void addObserver(BoardObserver obs){observer.add(obs);}
 
     /**
      * getter function for the player's warehouse
@@ -83,13 +111,30 @@ public class Board {
      */
     public Integer countBoardsPoints(){
         Integer score = 0;
-        score += faithpath.countFaithPoints();
         for (Map.Entry<Integer,Stack<DevelopmentCard>> entry : slots.entrySet()){
             for (DevelopmentCard dev : entry.getValue()){
                 score += dev.getPoints();
             }
         }
-        //anche dalle leader cards presenti in PlayerInGame
-        return score;
+        score += warehouse.countWarehousePoints() + faithpath.countFaithPoints();
+        return score;       //i punti dati dalle leader cards li somma direttamente la funzione chiamante
+    }
+
+    /**
+     * pushes a card into a specified position
+     * @param pos the position where the cards sholud be added
+     * @param card the development card that has to be added
+     */
+    public void pushDCard (Integer pos, DevelopmentCard card){
+        slots.get(pos).push(card);                                  //levelexception
+                                                                    //size = 7 end game
+    }
+
+    /**
+     * getter of the faithPath
+     * @return the board's relative faithpath
+     */
+    public FaithPath getFaithpath() {
+        return faithpath;
     }
 }
