@@ -30,7 +30,7 @@ public class Board {
     }
 
     /**
-     * the function gives a map with a resource type and the relative number ad adds it to the player's strogbox
+     * the function gives a map with a resource type and the relative number ad adds it to the player's strongbox
      * previously initialized to 0, it increments the relative key in the map
      * @param prod acquired resources from the production
      */
@@ -54,29 +54,16 @@ public class Board {
     }
 
     /**
-     * selects 2 resources from warehouse's maindepot using the relative funcion and stores in the strongbox a chosen resource
+     * selects 2 resources from warehouse's maindepot using the relative function and stores in the strongbox a chosen resource
      * @param input 2 any kind of resources from the main depot in the warehouse
      * @param out one resource of any kind to store in the strongbox
      */
-    public void setBaseProduction(ResourceType[] input ,ResourceType out ){
-        Map<ResourceType, Integer> mapInput = new HashMap<>();
-        mapInput.put(ResourceType.YELLOW,0);
-        mapInput.put(ResourceType.BLUE, 0);
-        mapInput.put(ResourceType.GREY, 0);
-        mapInput.put(ResourceType.VIOLET, 0);
+    public void setBaseProduction(ResourceType[] input, ResourceType out){
 
-        for (ResourceType resourceType : input) mapInput.replace(resourceType, mapInput.get(resourceType) + 1);
+        for (ResourceType resourceType : input)
+            baseProduction.addInput(resourceType, 1);
 
-        baseProduction.setInput(mapInput);
-
-        Map<ResourceType, Integer> mapOutput = new HashMap<>();
-        mapOutput.put(ResourceType.YELLOW,0);
-        mapOutput.put(ResourceType.BLUE, 0);
-        mapOutput.put(ResourceType.GREY, 0);
-        mapOutput.put(ResourceType.VIOLET, 0);
-
-        mapOutput.put(out,1);
-        baseProduction.setOutput(mapOutput);
+        baseProduction.addOutput(out, 1);
     }
 
     /**
@@ -122,7 +109,7 @@ public class Board {
 
     /**
      * pushes a card into a specified position
-     * @param pos the position where the cards sholud be added
+     * @param pos the position where the cards should be added
      * @param card the development card that has to be added
      */
     public void pushDCard (Integer pos, DevelopmentCard card){
