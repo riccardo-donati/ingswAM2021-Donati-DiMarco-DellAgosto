@@ -1,10 +1,12 @@
 package it.polimi.ingsw.model;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
+import it.polimi.ingsw.model.interfaces.Requirement;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -28,15 +30,22 @@ public abstract class Game implements BoardObserver {
 
     /**
      * get of developmentCards
-     * @return
+     * @return developmentCards
      */
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
 
     /**
+     * get of leaderCards
+     * @return leaderCards
+     */
+    public List<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
+    /**
      * get of cardMatrix
-     * @return
+     * @return cardMatrix
      */
     public Stack<DevelopmentCard>[][] getCardMatrix() {
         return cardMatrix;
@@ -50,7 +59,9 @@ public abstract class Game implements BoardObserver {
         developmentCards=new ArrayList<>();
         loadDevelopmentCardsFromJSON();
         //initialization of the leaderCards from JSON
-        //TO DO!
+        leaderCards=new ArrayList<>() ;
+        loadLeaderCardsFromJSON();
+
         market=new Market();
         market.initializeMarket();
         initializeCardMatrix();
@@ -71,7 +82,26 @@ public abstract class Game implements BoardObserver {
             System.out.println("DevelopmentCard.json not found");
         }
         developmentCards=gson.fromJson(reader,foundListType);
+    }
+    /**
+     * Using GSON we initialize the leaderCard list
+     */
+    public void loadLeaderCardsFromJSON() {
+        GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(Requirement.class, new InterfaceAdapter<Requirement>());
+        builder.registerTypeAdapter(SpecialAbility.class, new InterfaceAdapter<SpecialAbility>());
+        Gson gson = builder.create();
 
+        Type foundListType=new TypeToken<ArrayList<LeaderCard>>(){}.getType();
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new FileReader("src/main/java/it/polimi/ingsw/model/json/leaderCard.json"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("leaderCard.json not found");
+        }
+        leaderCards=gson.fromJson(reader,foundListType);
+        System.out.println("prova");
     }
 
     /**
@@ -95,20 +125,5 @@ public abstract class Game implements BoardObserver {
             copy.remove(dc);
         }
     }
-    @Override
-    public void updateEndGame() {
-
-    }
-
-    @Override
-    public void updatePopeFavor() {
-
-    }
-
-    @Override
-    public void updateDiscard() {
-
-    }
-
 
 }
