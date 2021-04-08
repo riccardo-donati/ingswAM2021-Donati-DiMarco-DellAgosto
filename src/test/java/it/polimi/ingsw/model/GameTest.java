@@ -25,6 +25,16 @@ class GameTest {
             assertNotNull(dc.getCost());
         }
     }
+    @Test
+    public void TestJSONLeaderCard(){
+        game=new Singleplayer();
+        assertEquals(game.getLeaderCards().size(),16);
+        for(LeaderCard lc : game.getLeaderCards()){
+            assertNotNull(lc.getRequirements());
+            assertNotNull(lc.getSpecialAbilities());
+            assertNotNull(lc.getPoints());
+        }
+    }
 
     @Test
     public void TestCardMatrixDimension(){
@@ -33,7 +43,6 @@ class GameTest {
         for(int r=0;r<3;r++){
             for(int c=0;c<4;c++){
                 assertEquals(4,matrix[r][c].size());
-
             }
         }
     }
