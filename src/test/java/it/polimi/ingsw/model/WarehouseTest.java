@@ -13,11 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WarehouseTest {
     Warehouse wh;
-    //WarehousePROVA wp; //da togliere
+
     @BeforeEach
-    public void initiliaze(){
+    public void initialize(){
         wh=new Warehouse();
-        //wp=new WarehousePROVA(); //da togliere
     }
 
     @Test
@@ -45,7 +44,7 @@ class WarehouseTest {
         wh.addResourceInPending(ResourceType.VIOLET);
         wh.addResourceInPending(ResourceType.VIOLET);
 
-        assertEquals(0,wh.countWarehousePoints());
+        assertEquals(0,wh.countWarehouseResource());
         wh.addExtraDepot(ResourceType.BLUE);
         wh.addExtraDepot(ResourceType.YELLOW);
         wh.addExtraDepot(ResourceType.VIOLET);
@@ -56,12 +55,35 @@ class WarehouseTest {
         wh.addResourceInDeposit(5,ResourceType.YELLOW);
         wh.addResourceInDeposit(5,ResourceType.YELLOW);
 
-        assertEquals(0,wh.countWarehousePoints());
+        assertEquals(4,wh.countWarehouseResource());
         wh.addResourceInDeposit(6,ResourceType.VIOLET);
         wh.addResourceInDeposit(6,ResourceType.VIOLET);
 
-        assertEquals(1,wh.countWarehousePoints());
+        assertEquals(6,wh.countWarehouseResource());
         wh.visualize();
+
+    }
+    @Test
+    public void TestDoubleSwap() throws IllegalResourceException, FullSpaceException {
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.VIOLET);
+        wh.addResourceInPending(ResourceType.VIOLET);
+
+        wh.addResourceInDeposit(1,ResourceType.GREY);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+        wh.addResourceInDeposit(3,ResourceType.VIOLET);
+        wh.addResourceInDeposit(3,ResourceType.VIOLET);
+
+        assertDoesNotThrow(
+                ()->wh.moveResource(2,3)
+        );
+        assertEquals(ResourceType.GREY,wh.getMaindepot().get(0).getSpace()[0]);
+        assertEquals(ResourceType.VIOLET ,wh.getMaindepot().get(1).getSpace()[0]);
+        assertEquals(ResourceType.VIOLET ,wh.getMaindepot().get(1).getSpace()[1]);
+        assertEquals(ResourceType.YELLOW ,wh.getMaindepot().get(2).getSpace()[0]);
+        wh.visualize();
+
 
     }
     @Test
@@ -80,7 +102,7 @@ class WarehouseTest {
         wh.addResourceInDeposit(2,ResourceType.VIOLET);
         wh.addResourceInDeposit(2,ResourceType.VIOLET);
 
-        assertEquals(1,wh.countWarehousePoints());
+        assertEquals(6,wh.countWarehouseResource());
         wh.visualize();
 
     }
@@ -113,12 +135,11 @@ class WarehouseTest {
         wh.addResourceInDeposit(5,ResourceType.VIOLET);
         wh.addResourceInDeposit(6,ResourceType.BLUE);
 
-        assertEquals(2,wh.countWarehousePoints());
+        assertEquals(10,wh.countWarehouseResource());
         wh.visualize();
     }
     @Test
     public void TestAddFullSpaceMain() throws IllegalResourceException, FullSpaceException {
-        //PROVA
         wh.addResourceInPending(ResourceType.YELLOW);
         wh.addResourceInPending(ResourceType.GREY);
         wh.addResourceInPending(ResourceType.YELLOW);
@@ -141,6 +162,9 @@ class WarehouseTest {
         wh.moveResource(1,2);
         assertDoesNotThrow(
                 ()->wh.addResourceInDeposit(2,ResourceType.YELLOW));
+        assertEquals(ResourceType.GREY,wh.getMaindepot().get(0).getSpace()[0]);
+        assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(1).getSpace()[0]);
+        assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(1).getSpace()[1]);
         wh.visualize();
 
     }
@@ -170,6 +194,8 @@ class WarehouseTest {
                 ()->wh.addResourceInDeposit(4,ResourceType.YELLOW));
         assertDoesNotThrow(
                 ()->wh.addResourceInDeposit(5,ResourceType.GREY));
+        assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.GREY,wh.getExtradepots().get(1).getSpace()[0]);
         wh.visualize();
     }
     @Test
@@ -200,6 +226,8 @@ class WarehouseTest {
                 ()->wh.addResourceInDeposit(4,ResourceType.YELLOW));
         assertDoesNotThrow(
                 ()->wh.moveResource(1,4));
+        assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(0).getSpace()[0]);
         wh.visualize();
     }
     @Test
@@ -216,6 +244,9 @@ class WarehouseTest {
                 ()->wh.moveResource(2,5));
         assertDoesNotThrow(
                 ()->wh.moveResource(2,4));
+        assertEquals(ResourceType.VIOLET,wh.getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(0).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[0]);
         wh.visualize();
     }
     @Test
@@ -227,9 +258,35 @@ class WarehouseTest {
         wh.moveResource(1,2);
 
         wh.addResourceInDeposit(1,ResourceType.YELLOW);
+        assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(0).getSpace()[0]);
+        assertEquals(ResourceType.VIOLET,wh.getMaindepot().get(1).getSpace()[0]);
         wh.visualize();
 
     }
+    @Test
+    public void SingleSwapExtra() throws IllegalResourceException, FullSpaceException, NonEmptyException {
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);
+
+        wh.addExtraDepot(ResourceType.YELLOW);
+
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+
+        wh.moveResource(2,4);
+        assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(1).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[1]);
+        assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getExtradepots().get(0).getSpace()[1]);
+
+        wh.moveResource(2,4);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[1]);
+        assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[1]);
+        wh.visualize();
+    }
+
     @Test
     public void TestDiscard() throws IllegalResourceException {
         wh.addResourceInPending(ResourceType.VIOLET);
@@ -240,6 +297,5 @@ class WarehouseTest {
         assertThrows(IllegalResourceException.class,
                 ()->wh.discardResource(ResourceType.VIOLET));
         wh.visualize();
-
     }
 }

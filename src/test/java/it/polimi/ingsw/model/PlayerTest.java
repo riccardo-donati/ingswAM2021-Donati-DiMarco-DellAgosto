@@ -98,8 +98,8 @@ class PlayerTest {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
-        player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.BLUE, new Production(), 2));
-        player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.YELLOW, new Production(), 2));
+        player.getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.BLUE, new Production(), 2));
+        player.getBoard().pushDCard(3, new DevelopmentCard(requirements, 1, Color.YELLOW, new Production(), 2));
 
         LeaderCard leaderCard1 = new LeaderCard();
         LeaderCard leaderCard2 = new LeaderCard();
@@ -125,9 +125,9 @@ class PlayerTest {
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 2, Color.BLUE, new Production(), 2));
-        player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 2));
-        player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 2, Color.VIOLET, new Production(), 2));
-        player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 3, Color.YELLOW, new Production(), 2));
+        player.getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 2));
+        player.getBoard().pushDCard(2, new DevelopmentCard(requirements, 2, Color.VIOLET, new Production(), 2));
+        player.getBoard().pushDCard(2, new DevelopmentCard(requirements, 3, Color.YELLOW, new Production(), 2));
 
         LeaderCard leaderCard1 = new LeaderCard();
         LeaderCard leaderCard2 = new LeaderCard();
