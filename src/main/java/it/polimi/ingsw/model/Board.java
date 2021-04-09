@@ -121,7 +121,12 @@ public class Board {
      * getter of the faithPath
      * @return the board's relative faithpath
      */
-    public FaithPath getFaithpath() {
+    public FaithPath getFaithPath() {
         return faithpath;
     }
+
+    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
+        return slots;
+    }
+
 }

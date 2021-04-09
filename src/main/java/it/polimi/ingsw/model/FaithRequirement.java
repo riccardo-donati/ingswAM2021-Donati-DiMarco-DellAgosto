@@ -14,8 +14,13 @@ public class FaithRequirement implements Requirement {
         return position;
     }
 
+    /**
+     * retrieves the faith path from the board and check the position
+     * @param board board that needs to be checked
+     * @return true if the position on the faith path is at least "position", false otherwise
+     */
     @Override
     public boolean check(Board board) {
-        return false;
+        return position >= board.getFaithPath().getPosition();
     }
 }
