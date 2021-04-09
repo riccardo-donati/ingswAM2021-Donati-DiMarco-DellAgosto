@@ -110,7 +110,7 @@ public class Warehouse {
         if(n>0) {
             if (id <= 3) {
                 maindepot.get(id - 1).addResource(res);
-            } else if (id > 3) {
+            } else {
                 extradepots.get(id - 4).addResource(res);
             }
             pendingResources.replace(res,n-1);
@@ -129,9 +129,9 @@ public class Warehouse {
         Deposit d1=null;
         Deposit d2=null;
         if(id1<=3) d1=maindepot.get(id1-1);
-        else if(id1>3) d1=extradepots.get(id1-4);
+        else d1=extradepots.get(id1-4);
         if(id2<=3) d2=maindepot.get(id2-1);
-        else if(id2>3) d2=extradepots.get(id2-4);
+        else d2=extradepots.get(id2-4);
 
         int cont1=0;
         int cont2=0;
@@ -141,22 +141,35 @@ public class Warehouse {
         for(int i=0;i<d2.getDimension();i++){
             if(d2.getSpace()[i]!=ResourceType.EMPTY) cont2++;
         }
-        //swap only if they have just 1 resource
-        if(cont1==1 && cont2==1){
-            ResourceType r1=d1.removeResource();
-            ResourceType r2=d2.removeResource();
-            d1.changeType(r2);
-            d2.changeType(r1);
-            d1.addResource(r2);
-            d2.addResource(r1);
 
+        //swap all the Resource in the deposit if possibile
+        if(cont1>0 && cont2>0 && cont1<=d2.getDimension() && cont2<=d1.getDimension() && d1.getType()!=d2.getType()){
+            List<ResourceType> res1=new ArrayList<>();
+            List<ResourceType> res2=new ArrayList<>();
+            ResourceType type1=d1.getType();
+            ResourceType type2=d2.getType();
+            for(int i=0;i<cont1;i++){
+                res1.add(d1.removeResource());
+            }
+            for(int i=0;i<cont2;i++){
+                res2.add(d2.removeResource());
+            }
+            d1.changeType(type2);
+            d2.changeType(type1);
+            for(ResourceType r : res1){
+                if(r!=ResourceType.EMPTY)
+                    d2.addResource(r);
+            }
+            for(ResourceType r : res2){
+                if(r!=ResourceType.EMPTY)
+                    d1.addResource(r);
+            }
         }
         //if the second deposit has 0 resource or the second is the same type of the first --> move
         if(cont1>0 && cont2==0 || cont1>0 && cont2>0 && d1.getType()==d2.getType()){
             ResourceType r1=d1.getType();
             d2.addResource(r1);
             d1.removeResource();
-
         }
 
     }
@@ -164,7 +177,7 @@ public class Warehouse {
     /**
      * discard a pending resource
      * @param res is the type of the resource i want to discard
-     * @throws IllegalResourceException
+     * @throws IllegalResourceException when there are no resources of res type in pending
      */
     public void discardResource(ResourceType res) throws IllegalResourceException {
         int n=pendingResources.get(res);
@@ -178,7 +191,7 @@ public class Warehouse {
 
     /**
      * register an observer to the list
-     * @param obs
+     * @param obs observer to add
      */
     public void addObserver(BoardObserver obs){
         observers.add(obs);
