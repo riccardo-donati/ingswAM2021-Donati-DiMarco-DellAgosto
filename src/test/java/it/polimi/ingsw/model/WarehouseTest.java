@@ -13,8 +13,9 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class WarehouseTest {
     Warehouse wh;
+
     @BeforeEach
-    public void initialiaze(){
+    public void initialize(){
         wh=new Warehouse();
     }
 
@@ -285,6 +286,7 @@ class WarehouseTest {
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[1]);
         wh.visualize();
     }
+
     @Test
     public void TestDiscard() throws IllegalResourceException {
         wh.addResourceInPending(ResourceType.VIOLET);
@@ -295,6 +297,5 @@ class WarehouseTest {
         assertThrows(IllegalResourceException.class,
                 ()->wh.discardResource(ResourceType.VIOLET));
         wh.visualize();
-
     }
 }

@@ -83,8 +83,19 @@ public class Player {
         return extraProductions;
     }
 
+    void chooseLeaders(List<LeaderCard> leaderCards) throws Exception {
+        if (!leadersInHand.isEmpty())
+            throw new Exception();
+        for (LeaderCard leaderCard : leaderCards) {
+            if (leadersInHand.contains(leaderCard))
+                throw new Exception();
+            else leadersInHand.add(leaderCard);
+        }
+    }
+
     /**
-     * if the card passed as parameter is available, all its abilities get activated, then the card is removed
+     * if the card passed as parameter is available and its requirements are met,
+     * all its abilities get activated, then the card is removed
      * from the leadersInHand list and added to the leadersInGame list
      * @param leaderCard card that is activated
      * @throws CardNotAvailableException thrown if leaderCard is not in the leadersInHand list
