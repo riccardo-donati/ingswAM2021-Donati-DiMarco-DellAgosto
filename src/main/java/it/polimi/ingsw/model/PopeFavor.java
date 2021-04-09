@@ -40,7 +40,7 @@ public class PopeFavor {
      * @return true if the current position is inside a small area in the Pope Favor
      */
     public boolean checkInside(Integer position){
-        return position >= initialPos && position <= finalPos;
+        return position >= initialPos;
     }
 
     /**

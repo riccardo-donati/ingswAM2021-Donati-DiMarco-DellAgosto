@@ -37,10 +37,17 @@ public class FaithPath {
     public void addToPosition(Integer move) {
         if(position + move > 24) {
             position = 24;
-            //notify endgame
         }
         else position += move;
+        for (PopeFavor pf : popeFavorList) {
+            if(position >= pf.getPopeSpace() && pf.getState().equals(PopeFavorState.UNACTIVE))
+                notifyPopeFavor();
+        }
+        if(position == 24)
+            notifyEndGame();
     }
+
+
 
     /**
      * Counts the current player's score by adding every value of the Map from the beginning to the player position
@@ -83,7 +90,17 @@ public class FaithPath {
     /**
      *
      */
-    public void notifyObserver(){ }
+    public void notifyEndGame(){
+        for(BoardObserver obs : observer){
+            obs.updateEndGame();
+        }
+    }
+
+    public void notifyPopeFavor(){
+        for(BoardObserver obs : observer){
+            obs.updatePopeFavor();
+        }
+    }
 
     /**
      *

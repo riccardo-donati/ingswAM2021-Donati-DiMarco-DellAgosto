@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.PopeFavorState;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -80,5 +81,13 @@ class GameTest {
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(2);
     }
 
-
+    @Test
+    void testEndGame(){
+        game = new Singleplayer();
+        game.addPlayer("Giancarlo Magalli");
+        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(27);
+        assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+    }
 }

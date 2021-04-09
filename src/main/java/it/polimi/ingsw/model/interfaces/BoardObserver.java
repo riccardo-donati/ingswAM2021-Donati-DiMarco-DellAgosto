@@ -4,4 +4,5 @@ import it.polimi.ingsw.model.FaithPath;
 
 public interface BoardObserver {
     void updateEndGame();
+    void updatePopeFavor();
 }

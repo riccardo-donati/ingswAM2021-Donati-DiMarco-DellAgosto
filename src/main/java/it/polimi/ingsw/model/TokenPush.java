@@ -6,6 +6,6 @@ public class TokenPush implements Token {
 
     @Override
     public void doAction(Game g) {
-        
+        g.pushBlackCross(2);
     }
 }

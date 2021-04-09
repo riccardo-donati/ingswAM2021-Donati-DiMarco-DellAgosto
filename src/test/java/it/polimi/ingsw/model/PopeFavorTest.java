@@ -30,6 +30,5 @@ class PopeFavorTest {
         assertTrue(popeFavor.checkInside(random1));
         assertTrue(popeFavor.checkInside(random2));
         assertFalse(popeFavor.checkInside(random1 - 1));
-        assertFalse(popeFavor.checkInside(random2 + 1));
     }
 }

@@ -70,4 +70,12 @@ class FaithPathTest {
         int position = faithPath.getPosition();
         assertEquals(19, faithPath.countFaithPoints());
     }
+
+    @Test
+    void testInside(){
+        faithPath.addToPosition(18);
+        assertTrue(faithPath.getPopeFavorList().get(0).checkInside(faithPath.getPosition()));
+        assertTrue(faithPath.getPopeFavorList().get(1).checkInside(faithPath.getPosition()));
+        assertFalse(faithPath.getPopeFavorList().get(2).checkInside(faithPath.getPosition()));
+    }
 }

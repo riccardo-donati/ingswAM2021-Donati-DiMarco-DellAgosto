@@ -4,9 +4,11 @@ import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.model.interfaces.Token;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -39,6 +41,14 @@ public abstract class Game implements BoardObserver {
     }
 
     public Player getCurrPlayer() { return currPlayer; }
+
+    //These functions will be overrided in the subclass singleplayer
+
+    public void pushBlackCross(Integer push){}
+
+    public void tokenShuffle(){}
+
+    public List<Token> getTokens(){return null;}
 
     /**
      * Constructor of the class Game where we initialize all the attributes
@@ -167,6 +177,7 @@ public abstract class Game implements BoardObserver {
     public void endGame(){
         System.out.println("ENDGAME");
     }
+
     public void nextTurn(){}
     public void startGame(){
         Random r=new Random();
@@ -186,5 +197,20 @@ public abstract class Game implements BoardObserver {
     @Override
     public void updateEndGame() {
         endGame();
+    }
+
+    @Override
+    public void updatePopeFavor() {
+        for (Player p: players) {
+            for (PopeFavor pf: p.getBoard().getFaithPath().getPopeFavorList()) {
+                if(pf.getState().equals(PopeFavorState.UNACTIVE)){
+                    if(pf.checkInside(p.getBoard().getFaithPath().getPosition())){
+                        pf.changeState(PopeFavorState.ACTIVE);
+                    }
+                    else pf.changeState(PopeFavorState.DISCARDED);
+                    break;
+                }
+            }
+        }
     }
 }
