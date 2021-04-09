@@ -21,6 +21,6 @@ public class FaithRequirement implements Requirement {
      */
     @Override
     public boolean check(Board board) {
-        return position >= board.getFaithPath().getPosition();
+        return position <= board.getFaithPath().getPosition();
     }
 }

@@ -15,13 +15,13 @@ class WarehouseTest {
     Warehouse wh;
     //WarehousePROVA wp; //da togliere
     @BeforeEach
-    public void initiliaze(){
+    public void initialize(){
         wh=new Warehouse();
         //wp=new WarehousePROVA(); //da togliere
     }
 
     @Test
-    public void TestaddIllegalResource(){
+    public void TestAddIllegalResource(){
         assertThrows(IllegalResourceException.class,
                 ()->wh.addResourceInPending(ResourceType.RED));
         assertDoesNotThrow(
