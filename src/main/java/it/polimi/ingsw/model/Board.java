@@ -119,7 +119,9 @@ public class Board {
         score += nres/5+ faithpath.countFaithPoints();
         return score;       //i punti dati dalle leader cards li somma direttamente la funzione chiamante
     }
-
+    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
+        return slots;
+    }
     /**
      * pushes a card into a specified position
      * @param pos the position where the cards sholud be added
@@ -133,6 +135,7 @@ public class Board {
                 throw new InvalidPushException();
             }
         }
+
         else if(card.getLevel()==2){
             if(slots.get(pos).size()==1 && slots.get(pos).get(0).getLevel()==1){
                 slots.get(pos).push(card);
@@ -156,7 +159,7 @@ public class Board {
      * getter of the faithPath
      * @return the board's relative faithpath
      */
-    public FaithPath getFaithpath() {
+    public FaithPath getFaithPath() {
         return faithpath;
     }
 

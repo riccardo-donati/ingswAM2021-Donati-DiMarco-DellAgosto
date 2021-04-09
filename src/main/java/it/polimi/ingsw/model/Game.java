@@ -128,7 +128,7 @@ public abstract class Game implements BoardObserver {
         }
         Player newPlayer=new Player(nickname,false);
         //game registration as an observer
-        newPlayer.getBoard().getFaithpath().addObserver(this);
+        newPlayer.getBoard().getFaithPath().addObserver(this);
         newPlayer.getBoard().addObserver(this);
         players.add(newPlayer);
 

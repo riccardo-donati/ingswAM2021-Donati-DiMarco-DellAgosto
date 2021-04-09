@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,25 @@ class GameTest {
                 }
             }
         }
+    }
+    @Test
+    public void TestDiscardColor(){
+        game=new Multiplayer();
+        for(int i=0;i<12;i++){
+            game.discardColor(Color.GREEN);
+        }
+        //trigger endgame
+    }
+
+
+    @Test
+    public void TestNotifyEndGame() {
+        game=new Singleplayer();
+        game.addPlayer("Carlo");
+        game.addPlayer("Giuseppe");
+        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(22);
+        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(23);
+        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(2);
     }
 
 

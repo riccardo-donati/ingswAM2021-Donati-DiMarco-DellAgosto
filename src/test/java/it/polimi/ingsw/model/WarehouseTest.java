@@ -43,7 +43,7 @@ class WarehouseTest {
         wh.addResourceInPending(ResourceType.VIOLET);
         wh.addResourceInPending(ResourceType.VIOLET);
 
-        assertEquals(0,wh.countWarehousePoints());
+        assertEquals(0,wh.countWarehouseResource());
         wh.addExtraDepot(ResourceType.BLUE);
         wh.addExtraDepot(ResourceType.YELLOW);
         wh.addExtraDepot(ResourceType.VIOLET);
@@ -54,11 +54,11 @@ class WarehouseTest {
         wh.addResourceInDeposit(5,ResourceType.YELLOW);
         wh.addResourceInDeposit(5,ResourceType.YELLOW);
 
-        assertEquals(0,wh.countWarehousePoints());
+        assertEquals(4,wh.countWarehouseResource());
         wh.addResourceInDeposit(6,ResourceType.VIOLET);
         wh.addResourceInDeposit(6,ResourceType.VIOLET);
 
-        assertEquals(1,wh.countWarehousePoints());
+        assertEquals(6,wh.countWarehouseResource());
         wh.visualize();
 
     }
@@ -101,7 +101,7 @@ class WarehouseTest {
         wh.addResourceInDeposit(2,ResourceType.VIOLET);
         wh.addResourceInDeposit(2,ResourceType.VIOLET);
 
-        assertEquals(1,wh.countWarehousePoints());
+        assertEquals(6,wh.countWarehouseResource());
         wh.visualize();
 
     }
@@ -134,7 +134,7 @@ class WarehouseTest {
         wh.addResourceInDeposit(5,ResourceType.VIOLET);
         wh.addResourceInDeposit(6,ResourceType.BLUE);
 
-        assertEquals(2,wh.countWarehousePoints());
+        assertEquals(10,wh.countWarehouseResource());
         wh.visualize();
     }
     @Test
