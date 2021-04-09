@@ -2,8 +2,12 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.InvalidPushException;
+import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
+import java.io.InvalidObjectException;
 import java.util.*;
 
 public class Board {
@@ -12,7 +16,7 @@ public class Board {
     private FaithPath faithpath;
     private Production baseProduction;
     private Map<Integer, Stack<DevelopmentCard>> slots;
-    private List<BoardObserver> observer = new ArrayList<>();
+    private List<BoardObserver> observers = new ArrayList<>();
 
     public Board() {
         strongbox = new HashMap<>();
@@ -30,7 +34,7 @@ public class Board {
     }
 
     /**
-     * the function gives a map with a resource type and the relative number ad adds it to the player's strongbox
+     * the function gives a map with a resource type and the relative number ad adds it to the player's strogbox
      * previously initialized to 0, it increments the relative key in the map
      * @param prod acquired resources from the production
      */
@@ -54,7 +58,7 @@ public class Board {
     }
 
     /**
-     * selects 2 resources from warehouse's maindepot using the relative function and stores in the strongbox a chosen resource
+     * selects 2 resources from warehouse's maindepot using the relative funcion and stores in the strongbox a chosen resource
      * @param input 2 any kind of resources from the main depot in the warehouse
      * @param out one resource of any kind to store in the strongbox
      */
@@ -66,11 +70,12 @@ public class Board {
         baseProduction.addOutput(out, 1);
     }
 
+
     /**
      * add the observer in a list of observer
      * @param obs the observer that has to be added in the observer's list
      */
-    public void addObserver(BoardObserver obs){observer.add(obs);}
+    public void addObserver(BoardObserver obs){observers.add(obs);}
 
     /**
      * getter function for the player's warehouse
@@ -83,7 +88,11 @@ public class Board {
     /**
      * notify the observer when QUALCOSA SUCCEDE MA NON SO COSA
      */
-    public void notifyObserver(){}
+    public void notifyObserver(){
+        for(BoardObserver obs : observers){
+            obs.updateEndGame();
+        }
+    }
 
     /**
      * picks Resources from any storage specified by the variable Source
@@ -103,18 +112,47 @@ public class Board {
                 score += dev.getPoints();
             }
         }
-        score += warehouse.countWarehousePoints() + faithpath.countFaithPoints();
+        int nres=warehouse.countWarehouseResource();
+        for (Map.Entry<ResourceType,Integer> entry : strongbox.entrySet()) {
+            nres+=entry.getValue();
+        }
+        score += nres/5+ faithpath.countFaithPoints();
         return score;       //i punti dati dalle leader cards li somma direttamente la funzione chiamante
     }
-
+    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
+        return slots;
+    }
     /**
      * pushes a card into a specified position
-     * @param pos the position where the cards should be added
+     * @param pos the position where the cards sholud be added
      * @param card the development card that has to be added
      */
-    public void pushDCard (Integer pos, DevelopmentCard card){
-        slots.get(pos).push(card);                                  //levelexception
-        //size = 7 end game
+    public void pushDCard (Integer pos, DevelopmentCard card) throws NonEmptyException, InvalidPushException {
+        if(card.getLevel()==1){
+            if(slots.get(pos).size()==0){
+                slots.get(pos).push(card);
+            }else{
+                throw new InvalidPushException();
+            }
+        }
+
+        else if(card.getLevel()==2){
+            if(slots.get(pos).size()==1 && slots.get(pos).get(0).getLevel()==1){
+                slots.get(pos).push(card);
+            }else {throw new InvalidPushException(); }
+        }
+        else if(card.getLevel()==3){
+            if(slots.get(pos).size()==2 && slots.get(pos).get(1).getLevel()==2){
+                slots.get(pos).push(card);
+            }else {throw new InvalidPushException(); }
+        }
+        int nCards=0;
+        for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : slots.entrySet()) {
+            nCards+=entry.getValue().size();
+        }
+        if(nCards==7){
+            notifyObserver();
+        }
     }
 
     /**
@@ -125,8 +163,14 @@ public class Board {
         return faithpath;
     }
 
-    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
-        return slots;
+    /**
+     * method for adding a resource in strongbox
+     * @param r is the resource
+     * @throws IllegalResourceException if the resource is not accepted
+     */
+    public void addResourceInStrongbox(ResourceType r) throws IllegalResourceException {
+        if(r==ResourceType.EMPTY || r==ResourceType.RED || r==ResourceType.UNKNOWN || r==ResourceType.WHITE)
+            throw new IllegalResourceException();
+        strongbox.replace(r,strongbox.get(r)+1);
     }
-
 }

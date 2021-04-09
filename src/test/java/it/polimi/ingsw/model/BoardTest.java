@@ -4,6 +4,8 @@ import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.InvalidPushException;
+import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -39,7 +41,7 @@ class BoardTest {
     }
 
     @Test
-    void BoardCounterPoints() throws IllegalResourceException, FullSpaceException {
+    void BoardCounterPoints() throws IllegalResourceException, FullSpaceException, NonEmptyException, InvalidPushException {
         List<ResourceRequirement> c = new ArrayList<>();
         ResourceRequirement r = new ResourceRequirement(ResourceType.BLUE, 2);
         c.add(r);
@@ -48,7 +50,7 @@ class BoardTest {
 
         Warehouse wh = b.getWarehouse();
 
-        DevelopmentCard dev = new DevelopmentCard(c,2,Color.VIOLET,null,3);  // result 3
+        DevelopmentCard dev = new DevelopmentCard(c,1,Color.VIOLET,null,3);  // result 3
         b.pushDCard(1, dev);
 
         f.addToPosition(16);                                                                     //result 9

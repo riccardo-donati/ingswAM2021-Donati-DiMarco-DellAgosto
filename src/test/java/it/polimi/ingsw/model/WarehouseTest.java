@@ -15,7 +15,7 @@ class WarehouseTest {
     Warehouse wh;
     //WarehousePROVA wp; //da togliere
     @BeforeEach
-    public void initialize(){
+    public void initiliaze(){
         wh=new Warehouse();
         //wp=new WarehousePROVA(); //da togliere
     }

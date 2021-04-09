@@ -30,7 +30,7 @@ public class Deposit {
 
     /**
      * get of id
-     * @return
+     * @return id
      */
     public Integer getId() {
         return id;
@@ -76,7 +76,7 @@ public class Deposit {
                     return;
                 }
             }
-        }else if(type==ResourceType.EMPTY){
+        }else{
                 for (int i = 0; i < dim; i++) {
                     if (space[i] == ResourceType.EMPTY) {
                         space[i] = res;
@@ -90,14 +90,15 @@ public class Deposit {
 
     /**
      *
-     * @return
+     * @return the removedResource
      */
     public ResourceType removeResource() {
         ResourceType ret=ResourceType.EMPTY;
-        for(int i=0;i<dim;i++){
+        for(int i=dim-1;i>=0;i--){
             if(space[i]!=ResourceType.EMPTY){
                 ret=space[i];
                 space[i]=ResourceType.EMPTY;
+                break;
             }
         }
         //Check if space is empty

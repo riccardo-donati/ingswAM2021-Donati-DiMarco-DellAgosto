@@ -11,10 +11,7 @@ import it.polimi.ingsw.model.interfaces.Requirement;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
-import java.util.Stack;
+import java.util.*;
 
 public abstract class Game implements BoardObserver {
     private static final Integer ROW=3;
@@ -26,30 +23,22 @@ public abstract class Game implements BoardObserver {
     private List<LeaderCard> leaderCards;
     private List<Player> players;
     private Player currPlayer;
-    private String firstPlayer;
 
-    /**
-     * get of developmentCards
-     * @return developmentCards
-     */
+    public List<Player> getPlayers() { return players; }
+
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
 
-    /**
-     * get of leaderCards
-     * @return leaderCards
-     */
     public List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
-    /**
-     * get of cardMatrix
-     * @return cardMatrix
-     */
+
     public Stack<DevelopmentCard>[][] getCardMatrix() {
         return cardMatrix;
     }
+
+    public Player getCurrPlayer() { return currPlayer; }
 
     /**
      * Constructor of the class Game where we initialize all the attributes
@@ -67,7 +56,6 @@ public abstract class Game implements BoardObserver {
         initializeCardMatrix();
         this.players=new ArrayList<>();
     }
-
     /**
      * Using GSON we initialize the developmentCard list
      */
@@ -101,7 +89,6 @@ public abstract class Game implements BoardObserver {
             System.out.println("leaderCard.json not found");
         }
         leaderCards=gson.fromJson(reader,foundListType);
-        System.out.println("prova");
     }
 
     /**
@@ -126,4 +113,78 @@ public abstract class Game implements BoardObserver {
         }
     }
 
+    /**
+     * addition of a new player into the game
+     * @param nickname of the new player
+     */
+    public void addPlayer(String nickname) {
+        if(nickname==""){
+            throw new IllegalArgumentException("nickname is empty");
+        }
+        for(Player p : players){
+            if(nickname.equals(p.getNickname())){
+                throw new IllegalArgumentException("nickname already taken");
+            }
+        }
+        Player newPlayer=new Player(nickname,false);
+        //game registration as an observer
+        newPlayer.getBoard().getFaithPath().addObserver(this);
+        newPlayer.getBoard().addObserver(this);
+        players.add(newPlayer);
+
+    }
+
+    /**
+     * discard the top card of the passed color from the matrix (starting with row 0->1->2)
+     * if the 3 stacks are empty -> trigger ENDGAME
+     * @param toDiscard is the Color of the card we want to discard
+     */
+    public void discardColor(Color toDiscard){
+        int col=toDiscard.ordinal();
+        int r=0;
+        DevelopmentCard dc;
+        try {
+            dc = cardMatrix[r][col].pop();
+        }catch (EmptyStackException e1){
+            r++;
+            try {
+                dc = cardMatrix[r][col].pop();
+            }catch (EmptyStackException e2){
+                r++;
+                try {
+                    dc = cardMatrix[r][col].pop();
+                    if(cardMatrix[r][col].size()==0){
+                        endGame();
+                    }
+
+                }catch (EmptyStackException e3){
+                    e3.printStackTrace();
+                }
+            }
+        }
+    }
+
+    public void endGame(){
+        System.out.println("ENDGAME");
+    }
+    public void nextTurn(){}
+    public void startGame(){
+        Random r=new Random();
+        int first_n;
+        try {
+            first_n = r.nextInt(players.size());
+        }catch (IllegalArgumentException e){
+            //0 players
+            return;
+        }
+        Player first=players.get(first_n);
+        first.setFirst(true);
+        currPlayer=first;
+
+    }
+
+    @Override
+    public void updateEndGame() {
+        endGame();
+    }
 }
