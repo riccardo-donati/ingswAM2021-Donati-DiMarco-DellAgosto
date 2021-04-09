@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
+import it.polimi.ingsw.model.exceptions.InvalidPushException;
+import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
 import org.junit.jupiter.api.Test;
 
@@ -92,7 +94,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderCardRequirement() {
+    void playLeaderCardRequirement() throws NonEmptyException, InvalidPushException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
@@ -118,7 +120,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderLevelCardRequirement() {
+    void playLeaderLevelCardRequirement() throws NonEmptyException, InvalidPushException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
