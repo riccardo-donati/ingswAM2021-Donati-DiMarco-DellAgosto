@@ -48,18 +48,24 @@ public class Production {
     }
 
     /**
-     * input set
-     * @param input
+     * adds to the input map a resource type and the corresponding quantity
+     * @param resourceType type of input to be added
+     * @param quantity quantity of the specified resource
      */
-    public void setInput(Map<ResourceType, Integer> input) {
-        this.input = input;
+    public void addInput(ResourceType resourceType, Integer quantity) {
+        if(input.containsKey(resourceType))
+            input.replace(resourceType, input.get(resourceType) + quantity);
+        else input.put(resourceType, quantity);
     }
 
     /**
-     * output set
-     * @param output
+     * adds to the output map a resource type and the corresponding quantity
+     * @param resourceType type of output to be added
+     * @param quantity quantity of the specified resource
      */
-    public void setOutput(Map<ResourceType, Integer> output) {
-        this.output = output;
+    public void addOutput(ResourceType resourceType, Integer quantity) {
+        if(output.containsKey(resourceType))
+            output.replace(resourceType, output.get(resourceType) + quantity);
+        else output.put(resourceType, quantity);
     }
 }

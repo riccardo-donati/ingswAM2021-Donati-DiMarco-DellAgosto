@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
+import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
+import it.polimi.ingsw.model.interfaces.Requirement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -85,10 +87,14 @@ public class Player {
      * @param leaderCard card that is activated
      * @throws CardNotAvailableException thrown if leaderCard is not in the leadersInHand list
      */
-    void playLeader(LeaderCard leaderCard) throws CardNotAvailableException {
+    void playLeader(LeaderCard leaderCard) throws CardNotAvailableException, RequirementNotMetException {
         if(leadersInHand.contains(leaderCard)) {
-            for(SpecialAbility x : leaderCard.getSpecialAbilities())
-                x.activate(this);
+            for (Requirement requirement : leaderCard.getRequirements()) {
+                if (!requirement.check(this.board))
+                    throw new RequirementNotMetException();
+            }
+            for (SpecialAbility specialAbility : leaderCard.getSpecialAbilities())
+                specialAbility.activate(this);
             leadersInHand.remove(leaderCard);
             leadersInGame.add(leaderCard);
         } else throw new CardNotAvailableException();

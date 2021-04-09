@@ -8,7 +8,7 @@ public class ResourceRequirement implements Requirement {
     private final Integer quantity;
     private final ResourceType resource;
 
-    public ResourceRequirement(Integer quantity, ResourceType resource) {
+    public ResourceRequirement(ResourceType resource, Integer quantity) {
         this.quantity = quantity;
         this.resource = resource;
     }

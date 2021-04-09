@@ -41,10 +41,10 @@ class BoardTest {
     @Test
     void BoardCounterPoints() throws IllegalResourceException, FullSpaceException {
         List<ResourceRequirement> c = new ArrayList<>();
-        ResourceRequirement r = new ResourceRequirement(2, ResourceType.BLUE);
+        ResourceRequirement r = new ResourceRequirement(ResourceType.BLUE, 2);
         c.add(r);
 
-        FaithPath f = b.getFaithpath();
+        FaithPath f = b.getFaithPath();
 
         Warehouse wh = b.getWarehouse();
 

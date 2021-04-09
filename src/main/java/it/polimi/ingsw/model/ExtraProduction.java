@@ -19,14 +19,9 @@ public class ExtraProduction extends SpecialAbility {
     @Override
     public void activate(Player player) {
         Production production = new Production();
-        Map<ResourceType, Integer> input = new HashMap<>();
-        Map<ResourceType, Integer> output = new HashMap<>();
-        input.put(resourceType, 1);
-        output.put(ResourceType.UNKNOWN, 1);
-        output.put(ResourceType.RED, 1);
-
-        production.setInput(input);
-        production.setOutput(output);
+        production.addInput(resourceType, 1);
+        production.addOutput(ResourceType.UNKNOWN, 1);
+        production.addOutput(ResourceType.RED, 1);
 
         player.addExtraProduction(production);
     }
