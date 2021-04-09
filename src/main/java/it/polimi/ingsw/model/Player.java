@@ -42,8 +42,10 @@ public class Player {
     public Player(String nickname, boolean first) {
         this.nickname = nickname;
         this.first = first;
-        //board = new Board();
+        board = new Board();
     }
+
+    public void setFirst(boolean first) { this.first = first; }
 
     public String getNickname() {
         return nickname;

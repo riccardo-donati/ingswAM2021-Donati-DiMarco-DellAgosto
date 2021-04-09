@@ -63,7 +63,7 @@ public class Warehouse {
      * counts the points generated from the resources in the warehouse and in the leaderdeposits
      * @return the points
      */
-    public Integer countWarehousePoints(){
+    public Integer countWarehouseResource(){
         int resCont=0;
         for(Deposit d : maindepot){
             for(int i=0;i<d.getDimension();i++){
@@ -75,7 +75,7 @@ public class Warehouse {
                 if(d.getSpace()[i]!=ResourceType.EMPTY) resCont++;
             }
         }
-        return resCont/5;
+        return resCont;
     }
 
     /**
