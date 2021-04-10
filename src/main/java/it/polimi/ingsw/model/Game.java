@@ -185,7 +185,6 @@ public abstract class Game implements BoardObserver {
         try {
             first_n = r.nextInt(players.size());
         }catch (IllegalArgumentException e){
-            //0 players
             return;
         }
         Player first=players.get(first_n);
@@ -213,4 +212,23 @@ public abstract class Game implements BoardObserver {
             }
         }
     }
+    //----------------------------------------
+    public void buyAtMarket(char rc,int index){
+        if(rc=='r'){
+            try {
+                market.getRow(index, currPlayer);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return;
+            }
+        }else if(rc=='c'){
+            try {
+                market.getColumn(index, currPlayer);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return;
+            }
+        }else throw new IllegalArgumentException("rc must be 'r' or 'c'" );
+    }
+
 }

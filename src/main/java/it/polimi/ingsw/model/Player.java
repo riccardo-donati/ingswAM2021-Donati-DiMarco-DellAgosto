@@ -3,6 +3,8 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
 import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
@@ -143,5 +145,18 @@ public class Player {
      */
     public void addExtraProduction(Production production) {
         extraProductions.add(production);
+    }
+
+    //----------------------------------------------------
+
+    /**
+     * Transform the white resource in pending in the resource contained in whiteTo
+     * @param res is the ResourceType
+     */
+    public void transformWhiteIn(ResourceType res) throws NoWhiteResourceException, IllegalResourceException {
+        if(whiteTo.containsKey(res)){
+            int n=whiteTo.get(res);
+            getBoard().getWarehouse().replaceWhiteFromPending(res,n);
+        }else throw new IllegalResourceException();
     }
 }

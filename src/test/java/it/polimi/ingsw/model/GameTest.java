@@ -2,7 +2,11 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
+import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -89,5 +93,69 @@ class GameTest {
         assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
         assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(1).getState());
         assertEquals(PopeFavorState.ACTIVE, game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+    }
+
+    //-----------------------------------------
+    @Test
+    public void TestBuyAtMarket(){
+        game=new Multiplayer();
+        game.addPlayer("Beppe");
+        game.addPlayer("Carlo");
+        game.startGame();
+
+        game.buyAtMarket('r',0);
+        game.buyAtMarket('r',1);
+        game.buyAtMarket('r',2);
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
+        assertTrue(game.getCurrPlayer().getBoard().getFaithPath().getPosition()>0);
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
+    }
+    @Test
+    public void TestBuyAtMarketWithOneWhiteTo(){
+        game=new Multiplayer();
+        game.addPlayer("Floriano");
+        game.startGame();
+
+        game.getCurrPlayer().addWhiteTo(ResourceType.BLUE);
+
+        game.buyAtMarket('r',0);
+        game.buyAtMarket('r',1);
+        game.buyAtMarket('r',2);
+        game.buyAtMarket('c',3);
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
+    }
+    @RepeatedTest(10)
+    public void TestBuyAtMarketWithTwoWhiteTo(){
+        game=new Multiplayer();
+        game.addPlayer("Floriano");
+        game.startGame();
+
+        game.getCurrPlayer().addWhiteTo(ResourceType.BLUE);
+        game.getCurrPlayer().addWhiteTo(ResourceType.YELLOW);
+
+        game.buyAtMarket('c',3);
+        game.buyAtMarket('r',0);
+        game.buyAtMarket('r',1);
+        game.buyAtMarket('r',2);
+
+
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)>=4);
+        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
+        int nWhite=game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE);
+        assertDoesNotThrow(
+                ()-> {
+                    game.getCurrPlayer().transformWhiteIn(ResourceType.BLUE);
+                    game.getCurrPlayer().transformWhiteIn(ResourceType.YELLOW);
+                    game.getCurrPlayer().transformWhiteIn(ResourceType.BLUE);
+                    game.getCurrPlayer().transformWhiteIn(ResourceType.YELLOW);
+                }
+        );
+        assertThrows(IllegalResourceException.class,
+                ()-> game.getCurrPlayer().transformWhiteIn(ResourceType.GREY));
+        assertEquals(nWhite-4,game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE));
+
+
+
     }
 }

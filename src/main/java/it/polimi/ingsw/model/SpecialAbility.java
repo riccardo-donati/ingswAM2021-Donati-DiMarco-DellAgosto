@@ -6,6 +6,7 @@ public abstract class SpecialAbility {
 
     protected ResourceType resourceType;
 
+
     public SpecialAbility(ResourceType resourceType) {
         this.resourceType = resourceType;
     }

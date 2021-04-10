@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.interfaces.Marble;
 
 import java.util.Objects;
@@ -13,7 +14,11 @@ public class ResourceMarble implements Marble {
     }
     @Override
     public void action(Player p) {
-
+        try {
+            p.getBoard().getWarehouse().addResourceInPending(type);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
