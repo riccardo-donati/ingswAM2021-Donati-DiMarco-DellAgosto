@@ -41,15 +41,15 @@ class MarketTest {
     }
     @Test
     public void testExtractRow(){
-        for(int i=0;i<4;i++){
-            m1.getRow(0,new Player());
+        for(int i=0;i<5;i++){
+            m1.getRow(0,new Player("Mario",false));
         }
         assertEquals(m1,m2);
     }
     @Test
     public void testExtractColumn(){
-        for(int i=0;i<3;i++){
-            m1.getColumn(0,new Player());
+        for(int i=0;i<4;i++){
+            m1.getColumn(0,new Player("Mario",false));
         }
         assertEquals(m1,m2);
     }

@@ -60,7 +60,8 @@ public class Market {
         Marble tmp=marbles[r][0];
         marbles[r][0]=marbles[r][1];
         marbles[r][1]=marbles[r][2];
-        marbles[r][2]=pendingmarble;
+        marbles[r][2]=marbles[r][3];
+        marbles[r][3]=pendingmarble;
         pendingmarble=tmp;
     }
     /**
@@ -77,7 +78,9 @@ public class Market {
         }
         Marble tmp=marbles[0][c];
         marbles[0][c]=marbles[1][c];
-        marbles[1][c]=pendingmarble;
+        marbles[1][c]=marbles[2][c];
+        marbles[2][c]=pendingmarble;
+
         pendingmarble=tmp;
     }
 
