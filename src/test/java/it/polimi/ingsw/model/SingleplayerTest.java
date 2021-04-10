@@ -21,7 +21,7 @@ class SingleplayerTest {
     }
 
     @Test
-    public void TestPath() throws FullGameException {                                 //
+    public void TestPath() throws FullGameException {
         s = new Singleplayer();
         s.addPlayer("Riccardo Ricevuti");
         s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(5);
@@ -65,5 +65,13 @@ class SingleplayerTest {
         assertEquals(s.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(2).getState(), PopeFavorState.ACTIVE);
     }
 
+    @Test
+    public void TestCheckWinner4() throws FullGameException {                   //expected antonio and score 20 faith + 9 Pope = 29
+        s = new Singleplayer();
+        s.addPlayer("Antoniolo Papillo");
+        s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(16);
+        s.pushBlackCross(23);
+        s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(32);
+    }
 
 }

@@ -152,7 +152,7 @@ public abstract class Game implements BoardObserver {
     public Result endGame(){
         Result result=new Result();
         for(Player p : players){
-            result.addToResults(p.getNickname(),p.getPoints());//countPoints;
+            result.addToResults(p.getNickname(),p.countPoints());//countPoints;
         }
         return result;
     }

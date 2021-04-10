@@ -130,10 +130,6 @@ public class Player {
         return first;
     }
 
-    public Integer getPoints() {
-        return points;
-    }
-
     public Board getBoard() {
         return board;
     }
@@ -166,6 +162,14 @@ public class Player {
                 throw new Exception();
             else leadersInHand.add(leaderCard);
         }
+    }
+
+    public Integer countPoints(){
+        Integer temp = 0;
+        for (LeaderCard l : leadersInGame){
+            temp += l.getPoints();
+        }
+        return temp+board.countBoardsPoints();
     }
 
     /**
