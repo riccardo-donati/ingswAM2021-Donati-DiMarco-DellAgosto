@@ -2,14 +2,10 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
-import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
-import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Player {
 
