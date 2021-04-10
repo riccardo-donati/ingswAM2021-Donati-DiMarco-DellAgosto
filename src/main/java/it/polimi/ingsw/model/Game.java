@@ -140,6 +140,7 @@ public abstract class Game implements BoardObserver {
         //game registration as an observer
         newPlayer.getBoard().getFaithPath().addObserver(this);
         newPlayer.getBoard().addObserver(this);
+        newPlayer.getBoard().getWarehouse().addObserver(this);
         players.add(newPlayer);
 
     }
@@ -199,6 +200,14 @@ public abstract class Game implements BoardObserver {
     }
 
     @Override
+    public void updateDiscard(Warehouse wh) {
+        for(Player p : players){
+            if(!p.getBoard().getWarehouse().equals(wh))
+                p.getBoard().getFaithPath().addToPosition(1);
+        }
+    }
+
+    @Override
     public void updatePopeFavor() {
         for (Player p: players) {
             for (PopeFavor pf: p.getBoard().getFaithPath().getPopeFavorList()) {
@@ -230,5 +239,7 @@ public abstract class Game implements BoardObserver {
             }
         }else throw new IllegalArgumentException("rc must be 'r' or 'c'" );
     }
+
+    public FaithPath getBlackCrossFaithPath(){return null;}
 
 }

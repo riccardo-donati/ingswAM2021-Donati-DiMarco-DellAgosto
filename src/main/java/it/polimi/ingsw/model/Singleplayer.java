@@ -77,4 +77,11 @@ public class Singleplayer extends Game {
 
         }
     }
+    @Override
+    public void updateDiscard(Warehouse wh) {
+        super.updateDiscard(wh);
+        blackFaithPath.addToPosition(1);
+    }
+    @Override
+    public FaithPath getBlackCrossFaithPath(){return blackFaithPath;}
 }

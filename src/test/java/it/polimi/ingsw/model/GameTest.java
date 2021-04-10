@@ -155,7 +155,33 @@ class GameTest {
                 ()-> game.getCurrPlayer().transformWhiteIn(ResourceType.GREY));
         assertEquals(nWhite-4,game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE));
 
+    }
 
+    @Test
+    public void TestObserverDiscardMulti() throws IllegalResourceException {
+        game=new Multiplayer();
+        game.addPlayer("Giacomo");
+        game.addPlayer("Aldo");
+        game.startGame();
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().discardResource(ResourceType.YELLOW);
+        for(Player p : game.getPlayers()){
+            if(p.equals(game.getCurrPlayer())){
+                assertEquals(0,p.getBoard().getFaithPath().getPosition());
+            }
+            else assertEquals(1,p.getBoard().getFaithPath().getPosition());
+        }
+    }
+    @Test
+    public void TestObserverDiscardSingle() throws IllegalResourceException {
+        game=new Singleplayer();
+        game.addPlayer("Giacomo");
+        game.startGame();
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().discardResource(ResourceType.YELLOW);
 
+        game.pushBlackCross(7);
+        assertEquals(0,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        assertEquals(8,game.getBlackCrossFaithPath().getPosition());
     }
 }

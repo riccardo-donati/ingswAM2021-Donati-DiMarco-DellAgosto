@@ -204,7 +204,7 @@ public class Warehouse {
      */
     public void notifyObservers(){
         for(BoardObserver o : observers){
-            //o.updateDiscard(); DA IMPLEMENTARE
+            o.updateDiscard(this);
         }
     }
 
