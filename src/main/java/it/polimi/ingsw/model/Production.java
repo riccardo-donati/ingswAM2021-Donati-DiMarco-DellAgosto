@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -44,7 +45,13 @@ public class Production {
      * if production is selected, deselect it and vice versa
      */
     public void toggleSelected(){
-        selected=!selected;
+        if(selected)
+            selected=!selected;
+        else{
+            if(checkValidity()){
+                selected=!selected;
+            }
+        }
     }
 
     /**
@@ -67,5 +74,39 @@ public class Production {
         if(output.containsKey(resourceType))
             output.replace(resourceType, output.get(resourceType) + quantity);
         else output.put(resourceType, quantity);
+    }
+
+    /**
+     * removes from the input map the quantity of the resource
+     * @param resourceType is the type of the resource
+     * @param quantity of the specified resource
+     * @throws ResourcesNotAvailableException when the resource is not available
+     */
+    public void removeInput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+        if(input.containsKey(resourceType) && input.get(resourceType)>=quantity){
+            input.replace(resourceType,input.get(resourceType)-quantity);
+        }else throw new ResourcesNotAvailableException();
+    }
+
+    /**
+     * removes from the output map the quantity of the resource
+     * @param resourceType is the type of the resource
+     * @param quantity of the specified resource
+     * @throws ResourcesNotAvailableException when the resource is not available
+     */
+    public void removeOutput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+        if(output.containsKey(resourceType) && output.get(resourceType)>=quantity){
+            output.replace(resourceType,output.get(resourceType)-quantity);
+        }else throw new ResourcesNotAvailableException();
+    }
+
+    public boolean checkValidity(){
+        for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
+            if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;
+        }
+        for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
+            if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;
+        }
+        return true;
     }
 }

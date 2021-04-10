@@ -2,10 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
-import it.polimi.ingsw.model.exceptions.InvalidPushException;
-import it.polimi.ingsw.model.exceptions.NonEmptyException;
-import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
+import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -203,5 +200,63 @@ class PlayerTest {
         map3.put(ResourceType.YELLOW, 4);
         Player.mergeResourceTypeMaps(map1, map2);
         assertEquals(map1, map3);
+    }
+
+    @Test
+    public void Test1PickUpResource() throws FullGameException, FullSpaceException, IllegalResourceException {
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.GREY);
+        int nres=player.getBoard().getWarehouse().countWarehouseResource();
+        assertDoesNotThrow(
+                ()->{
+                    player.pickUpResource(2);
+                    player.pickUpResource(3);
+                }
+        );
+        assertEquals(nres-2,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
+
+        player.revertPickUp();
+        assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
+    }
+    @Test
+    public void Test2PickUpResource() throws IllegalResourceException, FullSpaceException {
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+
+        player.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
+        int nres=player.getBoard().getWarehouse().countWarehouseResource();
+        player.getBoard().getWarehouse().visualize();
+        assertDoesNotThrow(
+                ()->{
+                    player.pickUpResource(2);
+                    player.pickUpResource(4);
+                    player.pickUpResource(4);
+                    player.pickUpResource(1);
+                }
+        );
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->player.pickUpResource(3));
+        assertEquals(nres-4,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
+
+        player.revertPickUp();
+        assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
     }
 }

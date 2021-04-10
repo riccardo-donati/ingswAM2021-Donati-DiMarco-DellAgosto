@@ -285,6 +285,40 @@ public class Warehouse {
         return sum;
     }
 
+    /**
+     * remove a resource from the selected deposit
+     * @param id is the id of the deposit
+     * @return the removed resource
+     */
+    public ResourceType removeResourceFromDeposit(Integer id){
+        Deposit d;
+        boolean extra=false;
+        ResourceType type=ResourceType.EMPTY;
+        try {
+            if (id <= 3) {
+                d = getMaindepot().get(id - 1);
+            } else {
+                d = getExtradepots().get(id - 4);
+                type=d.getType();
+                extra=true;
+            }
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+            System.out.println("Deposito inesistente");
+            return ResourceType.EMPTY;
+        }
+        ResourceType res=d.removeResource();
+        if(d.getType()==ResourceType.EMPTY){
+            try {
+                d.changeType(type);
+            } catch (NonEmptyException e) {
+                e.printStackTrace();
+            }
+        }
+        return res;
+
+    }
+
 
 
 

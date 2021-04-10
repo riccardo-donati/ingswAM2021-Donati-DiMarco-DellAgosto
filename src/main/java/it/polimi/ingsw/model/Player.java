@@ -21,8 +21,85 @@ public class Player {
     private Map<ResourceType, Integer> whiteTo = new HashMap<>();
     private List<Production> extraProductions = new ArrayList<>();
 
-    private Map<Source, Map<ResourceType, Integer>> pickedResources;
+    private Map<Integer,Map<ResourceType, Integer>> pickedResource=new HashMap<>();
 
+    /**
+     *pick up a resource from a deposit of warehouse
+     * @param id is the id of the deposit
+     * @throws ResourcesNotAvailableException if the resource isn't available
+     */
+    public void pickUpResource(Integer id) throws ResourcesNotAvailableException {
+        Deposit d;
+        try {
+            if (id <= 3) {
+                d = getBoard().getWarehouse().getMaindepot().get(id - 1);
+            } else {
+                d = getBoard().getWarehouse().getExtradepots().get(id - 4);
+            }
+        }catch (IndexOutOfBoundsException e){
+            e.printStackTrace();
+            System.out.println("Deposito inesistente");
+            return;
+        }
+        ResourceType r=getBoard().getWarehouse().removeResourceFromDeposit(id);
+        if(r!=ResourceType.EMPTY){
+            if(!pickedResource.containsKey(id)){
+                pickedResource.put(id,new HashMap<>());
+                pickedResource.get(id).put(ResourceType.GREY,0);
+                pickedResource.get(id).put(ResourceType.BLUE,0);
+                pickedResource.get(id).put(ResourceType.VIOLET,0);
+                pickedResource.get(id).put(ResourceType.YELLOW,0);
+            }
+            pickedResource.get(id).replace(r,pickedResource.get(id).get(r)+1);
+        }else throw new ResourcesNotAvailableException();
+    }
+
+    /**
+     * deposit back all the resources in the pickedUp map
+     */
+    public void revertPickUp(){
+        for (Map.Entry<Integer, Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
+            Deposit d;
+            if(entry.getKey()>3) {
+                d=getBoard().getWarehouse().getExtradepots().get(entry.getKey()-4);
+            } else {
+                d = getBoard().getWarehouse().getMaindepot().get(entry.getKey() - 1);
+            }
+            for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
+                for(int i=0;i<entry2.getValue();i++){
+                    try {
+                        d.addResource(entry2.getKey());
+
+                    } catch (IllegalResourceException e) {
+                        e.printStackTrace();
+                        System.out.println("Impossible Revert!");
+                        return;
+                    } catch (FullSpaceException e) {
+                        e.printStackTrace();
+                        System.out.println("Impossible Revert!");
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * initialize the pickedResource Map
+     */
+    public void initializePickedResource(){
+        //freestyle
+        pickedResource.put(1,new HashMap<>());
+        pickedResource.put(2,new HashMap<>());
+        pickedResource.put(3,new HashMap<>());
+        for(int i=1;i<4;i++){
+            pickedResource.get(i).put(ResourceType.GREY,0);
+            pickedResource.get(i).put(ResourceType.BLUE,0);
+            pickedResource.get(i).put(ResourceType.VIOLET,0);
+            pickedResource.get(i).put(ResourceType.YELLOW,0);
+        }
+        //da aggiungere ogni volta che aggiungo extradeposito
+    }
     /**
      * used for testing purposes
      */
@@ -39,6 +116,8 @@ public class Player {
         this.nickname = nickname;
         this.first = first;
         board = new Board();
+
+        initializePickedResource();
     }
 
     public void setFirst(boolean first) { this.first = first; }

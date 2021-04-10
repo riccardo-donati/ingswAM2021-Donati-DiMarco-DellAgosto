@@ -2,10 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.FullSpaceException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.model.exceptions.InvalidPushException;
-import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.*;
@@ -83,5 +80,17 @@ class BoardTest {
         wh.addResourceInDeposit(6,ResourceType.BLUE);                 // result 2
 
         assertEquals(14, b.countBoardsPoints());                //somma pari alle dcards + faithpath + warehouse
+    }
+
+    @Test
+    public void TestBaseProd() throws ResourcesNotAvailableException {
+        assertFalse(b.getBaseProduction().checkSelected() || b.getBaseProduction().checkValidity());
+        b.getBaseProduction().removeInput(ResourceType.UNKNOWN,2);
+        b.getBaseProduction().removeOutput(ResourceType.UNKNOWN,1);
+        assertTrue(b.getBaseProduction().checkValidity());
+        b.getBaseProduction().addInput(ResourceType.YELLOW,1);
+        b.getBaseProduction().toggleSelected();
+        assertTrue(b.getBaseProduction().checkSelected() && b.getBaseProduction().checkValidity());
+
     }
 }
