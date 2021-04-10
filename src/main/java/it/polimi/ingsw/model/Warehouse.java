@@ -53,10 +53,37 @@ public class Warehouse {
 
     /**
      * get of maindepot
-     * @return
+     * @return maindepot
      */
     public List<Deposit> getMaindepot() {
         return maindepot;
+    }
+
+    /**
+     * counts all the resources in the warehouse
+     * @return map of all the resources in the warehouse
+     */
+    public Map<ResourceType, Integer> getTotalResources() {
+        Map<ResourceType, Integer> tempMap = new HashMap<>();
+        for (Deposit deposit : maindepot) {
+            int counter = 0;
+            for (ResourceType resourceType : deposit.getSpace())
+                if (!resourceType.equals(ResourceType.EMPTY))
+                    counter++;
+            if (tempMap.containsKey(deposit.getType()))
+                tempMap.replace(deposit.getType(), tempMap.get(deposit.getType()) + counter);
+            else tempMap.put(deposit.getType(), counter);
+        }
+        for (Deposit deposit : extradepots) {
+            int counter = 0;
+            for (ResourceType resourceType : deposit.getSpace())
+                if (!resourceType.equals(ResourceType.EMPTY))
+                    counter++;
+            if (tempMap.containsKey(deposit.getType()))
+                tempMap.replace(deposit.getType(), tempMap.get(deposit.getType()) + counter);
+            else tempMap.put(deposit.getType(), counter);
+        }
+        return tempMap;
     }
 
     /**
@@ -65,16 +92,9 @@ public class Warehouse {
      */
     public Integer countWarehouseResource(){
         int resCont=0;
-        for(Deposit d : maindepot){
-            for(int i=0;i<d.getDimension();i++){
-                if(d.getSpace()[i]!=ResourceType.EMPTY) resCont++;
-            }
-        }
-        for(Deposit d : extradepots){
-            for(int i=0;i<d.getDimension();i++){
-                if(d.getSpace()[i]!=ResourceType.EMPTY) resCont++;
-            }
-        }
+        Map<ResourceType, Integer> totalResources = getTotalResources();
+        for (ResourceType resourceType : totalResources.keySet())
+            resCont += totalResources.get(resourceType);
         return resCont;
     }
 

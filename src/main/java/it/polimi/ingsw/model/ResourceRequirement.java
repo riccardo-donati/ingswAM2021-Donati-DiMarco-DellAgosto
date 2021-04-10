@@ -28,26 +28,7 @@ public class ResourceRequirement implements Requirement {
     @Override
     public boolean check(Board board) {
         Map<ResourceType, Integer> totalResources = board.getStrongBox();
-        List<Deposit> tempDepositList = board.getWarehouse().getMaindepot();
-        for (Deposit deposit : tempDepositList) {
-            int counter = 0;
-            if(deposit.getType().equals(resource)) {
-                for (ResourceType resourceType : deposit.getSpace())
-                    if (!resourceType.equals(ResourceType.EMPTY))
-                        counter++;
-            }
-            totalResources.replace(resource, totalResources.get(resource) + counter);
-        }
-        tempDepositList = board.getWarehouse().getExtradepots();
-        for (Deposit deposit : tempDepositList) {
-            int counter = 0;
-            if(deposit.getType().equals(resource)) {
-                for (ResourceType resourceType : deposit.getSpace())
-                    if (!resourceType.equals(ResourceType.EMPTY))
-                        counter++;
-            }
-            totalResources.replace(resource, totalResources.get(resource) + counter);
-        }
+        Player.mergeResourceTypeMaps(totalResources, board.getWarehouse().getTotalResources());
 
         return quantity <= totalResources.get(resource);
     }

@@ -4,18 +4,15 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
 import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
+import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Player {
 
     private String nickname;
     private boolean first;
-    private Integer points;
     private Board board;
 
     private List<LeaderCard> leadersInHand = new ArrayList<>();
@@ -55,10 +52,6 @@ public class Player {
         return first;
     }
 
-    public Integer getPoints() {
-        return points;
-    }
-
     public Board getBoard() {
         return board;
     }
@@ -81,6 +74,13 @@ public class Player {
 
     public List<Production> getExtraProductions() {
         return extraProductions;
+    }
+
+    public Integer countPoints() {
+        Integer temp = board.countBoardsPoints();
+        for (LeaderCard leaderCard : leadersInGame)
+            temp += leaderCard.getPoints();
+        return temp;
     }
 
     void chooseLeaders(List<LeaderCard> leaderCards) throws Exception {
@@ -143,5 +143,61 @@ public class Player {
      */
     public void addExtraProduction(Production production) {
         extraProductions.add(production);
+    }
+
+    /**
+     * Merges two Map<ResourceType, Integer> objects
+     * @param mainMap map that is modified
+     * @param mapToAdd map that is merged to the first one
+     */
+    public static void mergeResourceTypeMaps(Map<ResourceType, Integer> mainMap, Map<ResourceType, Integer> mapToAdd) {
+        for (ResourceType resourceType : mapToAdd.keySet()) {
+            if (mainMap.containsKey(resourceType))
+                mainMap.replace(resourceType, mainMap.get(resourceType) + mapToAdd.get(resourceType));
+            else mainMap.put(resourceType, mapToAdd.get(resourceType));
+        }
+    }
+
+    /**
+     * checks every available production, creating a collective map of all inputs and outputs of selected productions,
+     * then if the resources in the map input are available, passes the map output to the strongbox to be added,
+     * and passes the map input to the board to be removed
+     * @throws ResourcesNotAvailableException when the resource in the map input are not available
+     */
+    public void activateProductions() throws ResourcesNotAvailableException {
+        Map<ResourceType, Integer> input = new HashMap<>();
+        Map<ResourceType, Integer> output = new HashMap<>();
+        for (Production production : extraProductions) {
+            if (production.checkSelected()) {
+                mergeResourceTypeMaps(input, production.getInput());
+                mergeResourceTypeMaps(output, production.getOutput());
+                production.toggleSelected();
+            }
+        }
+        for (Stack<DevelopmentCard> stack : board.getSlots().values()) {
+            for (DevelopmentCard developmentCard : stack) {
+                Production production = developmentCard.getProd();
+                if (production.checkSelected()) {
+                    mergeResourceTypeMaps(input, production.getInput());
+                    mergeResourceTypeMaps(output, production.getOutput());
+                    production.toggleSelected();
+                }
+            }
+        }
+        Production production = board.getBaseProduction();
+        if (production.checkSelected()) {
+            mergeResourceTypeMaps(input, production.getInput());
+            mergeResourceTypeMaps(output, production.getOutput());
+            production.toggleSelected();
+        }
+
+        Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
+        mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
+        for (ResourceType resourceType : input.keySet())
+            if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < input.get(resourceType))
+                throw new ResourcesNotAvailableException();
+
+        // remove input from warehouse
+        board.depositInStrongbox(output);
     }
 }

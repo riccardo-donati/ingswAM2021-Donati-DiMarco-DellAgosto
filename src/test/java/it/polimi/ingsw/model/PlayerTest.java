@@ -147,6 +147,13 @@ class PlayerTest {
         assertEquals(1, player.getLeadersInGame().size());
     }
 
+    @Test
+    void playLeaderCardNotAvailableException() {
+        LeaderCard leaderCard = new LeaderCard();
+        assertThrows(CardNotAvailableException.class, ()->player.playLeader(leaderCard));
+        assertEquals(0, player.getLeadersInHand().size());
+        assertEquals(0, player.getLeadersInGame().size());
+    }
 
     @Test
     void addDiscount() {
@@ -179,5 +186,22 @@ class PlayerTest {
         assertEquals(1, player.getExtraProductions().size());
         extraProduction.activate(player);
         assertEquals(2, player.getExtraProductions().size());
+    }
+
+    @Test
+    void mergeProductionMaps() {
+        Map<ResourceType, Integer> map1 = new HashMap<>();
+        Map<ResourceType, Integer> map2 = new HashMap<>();
+        Map<ResourceType, Integer> map3 = new HashMap<>();
+
+        map1.put(ResourceType.BLUE, 2);
+        map1.put(ResourceType.GREY, 5);
+        map2.put(ResourceType.YELLOW, 4);
+        map2.put(ResourceType.GREY, 1);
+        map3.put(ResourceType.BLUE, 2);
+        map3.put(ResourceType.GREY, 6);
+        map3.put(ResourceType.YELLOW, 4);
+        Player.mergeResourceTypeMaps(map1, map2);
+        assertEquals(map1, map3);
     }
 }

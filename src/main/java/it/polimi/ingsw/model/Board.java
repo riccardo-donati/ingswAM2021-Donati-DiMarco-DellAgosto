@@ -57,6 +57,10 @@ public class Board {
         return strongbox;
     }
 
+    public Production getBaseProduction() {
+        return baseProduction;
+    }
+
     /**
      * selects 2 resources from warehouse's maindepot using the relative funcion and stores in the strongbox a chosen resource
      * @param input 2 any kind of resources from the main depot in the warehouse
