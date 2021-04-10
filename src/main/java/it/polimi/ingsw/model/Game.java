@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.FullGameException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.model.interfaces.Token;
@@ -16,8 +17,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public abstract class Game implements BoardObserver {
-    private static final Integer ROW=3;
-    private static final Integer COL=4;
+    protected static final Integer ROW=3;
+    protected static final Integer COL=4;
 
     private Market market;
     private Stack<DevelopmentCard>[][] cardMatrix;
@@ -127,7 +128,8 @@ public abstract class Game implements BoardObserver {
      * addition of a new player into the game
      * @param nickname of the new player
      */
-    public void addPlayer(String nickname) {
+    public void addPlayer(String nickname) throws FullGameException {
+
         if(nickname==""){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -140,42 +142,19 @@ public abstract class Game implements BoardObserver {
         //game registration as an observer
         newPlayer.getBoard().getFaithPath().addObserver(this);
         newPlayer.getBoard().addObserver(this);
+        newPlayer.getBoard().getWarehouse().addObserver(this);
         players.add(newPlayer);
 
     }
 
-    /**
-     * discard the top card of the passed color from the matrix (starting with row 0->1->2)
-     * if the 3 stacks are empty -> trigger ENDGAME
-     * @param toDiscard is the Color of the card we want to discard
-     */
-    public void discardColor(Color toDiscard){
-        int col=toDiscard.ordinal();
-        int r=0;
-        DevelopmentCard dc;
-        try {
-            dc = cardMatrix[r][col].pop();
-        }catch (EmptyStackException e1){
-            r++;
-            try {
-                dc = cardMatrix[r][col].pop();
-            }catch (EmptyStackException e2){
-                r++;
-                try {
-                    dc = cardMatrix[r][col].pop();
-                    if(cardMatrix[r][col].size()==0){
-                        endGame();
-                    }
+    public void discardColor(Color toDiscard){ }
 
-                }catch (EmptyStackException e3){
-                    e3.printStackTrace();
-                }
-            }
+    public Result endGame(){
+        Result result=new Result();
+        for(Player p : players){
+            result.addToResults(p.getNickname(),p.getPoints());//countPoints;
         }
-    }
-
-    public void endGame(){
-        System.out.println("ENDGAME");
+        return result;
     }
 
     public void nextTurn(){}
@@ -185,7 +164,6 @@ public abstract class Game implements BoardObserver {
         try {
             first_n = r.nextInt(players.size());
         }catch (IllegalArgumentException e){
-            //0 players
             return;
         }
         Player first=players.get(first_n);
@@ -197,6 +175,14 @@ public abstract class Game implements BoardObserver {
     @Override
     public void updateEndGame() {
         endGame();
+    }
+
+    @Override
+    public void updateDiscard(Warehouse wh) {
+        for(Player p : players){
+            if(!p.getBoard().getWarehouse().equals(wh))
+                p.getBoard().getFaithPath().addToPosition(1);
+        }
     }
 
     @Override
@@ -213,4 +199,27 @@ public abstract class Game implements BoardObserver {
             }
         }
     }
+    //----------------------------------------
+    public void buyAtMarket(char rc,int index){
+        if(rc=='r'){
+            try {
+                market.getRow(index, currPlayer);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return;
+            }
+        }else if(rc=='c'){
+            try {
+                market.getColumn(index, currPlayer);
+            }catch (IndexOutOfBoundsException e){
+                e.printStackTrace();
+                return;
+            }
+        }else throw new IllegalArgumentException("rc must be 'r' or 'c'" );
+    }
+
+    public FaithPath getBlackCrossFaithPath(){return null;}
+    public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
+
+
 }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
@@ -36,6 +37,7 @@ public class Warehouse {
         pendingResources.put(ResourceType.BLUE,0);
         pendingResources.put(ResourceType.VIOLET,0);
         pendingResources.put(ResourceType.YELLOW,0);
+        pendingResources.put(ResourceType.WHITE,0);
     }
 
     /**
@@ -126,7 +128,7 @@ public class Warehouse {
      */
     public void addResourceInDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException {
         Integer n=pendingResources.get(res);
-        if(n==null)throw new IllegalResourceException("No such resource in pending");
+        if(n==null || res==ResourceType.WHITE)throw new IllegalResourceException("No such resource in pending");
         if(n>0) {
             if (id <= 3) {
                 maindepot.get(id - 1).addResource(res);
@@ -222,7 +224,7 @@ public class Warehouse {
      */
     public void notifyObservers(){
         for(BoardObserver o : observers){
-            //o.updateDiscard(); DA IMPLEMENTARE
+            o.updateDiscard(this);
         }
     }
 
@@ -251,4 +253,39 @@ public class Warehouse {
             System.out.println("\n");
         }
     }
+    //----------------------------------------------------
+
+    /**
+     * This method replace a white resource in pending in qt selected resources
+     * @param res is the destination ResourceType
+     * @param qt is the quantity of the converted resource
+     * @throws NoWhiteResourceException if there aren't any white resource in pending
+     */
+    public void replaceWhiteFromPending(ResourceType res,Integer qt) throws NoWhiteResourceException {
+        if(pendingResources.containsKey(ResourceType.WHITE) && pendingResources.get(ResourceType.WHITE)>0){
+            pendingResources.replace(ResourceType.WHITE,pendingResources.get(ResourceType.WHITE)-1);
+            for(int i=0;i<qt;i++)
+                pendingResources.replace(res,pendingResources.get(res)+1);
+        }else{
+            throw new NoWhiteResourceException();
+        }
+    }
+
+    public Map<ResourceType, Integer> getPendingResources() { return pendingResources; }
+
+    /**
+     * count the resource in pending
+     * @return the sum of the resource of the map
+     */
+    public int countPendingResources(){
+        int sum=0;
+        for (Map.Entry<ResourceType, Integer> entry : pendingResources.entrySet()) {
+            sum+=entry.getValue();
+        }
+        return sum;
+    }
+
+
+
+
 }

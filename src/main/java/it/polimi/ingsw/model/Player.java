@@ -4,15 +4,18 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
 import it.polimi.ingsw.model.exceptions.RequirementNotMetException;
-import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class Player {
 
     private String nickname;
     private boolean first;
+    private Integer points;
     private Board board;
 
     private List<LeaderCard> leadersInHand = new ArrayList<>();
@@ -52,6 +55,10 @@ public class Player {
         return first;
     }
 
+    public Integer getPoints() {
+        return points;
+    }
+
     public Board getBoard() {
         return board;
     }
@@ -74,13 +81,6 @@ public class Player {
 
     public List<Production> getExtraProductions() {
         return extraProductions;
-    }
-
-    public Integer countPoints() {
-        Integer temp = board.countBoardsPoints();
-        for (LeaderCard leaderCard : leadersInGame)
-            temp += leaderCard.getPoints();
-        return temp;
     }
 
     void chooseLeaders(List<LeaderCard> leaderCards) throws Exception {
@@ -199,5 +199,18 @@ public class Player {
 
         // remove input from warehouse
         board.depositInStrongbox(output);
+    }
+
+    //----------------------------------------------------
+
+    /**
+     * Transform the white resource in pending in the resource contained in whiteTo
+     * @param res is the ResourceType
+     */
+    public void transformWhiteIn(ResourceType res) throws NoWhiteResourceException, IllegalResourceException {
+        if(whiteTo.containsKey(res)){
+            int n=whiteTo.get(res);
+            getBoard().getWarehouse().replaceWhiteFromPending(res,n);
+        }else throw new IllegalResourceException();
     }
 }
