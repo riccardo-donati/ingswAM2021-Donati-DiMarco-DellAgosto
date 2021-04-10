@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.FullGameException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
 import org.junit.jupiter.api.BeforeEach;
@@ -76,8 +77,8 @@ class GameTest {
 
 
     @Test
-    public void TestNotifyEndGame() {
-        game=new Singleplayer();
+    public void TestNotifyEndGame() throws FullGameException {
+        game=new Multiplayer();
         game.addPlayer("Carlo");
         game.addPlayer("Giuseppe");
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(22);
@@ -86,7 +87,7 @@ class GameTest {
     }
 
     @Test
-    void testEndGame(){
+    void testEndGame() throws FullGameException {
         game = new Singleplayer();
         game.addPlayer("Giancarlo Magalli");
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(27);
@@ -97,7 +98,7 @@ class GameTest {
 
     //-----------------------------------------
     @Test
-    public void TestBuyAtMarket(){
+    public void TestBuyAtMarket() throws FullGameException {
         game=new Multiplayer();
         game.addPlayer("Beppe");
         game.addPlayer("Carlo");
@@ -111,7 +112,7 @@ class GameTest {
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
     }
     @Test
-    public void TestBuyAtMarketWithOneWhiteTo(){
+    public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException {
         game=new Multiplayer();
         game.addPlayer("Floriano");
         game.startGame();
@@ -126,7 +127,7 @@ class GameTest {
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
     }
     @RepeatedTest(10)
-    public void TestBuyAtMarketWithTwoWhiteTo(){
+    public void TestBuyAtMarketWithTwoWhiteTo() throws FullGameException {
         game=new Multiplayer();
         game.addPlayer("Floriano");
         game.startGame();
@@ -158,7 +159,7 @@ class GameTest {
     }
 
     @Test
-    public void TestObserverDiscardMulti() throws IllegalResourceException {
+    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException {
         game=new Multiplayer();
         game.addPlayer("Giacomo");
         game.addPlayer("Aldo");
@@ -173,7 +174,7 @@ class GameTest {
         }
     }
     @Test
-    public void TestObserverDiscardSingle() throws IllegalResourceException {
+    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException {
         game=new Singleplayer();
         game.addPlayer("Giacomo");
         game.startGame();
@@ -183,5 +184,41 @@ class GameTest {
         game.pushBlackCross(7);
         assertEquals(0,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         assertEquals(8,game.getBlackCrossFaithPath().getPosition());
+    }
+    @Test
+    public void TestAddPlayer() throws FullGameException {
+        game=new Multiplayer();
+        assertThrows(IllegalArgumentException.class,
+                ()-> game.addPlayer(""));
+        game.addPlayer("Carlo");
+        assertThrows(IllegalArgumentException.class,
+                ()-> game.addPlayer("Carlo"));
+        assertEquals(1,game.getPlayers().size());
+
+    }
+    @Test
+    public void FullGameTest(){
+        game=new Singleplayer();
+        assertDoesNotThrow(
+                ()-> game.addPlayer("Aldo")
+        );
+        assertThrows(FullGameException.class,
+                ()->game.addPlayer("Giovanni"));
+        assertEquals(1,game.getPlayers().size());
+    }
+    @Test
+    public void FullGameTestMulti(){
+        game=new Multiplayer();
+        assertDoesNotThrow(
+                ()-> {
+                    game.addPlayer("Aldo");
+                    game.addPlayer("Giovanni");
+                    game.addPlayer("Giacomo");
+                    game.addPlayer("Giuseppe");
+                }
+        );
+        assertThrows(FullGameException.class,
+                ()->game.addPlayer("Giovanni"));
+        assertEquals(4,game.getPlayers().size());
     }
 }

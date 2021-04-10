@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PopeFavorState;
+import it.polimi.ingsw.model.exceptions.FullGameException;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -9,7 +10,7 @@ class MultiplayerTest {
     Game game;
 
     @Test
-    public void TestListPlayers() {
+    public void TestListPlayers() throws FullGameException {
         game = new Multiplayer();
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");
@@ -20,7 +21,7 @@ class MultiplayerTest {
     }
 
     @Test
-    public void TestNotifyPopeFavor() {
+    public void TestNotifyPopeFavor() throws FullGameException {
         game=new Multiplayer();
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");

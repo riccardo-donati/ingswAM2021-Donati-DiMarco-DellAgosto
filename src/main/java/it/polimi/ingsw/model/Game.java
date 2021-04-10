@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.FullGameException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.model.interfaces.Token;
@@ -127,7 +128,8 @@ public abstract class Game implements BoardObserver {
      * addition of a new player into the game
      * @param nickname of the new player
      */
-    public void addPlayer(String nickname) {
+    public void addPlayer(String nickname) throws FullGameException {
+        if(players.size()==4) throw new FullGameException();
         if(nickname==""){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -241,5 +243,7 @@ public abstract class Game implements BoardObserver {
     }
 
     public FaithPath getBlackCrossFaithPath(){return null;}
+    public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
+
 
 }

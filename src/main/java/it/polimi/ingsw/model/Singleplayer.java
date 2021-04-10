@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.PopeFavorState;
+import it.polimi.ingsw.model.exceptions.FullGameException;
 import it.polimi.ingsw.model.interfaces.Token;
 
 import java.io.FileNotFoundException;
@@ -84,4 +85,33 @@ public class Singleplayer extends Game {
     }
     @Override
     public FaithPath getBlackCrossFaithPath(){return blackFaithPath;}
+
+
+    /**
+     * before applying the super method check if the size of players is 1
+     * @param nick of the player
+     * @throws FullGameException if there is already a player
+     */
+    @Override
+    public void addPlayer(String nick) throws FullGameException {
+        if(getPlayers().size()==1){
+            throw new FullGameException();
+        }
+        super.addPlayer(nick);
+    }
+
+    /**
+     * draw a token from the stack and execute the related action
+     */
+    @Override
+    public void nextTurn(){
+        //controllo se non ci sono risorse in pending/picked up????
+        Token t=tokenStack.pop();
+        t.doAction(this);
+    }
+
+    @Override
+    public void endGame(){
+        getCurrPlayer();
+    }
 }
