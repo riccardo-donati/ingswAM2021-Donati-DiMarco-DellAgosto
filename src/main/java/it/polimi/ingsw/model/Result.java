@@ -15,18 +15,24 @@ public class Result {
     public String checkWinner(){
         int max=0;
         String win="";
-        for (Map.Entry<String, Integer> entry : results.entrySet()) {
-            if(entry.getValue()>max){
-                win=entry.getKey();
-                max=entry.getValue();
+        for (String s : results.keySet()) {
+            if(results.get(s) > max){
+                win = s;
+                max = results.get(s);
             }
         }
         return win;
     }
+
     public void setWinner(String winner){
         this.winner=winner;
-
+        //used for debugging
+        for(String s : results.keySet()){
+            System.out.println("Player: "+ s + "\nScore: "+ results.get(s)+"\n");
+        }
+        System.out.println("The winner is: " + winner + "\nWith a score of: "+ results.get(winner));
     }
+
     public void addToResults(String nickname,Integer points){
         results.put(nickname,points);
     }
