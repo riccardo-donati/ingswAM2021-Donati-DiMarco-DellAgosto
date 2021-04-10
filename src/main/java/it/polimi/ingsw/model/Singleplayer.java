@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.exceptions.FullGameException;
 import it.polimi.ingsw.model.interfaces.Token;
@@ -11,10 +12,7 @@ import it.polimi.ingsw.model.interfaces.Token;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Stack;
+import java.util.*;
 
 public class Singleplayer extends Game {
     private Stack<Token> tokenStack;
@@ -109,9 +107,63 @@ public class Singleplayer extends Game {
         Token t=tokenStack.pop();
         t.doAction(this);
     }
+    /**
+     * discard the top card of the passed color from the matrix (starting with row 0->1->2)
+     * if the 3 stacks are empty -> trigger ENDGAME
+     * @param toDiscard is the Color of the card we want to discard
+     */
+    @Override
+    public void discardColor(Color toDiscard){
+        int col=toDiscard.ordinal();
+        int r=0;
+        DevelopmentCard dc;
+        try {
+            dc = getCardMatrix()[r][col].pop();
+        }catch (EmptyStackException e1){
+            r++;
+            try {
+                dc = getCardMatrix()[r][col].pop();
+            }catch (EmptyStackException e2){
+                r++;
+                try {
+                    dc = getCardMatrix()[r][col].pop();
+                    if(getCardMatrix()[r][col].size()==0){
+                        endGame();
+                    }
+
+                }catch (EmptyStackException e3){
+                    e3.printStackTrace();
+                }
+            }
+        }
+    }
 
     @Override
-    public void endGame(){
-        getCurrPlayer();
+    public Result endGame(){
+        boolean lose=false;
+        int cont=0;
+        for(int c=0;c<COL;c++){
+            cont=0;
+            for(int r=0;r<ROW;r++){
+                if(getCardMatrix()[r][c].size()==0){
+                    cont++;
+                }
+            }
+            if(cont==3){
+                lose=true;
+                break;
+            }
+        }
+        if(blackFaithPath.getPosition()==24){
+            lose=true;
+        }
+        Result result=super.endGame();
+        if(lose){
+            result.setWinner("Lorenzo");
+        }else{
+            result.setWinner(result.checkWinner());
+        }
+        return result;
     }
+
 }

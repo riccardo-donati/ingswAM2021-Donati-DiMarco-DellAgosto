@@ -17,8 +17,8 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public abstract class Game implements BoardObserver {
-    private static final Integer ROW=3;
-    private static final Integer COL=4;
+    protected static final Integer ROW=3;
+    protected static final Integer COL=4;
 
     private Market market;
     private Stack<DevelopmentCard>[][] cardMatrix;
@@ -129,7 +129,7 @@ public abstract class Game implements BoardObserver {
      * @param nickname of the new player
      */
     public void addPlayer(String nickname) throws FullGameException {
-        if(players.size()==4) throw new FullGameException();
+
         if(nickname==""){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -147,38 +147,14 @@ public abstract class Game implements BoardObserver {
 
     }
 
-    /**
-     * discard the top card of the passed color from the matrix (starting with row 0->1->2)
-     * if the 3 stacks are empty -> trigger ENDGAME
-     * @param toDiscard is the Color of the card we want to discard
-     */
-    public void discardColor(Color toDiscard){
-        int col=toDiscard.ordinal();
-        int r=0;
-        DevelopmentCard dc;
-        try {
-            dc = cardMatrix[r][col].pop();
-        }catch (EmptyStackException e1){
-            r++;
-            try {
-                dc = cardMatrix[r][col].pop();
-            }catch (EmptyStackException e2){
-                r++;
-                try {
-                    dc = cardMatrix[r][col].pop();
-                    if(cardMatrix[r][col].size()==0){
-                        endGame();
-                    }
+    public void discardColor(Color toDiscard){ }
 
-                }catch (EmptyStackException e3){
-                    e3.printStackTrace();
-                }
-            }
+    public Result endGame(){
+        Result result=new Result();
+        for(Player p : players){
+            result.addToResults(p.getNickname(),p.getPoints());//countPoints;
         }
-    }
-
-    public void endGame(){
-        System.out.println("ENDGAME");
+        return result;
     }
 
     public void nextTurn(){}
