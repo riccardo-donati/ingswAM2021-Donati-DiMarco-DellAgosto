@@ -203,7 +203,7 @@ class PlayerTest {
     }
 
     @Test
-    public void Test1PickUpResource() throws FullGameException, FullSpaceException, IllegalResourceException {
+    public void Test1PickUpResourceWarehouse() throws FullGameException, FullSpaceException, IllegalResourceException {
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
@@ -216,8 +216,8 @@ class PlayerTest {
         int nres=player.getBoard().getWarehouse().countWarehouseResource();
         assertDoesNotThrow(
                 ()->{
-                    player.pickUpResource(2);
-                    player.pickUpResource(3);
+                    player.pickUpResourceFromWarehouse(2);
+                    player.pickUpResourceFromWarehouse(3);
                 }
         );
         assertEquals(nres-2,player.getBoard().getWarehouse().countWarehouseResource());
@@ -228,7 +228,7 @@ class PlayerTest {
         player.getBoard().getWarehouse().visualize();
     }
     @Test
-    public void Test2PickUpResource() throws IllegalResourceException, FullSpaceException {
+    public void Test2PickUpResourceWarehouse() throws IllegalResourceException, FullSpaceException {
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
@@ -244,14 +244,14 @@ class PlayerTest {
         player.getBoard().getWarehouse().visualize();
         assertDoesNotThrow(
                 ()->{
-                    player.pickUpResource(2);
-                    player.pickUpResource(4);
-                    player.pickUpResource(4);
-                    player.pickUpResource(1);
+                    player.pickUpResourceFromWarehouse(2);
+                    player.pickUpResourceFromWarehouse(4);
+                    player.pickUpResourceFromWarehouse(4);
+                    player.pickUpResourceFromWarehouse(1);
                 }
         );
         assertThrows(ResourcesNotAvailableException.class,
-                ()->player.pickUpResource(3));
+                ()->player.pickUpResourceFromWarehouse(3));
         assertEquals(nres-4,player.getBoard().getWarehouse().countWarehouseResource());
         player.getBoard().getWarehouse().visualize();
 
@@ -259,4 +259,81 @@ class PlayerTest {
         assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
         player.getBoard().getWarehouse().visualize();
     }
+    @Test
+    public void Test1PickUpResourceStrongbox() throws IllegalResourceException, ResourcesNotAvailableException {
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->player.pickUpResourceFromStrongbox(ResourceType.VIOLET) );
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+
+        player.revertPickUp();
+        assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+    }
+    @Test
+    public void TestPickUpResourceMixed() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        int nres=player.getBoard().getWarehouse().countWarehouseResource();
+
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromWarehouse(1);
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->{
+                    player.pickUpResourceFromWarehouse(1);
+                    player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+                });
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        player.pickUpResourceFromWarehouse(4);
+        player.pickUpResourceFromWarehouse(4);
+
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+        assertEquals(nres-3,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
+
+        player.revertPickUp();
+        assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+        assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
+        player.getBoard().getWarehouse().visualize();
+    }
+
+
 }

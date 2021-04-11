@@ -179,4 +179,10 @@ public class Board {
             throw new IllegalResourceException();
         strongbox.replace(r,strongbox.get(r)+1);
     }
+    public ResourceType removeResourceFromStrongbox(ResourceType r){
+        if(strongbox.containsKey(r) && strongbox.get(r)>0){
+            strongbox.replace(r,strongbox.get(r)-1);
+            return r;
+        }else return  ResourceType.EMPTY;
+    }
 }

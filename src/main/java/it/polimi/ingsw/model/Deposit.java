@@ -6,7 +6,6 @@ import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
 
 public class Deposit {
-    private static int ndeposit=0;
     private Integer id;
     private Integer dim;
     private ResourceType type;
@@ -15,11 +14,10 @@ public class Deposit {
     /**
      * initialize the array called space with EMPTY resources
      */
-    public Deposit(ResourceType res,Integer dim) throws IllegalResourceException {
+    public Deposit(Integer id,ResourceType res,Integer dim) throws IllegalResourceException {
         if(dim<0) throw new NegativeArraySizeException();
         if(res==ResourceType.WHITE || res==ResourceType.UNKNOWN) throw new IllegalResourceException();
-        ndeposit++;
-        this.id=ndeposit;
+        this.id=id;
         this.type=res;
         this.dim=dim;
         space=new ResourceType[dim];

@@ -12,12 +12,7 @@ import java.time.Year;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WarehouseTest {
-    Warehouse wh;
-
-    @BeforeEach
-    public void initialize(){
-        wh=new Warehouse();
-    }
+    Warehouse wh=new Warehouse();;
 
     @Test
     public void TestAddIllegalResource(){
@@ -347,6 +342,16 @@ class WarehouseTest {
         wh.removeResourceFromDeposit(4);
         assertThrows(IllegalResourceException.class,
                 ()-> wh.addResourceInDeposit(4,ResourceType.YELLOW));
+        wh.visualize();
+
+    }
+    @Test
+    public void TestSameResourceMain() throws IllegalResourceException, FullSpaceException {
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInDeposit(1,ResourceType.YELLOW);
+        assertThrows(IllegalResourceException.class,
+                ()->wh.addResourceInDeposit(2,ResourceType.YELLOW));
         wh.visualize();
 
     }

@@ -18,6 +18,8 @@ public class Warehouse {
     private Map<ResourceType,Integer> pendingResources;
     private List<BoardObserver> observers=new ArrayList<>();
 
+    private int nDeposit=0;
+
     /**
      * initializing the maindepot with empty resourcetypes and
      * the map with the 4 resourcetype we want
@@ -25,9 +27,13 @@ public class Warehouse {
     public Warehouse(){
         maindepot=new ArrayList<>();
         try {
-            maindepot.add(new Deposit(ResourceType.EMPTY,1));
-            maindepot.add(new Deposit(ResourceType.EMPTY,2));
-            maindepot.add(new Deposit(ResourceType.EMPTY,3));
+            nDeposit++;
+            maindepot.add(new Deposit(nDeposit,ResourceType.EMPTY,1));
+            nDeposit++;
+            maindepot.add(new Deposit(nDeposit,ResourceType.EMPTY,2));
+            nDeposit++;
+            maindepot.add(new Deposit(nDeposit,ResourceType.EMPTY,3));
+
         } catch (IllegalResourceException e) {
             e.printStackTrace();
         }
@@ -109,7 +115,8 @@ public class Warehouse {
         if(res==ResourceType.RED || res==ResourceType.EMPTY || res==ResourceType.UNKNOWN || res==ResourceType.WHITE){
             throw new IllegalResourceException();
         }else{
-            extradepots.add(new Deposit(res,2));
+            nDeposit++;
+            extradepots.add(new Deposit(nDeposit,res,2));
         }
     }
 
@@ -131,6 +138,11 @@ public class Warehouse {
         if(n==null || res==ResourceType.WHITE)throw new IllegalResourceException("No such resource in pending");
         if(n>0) {
             if (id <= 3) {
+                for(Deposit d : maindepot){
+                    if(d.getType()==res && !d.getId().equals(id)){
+                        throw new IllegalResourceException();    //a shelf already has this resource type as a type
+                    }
+                }
                 maindepot.get(id - 1).addResource(res);
             } else {
                 extradepots.get(id - 4).addResource(res);

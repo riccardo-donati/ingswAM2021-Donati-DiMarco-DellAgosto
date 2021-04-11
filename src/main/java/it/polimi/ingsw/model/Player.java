@@ -11,7 +11,6 @@ public class Player {
 
     private String nickname;
     private boolean first;
-    private Integer points;
     private Board board;
 
     private List<LeaderCard> leadersInHand = new ArrayList<>();
@@ -28,7 +27,7 @@ public class Player {
      * @param id is the id of the deposit
      * @throws ResourcesNotAvailableException if the resource isn't available
      */
-    public void pickUpResource(Integer id) throws ResourcesNotAvailableException {
+    public void pickUpResourceFromWarehouse(Integer id) throws ResourcesNotAvailableException {
         Deposit d;
         try {
             if (id <= 3) {
@@ -54,30 +53,49 @@ public class Player {
         }else throw new ResourcesNotAvailableException();
     }
 
+    public void pickUpResourceFromStrongbox(ResourceType res) throws ResourcesNotAvailableException {
+        ResourceType removed=getBoard().removeResourceFromStrongbox(res);
+        if(removed!=ResourceType.EMPTY){
+            pickedResource.get(0).replace(removed,pickedResource.get(0).get(removed)+1);
+        }else throw new ResourcesNotAvailableException();
+    }
     /**
      * deposit back all the resources in the pickedUp map
      */
     public void revertPickUp(){
         for (Map.Entry<Integer, Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
-            Deposit d;
-            if(entry.getKey()>3) {
-                d=getBoard().getWarehouse().getExtradepots().get(entry.getKey()-4);
-            } else {
-                d = getBoard().getWarehouse().getMaindepot().get(entry.getKey() - 1);
-            }
-            for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
-                for(int i=0;i<entry2.getValue();i++){
+            if(entry.getKey()==0){              //strongbox
+                for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
                     try {
-                        d.addResource(entry2.getKey());
-
+                        for(int i=0;i<entry2.getValue();i++)
+                        getBoard().addResourceInStrongbox(entry2.getKey());
                     } catch (IllegalResourceException e) {
                         e.printStackTrace();
                         System.out.println("Impossible Revert!");
                         return;
-                    } catch (FullSpaceException e) {
-                        e.printStackTrace();
-                        System.out.println("Impossible Revert!");
-                        return;
+                    }
+                }
+            }else {                             //warehouse
+                Deposit d;
+                if (entry.getKey() > 3) {
+                    d = getBoard().getWarehouse().getExtradepots().get(entry.getKey() - 4);
+                } else {
+                    d = getBoard().getWarehouse().getMaindepot().get(entry.getKey() - 1);
+                }
+                for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
+                    for (int i = 0; i < entry2.getValue(); i++) {
+                        try {
+                            d.addResource(entry2.getKey());
+
+                        } catch (IllegalResourceException e) {
+                            e.printStackTrace();
+                            System.out.println("Impossible Revert!");
+                            return;
+                        } catch (FullSpaceException e) {
+                            e.printStackTrace();
+                            System.out.println("Impossible Revert!");
+                            return;
+                        }
                     }
                 }
             }
@@ -88,17 +106,17 @@ public class Player {
      * initialize the pickedResource Map
      */
     public void initializePickedResource(){
-        //freestyle
+        pickedResource.put(0,new HashMap<>()); //strongbox
         pickedResource.put(1,new HashMap<>());
         pickedResource.put(2,new HashMap<>());
         pickedResource.put(3,new HashMap<>());
-        for(int i=1;i<4;i++){
+        for(int i=0;i<4;i++){
             pickedResource.get(i).put(ResourceType.GREY,0);
             pickedResource.get(i).put(ResourceType.BLUE,0);
             pickedResource.get(i).put(ResourceType.VIOLET,0);
             pickedResource.get(i).put(ResourceType.YELLOW,0);
         }
-        //da aggiungere ogni volta che aggiungo extradeposito
+
     }
     /**
      * used for testing purposes
