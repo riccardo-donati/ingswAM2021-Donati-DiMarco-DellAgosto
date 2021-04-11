@@ -16,6 +16,11 @@ public class Production {
         output=new HashMap<>();
         selected=false;
     }
+    public Production(Map<ResourceType,Integer> input,Map<ResourceType,Integer> output){
+        this.input=input;
+        this.output=output;
+        selected=false;
+    }
 
     /**
      * input get
@@ -46,7 +51,7 @@ public class Production {
      */
     public void toggleSelected(){
         if(selected)
-            selected=!selected;
+            selected=false;
         else{
             if(checkValidity()){
                 selected=!selected;

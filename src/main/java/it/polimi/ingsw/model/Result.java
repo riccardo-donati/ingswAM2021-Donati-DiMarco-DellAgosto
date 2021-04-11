@@ -12,6 +12,11 @@ public class Result {
         this.results=new HashMap<>();
 
     }
+
+    /**
+     * Check the provisional winner on the points basis
+     * @return the nickname of the provisional winner
+     */
     public String checkWinner(){
         int max=0;
         String win="";
@@ -24,6 +29,10 @@ public class Result {
         return win;
     }
 
+    /**
+     * Set the winner of the game
+     * @param winner is the nickname of the winner
+     */
     public void setWinner(String winner){
         this.winner=winner;
         //used for debugging

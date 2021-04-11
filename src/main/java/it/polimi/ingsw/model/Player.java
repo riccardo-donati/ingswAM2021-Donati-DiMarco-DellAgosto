@@ -62,20 +62,20 @@ public class Player {
     /**
      * deposit back all the resources in the pickedUp map
      */
-    public void revertPickUp(){
+    public void revertPickUp() {
         for (Map.Entry<Integer, Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
-            if(entry.getKey()==0){              //strongbox
+            if (entry.getKey() == 0) {              //strongbox
                 for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
                     try {
-                        for(int i=0;i<entry2.getValue();i++)
-                        getBoard().addResourceInStrongbox(entry2.getKey());
+                        for (int i = 0; i < entry2.getValue(); i++)
+                            getBoard().addResourceInStrongbox(entry2.getKey());
                     } catch (IllegalResourceException e) {
                         e.printStackTrace();
                         System.out.println("Impossible Revert!");
                         return;
                     }
                 }
-            }else {                             //warehouse
+            } else {                             //warehouse
                 Deposit d;
                 if (entry.getKey() > 3) {
                     d = getBoard().getWarehouse().getExtradepots().get(entry.getKey() - 4);
@@ -102,6 +102,17 @@ public class Player {
         }
     }
 
+    /**
+     * clear the pickedResource map
+     */
+    public void clearPickedUp(){
+        for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
+            entry.getValue().replace(ResourceType.GREY,0);
+            entry.getValue().replace(ResourceType.BLUE,0);
+            entry.getValue().replace(ResourceType.VIOLET,0);
+            entry.getValue().replace(ResourceType.YELLOW,0);
+        }
+    }
     /**
      * initialize the pickedResource Map
      */
@@ -288,16 +299,87 @@ public class Player {
             production.toggleSelected();
         }
 
-        Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
+        /*Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
         mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
         for (ResourceType resourceType : input.keySet())
             if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < input.get(resourceType))
                 throw new ResourcesNotAvailableException();
-
-        // remove input from warehouse
+        */
+        Production bigProd=new Production(input,output);
+        try{
+            checkTotalResourcesForProduction(bigProd);
+        }catch (ResourcesNotAvailableException e){
+            System.out.println("KO");
+            return;
+        }
+        try {
+            checkPickedResourcesForProduction(bigProd);
+        }catch (ResourcesNotAvailableException e){
+            System.out.println("KO");
+            revertPickUp();
+            return;
+        }catch (TooManyResourcesException e2){
+            System.out.println("Reselect the Resources");
+            revertPickUp();
+            return;
+        }
+        // remove input from pickedResource
+        clearPickedUp();
         board.depositInStrongbox(output);
     }
+    //----------------------------------------------------
+    public void checkPickedResourcesForProduction(Production p) throws ResourcesNotAvailableException, TooManyResourcesException {
+        Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
+        for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
+            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+        }
+        for (ResourceType resourceType : p.getInput().keySet()) {
+            if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
+                throw new ResourcesNotAvailableException();
+            if (resourcesAvailable.get(resourceType)>p.getInput().get(resourceType)){
+                throw new TooManyResourcesException();
+            }
+        }
+    }
+    public void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
+        Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
+        mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
+        //add also the picked up resources
+        for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
+            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+        }
+        for (ResourceType resourceType : p.getInput().keySet())
+            if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
+                throw new ResourcesNotAvailableException();
+    }
+    public void checkPickedResourceForDevelopmentCard(DevelopmentCard d) throws ResourcesNotAvailableException, TooManyResourcesException {
+        Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
+        for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
+            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+        }
+        for(ResourceRequirement rs : d.getCost()){
+            if(resourcesAvailable.get(rs.getResource())<rs.getQuantity()){
+                throw new ResourcesNotAvailableException();
+            }
+            if (resourcesAvailable.get(rs.getResource())>rs.getQuantity()){
+                throw new TooManyResourcesException();
+            }
+        }
+    }
+    public void buyCard(DevelopmentCard d){
+        try {
+            checkPickedResourceForDevelopmentCard(d);
+        }catch (ResourcesNotAvailableException e){
+            e.printStackTrace();
+            System.out.println("ko");
+            return;
+        }catch (TooManyResourcesException e2){
+            e2.printStackTrace();
+            System.out.println("");
+            return;
+        }
 
+    }
     //----------------------------------------------------
 
     /**
