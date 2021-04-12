@@ -5,10 +5,8 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.time.Year;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -334,6 +332,286 @@ class PlayerTest {
         assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
         player.getBoard().getWarehouse().visualize();
     }
+
+
+    @Test
+    public void TestBuyLv1() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        DevelopmentCard d=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        assertDoesNotThrow(
+                ()->player.buyCard(d,1)
+        );
+        assertEquals(d,player.getBoard().getSlots().get(1).get(0));
+    }
+    @Test
+    public void TestIllegalBuyLv1() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        DevelopmentCard d=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        player.getBoard().getSlots().get(1).push(d);
+        assertThrows(IllegalSlotException.class,
+                ()->player.buyCard(d,1)
+        );
+    }
+    @Test
+    public void TestBuyLv2() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+        DevelopmentCard d2=new DevelopmentCard(cost,2,Color.VIOLET,new Production(),10);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        player.getBoard().getSlots().get(1).push(d1);
+        assertThrows(IllegalSlotException.class,
+                ()-> player.buyCard(d2,2));
+        assertDoesNotThrow(
+                ()-> player.buyCard(d2,1));
+        assertEquals(d2,player.getBoard().getSlots().get(1).get(1));
+    }
+    @Test
+    public void TestBuyLv3() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        DevelopmentCard d11=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+        DevelopmentCard d12=new DevelopmentCard(cost,1,Color.BLUE,new Production(),5);
+        DevelopmentCard d2=new DevelopmentCard(cost,2,Color.VIOLET,new Production(),10);
+        DevelopmentCard d3=new DevelopmentCard(cost,3,Color.YELLOW,new Production(),15);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        assertThrows(IllegalSlotException.class,
+                ()->player.buyCard(d3,1));
+        player.getBoard().getSlots().get(1).push(d11);
+        assertThrows(IllegalSlotException.class,
+                ()->player.buyCard(d3,1));
+        player.getBoard().getSlots().get(3).push(d12);
+        player.getBoard().getSlots().get(3).push(d2);
+        assertDoesNotThrow(
+                ()->player.buyCard(d3,3));
+        assertEquals(d3,player.getBoard().getSlots().get(3).get(2));
+        assertEquals(d3,player.getBoard().getSlots().get(3).pop());
+    }
+    @Test
+    public void TestBuyCostTooFew() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.VIOLET,1));
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,1));
+        cost.add(new ResourceRequirement(ResourceType.BLUE,1));
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.BLUE);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.VIOLET);
+
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->player.buyCard(d1,1));
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(4);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertDoesNotThrow(
+                ()->player.buyCard(d1,1));
+        assertEquals(d1,player.getBoard().getSlots().get(1).get(0));
+    }
+
+    @Test
+    public void TestBuyCostTooMany1() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.VIOLET,1));
+        cost.add(new ResourceRequirement(ResourceType.YELLOW,1));
+        cost.add(new ResourceRequirement(ResourceType.BLUE,1));
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.BLUE);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.VIOLET);
+
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(4);
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertThrows(TooManyResourcesException.class,
+                ()->player.buyCard(d1,3));
+        player.revertPickUp();
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(4);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertDoesNotThrow(
+                ()->player.buyCard(d1,3));
+        assertEquals(d1,player.getBoard().getSlots().get(3).get(0));
+    }
+    @Test
+    public void TestBuyCostTooMany2() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.GREY,2));
+        cost.add(new ResourceRequirement(ResourceType.VIOLET,2));
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,new Production(),5);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+        player.getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.YELLOW);
+
+        player.getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.VIOLET);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.VIOLET);
+        player.getBoard().addResourceInStrongbox(ResourceType.VIOLET);
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(4);
+        player.pickUpResourceFromWarehouse(1);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertThrows(TooManyResourcesException.class,
+                ()->player.buyCard(d1,3));
+        player.revertPickUp();
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertDoesNotThrow(
+                ()->player.buyCard(d1,3));
+        assertEquals(d1,player.getBoard().getSlots().get(3).get(0));
+    }
+    @Test
+    public void TestPickedForProd() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+        Production p=new Production();
+        p.addInput(ResourceType.YELLOW,2);
+        p.addInput(ResourceType.BLUE,1);
+        p.addOutput(ResourceType.RED,3);
+
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+
+        player.getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        player.getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.getBoard().addResourceInStrongbox(ResourceType.VIOLET);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->player.checkPickedResourcesForProduction(p));
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(3);
+        assertThrows(TooManyResourcesException.class,
+                ()->player.checkPickedResourcesForProduction(p));
+        player.revertPickUp();
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromWarehouse(2);
+        player.pickUpResourceFromWarehouse(3);
+        assertThrows(TooManyResourcesException.class,
+                ()->player.checkPickedResourcesForProduction(p));
+        player.revertPickUp();
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromWarehouse(3);
+        assertDoesNotThrow(
+                ()->player.checkPickedResourcesForProduction(p));
+    }
+
 
 
 }

@@ -100,6 +100,7 @@ public class Player {
                 }
             }
         }
+        clearPickedUp();
     }
 
     /**
@@ -270,9 +271,11 @@ public class Player {
      * checks every available production, creating a collective map of all inputs and outputs of selected productions,
      * then if the resources in the map input are available, passes the map output to the strongbox to be added,
      * and passes the map input to the board to be removed
-     * @throws ResourcesNotAvailableException when the resource in the map input are not available
+     * @throws ResourcesNotAvailableException if the resources in the map input are not available
+     * @throws IllegalResourceException if the output contains illegal resources
+     * @throws TooManyResourcesException if the resources in pickedResources are too many for the input of the big production
      */
-    public void activateProductions() throws ResourcesNotAvailableException {
+    public void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException {
         Map<ResourceType, Integer> input = new HashMap<>();
         Map<ResourceType, Integer> output = new HashMap<>();
         for (Production production : extraProductions) {
@@ -298,49 +301,62 @@ public class Player {
             mergeResourceTypeMaps(output, production.getOutput());
             production.toggleSelected();
         }
-
-        /*Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
-        mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
-        for (ResourceType resourceType : input.keySet())
-            if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < input.get(resourceType))
-                throw new ResourcesNotAvailableException();
-        */
         Production bigProd=new Production(input,output);
-        try{
-            checkTotalResourcesForProduction(bigProd);
-        }catch (ResourcesNotAvailableException e){
-            System.out.println("KO");
-            return;
-        }
-        try {
-            checkPickedResourcesForProduction(bigProd);
-        }catch (ResourcesNotAvailableException e){
-            System.out.println("KO");
-            revertPickUp();
-            return;
-        }catch (TooManyResourcesException e2){
-            System.out.println("Reselect the Resources");
-            revertPickUp();
-            return;
-        }
-        // remove input from pickedResource
+        checkPickedResourcesForProduction(bigProd);
+
         clearPickedUp();
-        board.depositInStrongbox(output);
+        elaborateOutput(output);
     }
     //----------------------------------------------------
+
+    /**
+     * Deposit in strongbox the normal resources and convert in faith the Red resources
+     * @param output is output of a production
+     */
+    public void elaborateOutput(Map<ResourceType,Integer> output) throws IllegalResourceException {
+        if(output.containsKey(ResourceType.UNKNOWN) || output.containsKey(ResourceType.WHITE) || output.containsKey(ResourceType.EMPTY)){
+            throw new IllegalResourceException();
+        }
+        int faithProgression=0;
+        if(output.containsKey(ResourceType.RED)) {
+            faithProgression = output.get(ResourceType.RED);
+            output.replace(ResourceType.RED,0);
+        }
+        board.depositInStrongbox(output);
+        board.getFaithPath().addToPosition(faithProgression);
+    }
+    /**
+     * check in pickedResource map if you have enough resources for activating a certain production
+     * @param p is the production
+     * @throws ResourcesNotAvailableException if you have picked up less resources than the needed
+     * @throws TooManyResourcesException if you have picked up more resources than the needed
+     */
     public void checkPickedResourcesForProduction(Production p) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
             mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
         }
+        int totResProd=0;
+        int totResPick=0;
         for (ResourceType resourceType : p.getInput().keySet()) {
+            totResProd+=p.getInput().get(resourceType);
             if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
                 throw new ResourcesNotAvailableException();
             if (resourcesAvailable.get(resourceType)>p.getInput().get(resourceType)){
                 throw new TooManyResourcesException();
             }
         }
+        for (Map.Entry<ResourceType, Integer> entry : resourcesAvailable.entrySet()) {
+            totResPick+=entry.getValue();
+        }
+        if(totResPick!=totResProd) throw new TooManyResourcesException();
     }
+
+    /**
+     * check in all the sources if you have enough resources for activating a certain production
+     * @param p is the production
+     * @throws ResourcesNotAvailableException if you have less resources than the needed
+     */
     public void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
         Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
         mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
@@ -352,12 +368,22 @@ public class Player {
             if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
                 throw new ResourcesNotAvailableException();
     }
+
+    /**
+     * check in pickedResource map if you have enough resources for buying a certain davelopment card
+     * @param d is the development card
+     * @throws ResourcesNotAvailableException if you have picked up less resources than the needed
+     * @throws TooManyResourcesException if you have picked up more resources than the needed
+     */
     public void checkPickedResourceForDevelopmentCard(DevelopmentCard d) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
             mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
         }
+        int totResReq=0;
+        int totResPick=0;
         for(ResourceRequirement rs : d.getCost()){
+            totResReq+=rs.getQuantity();
             if(resourcesAvailable.get(rs.getResource())<rs.getQuantity()){
                 throw new ResourcesNotAvailableException();
             }
@@ -365,20 +391,37 @@ public class Player {
                 throw new TooManyResourcesException();
             }
         }
-    }
-    public void buyCard(DevelopmentCard d){
-        try {
-            checkPickedResourceForDevelopmentCard(d);
-        }catch (ResourcesNotAvailableException e){
-            e.printStackTrace();
-            System.out.println("ko");
-            return;
-        }catch (TooManyResourcesException e2){
-            e2.printStackTrace();
-            System.out.println("");
-            return;
+        //check if there are other resources not considered
+        for (Map.Entry<ResourceType, Integer> entry : resourcesAvailable.entrySet()) {
+            totResPick+=entry.getValue();
         }
+        if(totResPick!=totResReq) throw new TooManyResourcesException();
+    }
 
+    /**
+     * buy the selected development card and push it on the board
+     * @param d is the development card
+     * @param slot is the id of the slots map on the board
+     * @throws IllegalSlotException if you can't put the card in that slot
+     */
+    public void buyCard(DevelopmentCard d,Integer slot) throws IllegalSlotException, TooManyResourcesException, ResourcesNotAvailableException {
+
+        checkPickedResourceForDevelopmentCard(d);
+        if(d.getLevel()==1){
+            if(getBoard().getSlots().get(slot).size()>0){
+                throw new IllegalSlotException();
+            }
+        }else if(d.getLevel()==2){
+            if(getBoard().getSlots().get(slot).size()!=1 || getBoard().getSlots().get(slot).get(0).getLevel()!=1){
+                throw new IllegalSlotException();
+            }
+        }else if(d.getLevel()==3){
+            if(getBoard().getSlots().get(slot).size()!=2 || getBoard().getSlots().get(slot).get(1).getLevel()!=2 || getBoard().getSlots().get(slot).get(0).getLevel()!=1){
+                throw new IllegalSlotException();
+            }
+        }
+        getBoard().getSlots().get(slot).push(d);
+        clearPickedUp();
     }
     //----------------------------------------------------
 
@@ -392,4 +435,5 @@ public class Player {
             getBoard().getWarehouse().replaceWhiteFromPending(res,n);
         }else throw new IllegalResourceException();
     }
+
 }
