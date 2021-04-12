@@ -1,13 +1,11 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.InvalidPushException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
-import java.io.InvalidObjectException;
 import java.util.*;
 
 public class Board {
@@ -100,12 +98,6 @@ public class Board {
         }
     }
 
-    /**
-     * picks Resources from any storage specified by the variable Source
-     * @param res the type of the chosen resource
-     * @param source where is it taken from
-     */
-    public void pickUpResource(ResourceType res, Source source){}
 
     /**
      * counts all the points of a player's board, from cards to faith path

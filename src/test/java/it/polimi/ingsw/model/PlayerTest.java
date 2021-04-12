@@ -612,6 +612,143 @@ class PlayerTest {
                 ()->player.checkPickedResourcesForProduction(p));
     }
 
+    @Test
+    public void TestActivate1CardProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownFindException {
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        Production p=new Production();
+        p.addInput(ResourceType.GREY,1);
+        p.addInput(ResourceType.BLUE,1);
+        p.addOutput(ResourceType.RED,2);
+        p.addOutput(ResourceType.YELLOW,3);
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,p,5);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.buyCard(d1,1);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+
+        player.getBoard().getSlots().get(1).get(0).getProd().toggleSelected();
+
+        player.activateProductions();
+        assertEquals(2,player.getBoard().getFaithPath().getPosition());
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(3,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+
+    }
+    @Test
+    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
+        assertThrows(UnknownFindException.class,
+                ()->player.getBoard().getBaseProduction().toggleSelected());
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.GREY);
+        assertDoesNotThrow(
+                ()->player.getBoard().getBaseProduction().toggleSelected());
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        player.activateProductions();
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+
+    }
+    @Test
+    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
+        Production p=new Production();
+        p.addInput(ResourceType.YELLOW,1);
+        p.addOutput(ResourceType.RED,1);
+        p.addOutput(ResourceType.UNKNOWN,1);
+        player.addExtraProduction(p);
+        assertThrows(UnknownFindException.class,
+                ()->player.getExtraProductions().get(0).toggleSelected());
+        player.substituteUnknownInOutputProduction(player.getExtraProductions().get(0),ResourceType.BLUE);
+        assertDoesNotThrow(
+                ()->player.getExtraProductions().get(0).toggleSelected());
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        player.activateProductions();
+        assertEquals(1,player.getBoard().getFaithPath().getPosition());
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+    }
+    @Test
+    public void TestActivateBaseAndCardAndExtraProd() throws ResourcesNotAvailableException, IllegalResourceException, UnknownFindException, TooManyResourcesException, IllegalSlotException, UnknownNotFindException {
+        //----Card----
+        List<ResourceRequirement> cost=new ArrayList<>();
+        cost.add(new ResourceRequirement(ResourceType.GREY,1));
+        Production p=new Production();
+        p.addInput(ResourceType.BLUE,1);
+        p.addInput(ResourceType.BLUE,1);
+        p.addOutput(ResourceType.RED,2);
+        p.addOutput(ResourceType.VIOLET,3);
+        DevelopmentCard d1=new DevelopmentCard(cost,1,Color.GREEN,p,5);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.GREY);
+        player.pickUpResourceFromStrongbox(ResourceType.GREY);
+        player.buyCard(d1,1);
+
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+
+        player.getBoard().getSlots().get(1).get(0).getProd().toggleSelected();
+        //----Base----
+        assertThrows(UnknownFindException.class,
+                ()->player.getBoard().getBaseProduction().toggleSelected());
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.BLUE);
+        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.GREY);
+        assertDoesNotThrow(
+                ()->player.getBoard().getBaseProduction().toggleSelected());
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+
+        //----Extra----
+        Production p2=new Production();
+        p2.addInput(ResourceType.YELLOW,1);
+        p2.addOutput(ResourceType.RED,1);
+        p2.addOutput(ResourceType.UNKNOWN,1);
+        player.addExtraProduction(p2);
+        assertThrows(UnknownFindException.class,
+                ()->player.getExtraProductions().get(0).toggleSelected());
+        player.substituteUnknownInOutputProduction(player.getExtraProductions().get(0),ResourceType.BLUE);
+        assertDoesNotThrow(
+                ()->player.getExtraProductions().get(0).toggleSelected());
+
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+
+        player.activateProductions();
+        assertEquals(3,player.getBoard().getFaithPath().getPosition());
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
+        assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.GREY));
+        assertEquals(3,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
+
+    }
+
 
 
 }

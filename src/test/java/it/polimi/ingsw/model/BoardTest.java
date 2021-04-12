@@ -83,7 +83,7 @@ class BoardTest {
     }
 
     @Test
-    public void TestBaseProd() throws ResourcesNotAvailableException {
+    public void TestBaseProd() throws ResourcesNotAvailableException, UnknownFindException {
         assertFalse(b.getBaseProduction().checkSelected() || b.getBaseProduction().checkValidity());
         b.getBaseProduction().removeInput(ResourceType.UNKNOWN,2);
         b.getBaseProduction().removeOutput(ResourceType.UNKNOWN,1);

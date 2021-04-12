@@ -174,6 +174,7 @@ public abstract class Game implements BoardObserver {
 
     @Override
     public void updateEndGame() {
+        //non deve richiamare endgame ma deve cambiare la "booleana" di endgame
         endGame();
     }
 

@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.enums.Source;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
@@ -275,7 +274,7 @@ public class Player {
      * @throws IllegalResourceException if the output contains illegal resources
      * @throws TooManyResourcesException if the resources in pickedResources are too many for the input of the big production
      */
-    public void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException {
+    public void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFindException {
         Map<ResourceType, Integer> input = new HashMap<>();
         Map<ResourceType, Integer> output = new HashMap<>();
         for (Production production : extraProductions) {
@@ -435,5 +434,28 @@ public class Player {
             getBoard().getWarehouse().replaceWhiteFromPending(res,n);
         }else throw new IllegalResourceException();
     }
-
+    public void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFindException {
+        if(p.getInput().containsKey(ResourceType.UNKNOWN)){
+            int n=p.getInput().get(ResourceType.UNKNOWN);
+            if(n==1) p.getInput().remove(ResourceType.UNKNOWN);
+            else if(n>1) p.getInput().replace(ResourceType.UNKNOWN,n-1);
+            if(p.getInput().containsKey(res)){
+                p.getInput().replace(res,p.getInput().get(res)+1);
+            }else {
+                p.addInput(res, 1);
+            }
+        }else throw new UnknownNotFindException();
+    }
+    public void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFindException {
+        if(p.getOutput().containsKey(ResourceType.UNKNOWN)){
+            int n=p.getOutput().get(ResourceType.UNKNOWN);
+            if(n==1) p.getOutput().remove(ResourceType.UNKNOWN);
+            else if(n>1) p.getOutput().replace(ResourceType.UNKNOWN,n-1);
+            if(p.getOutput().containsKey(res)){
+                p.getOutput().replace(res,p.getOutput().get(res)+1);
+            }else {
+                p.addOutput(res, 1);
+            }
+        }else throw new UnknownNotFindException();
+    }
 }

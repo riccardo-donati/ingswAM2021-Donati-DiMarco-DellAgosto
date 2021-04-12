@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.UnknownFindException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class ProductionTest {
         p=new Production();
     }
     @Test
-    public void checkToggle(){
+    public void checkToggle() throws UnknownFindException {
         assertFalse(p.checkSelected());
         p.toggleSelected();
         assertTrue(p.checkSelected());

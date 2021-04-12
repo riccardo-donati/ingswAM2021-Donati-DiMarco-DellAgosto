@@ -48,7 +48,6 @@ public class FaithPath {
     }
 
 
-
     /**
      * Counts the current player's score by adding every value of the Map from the beginning to the player position
      * @return the player's score

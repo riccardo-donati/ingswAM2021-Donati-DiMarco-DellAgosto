@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
+import it.polimi.ingsw.model.exceptions.UnknownFindException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -49,13 +50,13 @@ public class Production {
     /**
      * if production is selected, deselect it and vice versa
      */
-    public void toggleSelected(){
+    public void toggleSelected() throws UnknownFindException {
         if(selected)
             selected=false;
         else{
             if(checkValidity()){
                 selected=!selected;
-            }
+            }else throw new UnknownFindException();
         }
     }
 
