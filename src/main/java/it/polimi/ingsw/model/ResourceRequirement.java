@@ -17,14 +17,27 @@ public class ResourceRequirement implements Requirement {
         this.resource = resource;
     }
 
+    /**
+     *
+     * @return the requirement quantity
+     */
     public Integer getQuantity() {
         return quantity;
     }
 
+    /**
+     *
+     * @return the requirement resource type
+     */
     public ResourceType getResource() {
         return resource;
     }
 
+    /**
+     * checks all the resources the player has
+     * @param board board that needs to be checked
+     * @return true if the player has at least "quantity" "resource"
+     */
     @Override
     public boolean check(Board board) {
         Map<ResourceType, Integer> totalResources = board.getStrongBox();

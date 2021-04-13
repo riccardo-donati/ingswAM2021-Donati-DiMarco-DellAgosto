@@ -2,9 +2,6 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class ExtraProduction extends SpecialAbility {
 
     public ExtraProduction(ResourceType resourceType) {
@@ -13,7 +10,7 @@ public class ExtraProduction extends SpecialAbility {
 
     /**
      * creates a new production (resourceType -> UNKNOWN + 1 faith point)
-     * and gives it to player to add to list of extra productions
+     * and gives it to player to add to the list of extra productions
      * @param player affected
      */
     @Override

@@ -12,11 +12,22 @@ public class Production {
     private Map<ResourceType,Integer> output;
     private boolean selected;
 
+    /**
+     * constructor that creates an empty production
+     * selected is set to false
+     */
     public Production(){
         input=new HashMap<>();
         output=new HashMap<>();
         selected=false;
     }
+
+    /**
+     * constructor that creates a production given an input and an output map
+     * selected is set to false
+     * @param input map that represents the input of the production
+     * @param output map that represents the output of the production
+     */
     public Production(Map<ResourceType,Integer> input,Map<ResourceType,Integer> output){
         this.input=input;
         this.output=output;
@@ -48,7 +59,9 @@ public class Production {
     }
 
     /**
-     * if production is selected, deselect it and vice versa
+     * if the attribute selected is true, it becomes false
+     * if the attribute selected is false, it becomes true ONLY if the production is valid (doesn't have UNKNOWN resource type in or out)
+     * @throws UnknownFindException if you are trying to select a production not valid
      */
     public void toggleSelected() throws UnknownFindException {
         if(selected)
@@ -106,6 +119,10 @@ public class Production {
         }else throw new ResourcesNotAvailableException();
     }
 
+    /**
+     * checks whether the production has any UNKNOWN resource type in the input or output map
+     * @return false if the production has any UNKNOWN resource type in the input or output map, true otherwise
+     */
     public boolean checkValidity(){
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;

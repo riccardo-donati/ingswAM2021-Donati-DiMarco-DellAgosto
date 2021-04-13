@@ -19,14 +19,26 @@ public class LevelCardRequirement implements Requirement {
         this.level = level;
     }
 
+    /**
+     *
+     * @return the requirement color
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     *
+     * @return the requirement quantity
+     */
     public Integer getQuantity() {
         return quantity;
     }
 
+    /**
+     *
+     * @return the requirement level
+     */
     public Integer getLevel() {
         return level;
     }

@@ -9,6 +9,10 @@ public class ExtraDeposit extends SpecialAbility {
         super(resourceType);
     }
 
+    /**
+     * gives warehouse a resource type to create a new extra deposit
+     * @param player affected
+     */
     @Override
     public void activate(Player player) {
         try {

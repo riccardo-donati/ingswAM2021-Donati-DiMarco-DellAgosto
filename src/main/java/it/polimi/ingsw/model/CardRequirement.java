@@ -16,10 +16,17 @@ public class CardRequirement implements Requirement {
         this.quantity = quantity;
     }
 
+    /**
+     * @return the requirement color
+     */
     public Color getColor() {
         return color;
     }
 
+    /**
+     *
+     * @return the requirement quantity
+     */
     public Integer getQuantity() {
         return quantity;
     }

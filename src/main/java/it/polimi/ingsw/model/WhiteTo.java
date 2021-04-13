@@ -9,7 +9,7 @@ public class WhiteTo extends SpecialAbility{
     }
 
     /**
-     * gives player a resource type to add to list of white conversion
+     * gives player a resource type to add to the list of white conversions
      * @param player affected
      */
     @Override
