@@ -12,7 +12,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlayerTest {
 
-    Player player = new Player("test", true);
+    Player player = new Player("test");
 
     @Test
     void chooseLeader() {
