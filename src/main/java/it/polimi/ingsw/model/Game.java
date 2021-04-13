@@ -3,10 +3,8 @@ package it.polimi.ingsw.model;
 import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.PopeFavorState;
-import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.FullGameException;
+import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.model.interfaces.Token;
@@ -43,8 +41,6 @@ public abstract class Game implements BoardObserver {
 
     public Player getCurrPlayer() { return currPlayer; }
 
-    //These functions will be overrided in the subclass singleplayer
-
     public void pushBlackCross(Integer push){}
 
     public void tokenShuffle(){}
@@ -66,6 +62,8 @@ public abstract class Game implements BoardObserver {
         market.initializeMarket();
         initializeCardMatrix();
         this.players=new ArrayList<>();
+        //-----
+        gamePhase=GamePhase.NOTSTARTED;
     }
     /**
      * Using GSON we initialize the developmentCard list
@@ -138,7 +136,7 @@ public abstract class Game implements BoardObserver {
                 throw new IllegalArgumentException("nickname already taken");
             }
         }
-        Player newPlayer=new Player(nickname,false);
+        Player newPlayer=new Player(nickname);
         //game registration as an observer
         newPlayer.getBoard().getFaithPath().addObserver(this);
         newPlayer.getBoard().addObserver(this);
@@ -158,18 +156,73 @@ public abstract class Game implements BoardObserver {
     }
 
     public void nextTurn(){}
-    public void startGame(){
-        Random r=new Random();
-        int first_n;
-        try {
-            first_n = r.nextInt(players.size());
-        }catch (IllegalArgumentException e){
-            return;
+    public void startGame() throws EmptyPlayersException, IllegalResourceException {
+        if(players.size()==0) throw new EmptyPlayersException();
+        Collections.shuffle(players);
+        for(int i=0;i<players.size();i++){
+            players.get(i).setOrder(i+1);
+            if(i==1){
+                players.get(i).getBoard().getWarehouse().addResourceInPending(ResourceType.UNKNOWN);
+            }else if(i==2){
+                players.get(i).getBoard().getWarehouse().addResourceInPending(ResourceType.UNKNOWN);
+                players.get(i).getBoard().getFaithPath().addToPosition(1);
+            }else if(i==3){
+                players.get(i).getBoard().getWarehouse().addResourceInPending(ResourceType.UNKNOWN);
+                players.get(i).getBoard().getWarehouse().addResourceInPending(ResourceType.UNKNOWN);
+                players.get(i).getBoard().getFaithPath().addToPosition(1);
+            }
         }
-        Player first=players.get(first_n);
-        first.setFirst(true);
-        currPlayer=first;
+        currPlayer=players.get(0);
+        gamePhase=GamePhase.SETUP;
+        turnPhase=TurnPhase.STARTSETUPTURN;
+    }
+    public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
+        if(turnPhase==TurnPhase.STARTSETUPTURN) {
+            currPlayer.chooseLeaders(l);
+            turnPhase=TurnPhase.ENDSETUPTURN;
+        }else throw new IllegalActionException();
 
+    }
+    public void passTurn() throws IllegalActionException {
+        if(gamePhase==GamePhase.SETUP){
+            if(turnPhase==TurnPhase.ENDSETUPTURN && currPlayer.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==0){
+                if(currPlayer.getOrder()==players.size()){
+                    gamePhase=GamePhase.ONGOING;
+                    turnPhase=TurnPhase.STARTTURN;
+                }else turnPhase=TurnPhase.STARTSETUPTURN;
+                nextTurn();
+            }else throw new IllegalActionException();
+        }//else if gamephase is ONGOING
+    }
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFindException {
+        if(gamePhase==GamePhase.SETUP){
+            currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
+        }
+    }
+
+    public GamePhase getGamePhase() { return gamePhase; }
+
+    public TurnPhase getTurnPhase() { return turnPhase; }
+
+    /**
+     * for each player extract 4 leader cards and return them to the controller
+     * @return the list of lists of 4 leader cards
+     * @throws EmptyPlayersException if there aren't any player
+     */
+    public List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException {
+        if(players.size()==0) throw new EmptyPlayersException();
+        List<LeaderCard> copyLeaders=new ArrayList<>(leaderCards);
+        List<List<LeaderCard>> result=new ArrayList<>();
+        Random r=new Random();
+        for(int i=0;i<players.size();i++){
+            result.add(new ArrayList<>());
+            for(int j=0;j<4;j++){
+                LeaderCard toAdd=copyLeaders.get(r.nextInt(copyLeaders.size()));
+                result.get(i).add(toAdd);
+                copyLeaders.remove(toAdd);
+            }
+        }
+        return result;
     }
 
     @Override
@@ -200,7 +253,6 @@ public abstract class Game implements BoardObserver {
             }
         }
     }
-    //----------------------------------------
     public void buyAtMarket(char rc,int index){
         if(rc=='r'){
             try {
@@ -221,6 +273,10 @@ public abstract class Game implements BoardObserver {
 
     public FaithPath getBlackCrossFaithPath(){return null;}
     public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
+
+    //-------phases-------------------------------------------------------------
+    private GamePhase gamePhase;
+    private TurnPhase turnPhase;
 
 
 }

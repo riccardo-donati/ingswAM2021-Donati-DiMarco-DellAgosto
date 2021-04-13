@@ -9,7 +9,7 @@ import java.util.*;
 public class Player {
 
     private String nickname;
-    private boolean first;
+    private Integer order;
     private Board board;
 
     private List<LeaderCard> leadersInHand = new ArrayList<>();
@@ -21,6 +21,9 @@ public class Player {
 
     private Map<Integer,Map<ResourceType, Integer>> pickedResource=new HashMap<>();
 
+    public void setOrder(int order){
+        this.order=order;
+    }
     /**
      *pick up a resource from a deposit of warehouse
      * @param id is the id of the deposit
@@ -139,25 +142,20 @@ public class Player {
     /**
      * under implementation
      * @param nickname player name
-     * @param first indicates whether the player is the first to play
-     */
-    public Player(String nickname, boolean first) {
+     * */
+    public Player(String nickname) {
         this.nickname = nickname;
-        this.first = first;
+        this.order = -1;
         board = new Board();
 
         initializePickedResource();
     }
 
-    public void setFirst(boolean first) { this.first = first; }
-
     public String getNickname() {
         return nickname;
     }
 
-    public boolean isFirst() {
-        return first;
-    }
+    public Integer getOrder(){return order;}
 
     public Board getBoard() {
         return board;
@@ -183,14 +181,13 @@ public class Player {
         return extraProductions;
     }
 
-    void chooseLeaders(List<LeaderCard> leaderCards) throws Exception {
-        if (!leadersInHand.isEmpty())
-            throw new Exception();
-        for (LeaderCard leaderCard : leaderCards) {
-            if (leadersInHand.contains(leaderCard))
-                throw new Exception();
-            else leadersInHand.add(leaderCard);
+    void chooseLeaders(List<LeaderCard> leaderCards) throws IllegalLeaderCardsException, NonEmptyException {
+        if(leaderCards.size()!=2 || leaderCards.get(0).equals(leaderCards.get(1))){
+            throw new IllegalLeaderCardsException();
         }
+        if (!leadersInHand.isEmpty())
+            throw new NonEmptyException();
+        leadersInHand.addAll(leaderCards);
     }
 
     public Integer countPoints(){

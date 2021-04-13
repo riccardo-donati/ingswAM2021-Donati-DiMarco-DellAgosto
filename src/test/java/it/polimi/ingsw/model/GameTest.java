@@ -1,11 +1,7 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.PopeFavorState;
-import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.FullGameException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
+import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
@@ -98,7 +94,7 @@ class GameTest {
 
     //-----------------------------------------
     @Test
-    public void TestBuyAtMarket() throws FullGameException {
+    public void TestBuyAtMarket() throws FullGameException, EmptyPlayersException, IllegalResourceException {
         game=new Multiplayer();
         game.addPlayer("Beppe");
         game.addPlayer("Carlo");
@@ -112,7 +108,7 @@ class GameTest {
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
     }
     @Test
-    public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException {
+    public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException, EmptyPlayersException, IllegalResourceException {
         game=new Multiplayer();
         game.addPlayer("Floriano");
         game.startGame();
@@ -127,7 +123,7 @@ class GameTest {
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
     }
     @RepeatedTest(10)
-    public void TestBuyAtMarketWithTwoWhiteTo() throws FullGameException {
+    public void TestBuyAtMarketWithTwoWhiteTo() throws FullGameException, EmptyPlayersException, IllegalResourceException {
         game=new Multiplayer();
         game.addPlayer("Floriano");
         game.startGame();
@@ -159,7 +155,7 @@ class GameTest {
     }
 
     @Test
-    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException {
+    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException, EmptyPlayersException {
         game=new Multiplayer();
         game.addPlayer("Giacomo");
         game.addPlayer("Aldo");
@@ -174,7 +170,7 @@ class GameTest {
         }
     }
     @Test
-    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException {
+    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException, EmptyPlayersException {
         game=new Singleplayer();
         game.addPlayer("Giacomo");
         game.startGame();
@@ -220,5 +216,86 @@ class GameTest {
         assertThrows(FullGameException.class,
                 ()->game.addPlayer("Giovanni"));
         assertEquals(4,game.getPlayers().size());
+    }
+    @Test
+    public void TestDivideLeaderCards() throws FullGameException, EmptyPlayersException {
+        game=new Multiplayer();
+        List<List<LeaderCard>> result;
+        assertThrows(EmptyPlayersException.class,
+                ()->game.divideLeaderCards());
+        game.addPlayer("Carlo");
+        game.addPlayer("Mario");
+        game.addPlayer("Beppe");
+
+        result=game.divideLeaderCards();
+        assertEquals(16,game.getLeaderCards().size());
+        assertEquals(3,result.size());
+        for(List<LeaderCard> list : result){
+            assertEquals(4,list.size());
+            for(LeaderCard ld : list){
+                assertNotNull(ld);
+            }
+        }
+    }
+    @Test
+    public void TestOrderPlayer() throws FullGameException, EmptyPlayersException, IllegalResourceException {
+        game=new Multiplayer();
+        game.addPlayer("AAA");
+        game.addPlayer("BOB");
+        game.addPlayer("MAX");
+        game.startGame();
+        for(Player p : game.getPlayers()){
+            if(p.getOrder()==2){
+                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==1);
+            }else if(p.getOrder()==3){
+                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==1);
+                assertTrue(p.getBoard().getFaithPath().getPosition()==1);
+            }else if(p.getOrder()==4){
+                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==2);
+                assertTrue(p.getBoard().getFaithPath().getPosition()==1);
+            }
+        }
+    }
+    @Test
+    public void TestSetUpTurn() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFindException, FullSpaceException {
+        game=new Multiplayer();
+        game.addPlayer("AAA");
+        game.addPlayer("BBB");
+        game.addPlayer("CCC");
+        game.startGame();
+        List<List<LeaderCard>> list=game.divideLeaderCards();
+        List<LeaderCard> choosen1=new ArrayList<>();
+        choosen1.add(list.get(0).get(2));
+        choosen1.add(list.get(0).get(1));
+        assertThrows(IllegalActionException.class,
+                ()->game.passTurn());
+        game.chooseLeader(choosen1);
+        assertThrows(UnknownNotFindException.class,
+                 ()->game.chooseResourceToDeposit(1,ResourceType.YELLOW));
+        game.passTurn();
+        List<LeaderCard> choosen2=new ArrayList<>();
+        choosen2.add(list.get(1).get(3));
+        choosen2.add(list.get(1).get(0));
+        assertThrows(IllegalActionException.class,
+                 ()->game.passTurn());
+        game.chooseLeader(choosen2);
+        assertThrows(IllegalActionException.class,
+                 ()->game.passTurn());
+        assertDoesNotThrow(
+                ()->game.chooseResourceToDeposit(1,ResourceType.YELLOW));
+        game.passTurn();
+        List<LeaderCard> choosen3=new ArrayList<>();
+        choosen3.add(list.get(2).get(0));
+        choosen3.add(list.get(2).get(1));
+        game.chooseLeader(choosen3);
+        game.chooseResourceToDeposit(1,ResourceType.BLUE);
+        assertThrows(UnknownNotFindException.class,
+                ()->game.chooseResourceToDeposit(2,ResourceType.YELLOW));
+        assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        game.passTurn();
+        assertEquals(GamePhase.ONGOING,game.getGamePhase());
+        assertEquals(TurnPhase.STARTTURN,game.getTurnPhase());
+        assertTrue(game.getCurrPlayer().getOrder()==1);
+
     }
 }

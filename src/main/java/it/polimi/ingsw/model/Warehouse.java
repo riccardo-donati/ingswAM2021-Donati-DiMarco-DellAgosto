@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.FullSpaceException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
-import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
 import java.util.ArrayList;
@@ -44,6 +41,7 @@ public class Warehouse {
         pendingResources.put(ResourceType.VIOLET,0);
         pendingResources.put(ResourceType.YELLOW,0);
         pendingResources.put(ResourceType.WHITE,0);
+        pendingResources.put(ResourceType.UNKNOWN,0);
     }
 
     /**
@@ -128,6 +126,13 @@ public class Warehouse {
         return extradepots;
     }
 
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws UnknownNotFindException, FullSpaceException, IllegalResourceException {
+        if(pendingResources.get(ResourceType.UNKNOWN)<=0) throw new UnknownNotFindException();
+        if(!pendingResources.containsKey(res) || res==ResourceType.WHITE || res==ResourceType.EMPTY) throw new IllegalResourceException();
+        pendingResources.replace(ResourceType.UNKNOWN,pendingResources.get(ResourceType.UNKNOWN)-1);
+        pendingResources.replace(res,pendingResources.get(res)+1);
+        addResourceInDeposit(id,res);
+    }
     /**
      * add a resource from pending to a deposit
      * @param id is the id of the deposit
@@ -135,7 +140,7 @@ public class Warehouse {
      */
     public void addResourceInDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException {
         Integer n=pendingResources.get(res);
-        if(n==null || res==ResourceType.WHITE)throw new IllegalResourceException("No such resource in pending");
+        if(n==null || res==ResourceType.WHITE || res==ResourceType.EMPTY)throw new IllegalResourceException("No such resource in pending");
         if(n>0) {
             if (id <= 3) {
                 for(Deposit d : maindepot){

@@ -175,6 +175,6 @@ public class Board {
         if(strongbox.containsKey(r) && strongbox.get(r)>0){
             strongbox.replace(r,strongbox.get(r)-1);
             return r;
-        }else return  ResourceType.EMPTY;
+        }else return ResourceType.EMPTY;
     }
 }
