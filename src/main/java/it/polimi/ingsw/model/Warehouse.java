@@ -161,6 +161,7 @@ public class Warehouse {
 
     /**
      * move a resource from a deposit to another
+     * or swap the resources if the second deposit is not empty
      * @param id1 is the id of the from deposit
      * @param id2 is the id of the to deposit
      */
@@ -218,11 +219,26 @@ public class Warehouse {
      * @param res is the type of the resource i want to discard
      * @throws IllegalResourceException when there are no resources of res type in pending
      */
-    public void discardResource(ResourceType res) throws IllegalResourceException {
+    public void discardResource(ResourceType res) throws IllegalResourceException, DepositableResourceException {
         int n=pendingResources.get(res);
         if(n>0){
-            pendingResources.replace(res,n-1);
-            notifyObservers();
+            boolean canDiscard=true;
+            boolean depositAlreadyExists=false;
+            for(Deposit d : maindepot){
+                if((d.getType()==res || d.getType()==ResourceType.EMPTY)&& d.freeSpaces()>0 && !depositAlreadyExists){
+                    canDiscard=false;
+                }
+                if(d.getType()==res) depositAlreadyExists=true;
+            }
+            for(Deposit d : extradepots){
+                if((d.getType()==res || d.getType()==ResourceType.EMPTY) && d.freeSpaces()>0){
+                    canDiscard=false;
+                }
+            }
+            if(canDiscard) {
+                pendingResources.replace(res, n - 1);
+                notifyObservers();
+            }else throw new DepositableResourceException();
         }else{
             throw new IllegalResourceException("No pending resource of this type");
         }

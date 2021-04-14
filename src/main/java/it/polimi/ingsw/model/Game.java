@@ -24,28 +24,28 @@ public abstract class Game implements BoardObserver {
     private List<LeaderCard> leaderCards;
     private List<Player> players;
     private Player currPlayer;
+    private GamePhase gamePhase;
+    private TurnPhase turnPhase;
+    private boolean endGameTrigger;
 
     public List<Player> getPlayers() { return players; }
-
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
-
     public List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
-
     public Stack<DevelopmentCard>[][] getCardMatrix() {
         return cardMatrix;
     }
-
     public Player getCurrPlayer() { return currPlayer; }
-
     public void pushBlackCross(Integer push){}
-
     public void tokenShuffle(){}
-
     public List<Token> getTokens(){return null;}
+    public FaithPath getBlackCrossFaithPath(){return null;}
+    public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
+    public GamePhase getGamePhase() { return gamePhase; }
+    public TurnPhase getTurnPhase() { return turnPhase; }
 
     /**
      * Constructor of the class Game where we initialize all the attributes
@@ -64,6 +64,7 @@ public abstract class Game implements BoardObserver {
         this.players=new ArrayList<>();
         //-----
         gamePhase=GamePhase.NOTSTARTED;
+        endGameTrigger=false;
     }
     /**
      * Using GSON we initialize the developmentCard list
@@ -80,6 +81,7 @@ public abstract class Game implements BoardObserver {
         }
         developmentCards=gson.fromJson(reader,foundListType);
     }
+
     /**
      * Using GSON we initialize the leaderCard list
      */
@@ -127,7 +129,6 @@ public abstract class Game implements BoardObserver {
      * @param nickname of the new player
      */
     public void addPlayer(String nickname) throws FullGameException {
-
         if(nickname==""){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -142,20 +143,66 @@ public abstract class Game implements BoardObserver {
         newPlayer.getBoard().addObserver(this);
         newPlayer.getBoard().getWarehouse().addObserver(this);
         players.add(newPlayer);
-
     }
 
+    /**
+     * implemented in Singleplayer
+     * @param toDiscard is the color of the card to discard
+     */
     public void discardColor(Color toDiscard){ }
 
-    public Result endGame(){
-        Result result=new Result();
+    /**
+     * implemented differently in single and multyplayer
+     */
+    public void nextTurn(){}
+
+    @Override
+    public void updateEndGame() {
+        endGameTrigger=true;
+    }
+    @Override
+    public void updateDiscard(Warehouse wh) {
         for(Player p : players){
-            result.addToResults(p.getNickname(),p.countPoints());//countPoints;
+            if(!p.getBoard().getWarehouse().equals(wh))
+                p.getBoard().getFaithPath().addToPosition(1);
         }
-        return result;
+    }
+    @Override
+    public void updatePopeFavor() {
+        for (Player p: players) {
+            for (PopeFavor pf: p.getBoard().getFaithPath().getPopeFavorList()) {
+                if(pf.getState().equals(PopeFavorState.UNACTIVE)){
+                    if(pf.checkInside(p.getBoard().getFaithPath().getPosition())){
+                        pf.changeState(PopeFavorState.ACTIVE);
+                    }
+                    else pf.changeState(PopeFavorState.DISCARDED);
+                    break;
+                }
+            }
+        }
     }
 
-    public void nextTurn(){}
+    /**
+     * Get a row or a column of marbles at market
+     * @param rc indicate row or column
+     * @param index is the index of the row/column
+     */
+    public void buyAtMarket(char rc,int index){
+        if(rc=='r'){
+            market.getRow(index, currPlayer);
+        }else if(rc=='c'){
+            market.getColumn(index, currPlayer);
+        }else throw new IllegalArgumentException("rc must be 'r' or 'c'" );
+    }
+
+    //----------------PublicInterface----------------------------------------------------------------------
+    //CONTROLLER:
+    /**
+     * Give the players a random order and the related bonus resources
+     * Set the currentPlayer and the SETUP phases
+     * @throws EmptyPlayersException if there aren't any players
+     * @throws IllegalResourceException if UNKNOWN is illegal (it's not)
+     */
     public void startGame() throws EmptyPlayersException, IllegalResourceException {
         if(players.size()==0) throw new EmptyPlayersException();
         Collections.shuffle(players);
@@ -176,34 +223,17 @@ public abstract class Game implements BoardObserver {
         gamePhase=GamePhase.SETUP;
         turnPhase=TurnPhase.STARTSETUPTURN;
     }
-    public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
-        if(turnPhase==TurnPhase.STARTSETUPTURN) {
-            currPlayer.chooseLeaders(l);
-            turnPhase=TurnPhase.ENDSETUPTURN;
-        }else throw new IllegalActionException();
-
-    }
-    public void passTurn() throws IllegalActionException {
-        if(gamePhase==GamePhase.SETUP){
-            if(turnPhase==TurnPhase.ENDSETUPTURN && currPlayer.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==0){
-                if(currPlayer.getOrder()==players.size()){
-                    gamePhase=GamePhase.ONGOING;
-                    turnPhase=TurnPhase.STARTTURN;
-                }else turnPhase=TurnPhase.STARTSETUPTURN;
-                nextTurn();
-            }else throw new IllegalActionException();
-        }//else if gamephase is ONGOING
-    }
-    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFindException {
-        if(gamePhase==GamePhase.SETUP){
-            currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
+    /**
+     * compile a report of the statistics of the game with points and winner
+     * @return the result of the game
+     */
+    public Result endGame(){
+        Result result=new Result();
+        for(Player p : players){
+            result.addToResults(p.getNickname(),p.countPoints());//countPoints;
         }
+        return result;
     }
-
-    public GamePhase getGamePhase() { return gamePhase; }
-
-    public TurnPhase getTurnPhase() { return turnPhase; }
-
     /**
      * for each player extract 4 leader cards and return them to the controller
      * @return the list of lists of 4 leader cards
@@ -224,59 +254,160 @@ public abstract class Game implements BoardObserver {
         }
         return result;
     }
-
-    @Override
-    public void updateEndGame() {
-        //non deve richiamare endgame ma deve cambiare la "booleana" di endgame
-        endGame();
+    //USER:
+        //SetUpTurn
+    public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
+        if(turnPhase==TurnPhase.STARTSETUPTURN) {
+            currPlayer.chooseLeaders(l);
+            turnPhase=TurnPhase.ENDSETUPTURN;
+        }else throw new IllegalActionException();
     }
-
-    @Override
-    public void updateDiscard(Warehouse wh) {
-        for(Player p : players){
-            if(!p.getBoard().getWarehouse().equals(wh))
-                p.getBoard().getFaithPath().addToPosition(1);
-        }
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFindException {
+        if(gamePhase==GamePhase.SETUP){
+            currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
+        }else throw new IllegalResourceException();
     }
+        //NormalTurn
+    public void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
+            currPlayer.playLeader(currPlayer.getLeadersInHand().get(index));
+        else throw new IllegalActionException();
+    }
+    public void discardLeader(int index) throws CardNotAvailableException, IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
+            currPlayer.discardLeader(currPlayer.getLeadersInHand().get(index));
+        else throw new IllegalActionException();
+    }
+    public void buyAtMarketInterface(char rc,int index) throws IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+            buyAtMarket(rc,index);
+            turnPhase=TurnPhase.DEPOSITPHASE;
+        }else throw new IllegalActionException();
+    }
+    public void depositResource(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, IllegalResourceException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
+            currPlayer.getBoard().getWarehouse().addResourceInDeposit(id,res);
+            if(currPlayer.getBoard().getWarehouse().getPendingResources().size()==0){
+                turnPhase=TurnPhase.ENDTURN;
+            }
+        }else throw new IllegalActionException();
+    }
+    public void discardResource(ResourceType res) throws IllegalActionException, IllegalResourceException, DepositableResourceException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
+            currPlayer.getBoard().getWarehouse().discardResource(res);
+            if(currPlayer.getBoard().getWarehouse().getPendingResources().size()==0){
+                turnPhase=TurnPhase.ENDTURN;
+            }
+        }else throw new IllegalActionException();
+    }
+    public void transformWhiteIn(ResourceType res) throws IllegalActionException, IllegalResourceException, NoWhiteResourceException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE) {
+            currPlayer.transformWhiteIn(res);
+        }else throw new IllegalActionException();
+    }
+    public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+            currPlayer.substituteUnknownInInputProduction(currPlayer.getBoard().getBaseProduction(),res);
+        }else throw new IllegalActionException();
+    }
+    public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+            currPlayer.substituteUnknownInOutputProduction(currPlayer.getBoard().getBaseProduction(),res);
+        }else throw new IllegalActionException();
+    }
+    public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+            currPlayer.substituteUnknownInOutputProduction(currPlayer.getExtraProductions().get(index), res);
+        }else throw new IllegalActionException();
+    }
+    public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+            currPlayer.substituteUnknownInInputProduction(currPlayer.getExtraProductions().get(index), res);
+        }else throw new IllegalActionException();
+    }
+    public void toggleBaseProd() throws UnknownFindException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
+            currPlayer.getBoard().getBaseProduction().toggleSelected();
+            if(currPlayer.countSelectedProductions()==0){
+                turnPhase=TurnPhase.STARTTURN;
+            }else turnPhase=TurnPhase.PICKUPPHASE;
+        }else new IllegalActionException();
+    }
+    public void toggleExtraProd(Integer index) throws UnknownFindException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
+            currPlayer.getExtraProductions().get(index).toggleSelected();
+            if(currPlayer.countSelectedProductions()==0){
+                turnPhase=TurnPhase.STARTTURN;
+            }else turnPhase=TurnPhase.PICKUPPHASE;
+        }else new IllegalActionException();
+    }
+    public void toggleCardProd(Integer slot) throws UnknownFindException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
+            Stack<DevelopmentCard> tmp=currPlayer.getBoard().getSlots().get(slot);
+            if(tmp.size()>0){
+                tmp.get(tmp.size()-1).getProd().toggleSelected();
+            }else new IllegalSlotException();
+            if(currPlayer.countSelectedProductions()==0){
+                turnPhase=TurnPhase.STARTTURN;
+            }else turnPhase=TurnPhase.PICKUPPHASE;
+        }else new IllegalActionException();
+    }
+    public void pickUpResourceFromWarehouse(Integer id) throws IllegalActionException, ResourcesNotAvailableException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
+            currPlayer.pickUpResourceFromWarehouse(id);
+            turnPhase=TurnPhase.PICKUPPHASE;
+        }else throw new IllegalActionException();
+    }
+    public void pickUpResourceFromStrongbox(ResourceType res) throws IllegalActionException, ResourcesNotAvailableException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
+            currPlayer.pickUpResourceFromStrongbox(res);
+            turnPhase=TurnPhase.PICKUPPHASE;
+        }else throw new IllegalActionException();
+    }
+    public void revertPickUp() throws IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE) {
+            currPlayer.revertPickUp();
+            turnPhase=TurnPhase.STARTTURN;
+        }else throw new IllegalActionException();
+    }
+    public void activateProductions() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFindException, IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
+            currPlayer.activateProductions();
+            turnPhase=TurnPhase.ENDTURN;
+        }else throw new IllegalActionException();
+    }
+    public void buyCard(Integer row,Integer col,Integer slot) throws ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, IllegalActionException {
+        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
+            if(cardMatrix[row][col].size()>0) {
+                currPlayer.buyCard(cardMatrix[row][col].pop(), slot);
+                turnPhase = TurnPhase.ENDTURN;
+            }else throw new EmptyStackException();
+        }else throw new IllegalActionException();
 
-    @Override
-    public void updatePopeFavor() {
-        for (Player p: players) {
-            for (PopeFavor pf: p.getBoard().getFaithPath().getPopeFavorList()) {
-                if(pf.getState().equals(PopeFavorState.UNACTIVE)){
-                    if(pf.checkInside(p.getBoard().getFaithPath().getPosition())){
-                        pf.changeState(PopeFavorState.ACTIVE);
-                    }
-                    else pf.changeState(PopeFavorState.DISCARDED);
-                    break;
+    }
+    public void moveResource(Integer dep1,Integer dep2) throws IllegalActionException, IllegalResourceException, FullSpaceException, NonEmptyException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.DEPOSITPHASE ||turnPhase==TurnPhase.ENDTURN)) {
+            currPlayer.getBoard().getWarehouse().moveResource(dep1,dep2);
+        }else throw new IllegalActionException();
+    }
+        //GenericTurn
+    public void passTurn() throws IllegalActionException {
+        if(gamePhase==GamePhase.SETUP){
+            if(turnPhase==TurnPhase.ENDSETUPTURN && currPlayer.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==0){
+                if(currPlayer.getOrder()==players.size()){
+                    gamePhase=GamePhase.ONGOING;
+                    turnPhase=TurnPhase.STARTTURN;
+                }else turnPhase=TurnPhase.STARTSETUPTURN;
+                nextTurn();
+            }else throw new IllegalActionException();
+        }else if(gamePhase==GamePhase.ONGOING){
+            if(turnPhase==TurnPhase.ENDTURN){
+                if(currPlayer.getOrder()==players.size() && endGameTrigger){
+                    gamePhase=GamePhase.ENDGAME;
+                    endGame();
                 }
-            }
+            }else throw new IllegalActionException();
         }
     }
-    public void buyAtMarket(char rc,int index){
-        if(rc=='r'){
-            try {
-                market.getRow(index, currPlayer);
-            }catch (IndexOutOfBoundsException e){
-                e.printStackTrace();
-                return;
-            }
-        }else if(rc=='c'){
-            try {
-                market.getColumn(index, currPlayer);
-            }catch (IndexOutOfBoundsException e){
-                e.printStackTrace();
-                return;
-            }
-        }else throw new IllegalArgumentException("rc must be 'r' or 'c'" );
-    }
-
-    public FaithPath getBlackCrossFaithPath(){return null;}
-    public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
-
-    //-------phases-------------------------------------------------------------
-    private GamePhase gamePhase;
-    private TurnPhase turnPhase;
-
-
+    //-----------------------------------------------------------------------------------------------------
 }

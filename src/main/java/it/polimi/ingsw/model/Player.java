@@ -219,6 +219,17 @@ public class Player {
     }
 
     /**
+     * discard a leader card in hand to gain 1 faith point
+     * @param ld is the leadercard
+     * @throws CardNotAvailableException if the leader card is not available
+     */
+    public void discardLeader(LeaderCard ld) throws CardNotAvailableException {
+        if(leadersInHand.contains(ld)){
+            leadersInHand.remove(ld);
+            getBoard().getFaithPath().addToPosition(1);
+        }else throw new CardNotAvailableException();
+    }
+    /**
      * Modifies the map discounts:
      *  if the resource type is already present, increments its value by 1
      *  if the resource type is not present, it gets added to the map with value 1
@@ -454,5 +465,25 @@ public class Player {
                 p.addOutput(res, 1);
             }
         }else throw new UnknownNotFindException();
+    }
+
+    /**
+     * count the total amount of selected productions
+     * @return the number of selected productions
+     */
+    public Integer countSelectedProductions(){
+        Integer cont=0;
+        if(getBoard().getBaseProduction().checkSelected()) cont++;
+        for(Production p : extraProductions){
+            if(p.checkSelected()) cont++;
+        }
+        for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : getBoard().getSlots().entrySet()) {
+            if(entry.getValue().size()>0) {
+                if (entry.getValue().get(entry.getValue().size() - 1).getProd().checkSelected()) {
+                    cont++;
+                }
+            }
+        }
+        return cont;
     }
 }

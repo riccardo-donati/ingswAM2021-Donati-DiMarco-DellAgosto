@@ -748,7 +748,31 @@ class PlayerTest {
         assertEquals(3,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
 
     }
+    @Test
+    public void TestCountSelectedProd() throws UnknownNotFindException, UnknownFindException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException {
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.BLUE);
+        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+        player.getBoard().getBaseProduction().toggleSelected();
+        player.getExtraProductions().add(new Production());
+        player.getExtraProductions().add(new Production());
+        //player.getExtraProductions().get(0).toggleSelected();
+        player.getExtraProductions().get(1).toggleSelected();
+        List<ResourceRequirement> l=new ArrayList<>();
+        l.add(new ResourceRequirement(ResourceType.YELLOW,1));
+        DevelopmentCard d=new DevelopmentCard(l,1,Color.BLUE,new Production(),5);
+        DevelopmentCard d2=new DevelopmentCard(l,2,Color.BLUE,new Production(),10);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.buyCard(d,1);
+        player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.buyCard(d2,1);
+        player.getBoard().getSlots().get(1).get(0).getProd().toggleSelected();
+        player.getBoard().getSlots().get(1).get(1).getProd().toggleSelected();
 
+        assertEquals(3,player.countSelectedProductions());
+    }
 
 
 }

@@ -124,4 +124,15 @@ public class Deposit {
         }
         System.out.print("\n");
     }
+
+    /**
+     * @return the number of EMPTY spaces in the deposit
+     */
+    public Integer freeSpaces(){
+        Integer count=0;
+        for(int i=0;i<dim;i++){
+            if(space[i]==ResourceType.EMPTY) count++;
+        }
+        return count;
+    }
 }

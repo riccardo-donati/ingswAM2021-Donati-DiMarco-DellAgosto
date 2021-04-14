@@ -84,7 +84,6 @@ public class Singleplayer extends Game {
     @Override
     public FaithPath getBlackCrossFaithPath(){return blackFaithPath;}
 
-
     /**
      * before applying the super method check if the size of players is 1
      * @param nick of the player
@@ -103,7 +102,6 @@ public class Singleplayer extends Game {
      */
     @Override
     public void nextTurn(){
-        //controllo se non ci sono risorse in pending/picked up????
         Token t=tokenStack.pop();
         t.doAction(this);
     }
@@ -138,6 +136,7 @@ public class Singleplayer extends Game {
         }
     }
 
+    //----------------PublicInterface----------------------------------------------------------------------
     @Override
     public Result endGame(){
         boolean lose=false;
@@ -165,5 +164,7 @@ public class Singleplayer extends Game {
         }
         return result;
     }
+    //-----------------------------------------------------------------------------------------------------
+
 
 }

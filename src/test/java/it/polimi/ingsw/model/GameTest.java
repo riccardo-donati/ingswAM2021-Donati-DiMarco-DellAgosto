@@ -155,12 +155,21 @@ class GameTest {
     }
 
     @Test
-    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException, EmptyPlayersException {
+    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException, EmptyPlayersException, DepositableResourceException, FullSpaceException {
         game=new Multiplayer();
         game.addPlayer("Giacomo");
         game.addPlayer("Aldo");
         game.startGame();
+
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.BLUE);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
         game.getCurrPlayer().getBoard().getWarehouse().discardResource(ResourceType.YELLOW);
         for(Player p : game.getPlayers()){
             if(p.equals(game.getCurrPlayer())){
@@ -170,11 +179,19 @@ class GameTest {
         }
     }
     @Test
-    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException, EmptyPlayersException {
+    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException, EmptyPlayersException, DepositableResourceException, FullSpaceException {
         game=new Singleplayer();
         game.addPlayer("Giacomo");
         game.startGame();
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
+
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.BLUE);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.VIOLET);
+
         game.getCurrPlayer().getBoard().getWarehouse().discardResource(ResourceType.YELLOW);
 
         game.pushBlackCross(7);
@@ -255,47 +272,5 @@ class GameTest {
                 assertTrue(p.getBoard().getFaithPath().getPosition()==1);
             }
         }
-    }
-    @Test
-    public void TestSetUpTurn() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFindException, FullSpaceException {
-        game=new Multiplayer();
-        game.addPlayer("AAA");
-        game.addPlayer("BBB");
-        game.addPlayer("CCC");
-        game.startGame();
-        List<List<LeaderCard>> list=game.divideLeaderCards();
-        List<LeaderCard> choosen1=new ArrayList<>();
-        choosen1.add(list.get(0).get(2));
-        choosen1.add(list.get(0).get(1));
-        assertThrows(IllegalActionException.class,
-                ()->game.passTurn());
-        game.chooseLeader(choosen1);
-        assertThrows(UnknownNotFindException.class,
-                 ()->game.chooseResourceToDeposit(1,ResourceType.YELLOW));
-        game.passTurn();
-        List<LeaderCard> choosen2=new ArrayList<>();
-        choosen2.add(list.get(1).get(3));
-        choosen2.add(list.get(1).get(0));
-        assertThrows(IllegalActionException.class,
-                 ()->game.passTurn());
-        game.chooseLeader(choosen2);
-        assertThrows(IllegalActionException.class,
-                 ()->game.passTurn());
-        assertDoesNotThrow(
-                ()->game.chooseResourceToDeposit(1,ResourceType.YELLOW));
-        game.passTurn();
-        List<LeaderCard> choosen3=new ArrayList<>();
-        choosen3.add(list.get(2).get(0));
-        choosen3.add(list.get(2).get(1));
-        game.chooseLeader(choosen3);
-        game.chooseResourceToDeposit(1,ResourceType.BLUE);
-        assertThrows(UnknownNotFindException.class,
-                ()->game.chooseResourceToDeposit(2,ResourceType.YELLOW));
-        assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
-        game.passTurn();
-        assertEquals(GamePhase.ONGOING,game.getGamePhase());
-        assertEquals(TurnPhase.STARTTURN,game.getTurnPhase());
-        assertTrue(game.getCurrPlayer().getOrder()==1);
-
     }
 }

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.DepositableResourceException;
 import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
@@ -321,10 +322,43 @@ class WarehouseTest {
     }
 
     @Test
-    public void TestDiscard() throws IllegalResourceException {
+    public void TestDiscardExtraDep() throws IllegalResourceException, FullSpaceException, DepositableResourceException {
         wh.addResourceInPending(ResourceType.VIOLET);
+        wh.addResourceInPending(ResourceType.VIOLET);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.BLUE);
+        wh.addResourceInPending(ResourceType.YELLOW);
         wh.addResourceInPending(ResourceType.YELLOW);
 
+        wh.addExtraDepot(ResourceType.GREY);
+        wh.addExtraDepot(ResourceType.YELLOW);
+
+        wh.addResourceInDeposit(1,ResourceType.VIOLET);
+        wh.addResourceInDeposit(2,ResourceType.GREY);
+        wh.discardResource(ResourceType.VIOLET);
+        wh.addResourceInDeposit(4,ResourceType.GREY);
+        wh.addResourceInDeposit(5,ResourceType.YELLOW);
+        assertThrows(DepositableResourceException.class,
+                ()->wh.discardResource(ResourceType.YELLOW));
+        assertThrows(DepositableResourceException.class,
+                ()->wh.discardResource(ResourceType.BLUE));
+
+
+    }
+    @Test
+    public void TestDiscard() throws IllegalResourceException, FullSpaceException {
+        wh.addResourceInPending(ResourceType.VIOLET);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.BLUE);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);
+
+        wh.addResourceInDeposit(1,ResourceType.GREY);
+        wh.addResourceInDeposit(2,ResourceType.BLUE);
+        wh.addResourceInDeposit(3,ResourceType.YELLOW);
+        assertThrows(DepositableResourceException.class,
+                ()->wh.discardResource(ResourceType.YELLOW));
         assertDoesNotThrow(
                 ()->wh.discardResource(ResourceType.VIOLET));
         assertThrows(IllegalResourceException.class,

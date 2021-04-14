@@ -71,5 +71,19 @@ class DepositTest {
         assertThrows(NonEmptyException.class,
                 ()->depo.changeType(ResourceType.VIOLET));
     }
+    @Test
+    public void TestFreeSpaces() throws IllegalResourceException, FullSpaceException {
+        depo=new Deposit(1,ResourceType.GREY,4);
+        assertEquals(4, depo.freeSpaces());
+        depo.addResource(ResourceType.GREY);
+        depo.addResource(ResourceType.GREY);
+        assertEquals(2, depo.freeSpaces());
+        depo.addResource(ResourceType.GREY);
+        depo.addResource(ResourceType.GREY);
+        assertEquals(0, depo.freeSpaces());
+        depo.removeResource();
+        assertEquals(1, depo.freeSpaces());
+    }
+
 
 }

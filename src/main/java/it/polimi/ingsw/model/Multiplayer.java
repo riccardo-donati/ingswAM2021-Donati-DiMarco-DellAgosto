@@ -15,7 +15,6 @@ public class Multiplayer extends Game{
      */
     @Override
     public void nextTurn(){
-        //controllo se non ci sono risorse in pending/picked up????
         int index=getPlayers().indexOf(getCurrPlayer());
         setCurrPlayer(getPlayers().get((index+1)%(getPlayers().size())));
     }
@@ -25,12 +24,13 @@ public class Multiplayer extends Game{
         if(getPlayers().size()==4) throw new FullGameException();
         super.addPlayer(nick);
     }
-
+    //----------------PublicInterface----------------------------------------------------------------------
     @Override
     public Result endGame(){
         Result result=super.endGame();
         result.setWinner(result.checkWinner());
         return  result;
     }
+    //-----------------------------------------------------------------------------------------------------
 
 }
