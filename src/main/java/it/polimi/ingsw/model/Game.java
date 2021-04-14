@@ -47,6 +47,15 @@ public abstract class Game implements BoardObserver {
     public GamePhase getGamePhase() { return gamePhase; }
     public TurnPhase getTurnPhase() { return turnPhase; }
 
+
+    /**
+     * market setter for testing purposes
+     * @param market new market
+     */
+    public void setMarket(Market market) {
+        this.market = market;
+    }
+
     /**
      * Constructor of the class Game where we initialize all the attributes
      */
@@ -287,7 +296,7 @@ public abstract class Game implements BoardObserver {
     public void depositResource(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
             currPlayer.getBoard().getWarehouse().addResourceInDeposit(id,res);
-            if(currPlayer.getBoard().getWarehouse().getPendingResources().size()==0){
+            if(currPlayer.getBoard().getWarehouse().getPendingResources().values().stream().allMatch(i -> i == 0)){
                 turnPhase=TurnPhase.ENDTURN;
             }
         }else throw new IllegalActionException();
@@ -295,7 +304,7 @@ public abstract class Game implements BoardObserver {
     public void discardResource(ResourceType res) throws IllegalActionException, IllegalResourceException, DepositableResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
             currPlayer.getBoard().getWarehouse().discardResource(res);
-            if(currPlayer.getBoard().getWarehouse().getPendingResources().size()==0){
+            if(currPlayer.getBoard().getWarehouse().getPendingResources().values().stream().allMatch(i -> i == 0)){
                 turnPhase=TurnPhase.ENDTURN;
             }
         }else throw new IllegalActionException();

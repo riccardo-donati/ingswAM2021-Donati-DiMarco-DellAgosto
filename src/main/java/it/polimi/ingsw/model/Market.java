@@ -14,14 +14,14 @@ public class Market {
 
 
     /**
-     * Initializing the marble matrix and the pendingmarble in a defined order
+     * Initializing the marble matrix and the pendingMarble in a defined order
      */
     private Marble[][] marbles={
             {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
             {new ResourceMarble(ResourceType.GREY),new ResourceMarble(ResourceType.GREY),new ResourceMarble(ResourceType.BLUE),new ResourceMarble(ResourceType.BLUE)},
             {new ResourceMarble(ResourceType.VIOLET),new ResourceMarble(ResourceType.VIOLET),new ResourceMarble(ResourceType.YELLOW),new ResourceMarble(ResourceType.YELLOW)},
     };
-    private Marble pendingmarble=new RedMarble();
+    private Marble pendingMarble=new RedMarble();
 
     /**
      * Randomizing the order of the marbles
@@ -40,8 +40,8 @@ public class Market {
         }
         int rowSwap=ran.nextInt(NROW);
         int colSwap=ran.nextInt(NCOL);
-        Marble tmp=pendingmarble;
-        pendingmarble=marbles[rowSwap][colSwap];
+        Marble tmp=pendingMarble;
+        pendingMarble=marbles[rowSwap][colSwap];
         marbles[rowSwap][colSwap]=tmp;
     }
 
@@ -61,8 +61,8 @@ public class Market {
         marbles[r][0]=marbles[r][1];
         marbles[r][1]=marbles[r][2];
         marbles[r][2]=marbles[r][3];
-        marbles[r][3]=pendingmarble;
-        pendingmarble=tmp;
+        marbles[r][3]=pendingMarble;
+        pendingMarble=tmp;
     }
     /**
      * Extract the Resources from the column of the market
@@ -79,9 +79,9 @@ public class Market {
         Marble tmp=marbles[0][c];
         marbles[0][c]=marbles[1][c];
         marbles[1][c]=marbles[2][c];
-        marbles[2][c]=pendingmarble;
+        marbles[2][c]=pendingMarble;
 
-        pendingmarble=tmp;
+        pendingMarble=tmp;
     }
 
     /**
@@ -90,8 +90,8 @@ public class Market {
     public Marble[][] getMarbles(){
         return marbles;
     }
-    public Marble getPendingmarble(){
-        return pendingmarble;
+    public Marble getpendingMarble(){
+        return pendingMarble;
     }
 
 
@@ -107,7 +107,7 @@ public class Market {
                 }
             }
         }
-        return pendingmarble.equals(market.pendingmarble);
+        return pendingMarble.equals(market.pendingMarble);
     }
 
 
