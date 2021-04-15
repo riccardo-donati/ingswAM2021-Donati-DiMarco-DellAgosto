@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -170,4 +172,106 @@ public class PublicInterfaceTest {
         assertDoesNotThrow(()->game.passTurn());
     }
 
+    @Test
+    public void TestExtraProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+        TestSetUpTurnMultiplayer();
+
+        //artificially adding resources to player's warehouse
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(3, ResourceType.GREY);
+
+        //artificially adding extra production
+        ExtraProduction extraProduction = new ExtraProduction(ResourceType.GREY);
+        extraProduction.activate(game.getCurrPlayer());
+
+        assertThrows(UnknownFindException.class, ()->game.toggleExtraProd(0));
+        game.substituteUnknownInOutputExtraProduction(0, ResourceType.YELLOW);
+        assertDoesNotThrow(()->game.toggleExtraProd(0));
+
+        game.pickUpResourceFromWarehouse(3);
+
+        assertDoesNotThrow(()->game.activateProductions());
+        assertDoesNotThrow(()->game.passTurn());
+    }
+
+    @Test
+    public void TestRegularProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, InvalidPushException {
+        TestSetUpTurnMultiplayer();
+
+        //artificially adding resources to player's strongbox
+        Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
+        depositInStrongbox.put(ResourceType.GREY, 3);
+        game.getCurrPlayer().getBoard().depositInStrongbox(depositInStrongbox);
+
+        //artificially adding development card
+        List<ResourceRequirement> requirements = new ArrayList<>();
+        requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
+        Production production = new Production();
+        production.addInput(ResourceType.GREY, 1);
+        production.addOutput(ResourceType.RED, 4);
+        game.getCurrPlayer().getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, production, 3));
+
+        assertDoesNotThrow(()->game.toggleCardProd(1));
+        assertThrows(ResourcesNotAvailableException.class, ()->game.pickUpResourceFromStrongbox(ResourceType.YELLOW));
+        assertDoesNotThrow(()->game.pickUpResourceFromStrongbox(ResourceType.GREY));
+        assertDoesNotThrow(()->game.activateProductions());
+        assertEquals(4, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        assertDoesNotThrow(()->game.passTurn());
+    }
+
+    @Test
+    public void TestBuyDevelopmentCard() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+        TestSetUpTurnMultiplayer();
+
+        //artificially adding resources to player's strongbox
+        Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
+        depositInStrongbox.put(ResourceType.YELLOW, 1);
+        game.getCurrPlayer().getBoard().depositInStrongbox(depositInStrongbox);
+
+        //artificially adding a development card on the stack in position [0][0]
+        List<ResourceRequirement> requirements = new ArrayList<>();
+        requirements.add(new ResourceRequirement(ResourceType.YELLOW, 1));
+        DevelopmentCard developmentCard = new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3);
+        game.getCardMatrix()[0][0].push(developmentCard);
+
+        assertThrows(IllegalActionException.class, ()->game.buyCard(0, 0, 1));
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        assertDoesNotThrow(()->game.buyCard(0, 0, 1));
+        assertEquals(TurnPhase.ENDTURN, game.getTurnPhase());
+        assertDoesNotThrow(()->game.passTurn());
+    }
+
+    @Test
+    public void PlayAndDiscardLeader() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
+        TestSetUpTurnMultiplayer();
+
+        game.getCurrPlayer().getLeadersInHand().remove(0);
+        game.getCurrPlayer().getLeadersInHand().remove(0);
+
+        LeaderCard leaderCard = new LeaderCard();
+        leaderCard.addRequirement(new ResourceRequirement(ResourceType.YELLOW, 3));
+        game.getCurrPlayer().getLeadersInHand().add(leaderCard);
+        game.getCurrPlayer().getLeadersInHand().add(new LeaderCard());
+
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2, ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2, ResourceType.YELLOW);
+        Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
+        depositInStrongbox.put(ResourceType.YELLOW, 1);
+        game.getCurrPlayer().getBoard().depositInStrongbox(depositInStrongbox);
+
+        assertDoesNotThrow(()->game.playLeader(0));
+        assertEquals(TurnPhase.STARTTURN, game.getTurnPhase());
+
+        assertDoesNotThrow(()->game.discardLeader(0));
+        assertEquals(1, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        assertEquals(TurnPhase.STARTTURN, game.getTurnPhase());
+    }
+
+
+
 }
+
+
+
