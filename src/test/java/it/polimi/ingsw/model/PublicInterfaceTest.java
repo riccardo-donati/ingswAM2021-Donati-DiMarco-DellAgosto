@@ -242,7 +242,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void PlayAndDiscardLeader() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
+    public void TestPlayAndDiscardLeader() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
         TestSetUpTurnMultiplayer();
 
         game.getCurrPlayer().getLeadersInHand().remove(0);
@@ -267,6 +267,88 @@ public class PublicInterfaceTest {
         assertDoesNotThrow(()->game.discardLeader(0));
         assertEquals(1, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         assertEquals(TurnPhase.STARTTURN, game.getTurnPhase());
+    }
+    public void fillDeposits(Player p,boolean warehouse) throws IllegalResourceException, FullSpaceException {
+        Map<ResourceType, Integer> resMap=new HashMap<>();
+        resMap.put(ResourceType.YELLOW,999);
+        resMap.put(ResourceType.BLUE,999);
+        resMap.put(ResourceType.GREY,999);
+        resMap.put(ResourceType.VIOLET,999);
+        p.getBoard().depositInStrongbox(resMap);
+
+        if(warehouse) {
+            p.getBoard().getWarehouse().getMaindepot().get(0).addResource(ResourceType.YELLOW);
+            p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
+            p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
+            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
+            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
+            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
+
+            p.getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
+            p.getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
+            p.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
+            p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
+
+            p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
+            p.getBoard().getWarehouse().visualize();
+        }
+    }
+    @Test
+    public void TestSingleRevert() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException {
+        TestSetUpTurnSingleplayer();
+        fillDeposits(game.getCurrPlayer(),true);
+        game.initializeCardMatrixForTests();
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.revertPickUp();
+        assertEquals(TurnPhase.STARTTURN,game.getTurnPhase());
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        assertEquals(TurnPhase.PICKUPPHASE,game.getTurnPhase());
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.pickUpResourceFromWarehouse(2); //blue
+        game.substituteUnknownInOutputBaseProduction(ResourceType.YELLOW);
+        game.toggleBaseProd();
+        game.activateProductions();
+        assertEquals(998,game.getCurrPlayer().getBoard().getStrongBox().get(ResourceType.BLUE));
+        assertEquals(1000,game.getCurrPlayer().getBoard().getStrongBox().get(ResourceType.YELLOW));
+        game.passTurn();
+    }
+    @Test
+    public void TestSingleEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException {
+        TestSetUpTurnSingleplayer();
+        fillDeposits(game.getCurrPlayer(),true);
+        game.discardLeader(0);
+        assertEquals(1,game.getBlackCrossFaithPath().getPosition());
+        LeaderCard ld=new LeaderCard(5);
+        ld.addSpecialAbility(new ExtraDeposit(ResourceType.YELLOW));
+        game.getCurrPlayer().getLeadersInHand().add(ld);
+        game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
+        game.moveResource(1,8);
+        game.getCurrPlayer().getBoard().getWarehouse().visualize();
+        game.pickUpResourceFromWarehouse(8);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.revertPickUp();
+        game.setMarket(new Market());
+        game.buyAtMarketInterface('r',0);
+        game.passTurn();
+        //aggiungi token ordinati
+    }
+    @Test
+    public void TestMultiEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+        TestSetUpTurnMultiplayer();
+        fillDeposits(game.getCurrPlayer(),false);
+        Market m =new Market();
+        game.setMarket(m);
+        game.buyAtMarketInterface('c',1);
+        game.depositResource(1,ResourceType.GREY);
+        game.depositResource(3,ResourceType.VIOLET);
+        game.moveResource(3,1);
+        game.moveResource(1,2);
+        game.getCurrPlayer().getBoard().getWarehouse().visualize();
+        game.passTurn();
+        assertEquals(2,game.getCurrPlayer().getOrder());
+
     }
 
 

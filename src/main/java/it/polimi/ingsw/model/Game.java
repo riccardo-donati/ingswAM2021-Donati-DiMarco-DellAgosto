@@ -49,6 +49,24 @@ public abstract class Game implements BoardObserver {
 
 
     /**
+     * Reininitilize the cardMatrix for Test purposes
+     */
+    protected void initializeCardMatrixForTests(){
+        Stack<DevelopmentCard>[][] newCardMatrix=new Stack[ROW][COL];
+        for(int r=0;r<ROW;r++){
+            for(int c=0;c<COL;c++){
+                newCardMatrix[r][c]=new Stack<>();
+            }
+        }
+        List<DevelopmentCard> copy=new ArrayList<>(developmentCards);
+        for(int i=0;i<developmentCards.size();i++){
+            DevelopmentCard dc=copy.get(0);
+            newCardMatrix[dc.getLevel()-1][dc.getColor().ordinal()].push(dc);
+            copy.remove(dc);
+        }
+        cardMatrix=newCardMatrix;
+    }
+    /**
      * market setter for testing purposes
      * @param market new market
      */
@@ -291,7 +309,9 @@ public abstract class Game implements BoardObserver {
     public void buyAtMarketInterface(char rc,int index) throws IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
             buyAtMarket(rc,index);
-            turnPhase=TurnPhase.DEPOSITPHASE;
+            if(currPlayer.getBoard().getWarehouse().getPendingResources().values().stream().allMatch(i -> i == 0))
+                turnPhase=TurnPhase.ENDTURN;
+            else turnPhase=TurnPhase.DEPOSITPHASE;
         }else throw new IllegalActionException();
     }
     public void depositResource(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, IllegalResourceException {
@@ -316,22 +336,22 @@ public abstract class Game implements BoardObserver {
         }else throw new IllegalActionException();
     }
     public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
-        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+        if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.substituteUnknownInInputProduction(currPlayer.getBoard().getBaseProduction(),res);
         }else throw new IllegalActionException();
     }
     public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
-        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+        if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.substituteUnknownInOutputProduction(currPlayer.getBoard().getBaseProduction(),res);
         }else throw new IllegalActionException();
     }
     public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
-        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+        if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.substituteUnknownInOutputProduction(currPlayer.getExtraProductions().get(index), res);
         }else throw new IllegalActionException();
     }
     public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
-        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
+        if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.substituteUnknownInInputProduction(currPlayer.getExtraProductions().get(index), res);
         }else throw new IllegalActionException();
     }
@@ -408,7 +428,8 @@ public abstract class Game implements BoardObserver {
                     gamePhase=GamePhase.ONGOING;
                     turnPhase=TurnPhase.STARTTURN;
                 }else turnPhase=TurnPhase.STARTSETUPTURN;
-                nextTurn();
+                if(players.size()>1)
+                    nextTurn();
             }else throw new IllegalActionException();
         }else if(gamePhase==GamePhase.ONGOING){
             if(turnPhase==TurnPhase.ENDTURN){
@@ -416,6 +437,7 @@ public abstract class Game implements BoardObserver {
                     gamePhase=GamePhase.ENDGAME;
                     endGame();
                 }
+                nextTurn();
             }else throw new IllegalActionException();
         }
     }

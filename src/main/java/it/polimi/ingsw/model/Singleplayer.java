@@ -6,7 +6,9 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.PopeFavorState;
+import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
 import it.polimi.ingsw.model.exceptions.FullGameException;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.interfaces.Token;
 
 import java.io.FileNotFoundException;
@@ -43,7 +45,11 @@ public class Singleplayer extends Game {
         }
         tokens=gson.fromJson(reader,foundListType);
     }
-
+    @Override
+    public void discardLeader(int index) throws IllegalActionException, CardNotAvailableException {
+        super.discardLeader(index);
+        getBlackCrossFaithPath().addToPosition(1);
+    }
     @Override
     public List<Token> getTokens() {
         return tokens;
