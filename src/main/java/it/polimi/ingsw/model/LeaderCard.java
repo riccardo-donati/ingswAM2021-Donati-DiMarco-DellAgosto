@@ -10,10 +10,16 @@ public class LeaderCard {
     private List<SpecialAbility> specialAbilities = new ArrayList<>();
     private Integer points;
 
-    public LeaderCard() {
+    /**
+     * for testing purposes
+     */
+    protected LeaderCard() {
     }
-    //used for testing
-    public LeaderCard(Integer points) {
+
+    /**
+     * @param points the leader card's points
+     */
+    protected LeaderCard(Integer points) {
         this.points = points;
     }
 
@@ -21,7 +27,7 @@ public class LeaderCard {
      * requirements list getter
      * @return list of requirements
      */
-    public List<Requirement> getRequirements() {
+    protected List<Requirement> getRequirements() {
         return requirements;
     }
 

@@ -5,6 +5,8 @@ import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
 
+import java.util.Arrays;
+
 public class Deposit {
     private Integer id;
     private Integer dim;
@@ -14,23 +16,21 @@ public class Deposit {
     /**
      * initialize the array called space with EMPTY resources
      */
-    public Deposit(Integer id,ResourceType res,Integer dim) throws IllegalResourceException {
-        if(dim<0) throw new NegativeArraySizeException();
-        if(res==ResourceType.WHITE || res==ResourceType.UNKNOWN) throw new IllegalResourceException();
-        this.id=id;
-        this.type=res;
-        this.dim=dim;
-        space=new ResourceType[dim];
-        for(int i=0;i<dim;i++){
-            space[i]=ResourceType.EMPTY;
-        }
+    protected Deposit(Integer id,ResourceType res,Integer dim) throws IllegalResourceException {
+        if (dim < 0) throw new NegativeArraySizeException();
+        if (res == ResourceType.WHITE || res == ResourceType.UNKNOWN) throw new IllegalResourceException();
+        this.id = id;
+        this.type = res;
+        this.dim = dim;
+        space = new ResourceType[this.dim];
+        Arrays.fill(space, ResourceType.EMPTY);
     }
 
     /**
      * get of id
      * @return id
      */
-    public Integer getId() {
+    protected Integer getId() {
         return id;
     }
 
@@ -38,7 +38,7 @@ public class Deposit {
      * get of dimension
      * @return the length of the array
      */
-    public Integer getDimension() {
+    protected Integer getDimension() {
         return dim;
     }
 
@@ -46,7 +46,7 @@ public class Deposit {
      * get of space
      * @return the space array
      */
-    public ResourceType[] getSpace() {
+    protected ResourceType[] getSpace() {
         return space;
     }
 
@@ -54,7 +54,7 @@ public class Deposit {
      * get of type
      * @return the type of the deposit
      */
-    public ResourceType getType() {
+    protected ResourceType getType() {
         return type;
     }
 
@@ -64,7 +64,7 @@ public class Deposit {
      * @throws IllegalResourceException if the ResourceType is wrong
      * @throws IndexOutOfBoundsException if the index is out of bounds
      */
-    public void addResource(ResourceType res) throws IllegalResourceException, IndexOutOfBoundsException, FullSpaceException {
+    protected void addResource(ResourceType res) throws IllegalResourceException, IndexOutOfBoundsException, FullSpaceException {
         if(res==ResourceType.WHITE || res==ResourceType.RED || res==ResourceType.UNKNOWN) throw new IllegalResourceException();
         if(type!=ResourceType.EMPTY) {
             if (res != type) throw new IllegalResourceException();
@@ -90,7 +90,7 @@ public class Deposit {
      *
      * @return the removedResource
      */
-    public ResourceType removeResource() {
+    protected ResourceType removeResource() {
         ResourceType ret=ResourceType.EMPTY;
         for(int i=dim-1;i>=0;i--){
             if(space[i]!=ResourceType.EMPTY){
@@ -107,7 +107,7 @@ public class Deposit {
         }
         return ret;
     }
-    public void changeType(ResourceType res) throws NonEmptyException {
+    protected void changeType(ResourceType res) throws NonEmptyException {
         for(int i=0;i<dim;i++){
             if(space[i]!=ResourceType.EMPTY){
                 throw new NonEmptyException();
@@ -115,7 +115,7 @@ public class Deposit {
         }
         type=res;
     }
-    public void visualize(){
+    protected void visualize(){
         System.out.println("ID:"+id);
         System.out.println("TYPE:"+type);
         System.out.print("SPACE:");
@@ -128,7 +128,7 @@ public class Deposit {
     /**
      * @return the number of EMPTY spaces in the deposit
      */
-    public Integer freeSpaces(){
+    protected Integer freeSpaces(){
         Integer count=0;
         for(int i=0;i<dim;i++){
             if(space[i]==ResourceType.EMPTY) count++;

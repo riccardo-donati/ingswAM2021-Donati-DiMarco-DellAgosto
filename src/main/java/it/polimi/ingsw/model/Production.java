@@ -16,7 +16,7 @@ public class Production {
      * constructor that creates an empty production
      * selected is set to false
      */
-    public Production(){
+    protected Production(){
         input=new HashMap<>();
         output=new HashMap<>();
         selected=false;
@@ -28,7 +28,7 @@ public class Production {
      * @param input map that represents the input of the production
      * @param output map that represents the output of the production
      */
-    public Production(Map<ResourceType,Integer> input,Map<ResourceType,Integer> output){
+    protected Production(Map<ResourceType,Integer> input,Map<ResourceType,Integer> output){
         this.input=input;
         this.output=output;
         selected=false;
@@ -38,7 +38,7 @@ public class Production {
      * input get
      * @return the input of the production
      */
-    public Map<ResourceType, Integer> getInput() {
+    protected Map<ResourceType, Integer> getInput() {
         return input;
     }
 
@@ -46,7 +46,7 @@ public class Production {
      * output get
      * @return the output of the production
      */
-    public Map<ResourceType, Integer> getOutput() {
+    protected Map<ResourceType, Integer> getOutput() {
         return output;
     }
 
@@ -54,7 +54,7 @@ public class Production {
      * selected get
      * @return true if the production is selected
      */
-    public boolean checkSelected(){
+    protected boolean checkSelected(){
         return selected;
     }
 
@@ -63,7 +63,7 @@ public class Production {
      * if the attribute selected is false, it becomes true ONLY if the production is valid (doesn't have UNKNOWN resource type in or out)
      * @throws UnknownFindException if you are trying to select a production not valid
      */
-    public void toggleSelected() throws UnknownFindException {
+    protected void toggleSelected() throws UnknownFindException {
         if(selected)
             selected=false;
         else{
@@ -78,7 +78,7 @@ public class Production {
      * @param resourceType type of input to be added
      * @param quantity quantity of the specified resource
      */
-    public void addInput(ResourceType resourceType, Integer quantity) {
+    protected void addInput(ResourceType resourceType, Integer quantity) {
         if(input.containsKey(resourceType))
             input.replace(resourceType, input.get(resourceType) + quantity);
         else input.put(resourceType, quantity);
@@ -89,7 +89,7 @@ public class Production {
      * @param resourceType type of output to be added
      * @param quantity quantity of the specified resource
      */
-    public void addOutput(ResourceType resourceType, Integer quantity) {
+    protected void addOutput(ResourceType resourceType, Integer quantity) {
         if(output.containsKey(resourceType))
             output.replace(resourceType, output.get(resourceType) + quantity);
         else output.put(resourceType, quantity);
@@ -101,7 +101,7 @@ public class Production {
      * @param quantity of the specified resource
      * @throws ResourcesNotAvailableException when the resource is not available
      */
-    public void removeInput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+    protected void removeInput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
         if(input.containsKey(resourceType) && input.get(resourceType)>=quantity){
             input.replace(resourceType,input.get(resourceType)-quantity);
         }else throw new ResourcesNotAvailableException();
@@ -113,7 +113,7 @@ public class Production {
      * @param quantity of the specified resource
      * @throws ResourcesNotAvailableException when the resource is not available
      */
-    public void removeOutput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+    protected void removeOutput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
         if(output.containsKey(resourceType) && output.get(resourceType)>=quantity){
             output.replace(resourceType,output.get(resourceType)-quantity);
         }else throw new ResourcesNotAvailableException();
@@ -123,7 +123,7 @@ public class Production {
      * checks whether the production has any UNKNOWN resource type in the input or output map
      * @return false if the production has any UNKNOWN resource type in the input or output map, true otherwise
      */
-    public boolean checkValidity(){
+    protected boolean checkValidity(){
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;
         }

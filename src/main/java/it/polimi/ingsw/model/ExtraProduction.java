@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 
 public class ExtraProduction extends SpecialAbility {
 
-    public ExtraProduction(ResourceType resourceType) {
+    protected ExtraProduction(ResourceType resourceType) {
         super(resourceType);
     }
 

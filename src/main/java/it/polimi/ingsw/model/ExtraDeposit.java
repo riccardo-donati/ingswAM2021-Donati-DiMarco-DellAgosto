@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 
 public class ExtraDeposit extends SpecialAbility {
 
-    public ExtraDeposit(ResourceType resourceType) {
+    protected ExtraDeposit(ResourceType resourceType) {
         super(resourceType);
     }
 
@@ -14,7 +14,7 @@ public class ExtraDeposit extends SpecialAbility {
      * @param player affected
      */
     @Override
-    public void activate(Player player) {
+    protected void activate(Player player) {
         try {
             player.getBoard().getWarehouse().addExtraDepot(resourceType);
         } catch (IllegalResourceException e) {

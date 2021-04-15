@@ -7,7 +7,7 @@ public abstract class SpecialAbility {
     protected ResourceType resourceType;
 
 
-    public SpecialAbility(ResourceType resourceType) {
+    protected SpecialAbility(ResourceType resourceType) {
         this.resourceType = resourceType;
     }
 
@@ -15,6 +15,6 @@ public abstract class SpecialAbility {
      * depending on the class that runs it, activates the special ability for the player
      * @param player affected
      */
-    public void activate(Player player) { }
+    protected void activate(Player player) { }
 
 }

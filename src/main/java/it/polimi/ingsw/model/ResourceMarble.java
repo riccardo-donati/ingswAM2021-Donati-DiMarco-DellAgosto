@@ -9,9 +9,14 @@ import java.util.Objects;
 public class ResourceMarble implements Marble {
     private ResourceType type;
 
-    public ResourceMarble(ResourceType t){
+    protected ResourceMarble(ResourceType t){
         type=t;
     }
+
+    /**
+     *
+     * @param p target of the changes
+     */
     @Override
     public void action(Player p) {
         try {

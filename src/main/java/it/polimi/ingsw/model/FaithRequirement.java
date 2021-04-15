@@ -6,7 +6,7 @@ public class FaithRequirement implements Requirement {
 
     private final Integer position;
 
-    public FaithRequirement(Integer position) {
+    protected FaithRequirement(Integer position) {
         this.position = position;
     }
 
@@ -14,7 +14,7 @@ public class FaithRequirement implements Requirement {
      *
      * @return the requirement position
      */
-    public Integer getPosition() {
+    protected Integer getPosition() {
         return position;
     }
 

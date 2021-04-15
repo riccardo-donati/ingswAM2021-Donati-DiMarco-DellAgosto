@@ -28,38 +28,38 @@ public abstract class Game implements BoardObserver {
     private TurnPhase turnPhase;
     private boolean endGameTrigger;
 
-    public List<Player> getPlayers() { return players; }
-    public List<DevelopmentCard> getDevelopmentCards() {
+    protected List<Player> getPlayers() { return players; }
+    protected List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
-    public List<LeaderCard> getLeaderCards() {
+    protected List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
-    public Stack<DevelopmentCard>[][] getCardMatrix() {
+    protected Stack<DevelopmentCard>[][] getCardMatrix() {
         return cardMatrix;
     }
-    public Player getCurrPlayer() { return currPlayer; }
-    public void pushBlackCross(Integer push){}
-    public void tokenShuffle(){}
-    public List<Token> getTokens(){return null;}
-    public FaithPath getBlackCrossFaithPath(){return null;}
-    public void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
-    public GamePhase getGamePhase() { return gamePhase; }
-    public TurnPhase getTurnPhase() { return turnPhase; }
+    protected Player getCurrPlayer() { return currPlayer; }
+    protected void pushBlackCross(Integer push){}
+    protected void tokenShuffle(){}
+    protected List<Token> getTokens(){return null;}
+    protected FaithPath getBlackCrossFaithPath(){return null;}
+    protected void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
+    protected GamePhase getGamePhase() { return gamePhase; }
+    protected TurnPhase getTurnPhase() { return turnPhase; }
 
 
     /**
      * market setter for testing purposes
      * @param market new market
      */
-    public void setMarket(Market market) {
+    protected void setMarket(Market market) {
         this.market = market;
     }
 
     /**
      * Constructor of the class Game where we initialize all the attributes
      */
-    public Game()  {
+    protected Game()  {
         //initialization of the developmentCards from JSON
         developmentCards=new ArrayList<>();
         loadDevelopmentCardsFromJSON();
@@ -78,7 +78,7 @@ public abstract class Game implements BoardObserver {
     /**
      * Using GSON we initialize the developmentCard list
      */
-    public void loadDevelopmentCardsFromJSON() {
+    protected void loadDevelopmentCardsFromJSON() {
         Gson gson=new Gson();
         Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
         JsonReader reader = null;
@@ -94,7 +94,7 @@ public abstract class Game implements BoardObserver {
     /**
      * Using GSON we initialize the leaderCard list
      */
-    public void loadLeaderCardsFromJSON() {
+    protected void loadLeaderCardsFromJSON() {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new InterfaceAdapter<Requirement>());
         builder.registerTypeAdapter(SpecialAbility.class, new InterfaceAdapter<SpecialAbility>());
@@ -116,11 +116,11 @@ public abstract class Game implements BoardObserver {
      * ROW 0: level 1 | ROW 1: level 2 | ROW 2: level 3
      * COL 0: GREEN | COL 1: BLUE | COL 2: YELLOW | COL 3: VIOLET
      */
-    public void initializeCardMatrix(){
-        cardMatrix=new Stack[ROW][COL];
-        for(int r=0;r<ROW;r++){
-            for(int c=0;c<COL;c++){
-                cardMatrix[r][c]=new Stack<>();
+    protected void initializeCardMatrix(){
+        cardMatrix = new Stack[ROW][COL];
+        for (int r = 0; r < ROW; r++){
+            for (int c = 0; c < COL; c++){
+                cardMatrix[r][c] = new Stack<>();
             }
         }
         List<DevelopmentCard> copy=new ArrayList<>(developmentCards);
@@ -137,8 +137,8 @@ public abstract class Game implements BoardObserver {
      * addition of a new player into the game
      * @param nickname of the new player
      */
-    public void addPlayer(String nickname) throws FullGameException {
-        if(nickname==""){
+    protected void addPlayer(String nickname) throws FullGameException {
+        if(nickname.equals("")){
             throw new IllegalArgumentException("nickname is empty");
         }
         for(Player p : players){
@@ -158,17 +158,18 @@ public abstract class Game implements BoardObserver {
      * implemented in Singleplayer
      * @param toDiscard is the color of the card to discard
      */
-    public void discardColor(Color toDiscard){ }
+    protected void discardColor(Color toDiscard){ }
 
     /**
      * implemented differently in single and multyplayer
      */
-    public void nextTurn(){}
+    protected void nextTurn(){}
 
     @Override
     public void updateEndGame() {
         endGameTrigger=true;
     }
+
     @Override
     public void updateDiscard(Warehouse wh) {
         for(Player p : players){
@@ -196,7 +197,7 @@ public abstract class Game implements BoardObserver {
      * @param rc indicate row or column
      * @param index is the index of the row/column
      */
-    public void buyAtMarket(char rc,int index){
+    protected void buyAtMarket(char rc,int index){
         if(rc=='r'){
             market.getRow(index, currPlayer);
         }else if(rc=='c'){
@@ -212,7 +213,7 @@ public abstract class Game implements BoardObserver {
      * @throws EmptyPlayersException if there aren't any players
      * @throws IllegalResourceException if UNKNOWN is illegal (it's not)
      */
-    public void startGame() throws EmptyPlayersException, IllegalResourceException {
+    protected void startGame() throws EmptyPlayersException, IllegalResourceException {
         if(players.size()==0) throw new EmptyPlayersException();
         Collections.shuffle(players);
         for(int i=0;i<players.size();i++){
@@ -236,7 +237,7 @@ public abstract class Game implements BoardObserver {
      * compile a report of the statistics of the game with points and winner
      * @return the result of the game
      */
-    public Result endGame(){
+    protected Result endGame(){
         Result result=new Result();
         for(Player p : players){
             result.addToResults(p.getNickname(),p.countPoints());//countPoints;
@@ -248,7 +249,7 @@ public abstract class Game implements BoardObserver {
      * @return the list of lists of 4 leader cards
      * @throws EmptyPlayersException if there aren't any player
      */
-    public List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException {
+    protected List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException {
         if(players.size()==0) throw new EmptyPlayersException();
         List<LeaderCard> copyLeaders=new ArrayList<>(leaderCards);
         List<List<LeaderCard>> result=new ArrayList<>();
@@ -334,34 +335,34 @@ public abstract class Game implements BoardObserver {
             currPlayer.substituteUnknownInInputProduction(currPlayer.getExtraProductions().get(index), res);
         }else throw new IllegalActionException();
     }
-    public void toggleBaseProd() throws UnknownFindException {
+    public void toggleBaseProd() throws UnknownFindException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getBoard().getBaseProduction().toggleSelected();
             if(currPlayer.countSelectedProductions()==0){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
-        }else new IllegalActionException();
+        }else throw new IllegalActionException();
     }
-    public void toggleExtraProd(Integer index) throws UnknownFindException {
+    public void toggleExtraProd(Integer index) throws UnknownFindException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getExtraProductions().get(index).toggleSelected();
             if(currPlayer.countSelectedProductions()==0){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
-        }else new IllegalActionException();
+        }else throw new IllegalActionException();
     }
-    public void toggleCardProd(Integer slot) throws UnknownFindException {
+    public void toggleCardProd(Integer slot) throws UnknownFindException, IllegalActionException, IllegalSlotException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             Stack<DevelopmentCard> tmp=currPlayer.getBoard().getSlots().get(slot);
             if(tmp.size()>0){
                 tmp.get(tmp.size()-1).getProd().toggleSelected();
-            }else new IllegalSlotException();
+            }else throw new IllegalSlotException();
             if(currPlayer.countSelectedProductions()==0){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
-        }else new IllegalActionException();
+        }else throw new IllegalActionException();
     }
-    public void pickUpResourceFromWarehouse(Integer id) throws IllegalActionException, ResourcesNotAvailableException {
+    public void pickUpResourceFromWarehouse(Integer id) throws IllegalActionException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.pickUpResourceFromWarehouse(id);
             turnPhase=TurnPhase.PICKUPPHASE;
@@ -373,7 +374,7 @@ public abstract class Game implements BoardObserver {
             turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
-    public void revertPickUp() throws IllegalActionException {
+    public void revertPickUp() throws IllegalActionException, FullSpaceException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE) {
             currPlayer.revertPickUp();
             turnPhase=TurnPhase.STARTTURN;

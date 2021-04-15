@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model.interfaces;
 
 import it.polimi.ingsw.model.Board;
-import it.polimi.ingsw.model.enums.Color;
 
 public interface Requirement {
 

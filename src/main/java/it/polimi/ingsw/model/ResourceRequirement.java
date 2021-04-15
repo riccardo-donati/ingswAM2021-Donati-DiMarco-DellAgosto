@@ -12,7 +12,12 @@ public class ResourceRequirement implements Requirement {
     private final Integer quantity;
     private final ResourceType resource;
 
-    public ResourceRequirement(ResourceType resource, Integer quantity) {
+    /**
+     * base constructor
+     * @param resource type of the requirement
+     * @param quantity size of the requirement
+     */
+    protected ResourceRequirement(ResourceType resource, Integer quantity) {
         this.quantity = quantity;
         this.resource = resource;
     }
@@ -21,7 +26,7 @@ public class ResourceRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    public Integer getQuantity() {
+    protected Integer getQuantity() {
         return quantity;
     }
 
@@ -29,7 +34,7 @@ public class ResourceRequirement implements Requirement {
      *
      * @return the requirement resource type
      */
-    public ResourceType getResource() {
+    protected ResourceType getResource() {
         return resource;
     }
 

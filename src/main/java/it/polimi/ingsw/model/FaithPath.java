@@ -13,7 +13,7 @@ public class FaithPath {
     /**
      * initialize the position, the Points Position as an HAshMap and the 3 PopeFavor cards with their values
      */
-    public FaithPath() {
+    protected FaithPath() {
         this.position = 0;
         pointsPosition = new HashMap<>();
         pointsPosition.put(3,1);
@@ -34,7 +34,7 @@ public class FaithPath {
      * moves the current player position for a certain value
      * @param move express how much the player position has to move forward
      */
-    public void addToPosition(Integer move) {
+    protected void addToPosition(Integer move) {
         if(position + move > 24) {
             position = 24;
         }
@@ -52,7 +52,7 @@ public class FaithPath {
      * Counts the current player's score by adding every value of the Map from the beginning to the player position
      * @return the player's score
      */
-    public Integer countFaithPoints(){
+    protected Integer countFaithPoints(){
         Integer curr = 0, max = 0;
 
         for (Map.Entry<Integer,Integer> entry : pointsPosition.entrySet()){
@@ -74,7 +74,7 @@ public class FaithPath {
      * getter for the attribute
      * @return the current position
      */
-    public Integer getPosition() {
+    protected Integer getPosition() {
         return position;
     }
 
@@ -82,20 +82,20 @@ public class FaithPath {
      * getter of the Pope Favor list
      * @return the list of all the pope favor cards
      */
-    public List<PopeFavor> getPopeFavorList() {
+    protected List<PopeFavor> getPopeFavorList() {
         return popeFavorList;
     }
 
     /**
      *
      */
-    public void notifyEndGame(){
+    protected void notifyEndGame(){
         for(BoardObserver obs : observer){
             obs.updateEndGame();
         }
     }
 
-    public void notifyPopeFavor(){
+    protected void notifyPopeFavor(){
         for(BoardObserver obs : observer){
             obs.updatePopeFavor();
         }
@@ -105,7 +105,7 @@ public class FaithPath {
      *
      * @param obs observer to the FaithPath
      */
-    public void addObserver(BoardObserver obs){
+    protected void addObserver(BoardObserver obs){
         observer.add(obs);
     }
 

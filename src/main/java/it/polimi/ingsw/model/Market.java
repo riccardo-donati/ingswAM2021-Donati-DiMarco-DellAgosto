@@ -12,7 +12,6 @@ public class Market {
     private static final Integer NROW=3;
     private static final Integer NCOL=4;
 
-
     /**
      * Initializing the marble matrix and the pendingMarble in a defined order
      */
@@ -26,7 +25,7 @@ public class Market {
     /**
      * Randomizing the order of the marbles
      */
-    public void initializeMarket(){
+    protected void initializeMarket(){
         Random ran=new Random();
 
         for(int r=0;r<NROW;r++){
@@ -50,7 +49,7 @@ public class Market {
      * @param r index of the selected row
      * @param p refercence to the clicking player
      */
-    public void getRow(Integer r,Player p){
+    protected void getRow(Integer r,Player p){
         if(r<0 || r>2){
             throw new IndexOutOfBoundsException();
         }
@@ -69,7 +68,7 @@ public class Market {
      * @param c index of the selected column
      * @param p refercence to the clicking player
      */
-    public void getColumn(Integer c,Player p){
+    protected void getColumn(Integer c,Player p){
         if(c<0 || c>3){
             throw new IndexOutOfBoundsException();
         }
@@ -85,15 +84,18 @@ public class Market {
     }
 
     /**
-     *getter of the attributes
+     * @return market structure
      */
-    public Marble[][] getMarbles(){
+    protected Marble[][] getMarbles(){
         return marbles;
     }
-    public Marble getpendingMarble(){
+
+    /**
+     * @return pending marble attribute
+     */
+    protected Marble getPendingMarble(){
         return pendingMarble;
     }
-
 
     @Override
     public boolean equals(Object o) {
@@ -109,6 +111,5 @@ public class Market {
         }
         return pendingMarble.equals(market.pendingMarble);
     }
-
 
 }

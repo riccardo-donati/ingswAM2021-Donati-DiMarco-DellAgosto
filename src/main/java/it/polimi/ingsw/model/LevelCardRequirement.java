@@ -1,7 +1,6 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
 import java.util.Map;
@@ -13,7 +12,7 @@ public class LevelCardRequirement implements Requirement {
     private final Integer quantity;
     private final Integer level;
 
-    public LevelCardRequirement(Color color, Integer quantity, Integer level) {
+    protected LevelCardRequirement(Color color, Integer quantity, Integer level) {
         this.color = color;
         this.quantity = quantity;
         this.level = level;
@@ -23,7 +22,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement color
      */
-    public Color getColor() {
+    protected Color getColor() {
         return color;
     }
 
@@ -31,7 +30,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    public Integer getQuantity() {
+    protected Integer getQuantity() {
         return quantity;
     }
 
@@ -39,7 +38,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement level
      */
-    public Integer getLevel() {
+    protected Integer getLevel() {
         return level;
     }
 

@@ -1,6 +1,5 @@
 package it.polimi.ingsw.model.interfaces;
 
-import it.polimi.ingsw.model.FaithPath;
 import it.polimi.ingsw.model.Warehouse;
 
 public interface BoardObserver {

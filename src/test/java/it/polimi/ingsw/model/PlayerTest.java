@@ -89,7 +89,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderCardRequirement() throws NonEmptyException, InvalidPushException {
+    void playLeaderCardRequirement() throws InvalidPushException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
@@ -115,7 +115,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderLevelCardRequirement() throws NonEmptyException, InvalidPushException {
+    void playLeaderLevelCardRequirement() throws InvalidPushException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
@@ -201,7 +201,7 @@ class PlayerTest {
     }
 
     @Test
-    public void Test1PickUpResourceWarehouse() throws FullGameException, FullSpaceException, IllegalResourceException {
+    public void Test1PickUpResourceWarehouse() throws FullSpaceException, IllegalResourceException {
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
@@ -258,7 +258,7 @@ class PlayerTest {
         player.getBoard().getWarehouse().visualize();
     }
     @Test
-    public void Test1PickUpResourceStrongbox() throws IllegalResourceException, ResourcesNotAvailableException {
+    public void Test1PickUpResourceStrongbox() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException {
         player.getBoard().addResourceInStrongbox(ResourceType.YELLOW);
         player.getBoard().addResourceInStrongbox(ResourceType.GREY);
         player.getBoard().addResourceInStrongbox(ResourceType.BLUE);
@@ -282,7 +282,7 @@ class PlayerTest {
         assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
     }
     @Test
-    public void TestPickUpResourceMixed() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+    public void TestPickUpResourceMixed() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
         player.getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
@@ -335,7 +335,7 @@ class PlayerTest {
 
 
     @Test
-    public void TestBuyLv1() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+    public void TestBuyLv1() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
@@ -364,7 +364,7 @@ class PlayerTest {
         assertEquals(d,player.getBoard().getSlots().get(1).get(0));
     }
     @Test
-    public void TestIllegalBuyLv1() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException {
+    public void TestIllegalBuyLv1() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
@@ -393,7 +393,7 @@ class PlayerTest {
         );
     }
     @Test
-    public void TestBuyLv2() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException {
+    public void TestBuyLv2() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
@@ -425,7 +425,7 @@ class PlayerTest {
         assertEquals(d2,player.getBoard().getSlots().get(1).get(1));
     }
     @Test
-    public void TestBuyLv3() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException {
+    public void TestBuyLv3() throws IllegalResourceException, ResourcesNotAvailableException, FullSpaceException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.YELLOW,2));
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
@@ -464,7 +464,7 @@ class PlayerTest {
         assertEquals(d3,player.getBoard().getSlots().get(3).pop());
     }
     @Test
-    public void TestBuyCostTooFew() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+    public void TestBuyCostTooFew() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.VIOLET,1));
         cost.add(new ResourceRequirement(ResourceType.YELLOW,1));
@@ -496,7 +496,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestBuyCostTooMany1() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException {
+    public void TestBuyCostTooMany1() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.VIOLET,1));
         cost.add(new ResourceRequirement(ResourceType.YELLOW,1));
@@ -532,7 +532,7 @@ class PlayerTest {
         assertEquals(d1,player.getBoard().getSlots().get(3).get(0));
     }
     @Test
-    public void TestBuyCostTooMany2() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException {
+    public void TestBuyCostTooMany2() throws ResourcesNotAvailableException, FullSpaceException, IllegalResourceException, DepositNotExistingException, NonEmptyException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.GREY,2));
         cost.add(new ResourceRequirement(ResourceType.VIOLET,2));
@@ -574,7 +574,7 @@ class PlayerTest {
         assertEquals(d1,player.getBoard().getSlots().get(3).get(0));
     }
     @Test
-    public void TestPickedForProd() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException {
+    public void TestPickedForProd() throws IllegalResourceException, FullSpaceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         Production p=new Production();
         p.addInput(ResourceType.YELLOW,2);
         p.addInput(ResourceType.BLUE,1);
@@ -644,7 +644,7 @@ class PlayerTest {
 
     }
     @Test
-    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
+    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
         assertThrows(UnknownFindException.class,
                 ()->player.getBoard().getBaseProduction().toggleSelected());
         player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
@@ -666,7 +666,7 @@ class PlayerTest {
 
     }
     @Test
-    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
+    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
         Production p=new Production();
         p.addInput(ResourceType.YELLOW,1);
         p.addOutput(ResourceType.RED,1);

@@ -166,8 +166,8 @@ public class Warehouse {
      * @param id2 is the id of the to deposit
      */
     public void moveResource(Integer id1,Integer id2) throws FullSpaceException, IllegalResourceException, NonEmptyException {
-        Deposit d1=null;
-        Deposit d2=null;
+        Deposit d1;
+        Deposit d2;
         if(id1<=3) d1=maindepot.get(id1-1);
         else d1=extradepots.get(id1-4);
         if(id2<=3) d2=maindepot.get(id2-1);
@@ -323,36 +323,23 @@ public class Warehouse {
      * @param id is the id of the deposit
      * @return the removed resource
      */
-    public ResourceType removeResourceFromDeposit(Integer id){
+    public ResourceType removeResourceFromDeposit(Integer id) throws DepositNotExistingException, NonEmptyException {
         Deposit d;
-        boolean extra=false;
-        ResourceType type=ResourceType.EMPTY;
-        try {
-            if (id <= 3) {
-                d = getMaindepot().get(id - 1);
-            } else {
-                d = getExtradepots().get(id - 4);
-                type=d.getType();
-                extra=true;
-            }
-        }catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
-            System.out.println("Deposito inesistente");
-            return ResourceType.EMPTY;
+        ResourceType type = ResourceType.EMPTY;
+
+        if(id < 1 || id > nDeposit)
+            throw new DepositNotExistingException();
+
+        if (id <= 3) {
+            d = getMaindepot().get(id - 1);
+        } else {
+            d = getExtradepots().get(id - 4);
+            type=d.getType();
         }
+
         ResourceType res=d.removeResource();
-        if(d.getType()==ResourceType.EMPTY){
-            try {
-                d.changeType(type);
-            } catch (NonEmptyException e) {
-                e.printStackTrace();
-            }
-        }
+        if(d.getType()==ResourceType.EMPTY)
+            d.changeType(type);
         return res;
-
     }
-
-
-
-
 }

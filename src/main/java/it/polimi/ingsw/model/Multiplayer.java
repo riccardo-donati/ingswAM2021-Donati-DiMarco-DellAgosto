@@ -14,19 +14,19 @@ public class Multiplayer extends Game{
      * set the next player
      */
     @Override
-    public void nextTurn(){
+    protected void nextTurn(){
         int index=getPlayers().indexOf(getCurrPlayer());
         setCurrPlayer(getPlayers().get((index+1)%(getPlayers().size())));
     }
 
     @Override
-    public void addPlayer(String nick) throws FullGameException {
+    protected void addPlayer(String nick) throws FullGameException {
         if(getPlayers().size()==4) throw new FullGameException();
         super.addPlayer(nick);
     }
     //----------------PublicInterface----------------------------------------------------------------------
     @Override
-    public Result endGame(){
+    protected Result endGame(){
         Result result=super.endGame();
         result.setWinner(result.checkWinner());
         return  result;

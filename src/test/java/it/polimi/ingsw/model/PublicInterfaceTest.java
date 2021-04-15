@@ -149,7 +149,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestBaseProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+    public void TestBaseProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException, DepositNotExistingException {
         TestSetUpTurnMultiplayer();
 
         //artificially adding resources to player's warehouse
@@ -173,7 +173,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestExtraProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+    public void TestExtraProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException, DepositNotExistingException {
         TestSetUpTurnMultiplayer();
 
         //artificially adding resources to player's warehouse

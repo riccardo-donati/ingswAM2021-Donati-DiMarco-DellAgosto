@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.DepositableResourceException;
-import it.polimi.ingsw.model.exceptions.FullSpaceException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +10,7 @@ import java.time.Year;
 import static org.junit.jupiter.api.Assertions.*;
 
 class WarehouseTest {
-    Warehouse wh=new Warehouse();;
+    Warehouse wh=new Warehouse();
 
     @Test
     public void TestAddIllegalResource(){
@@ -135,7 +132,7 @@ class WarehouseTest {
         wh.visualize();
     }
     @Test
-    public void TestRemove() throws IllegalResourceException, FullSpaceException {
+    public void TestRemove() throws IllegalResourceException, FullSpaceException, DepositNotExistingException, NonEmptyException {
         wh.addResourceInPending(ResourceType.BLUE);
         wh.addResourceInPending(ResourceType.BLUE);
         wh.addResourceInPending(ResourceType.BLUE);
@@ -367,7 +364,7 @@ class WarehouseTest {
     }
 
     @Test
-    public void TestRemoveAddExtra() throws IllegalResourceException, FullSpaceException {
+    public void TestRemoveAddExtra() throws IllegalResourceException, FullSpaceException, DepositNotExistingException, NonEmptyException {
         wh.addResourceInPending(ResourceType.VIOLET);
         wh.addResourceInPending(ResourceType.YELLOW);
 

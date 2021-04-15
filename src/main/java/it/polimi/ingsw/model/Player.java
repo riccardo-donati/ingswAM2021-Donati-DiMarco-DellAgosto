@@ -21,7 +21,7 @@ public class Player {
 
     private Map<Integer,Map<ResourceType, Integer>> pickedResource=new HashMap<>();
 
-    public void setOrder(int order){
+    protected void setOrder(int order){
         this.order=order;
     }
     /**
@@ -29,19 +29,7 @@ public class Player {
      * @param id is the id of the deposit
      * @throws ResourcesNotAvailableException if the resource isn't available
      */
-    public void pickUpResourceFromWarehouse(Integer id) throws ResourcesNotAvailableException {
-        Deposit d;
-        try {
-            if (id <= 3) {
-                d = getBoard().getWarehouse().getMaindepot().get(id - 1);
-            } else {
-                d = getBoard().getWarehouse().getExtradepots().get(id - 4);
-            }
-        }catch (IndexOutOfBoundsException e){
-            e.printStackTrace();
-            System.out.println("Deposito inesistente");
-            return;
-        }
+    protected void pickUpResourceFromWarehouse(Integer id) throws ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         ResourceType r=getBoard().getWarehouse().removeResourceFromDeposit(id);
         if(r!=ResourceType.EMPTY){
             if(!pickedResource.containsKey(id)){
@@ -55,7 +43,7 @@ public class Player {
         }else throw new ResourcesNotAvailableException();
     }
 
-    public void pickUpResourceFromStrongbox(ResourceType res) throws ResourcesNotAvailableException {
+    protected void pickUpResourceFromStrongbox(ResourceType res) throws ResourcesNotAvailableException {
         ResourceType removed=getBoard().removeResourceFromStrongbox(res);
         if(removed!=ResourceType.EMPTY){
             pickedResource.get(0).replace(removed,pickedResource.get(0).get(removed)+1);
@@ -64,7 +52,7 @@ public class Player {
     /**
      * deposit back all the resources in the pickedUp map
      */
-    public void revertPickUp() {
+    protected void revertPickUp() throws FullSpaceException, IllegalResourceException {
         for (Map.Entry<Integer, Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
             if (entry.getKey() == 0) {              //strongbox
                 for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
@@ -84,22 +72,9 @@ public class Player {
                 } else {
                     d = getBoard().getWarehouse().getMaindepot().get(entry.getKey() - 1);
                 }
-                for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
-                    for (int i = 0; i < entry2.getValue(); i++) {
-                        try {
-                            d.addResource(entry2.getKey());
-
-                        } catch (IllegalResourceException e) {
-                            e.printStackTrace();
-                            System.out.println("Impossible Revert!");
-                            return;
-                        } catch (FullSpaceException e) {
-                            e.printStackTrace();
-                            System.out.println("Impossible Revert!");
-                            return;
-                        }
-                    }
-                }
+                for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet())
+                    for (int i = 0; i < entry2.getValue(); i++)
+                        d.addResource(entry2.getKey());
             }
         }
         clearPickedUp();
@@ -108,7 +83,7 @@ public class Player {
     /**
      * clear the pickedResource map
      */
-    public void clearPickedUp(){
+    protected void clearPickedUp(){
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
             entry.getValue().replace(ResourceType.GREY,0);
             entry.getValue().replace(ResourceType.BLUE,0);
@@ -119,7 +94,7 @@ public class Player {
     /**
      * initialize the pickedResource Map
      */
-    public void initializePickedResource(){
+    protected void initializePickedResource(){
         pickedResource.put(0,new HashMap<>()); //strongbox
         pickedResource.put(1,new HashMap<>());
         pickedResource.put(2,new HashMap<>());
@@ -135,7 +110,7 @@ public class Player {
     /**
      * used for testing purposes
      */
-    public Player() {
+    protected Player() {
 
     }
 
@@ -143,7 +118,7 @@ public class Player {
      * under implementation
      * @param nickname player name
      * */
-    public Player(String nickname) {
+    protected Player(String nickname) {
         this.nickname = nickname;
         this.order = -1;
         board = new Board();
@@ -151,33 +126,33 @@ public class Player {
         initializePickedResource();
     }
 
-    public String getNickname() {
+    protected String getNickname() {
         return nickname;
     }
 
-    public Integer getOrder(){return order;}
+    protected Integer getOrder(){return order;}
 
-    public Board getBoard() {
+    protected Board getBoard() {
         return board;
     }
 
-    public List<LeaderCard> getLeadersInHand() {
+    protected List<LeaderCard> getLeadersInHand() {
         return leadersInHand;
     }
 
-    public List<LeaderCard> getLeadersInGame() {
+    protected List<LeaderCard> getLeadersInGame() {
         return leadersInGame;
     }
 
-    public Map<ResourceType, Integer> getDiscounts() {
+    protected Map<ResourceType, Integer> getDiscounts() {
         return discounts;
     }
 
-    public Map<ResourceType, Integer> getWhiteTo() {
+    protected Map<ResourceType, Integer> getWhiteTo() {
         return whiteTo;
     }
 
-    public List<Production> getExtraProductions() {
+    protected List<Production> getExtraProductions() {
         return extraProductions;
     }
 
@@ -190,7 +165,7 @@ public class Player {
         leadersInHand.addAll(leaderCards);
     }
 
-    public Integer countPoints(){
+    protected Integer countPoints(){
         Integer temp = 0;
         for (LeaderCard l : leadersInGame){
             temp += l.getPoints();
@@ -223,7 +198,7 @@ public class Player {
      * @param ld is the leadercard
      * @throws CardNotAvailableException if the leader card is not available
      */
-    public void discardLeader(LeaderCard ld) throws CardNotAvailableException {
+    protected void discardLeader(LeaderCard ld) throws CardNotAvailableException {
         if(leadersInHand.contains(ld)){
             leadersInHand.remove(ld);
             getBoard().getFaithPath().addToPosition(1);
@@ -235,7 +210,7 @@ public class Player {
      *  if the resource type is not present, it gets added to the map with value 1
      * @param resourceType discount added
      */
-    public void addDiscount(ResourceType resourceType) {
+    protected void addDiscount(ResourceType resourceType) {
         if(discounts.containsKey(resourceType))
             discounts.replace(resourceType, discounts.get(resourceType) + 1);
         else discounts.put(resourceType, 1);
@@ -247,7 +222,7 @@ public class Player {
      *      *  if the resource type is not present, it gets added to the map with value 1
      * @param resourceType conversion added
      */
-    public void addWhiteTo(ResourceType resourceType) {
+    protected void addWhiteTo(ResourceType resourceType) {
         if(whiteTo.containsKey(resourceType))
             whiteTo.replace(resourceType, whiteTo.get(resourceType) + 1);
         else whiteTo.put(resourceType, 1);
@@ -257,7 +232,7 @@ public class Player {
      * adds the new production to the extra productions list
      * @param production added
      */
-    public void addExtraProduction(Production production) {
+    protected void addExtraProduction(Production production) {
         extraProductions.add(production);
     }
 
@@ -266,7 +241,7 @@ public class Player {
      * @param mainMap map that is modified
      * @param mapToAdd map that is merged to the first one
      */
-    public static void mergeResourceTypeMaps(Map<ResourceType, Integer> mainMap, Map<ResourceType, Integer> mapToAdd) {
+    protected static void mergeResourceTypeMaps(Map<ResourceType, Integer> mainMap, Map<ResourceType, Integer> mapToAdd) {
         for (ResourceType resourceType : mapToAdd.keySet()) {
             if (mainMap.containsKey(resourceType))
                 mainMap.replace(resourceType, mainMap.get(resourceType) + mapToAdd.get(resourceType));
@@ -282,7 +257,7 @@ public class Player {
      * @throws IllegalResourceException if the output contains illegal resources
      * @throws TooManyResourcesException if the resources in pickedResources are too many for the input of the big production
      */
-    public void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFindException {
+    protected void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFindException {
         Map<ResourceType, Integer> input = new HashMap<>();
         Map<ResourceType, Integer> output = new HashMap<>();
         for (Production production : extraProductions) {
@@ -320,7 +295,7 @@ public class Player {
      * Deposit in strongbox the normal resources and convert in faith the Red resources
      * @param output is output of a production
      */
-    public void elaborateOutput(Map<ResourceType,Integer> output) throws IllegalResourceException {
+    protected void elaborateOutput(Map<ResourceType,Integer> output) throws IllegalResourceException {
         if(output.containsKey(ResourceType.UNKNOWN) || output.containsKey(ResourceType.WHITE) || output.containsKey(ResourceType.EMPTY)){
             throw new IllegalResourceException();
         }
@@ -338,7 +313,7 @@ public class Player {
      * @throws ResourcesNotAvailableException if you have picked up less resources than the needed
      * @throws TooManyResourcesException if you have picked up more resources than the needed
      */
-    public void checkPickedResourcesForProduction(Production p) throws ResourcesNotAvailableException, TooManyResourcesException {
+    protected void checkPickedResourcesForProduction(Production p) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
             mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
@@ -364,7 +339,7 @@ public class Player {
      * @param p is the production
      * @throws ResourcesNotAvailableException if you have less resources than the needed
      */
-    public void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
+    protected void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
         Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
         mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
         //add also the picked up resources
@@ -382,7 +357,7 @@ public class Player {
      * @throws ResourcesNotAvailableException if you have picked up less resources than the needed
      * @throws TooManyResourcesException if you have picked up more resources than the needed
      */
-    public void checkPickedResourceForDevelopmentCard(DevelopmentCard d) throws ResourcesNotAvailableException, TooManyResourcesException {
+    protected void checkPickedResourceForDevelopmentCard(DevelopmentCard d) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
             mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
@@ -411,7 +386,7 @@ public class Player {
      * @param slot is the id of the slots map on the board
      * @throws IllegalSlotException if you can't put the card in that slot
      */
-    public void buyCard(DevelopmentCard d,Integer slot) throws IllegalSlotException, TooManyResourcesException, ResourcesNotAvailableException {
+    protected void buyCard(DevelopmentCard d,Integer slot) throws IllegalSlotException, TooManyResourcesException, ResourcesNotAvailableException {
 
         checkPickedResourceForDevelopmentCard(d);
         if(d.getLevel()==1){
@@ -436,13 +411,13 @@ public class Player {
      * Transform the white resource in pending in the resource contained in whiteTo
      * @param res is the ResourceType
      */
-    public void transformWhiteIn(ResourceType res) throws NoWhiteResourceException, IllegalResourceException {
+    protected void transformWhiteIn(ResourceType res) throws NoWhiteResourceException, IllegalResourceException {
         if(whiteTo.containsKey(res)){
             int n=whiteTo.get(res);
             getBoard().getWarehouse().replaceWhiteFromPending(res,n);
         }else throw new IllegalResourceException();
     }
-    public void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFindException {
+    protected void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFindException {
         if(p.getInput().containsKey(ResourceType.UNKNOWN)){
             int n=p.getInput().get(ResourceType.UNKNOWN);
             if(n==1) p.getInput().remove(ResourceType.UNKNOWN);
@@ -454,7 +429,7 @@ public class Player {
             }
         }else throw new UnknownNotFindException();
     }
-    public void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFindException {
+    protected void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFindException {
         if(p.getOutput().containsKey(ResourceType.UNKNOWN)){
             int n=p.getOutput().get(ResourceType.UNKNOWN);
             if(n==1) p.getOutput().remove(ResourceType.UNKNOWN);
@@ -471,7 +446,7 @@ public class Player {
      * count the total amount of selected productions
      * @return the number of selected productions
      */
-    public Integer countSelectedProductions(){
+    protected Integer countSelectedProductions(){
         Integer cont=0;
         if(getBoard().getBaseProduction().checkSelected()) cont++;
         for(Production p : extraProductions){

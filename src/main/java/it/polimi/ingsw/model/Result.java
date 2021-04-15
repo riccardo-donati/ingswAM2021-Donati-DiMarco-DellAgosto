@@ -8,16 +8,18 @@ public class Result {
     private Map<String,Integer> results;
     private String winner;
 
-    public Result(){
+    /**
+     * constructor
+     */
+    protected Result(){
         this.results=new HashMap<>();
-
     }
 
     /**
      * Check the provisional winner on the points basis
      * @return the nickname of the provisional winner
      */
-    public String checkWinner(){
+    protected String checkWinner(){
         int max=0;
         String win="";
         for (String s : results.keySet()) {
@@ -33,7 +35,7 @@ public class Result {
      * Set the winner of the game
      * @param winner is the nickname of the winner
      */
-    public void setWinner(String winner){
+    protected void setWinner(String winner){
         this.winner=winner;
         //used for debugging
         for(String s : results.keySet()){
@@ -42,7 +44,12 @@ public class Result {
         System.out.println("The winner is: " + winner + "\nWith a score of: "+ results.get(winner));
     }
 
-    public void addToResults(String nickname,Integer points){
+    /**
+     * add a player to the Result object
+     * @param nickname player's name
+     * @param points player's point
+     */
+    protected void addToResults(String nickname,Integer points){
         results.put(nickname,points);
     }
 }

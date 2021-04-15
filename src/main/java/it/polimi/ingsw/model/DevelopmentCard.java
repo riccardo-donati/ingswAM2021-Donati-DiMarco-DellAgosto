@@ -1,14 +1,9 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.ResourceType;
 
-import java.util.ArrayList;
 import java.util.List;
 
-/**
- * generators of the attributes of the class
- */
 public class DevelopmentCard {
     private List<ResourceRequirement> cost;
     private Integer level;
@@ -24,34 +19,39 @@ public class DevelopmentCard {
         this.points = points;
     }
 
-    public Color getColor(){return color;}
     /**
-     * getter of the attribute Livello
-     * @return the level of the relative card
+     * getter of the attribute color
+     * @return the card's color
      */
-    public Integer getLevel() {
+    protected Color getColor(){return color;}
+
+    /**
+     * getter of the attribute livello
+     * @return the card's level
+     */
+    protected Integer getLevel() {
         return level;
     }
 
     /**
      * getter of the card's cost
-     * @return how much and what resource is needed to buy that card
+     * @return the list of resource requirements
      */
-    public List<ResourceRequirement> getCost() {
+    protected List<ResourceRequirement> getCost() {
         return cost;
     }
 
     /**
      * getter of the card's production
-     * @return what is needed to offer to activate and what will be got back
+     * @return the card's production
      */
-    public Production getProd() {
+    protected Production getProd() {
         return production;
     }
 
     /**
      * getter for the relative card's points
-     * @return the currant points earned by the bought card
+     * @return the card's points
      */
-    public Integer getPoints(){ return points;}
+    protected Integer getPoints(){ return points;}
 }

@@ -11,7 +11,12 @@ public class CardRequirement implements Requirement {
     private final Color color;
     private final Integer quantity;
 
-    public CardRequirement(Color color, Integer quantity) {
+    /**
+     * constructor
+     * @param color required card's color
+     * @param quantity required card's quantity
+     */
+    protected CardRequirement(Color color, Integer quantity) {
         this.color = color;
         this.quantity = quantity;
     }
@@ -19,7 +24,7 @@ public class CardRequirement implements Requirement {
     /**
      * @return the requirement color
      */
-    public Color getColor() {
+    protected Color getColor() {
         return color;
     }
 
@@ -27,7 +32,7 @@ public class CardRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    public Integer getQuantity() {
+    protected Integer getQuantity() {
         return quantity;
     }
 

@@ -76,13 +76,23 @@ public class Singleplayer extends Game {
 
         }
     }
+
+    /**
+     * when a resource is discarded, increase the black cross's position by 1
+     * @param wh player's warehouse
+     */
     @Override
     public void updateDiscard(Warehouse wh) {
         super.updateDiscard(wh);
         blackFaithPath.addToPosition(1);
     }
+
+    /**
+     *
+     * @return position of the black cross
+     */
     @Override
-    public FaithPath getBlackCrossFaithPath(){return blackFaithPath;}
+    protected FaithPath getBlackCrossFaithPath(){return blackFaithPath;}
 
     /**
      * before applying the super method check if the size of players is 1
@@ -90,7 +100,7 @@ public class Singleplayer extends Game {
      * @throws FullGameException if there is already a player
      */
     @Override
-    public void addPlayer(String nick) throws FullGameException {
+    protected void addPlayer(String nick) throws FullGameException {
         if(getPlayers().size()==1){
             throw new FullGameException();
         }
@@ -101,7 +111,7 @@ public class Singleplayer extends Game {
      * draw a token from the stack and execute the related action
      */
     @Override
-    public void nextTurn(){
+    protected void nextTurn(){
         Token t=tokenStack.pop();
         t.doAction(this);
     }
@@ -111,24 +121,22 @@ public class Singleplayer extends Game {
      * @param toDiscard is the Color of the card we want to discard
      */
     @Override
-    public void discardColor(Color toDiscard){
+    protected void discardColor(Color toDiscard){
         int col=toDiscard.ordinal();
         int r=0;
-        DevelopmentCard dc;
         try {
-            dc = getCardMatrix()[r][col].pop();
+            getCardMatrix()[r][col].pop();
         }catch (EmptyStackException e1){
             r++;
             try {
-                dc = getCardMatrix()[r][col].pop();
+                getCardMatrix()[r][col].pop();
             }catch (EmptyStackException e2){
                 r++;
                 try {
-                    dc = getCardMatrix()[r][col].pop();
+                    getCardMatrix()[r][col].pop();
                     if(getCardMatrix()[r][col].size()==0){
                         endGame();
                     }
-
                 }catch (EmptyStackException e3){
                     e3.printStackTrace();
                 }
@@ -137,10 +145,15 @@ public class Singleplayer extends Game {
     }
 
     //----------------PublicInterface----------------------------------------------------------------------
+
+    /**
+     *
+     * @return game result
+     */
     @Override
-    public Result endGame(){
+    protected Result endGame(){
         boolean lose=false;
-        int cont=0;
+        int cont;
         for(int c=0;c<COL;c++){
             cont=0;
             for(int r=0;r<ROW;r++){
@@ -165,6 +178,5 @@ public class Singleplayer extends Game {
         return result;
     }
     //-----------------------------------------------------------------------------------------------------
-
 
 }

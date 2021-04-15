@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 
 public class Discount extends SpecialAbility {
 
-    public Discount(ResourceType resourceType) {
+    protected Discount(ResourceType resourceType) {
         super(resourceType);
     }
 
@@ -13,7 +13,7 @@ public class Discount extends SpecialAbility {
      * @param player affected
      */
     @Override
-    public void activate(Player player) {
+    protected void activate(Player player) {
         player.addDiscount(resourceType);
     }
 }

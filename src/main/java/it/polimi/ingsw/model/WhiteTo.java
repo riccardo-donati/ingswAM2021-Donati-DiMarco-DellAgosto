@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 
 public class WhiteTo extends SpecialAbility{
 
-    public WhiteTo(ResourceType resourceType) {
+    protected WhiteTo(ResourceType resourceType) {
         super(resourceType);
     }
 
@@ -13,7 +13,7 @@ public class WhiteTo extends SpecialAbility{
      * @param player affected
      */
     @Override
-    public void activate(Player player) {
+    protected void activate(Player player) {
         player.addWhiteTo(resourceType);
     }
 }
