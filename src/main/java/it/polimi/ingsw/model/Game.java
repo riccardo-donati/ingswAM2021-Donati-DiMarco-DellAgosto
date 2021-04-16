@@ -28,6 +28,7 @@ public abstract class Game implements BoardObserver {
     private TurnPhase turnPhase;
     private boolean endGameTrigger;
 
+    protected boolean isEndGameTrigger() { return endGameTrigger; }
     protected List<Player> getPlayers() { return players; }
     protected List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
@@ -258,10 +259,11 @@ public abstract class Game implements BoardObserver {
     protected Result endGame(){
         Result result=new Result();
         for(Player p : players){
-            result.addToResults(p.getNickname(),p.countPoints());//countPoints;
+            result.addToResults(p.getNickname(), p.countPoints(), p.getBoard().countTotalResources());//countPoints;
         }
         return result;
     }
+
     /**
      * for each player extract 4 leader cards and return them to the controller
      * @return the list of lists of 4 leader cards

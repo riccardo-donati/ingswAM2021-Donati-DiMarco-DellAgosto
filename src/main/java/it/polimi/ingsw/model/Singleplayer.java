@@ -177,7 +177,9 @@ public class Singleplayer extends Game {
         }
         Result result=super.endGame();
         if(lose){
-            result.setWinner("Lorenzo");
+            List<String> winner = new ArrayList<>();
+            winner.add("Lorenzo");
+            result.setWinner(winner);
         }else{
             result.setWinner(result.checkWinner());
         }

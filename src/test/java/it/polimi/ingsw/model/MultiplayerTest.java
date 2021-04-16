@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
@@ -59,7 +60,7 @@ class MultiplayerTest {
 
     }
 
-    @Test
+/*    @Test
     public void TestWinner() throws FullGameException {
         game=new Multiplayer();
         game.addPlayer("Tizio forte");
@@ -79,12 +80,14 @@ class MultiplayerTest {
 
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(10);   //points: 12 + 2 + 3 = 17
         game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(11);   // 20 + 2 + 3 + 4 = 29 winner
-        game.getPlayers().get(2).getBoard().getFaithPath().addToPosition(39);    // 6
-        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(19);    // 2
-    }
+        game.getPlayers().get(2).getBoard().getFaithPath().addToPosition(39);   // 6
+        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(19);   // 2
+
+        assertTrue(game.isEndGameTrigger());
+    }*/
 
     @Test
-    public void TestWinner2() throws FullGameException, NonEmptyException, InvalidPushException, IllegalResourceException, FullSpaceException {
+    public void TestWinner2() throws FullGameException, InvalidPushException, IllegalResourceException, FullSpaceException {
         game =new Multiplayer();
         game.addPlayer("Jack");     //11 Dcards + 3 storage + 3 leader + 5 pf + 12 faith = 34
         game.addPlayer("Io");       //26 points
@@ -126,6 +129,42 @@ class MultiplayerTest {
         game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(8);
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(12);
         game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(20);
+
+        assertTrue(game.isEndGameTrigger());
     }
 
+    @Test
+    public void TestSamePointsWinner() throws FullGameException, IllegalResourceException, InvalidPushException, FullSpaceException {
+        game = new Multiplayer();
+        game.addPlayer("Qiqi"); //2+1+25    28 points 1 resources -> winner
+        game.addPlayer("Eula"); //3+1+24    28 points 1 resources -> winner
+        game.addPlayer("Keqing"); //3+1+24  27 points 2 resources
+        game.addPlayer("Jean"); //3+1+24    28 points 0 resources
+
+        List<ResourceRequirement> requirements = new ArrayList<>();
+        requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
+        game.getPlayers().get(0).getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
+        game.getPlayers().get(1).getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.YELLOW, new Production(), 8));
+        game.getPlayers().get(2).getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.YELLOW, new Production(), 7));
+        game.getPlayers().get(3).getBoard().pushDCard(2, new DevelopmentCard(requirements, 1, Color.YELLOW, new Production(), 4));
+
+        game.getPlayers().get(0).getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
+        game.getPlayers().get(1).getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
+        game.getPlayers().get(2).getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+        game.getPlayers().get(2).getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
+
+        game.getPlayers().get(0).getBoard().getWarehouse().addResourceInDeposit(3,ResourceType.BLUE);
+        game.getPlayers().get(1).getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.YELLOW);
+        game.getPlayers().get(2).getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+        game.getPlayers().get(2).getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.GREY);
+
+        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(21); //+21+4
+        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(21); //+16+4
+        game.getPlayers().get(2).getBoard().getFaithPath().addToPosition(21); //+16+4
+        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(24); //+24 ->triggers endgame
+
+        Result result = game.endGame();
+        assertTrue(result.getWinner().contains("Qiqi"));
+        assertTrue(result.getWinner().contains("Eula"));
+    }
 }

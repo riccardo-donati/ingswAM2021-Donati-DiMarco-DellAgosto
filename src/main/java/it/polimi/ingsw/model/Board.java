@@ -173,4 +173,12 @@ public class Board {
             obs.updateEndGame();
         }
     }
+
+    protected  Integer countStrongboxResources() {
+        return strongbox.values().stream().reduce(0, Integer::sum);
+    }
+
+    protected Integer countTotalResources() {
+        return warehouse.countWarehouseResource() + countStrongboxResources();
+    }
 }

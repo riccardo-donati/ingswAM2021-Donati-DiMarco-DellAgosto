@@ -27,9 +27,9 @@ public class Multiplayer extends Game{
     //----------------PublicInterface----------------------------------------------------------------------
     @Override
     protected Result endGame(){
-        Result result=super.endGame();
+        Result result = super.endGame();
         result.setWinner(result.checkWinner());
-        return  result;
+        return result;
     }
     //-----------------------------------------------------------------------------------------------------
 

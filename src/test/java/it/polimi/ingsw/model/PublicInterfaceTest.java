@@ -268,7 +268,8 @@ public class PublicInterfaceTest {
         assertEquals(1, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         assertEquals(TurnPhase.STARTTURN, game.getTurnPhase());
     }
-    public void fillDeposits(Player p,boolean warehouse) throws IllegalResourceException, FullSpaceException {
+
+    public static void fillDeposits(Player p,boolean warehouse) throws IllegalResourceException, FullSpaceException {
         Map<ResourceType, Integer> resMap=new HashMap<>();
         resMap.put(ResourceType.YELLOW,999);
         resMap.put(ResourceType.BLUE,999);
@@ -293,8 +294,9 @@ public class PublicInterfaceTest {
             p.getBoard().getWarehouse().visualize();
         }
     }
+
     @Test
-    public void TestSingleRevert() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException {
+    public void TestSingleRevert() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException {
         TestSetUpTurnSingleplayer();
         fillDeposits(game.getCurrPlayer(),true);
         game.initializeCardMatrixForTests();
@@ -314,6 +316,7 @@ public class PublicInterfaceTest {
         assertEquals(1000,game.getCurrPlayer().getBoard().getStrongBox().get(ResourceType.YELLOW));
         game.passTurn();
     }
+
     @Test
     public void TestSingleEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException {
         TestSetUpTurnSingleplayer();
@@ -334,8 +337,9 @@ public class PublicInterfaceTest {
         game.passTurn();
         //aggiungi token ordinati
     }
+
     @Test
-    public void TestMultiEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
+    public void TestMultiEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
         TestSetUpTurnMultiplayer();
         fillDeposits(game.getCurrPlayer(),false);
         Market m =new Market();

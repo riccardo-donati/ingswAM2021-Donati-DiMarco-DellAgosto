@@ -71,16 +71,9 @@ public class Warehouse {
      */
     public Map<ResourceType, Integer> getTotalResources() {
         Map<ResourceType, Integer> tempMap = new HashMap<>();
-        for (Deposit deposit : maindepot) {
-            int counter = 0;
-            for (ResourceType resourceType : deposit.getSpace())
-                if (!resourceType.equals(ResourceType.EMPTY))
-                    counter++;
-            if (tempMap.containsKey(deposit.getType()))
-                tempMap.replace(deposit.getType(), tempMap.get(deposit.getType()) + counter);
-            else tempMap.put(deposit.getType(), counter);
-        }
-        for (Deposit deposit : extradepots) {
+        List<Deposit> temp = new ArrayList<>(maindepot);
+        temp.addAll(extradepots);
+        for (Deposit deposit : temp) {
             int counter = 0;
             for (ResourceType resourceType : deposit.getSpace())
                 if (!resourceType.equals(ResourceType.EMPTY))
@@ -97,11 +90,7 @@ public class Warehouse {
      * @return the points
      */
     public Integer countWarehouseResource(){
-        int resCont=0;
-        Map<ResourceType, Integer> totalResources = getTotalResources();
-        for (ResourceType resourceType : totalResources.keySet())
-            resCont += totalResources.get(resourceType);
-        return resCont;
+        return getTotalResources().values().stream().reduce(0, Integer::sum);
     }
 
     /**
