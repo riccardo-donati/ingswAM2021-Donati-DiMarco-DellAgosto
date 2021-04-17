@@ -92,7 +92,6 @@ public class Singleplayer extends Game {
         super.updateDiscard(wh);
         blackFaithPath.addToPosition(1);
     }
-
     /**
      *
      * @return position of the black cross

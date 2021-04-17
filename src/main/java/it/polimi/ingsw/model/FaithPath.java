@@ -10,6 +10,10 @@ public class FaithPath {
     private List<PopeFavor> popeFavorList;
     private List<BoardObserver> observer = new ArrayList<>();
 
+    public List<BoardObserver> getObserver() {
+        return observer;
+    }
+
     /**
      * initialize the position, the Points Position as an HAshMap and the 3 PopeFavor cards with their values
      */

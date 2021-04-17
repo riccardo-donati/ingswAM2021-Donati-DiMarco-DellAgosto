@@ -96,6 +96,10 @@ public class Board {
         return score;       //i punti dati dalle leader cards li somma direttamente la funzione chiamante
     }
 
+    public List<BoardObserver> getObservers() {
+        return observers;
+    }
+
     /**
      * add a single resource in strongbox
      * @param r is the resource
@@ -107,6 +111,9 @@ public class Board {
         strongbox.replace(r,strongbox.get(r)+1);
     }
 
+    public Integer countNresInStrongbox(){
+        return getStrongBox().values().stream().reduce(0,(a,b)->a+b);
+    }
     /**
      * add a map of resources to the strongbox
      * @param prod acquired resources from the production

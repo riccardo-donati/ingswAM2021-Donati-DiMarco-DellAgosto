@@ -789,7 +789,7 @@ class PlayerTest {
     @Test
     public void TestTotalResources() throws FullSpaceException, IllegalResourceException {
         Player player = new Player("Riki001");
-        PublicInterfaceTest.fillDeposits(player, true);
+        Utilities.fillDeposits(player, true);
         assertEquals(4003, player.getBoard().countTotalResources());
     }
 }

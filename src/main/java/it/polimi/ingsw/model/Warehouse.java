@@ -17,6 +17,10 @@ public class Warehouse {
 
     private int nDeposit=0;
 
+    public List<BoardObserver> getObservers() {
+        return observers;
+    }
+
     /**
      * initializing the maindepot with empty resourcetypes and
      * the map with the 4 resourcetype we want

@@ -1,12 +1,20 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.interfaces.BoardObserver;
+import it.polimi.ingsw.model.interfaces.Marble;
+import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Test;
 
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -111,8 +119,8 @@ public class PublicInterfaceTest {
     }*/
 
     @Test
-    public void TestOneWhiteTo() throws NonEmptyException, EmptyPlayersException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, IllegalResourceException, FullGameException {
-        TestSetUpTurnMultiplayer();
+    public void TestOneWhiteTo() throws NonEmptyException,  IllegalActionException, FullSpaceException, IllegalResourceException, IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
         // forcing conversion special ability
         game.getCurrPlayer().getWhiteTo().put(ResourceType.BLUE, 1);
         game.setMarket(new Market());            // market not initialized (known structure)
@@ -129,8 +137,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestTwoWhiteTo() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, NoWhiteResourceException {
-        TestSetUpTurnMultiplayer();
+    public void TestTwoWhiteTo() throws  IllegalResourceException, IllegalActionException, FullSpaceException, NoWhiteResourceException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
         // forcing conversion special ability
         game.getCurrPlayer().getWhiteTo().put(ResourceType.BLUE, 1);
         game.getCurrPlayer().getWhiteTo().put(ResourceType.GREY, 1);
@@ -149,9 +157,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestBaseProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException, DepositNotExistingException {
-        TestSetUpTurnMultiplayer();
-
+    public void TestBaseProduction() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, UnknownNotFindException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
         //artificially adding resources to player's warehouse
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
@@ -173,8 +180,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestExtraProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException, DepositNotExistingException {
-        TestSetUpTurnMultiplayer();
+    public void TestExtraProduction() throws NonEmptyException, IllegalResourceException,  IllegalActionException, FullSpaceException, UnknownNotFindException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's warehouse
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
@@ -195,8 +202,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestRegularProduction() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, InvalidPushException {
-        TestSetUpTurnMultiplayer();
+    public void TestRegularProduction() throws InvalidPushException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's strongbox
         Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
@@ -220,8 +227,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestBuyDevelopmentCard() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, ResourcesNotAvailableException {
-        TestSetUpTurnMultiplayer();
+    public void TestBuyDevelopmentCard() throws  IllegalActionException, ResourcesNotAvailableException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's strongbox
         Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
@@ -242,8 +249,8 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestPlayAndDiscardLeader() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
-        TestSetUpTurnMultiplayer();
+    public void TestPlayAndDiscardLeader() throws  IllegalResourceException, FullSpaceException,  IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
 
         game.getCurrPlayer().getLeadersInHand().remove(0);
         game.getCurrPlayer().getLeadersInHand().remove(0);
@@ -269,36 +276,11 @@ public class PublicInterfaceTest {
         assertEquals(TurnPhase.STARTTURN, game.getTurnPhase());
     }
 
-    public static void fillDeposits(Player p,boolean warehouse) throws IllegalResourceException, FullSpaceException {
-        Map<ResourceType, Integer> resMap=new HashMap<>();
-        resMap.put(ResourceType.YELLOW,999);
-        resMap.put(ResourceType.BLUE,999);
-        resMap.put(ResourceType.GREY,999);
-        resMap.put(ResourceType.VIOLET,999);
-        p.getBoard().depositInStrongbox(resMap);
-
-        if(warehouse) {
-            p.getBoard().getWarehouse().getMaindepot().get(0).addResource(ResourceType.YELLOW);
-            p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
-            p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
-            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
-            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
-            p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
-
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
-
-            p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
-            p.getBoard().getWarehouse().visualize();
-        }
-    }
 
     @Test
-    public void TestSingleRevert() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException {
-        TestSetUpTurnSingleplayer();
-        fillDeposits(game.getCurrPlayer(),true);
+    public void TestSingleRevert() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
         game.initializeCardMatrixForTests();
         game.pickUpResourceFromStrongbox(ResourceType.BLUE);
         game.pickUpResourceFromStrongbox(ResourceType.BLUE);
@@ -318,9 +300,9 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestSingleEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException {
-        TestSetUpTurnSingleplayer();
-        fillDeposits(game.getCurrPlayer(),true);
+    public void TestSingleEvolution() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
         game.discardLeader(0);
         assertEquals(1,game.getBlackCrossFaithPath().getPosition());
         LeaderCard ld=new LeaderCard(5);
@@ -335,13 +317,13 @@ public class PublicInterfaceTest {
         game.setMarket(new Market());
         game.buyAtMarketInterface('r',0);
         game.passTurn();
-        //aggiungi token ordinati
+        //add ordered tokens
     }
 
     @Test
-    public void TestMultiEvolution() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
-        TestSetUpTurnMultiplayer();
-        fillDeposits(game.getCurrPlayer(),false);
+    public void TestMultiEvolution() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
+        Utilities.fillDeposits(game.getCurrPlayer(),false);
         Market m =new Market();
         game.setMarket(m);
         game.buyAtMarketInterface('c',1);
@@ -352,6 +334,23 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.passTurn();
         assertEquals(2,game.getCurrPlayer().getOrder());
+    }
+
+    @Test
+    public void TestSaveAndLoadGameStateMulti() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, IOException {
+        TestSetUpTurnMultiplayer();
+        game.saveGameStateOnJson("setUpMulti");
+        Game g2=Utilities.loadGame("setUpMulti",'m');
+        assertEquals(game.getMarket(),g2.getMarket());
+        //should be the total equal but i have the override of the equals only in market
+    }
+    @Test
+    public void TestSaveAndLoadGameStateSingle() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, IOException {
+        TestSetUpTurnSingleplayer();
+        game.saveGameStateOnJson("setUpSingle");
+        Game g2=Utilities.loadGame("setUpSingle",'s');
+        assertEquals(game.getMarket(),g2.getMarket());
+        //should be the total equal but i have the override of the equals only in market
 
     }
 
