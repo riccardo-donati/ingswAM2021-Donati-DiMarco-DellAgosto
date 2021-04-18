@@ -372,22 +372,8 @@ public class Player {
      * @throws IllegalSlotException if you can't put the card in that slot
      */
     protected void buyCard(DevelopmentCard d,Integer slot) throws IllegalSlotException, TooManyResourcesException, ResourcesNotAvailableException {
-
         checkPickedResourceForDevelopmentCard(d);
-        if(d.getLevel()==1){
-            if(getBoard().getSlots().get(slot).size()>0){
-                throw new IllegalSlotException();
-            }
-        }else if(d.getLevel()==2){
-            if(getBoard().getSlots().get(slot).size()!=1 || getBoard().getSlots().get(slot).get(0).getLevel()!=1){
-                throw new IllegalSlotException();
-            }
-        }else if(d.getLevel()==3){
-            if(getBoard().getSlots().get(slot).size()!=2 || getBoard().getSlots().get(slot).get(1).getLevel()!=2 || getBoard().getSlots().get(slot).get(0).getLevel()!=1){
-                throw new IllegalSlotException();
-            }
-        }
-        getBoard().getSlots().get(slot).push(d);
+        getBoard().pushDCard(slot,d);
         clearPickedUp();
     }
     //----------------------------------------------------

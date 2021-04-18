@@ -63,8 +63,12 @@ public class Result {
         for (String s : results.keySet()) {
             System.out.println("Player: " + s + "\nScore: " + results.get(s)[0] + "\nResources: " + results.get(s)[1] +  "\n");
         }
-        for (String s : this.winner)
-            System.out.println("Winner(s): " + s + "\nScore: " + results.get(s)[0] + "\nResources: " + results.get(s)[1] +  "\n");
+        for (String s : this.winner){
+            if(!s.equals("Lorenzo"))
+                System.out.println("Winner(s): " + s + "\nScore: " + results.get(s)[0] + "\nResources: " + results.get(s)[1] +  "\n");
+            else  System.out.println("Lorenzo wins you LOSE!");
+
+        }
     }
 
     /**

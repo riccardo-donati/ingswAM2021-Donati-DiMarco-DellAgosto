@@ -170,6 +170,7 @@ public class PublicInterfaceTest {
         game.pickUpResourceFromWarehouse(2);
 
         assertDoesNotThrow(()->game.activateProductions());
+        assertFalse(game.getCurrPlayer().getBoard().getBaseProduction().checkSelected());
         assertDoesNotThrow(()->game.passTurn());
     }
 
@@ -192,11 +193,12 @@ public class PublicInterfaceTest {
         game.pickUpResourceFromWarehouse(3);
 
         assertDoesNotThrow(()->game.activateProductions());
+        assertFalse(game.getCurrPlayer().getExtraProductions().get(0).checkSelected());
         assertDoesNotThrow(()->game.passTurn());
     }
 
     @Test
-    public void TestRegularProduction() throws InvalidPushException, IOException {
+    public void TestRegularProduction() throws IOException, IllegalSlotException {
         game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's strongbox
@@ -294,11 +296,16 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestSingleEvolution() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+    public void TestSingleEvolutionDiscard() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
         game=Utilities.loadGame("setUpSingle",'s');
         Utilities.fillDeposits(game.getCurrPlayer(),true);
+
+        //i manually push a discard yellow token on top of the stack
+        game.orderTokenStack();
+        game.getTokenStack().push(game.getTokenStack().remove(0));
+
         game.discardLeader(0);
-        assertEquals(1,game.getBlackCrossFaithPath().getPosition());
+        assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         LeaderCard ld=new LeaderCard(5);
         ld.addSpecialAbility(new ExtraDeposit(ResourceType.YELLOW));
         game.getCurrPlayer().getLeadersInHand().add(ld);
@@ -311,7 +318,59 @@ public class PublicInterfaceTest {
         game.setMarket(new Market());
         game.buyAtMarketInterface('r',0);
         game.passTurn();
-        //add ordered tokens
+        assertEquals(2, game.getCardMatrix()[0][2].size());
+        assertEquals(6,game.getTokenStack().size());
+    }
+    @Test
+    public void TestSingleEvolutionPushShuffle() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
+
+        //i manually set a  pushShuffleToken on top of the stack
+        game.orderTokenStack();
+
+        game.discardLeader(0);
+        assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        LeaderCard ld=new LeaderCard(5);
+        ld.addSpecialAbility(new ExtraDeposit(ResourceType.YELLOW));
+        game.getCurrPlayer().getLeadersInHand().add(ld);
+        game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
+        game.moveResource(1,8);
+        game.getCurrPlayer().getBoard().getWarehouse().visualize();
+        game.pickUpResourceFromWarehouse(8);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.revertPickUp();
+        game.setMarket(new Market());
+        game.buyAtMarketInterface('r',0);
+        game.passTurn();
+        assertEquals(1, game.getBlackCrossFaithPath().getPosition());
+        assertEquals(7,game.getTokenStack().size());
+    }
+    @Test
+    public void TestSingleEvolutionPush() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, CardNotAvailableException, RequirementNotMetException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
+
+        //i manually set a  pushToken on top of the stack
+        game.orderTokenStack();
+        game.getTokenStack().push(game.getTokenStack().remove(5));
+
+        game.discardLeader(0);
+        assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        LeaderCard ld=new LeaderCard(5);
+        ld.addSpecialAbility(new ExtraDeposit(ResourceType.YELLOW));
+        game.getCurrPlayer().getLeadersInHand().add(ld);
+        game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
+        game.moveResource(1,8);
+        game.getCurrPlayer().getBoard().getWarehouse().visualize();
+        game.pickUpResourceFromWarehouse(8);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.revertPickUp();
+        game.setMarket(new Market());
+        game.buyAtMarketInterface('r',0);
+        game.passTurn();
+        assertEquals(2, game.getBlackCrossFaithPath().getPosition());
+        assertEquals(6,game.getTokenStack().size());
     }
 
     @Test
@@ -328,6 +387,7 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.passTurn();
         assertEquals(2,game.getCurrPlayer().getOrder());
+        assertEquals(TurnPhase.STARTTURN,game.getTurnPhase());
     }
 
     @Test
@@ -346,6 +406,168 @@ public class PublicInterfaceTest {
         assertEquals(game.getMarket(),g2.getMarket());
         //should be the total equal but i have the override of the equals only in market
 
+    }
+
+    @Test
+    public void TestSingleEndgameLose1() throws  IllegalResourceException, IllegalActionException, FullSpaceException,IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
+
+        //manually adding a token that triggers endgame
+        Token t=new TokenDiscard(Color.GREEN,14);
+        game.getTokenStack().push(t);
+
+        game.setMarket(new Market());
+        game.buyAtMarketInterface('r',0);
+        game.passTurn();
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+        assertThrows(IllegalActionException.class,
+                ()->game.discardLeader(0));
+    }
+    @Test
+    public void TestSingleEndgameLose2() throws  IllegalResourceException, IllegalActionException, FullSpaceException,  IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
+
+        //manually adding a token that triggers endgame
+        Token t=new TokenPush(26);
+        game.getTokenStack().push(t);
+
+        game.setMarket(new Market());
+        game.buyAtMarketInterface('r',0);
+        game.passTurn();
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+        assertThrows(IllegalActionException.class,
+                ()->game.discardLeader(0));
+    }
+    @Test
+    public void TestSingleEndgameLose3() throws  IllegalResourceException, IllegalActionException, FullSpaceException, ResourcesNotAvailableException, IOException, IllegalSlotException, TooManyResourcesException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),true);
+        game.initializeCardMatrixForTests();
+        //manually ordering the tokenStack for not discarding card in the first 2 passes
+        game.orderTokenStack();
+        game.getTokenStack().pop();
+
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.buyCard(0,1,1);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.buyCard(1,1,1);
+        //manually adding a token that almost triggers endgame
+        Token t=new TokenDiscard(Color.GREEN,11);
+        game.getTokenStack().push(t);
+
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.buyCard(2,0,1);
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+        assertThrows(IllegalActionException.class,
+                ()->game.discardLeader(0));
+    }
+    @Test
+    public void TestSingleInstaWin1() throws IOException, FullSpaceException, IllegalResourceException, IllegalActionException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException {
+        //7 cards
+        game=Utilities.loadGame("setUpSingle",'s');
+        Utilities.fillDeposits(game.getCurrPlayer(),false);
+        game.initializeCardMatrixForTests();
+        //pushing at the top of the stacks 7 tokens that are passive on the cardMatrix
+        for(int i=0;i<7;i++){
+            game.getTokenStack().push(new TokenPush(1));
+        }
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.buyCard(0,0,1);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.buyCard(0,1,2);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(0,2,3);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(1,0,1);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(1,1,2);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.buyCard(1,2,3);
+        game.passTurn();
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(2,0,1);
+        game.passTurn();
+        assertTrue(game.isEndGameTrigger());
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+    }
+    @Test
+    public void TestSingleInstaWin2() throws UnknownFindException, IllegalActionException, ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, IOException {
+        //24 faith points with productions
+        game=Utilities.loadGame("setUpSingle",'s');
+        Production p=new Production();
+        p.addOutput(ResourceType.RED,24);
+        game.getCurrPlayer().getExtraProductions().add(p);
+        game.toggleExtraProd(0);
+        game.activateProductions();
+        assertTrue(game.isEndGameTrigger());
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+    }
+    @Test
+    public void TestSingleInstaWin3() throws  IllegalActionException,   IOException {
+        //24 faith points with market
+        game=Utilities.loadGame("setUpSingle",'s');
+        game.setMarket(new Market());
+        //push 30 do nothing tokens
+        for(int i=0;i<30;i++) {
+            Token n = new TokenPush(0);
+            game.getTokenStack().push(n);
+        }
+        //buy each turn the first row that is all white and red
+        for(int i=0;i<30;i++){
+            game.buyAtMarketInterface('r',0);
+            game.passTurn();
+        }
+        assertTrue(game.isEndGameTrigger());
+        assertEquals(GamePhase.ENDGAME,game.getGamePhase());
     }
 
 

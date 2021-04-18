@@ -47,10 +47,10 @@ public abstract class Game implements BoardObserver {
     protected void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
     protected GamePhase getGamePhase() { return gamePhase; }
     protected TurnPhase getTurnPhase() { return turnPhase; }
-
-    public Market getMarket() {
-        return market;
-    }
+    protected Stack<Token> getTokenStack() {return  null; }
+    protected void setGamePhase(GamePhase gamePhase) { this.gamePhase = gamePhase; }
+    protected Market getMarket() { return market; }
+    protected void setTurnPhase(TurnPhase turnPhase) { this.turnPhase = turnPhase; }
 
     /**
      * Reininitilize the cardMatrix for Test purposes
@@ -161,8 +161,10 @@ public abstract class Game implements BoardObserver {
      */
     protected void discardColor(Color toDiscard){ }
 
+    public void orderTokenStack(){}
+
     /**
-     * implemented differently in single and multyplayer
+     * implemented differently in single and multiplayer
      */
     protected void nextTurn(){}
 
@@ -214,7 +216,7 @@ public abstract class Game implements BoardObserver {
      * @throws EmptyPlayersException if there aren't any players
      * @throws IllegalResourceException if UNKNOWN is illegal (it's not)
      */
-    protected void startGame() throws EmptyPlayersException, IllegalResourceException {
+    public void startGame() throws EmptyPlayersException, IllegalResourceException {
         if(players.size()==0) throw new EmptyPlayersException();
         Collections.shuffle(players);
         for(int i=0;i<players.size();i++){
@@ -238,7 +240,7 @@ public abstract class Game implements BoardObserver {
      * compile a report of the statistics of the game with points and winner
      * @return the result of the game
      */
-    protected Result endGame(){
+    public Result endGame(){
         Result result=new Result();
         for(Player p : players){
             result.addToResults(p.getNickname(), p.countPoints(), p.getBoard().countTotalResources());//countPoints;
@@ -251,7 +253,7 @@ public abstract class Game implements BoardObserver {
      * @return the list of lists of 4 leader cards
      * @throws EmptyPlayersException if there aren't any player
      */
-    protected List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException {
+    public List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException {
         if(players.size()==0) throw new EmptyPlayersException();
         List<LeaderCard> copyLeaders=new ArrayList<>(leaderCards);
         List<List<LeaderCard>> result=new ArrayList<>();
@@ -270,7 +272,7 @@ public abstract class Game implements BoardObserver {
      * addition of a new player into the game
      * @param nickname of the new player
      */
-    protected void addPlayer(String nickname) throws FullGameException {
+    public void addPlayer(String nickname) throws FullGameException {
         if(nickname.equals("")){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -464,6 +466,7 @@ public abstract class Game implements BoardObserver {
                     endGame();
                 }
                 currPlayer.resetProductions();
+                turnPhase=TurnPhase.STARTTURN;
                 nextTurn();
             }else throw new IllegalActionException();
         }

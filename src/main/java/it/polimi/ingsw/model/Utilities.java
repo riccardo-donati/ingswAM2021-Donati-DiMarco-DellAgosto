@@ -124,7 +124,7 @@ public  class Utilities {
             p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
 
             p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
-            p.getBoard().getWarehouse().visualize();
+            //p.getBoard().getWarehouse().visualize();
         }
     }
 }
