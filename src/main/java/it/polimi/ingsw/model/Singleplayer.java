@@ -217,7 +217,7 @@ public class Singleplayer extends Game {
 
     }
     @Override
-    public void activateProductions() throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFindException {
+    public void activateProductions() throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException {
         super.activateProductions();
         //insta win if the player reach the last cell of the faithpath
         if(isEndGameTrigger()){

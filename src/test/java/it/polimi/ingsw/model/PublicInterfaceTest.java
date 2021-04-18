@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Test;
 
 
@@ -540,7 +541,7 @@ public class PublicInterfaceTest {
         assertEquals(GamePhase.ENDGAME,game.getGamePhase());
     }
     @Test
-    public void TestSingleInstaWin2() throws UnknownFindException, IllegalActionException, ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, IOException {
+    public void TestSingleInstaWin2() throws IllegalActionException, ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, IOException, UnknownFoundException {
         //24 faith points with productions
         game=Utilities.loadGame("setUpSingle",'s');
         Production p=new Production();
@@ -569,8 +570,6 @@ public class PublicInterfaceTest {
         assertTrue(game.isEndGameTrigger());
         assertEquals(GamePhase.ENDGAME,game.getGamePhase());
     }
-
-
 
 }
 
