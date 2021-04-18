@@ -4,11 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.PopeFavorState;
-import it.polimi.ingsw.model.exceptions.CardNotAvailableException;
-import it.polimi.ingsw.model.exceptions.FullGameException;
-import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.enums.*;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Token;
 
 import java.io.FileNotFoundException;
@@ -29,6 +26,9 @@ public class Singleplayer extends Game {
         blackFaithPath.addObserver(this);
     }
 
+    @Override
+    public Stack<Token> getTokenStack() { return tokenStack; }
+
     public void loadTokensFromJSON(){
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Token.class, new InterfaceAdapter<Token>());
@@ -45,11 +45,18 @@ public class Singleplayer extends Game {
         }
         tokens=gson.fromJson(reader,foundListType);
     }
+
+    /**
+     * for testing purposes
+     */
     @Override
-    public void discardLeader(int index) throws IllegalActionException, CardNotAvailableException {
-        super.discardLeader(index);
-        getBlackCrossFaithPath().addToPosition(1);
+    public void orderTokenStack() {
+        this.tokenStack = new Stack<>() ;
+        for(Token t : tokens)
+            tokenStack.push(t);
     }
+
+
     @Override
     public List<Token> getTokens() {
         return tokens;
@@ -105,7 +112,7 @@ public class Singleplayer extends Game {
      * @throws FullGameException if there is already a player
      */
     @Override
-    protected void addPlayer(String nick) throws FullGameException {
+    public void addPlayer(String nick) throws FullGameException {
         if(getPlayers().size()==1){
             throw new FullGameException();
         }
@@ -120,6 +127,7 @@ public class Singleplayer extends Game {
         Token t=tokenStack.pop();
         t.doAction(this);
     }
+
     /**
      * discard the top card of the passed color from the matrix (starting with row 0->1->2)
      * if the 3 stacks are empty -> trigger ENDGAME
@@ -140,10 +148,10 @@ public class Singleplayer extends Game {
                 try {
                     getCardMatrix()[r][col].pop();
                     if(getCardMatrix()[r][col].size()==0){
-                        endGame();
+                        updateEndGame();
                     }
                 }catch (EmptyStackException e3){
-                    e3.printStackTrace();
+
                 }
             }
         }
@@ -156,7 +164,7 @@ public class Singleplayer extends Game {
      * @return game result
      */
     @Override
-    protected Result endGame(){
+    public Result endGame(){
         boolean lose=false;
         int cont;
         for(int c=0;c<COL;c++){
@@ -183,6 +191,59 @@ public class Singleplayer extends Game {
             result.setWinner(result.checkWinner());
         }
         return result;
+    }
+    @Override
+    public void passTurn() throws IllegalActionException {
+        super.passTurn();
+        if(getGamePhase()==GamePhase.ONGOING) {
+            if (isEndGameTrigger()) {
+                setGamePhase(GamePhase.ENDGAME);
+                endGame();
+            } else {
+                setTurnPhase(TurnPhase.STARTTURN);
+            }
+        }
+    }
+    @Override
+    public void buyCard(Integer row,Integer col,Integer slot) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException {
+        super.buyCard(row,col,slot);
+        //if the player buy the last card of 1 column -> insta lose
+        //if the player buy the 7th card -> insta win
+        if(getCardMatrix()[row][col].size()==0 && row==ROW-1 || isEndGameTrigger()){
+            updateEndGame();
+            setGamePhase(GamePhase.ENDGAME);
+            endGame();
+        }
+
+    }
+    @Override
+    public void activateProductions() throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFindException {
+        super.activateProductions();
+        //insta win if the player reach the last cell of the faithpath
+        if(isEndGameTrigger()){
+            updateEndGame();
+            setGamePhase(GamePhase.ENDGAME);
+            endGame();
+        }
+    }
+    @Override
+    public void buyAtMarketInterface(char rc,int index) throws IllegalActionException {
+        super.buyAtMarketInterface(rc,index);
+        if(isEndGameTrigger()){
+            updateEndGame();
+            setGamePhase(GamePhase.ENDGAME);
+            endGame();
+        }
+    }
+    @Override
+    public void discardResource(ResourceType res) throws IllegalActionException, DepositableResourceException, IllegalResourceException {
+        super.discardResource(res);
+        getBlackCrossFaithPath().addToPosition(1);
+        if(isEndGameTrigger()){
+            updateEndGame();
+            setGamePhase(GamePhase.ENDGAME);
+            endGame();
+        }
     }
     //-----------------------------------------------------------------------------------------------------
 

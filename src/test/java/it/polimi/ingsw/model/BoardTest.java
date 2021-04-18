@@ -38,7 +38,7 @@ class BoardTest {
     }
 
     @Test
-    void BoardCounterPoints() throws IllegalResourceException, FullSpaceException, NonEmptyException, InvalidPushException {
+    void BoardCounterPoints() throws IllegalResourceException, FullSpaceException,  IllegalSlotException {
         List<ResourceRequirement> c = new ArrayList<>();
         ResourceRequirement r = new ResourceRequirement(ResourceType.BLUE, 2);
         c.add(r);

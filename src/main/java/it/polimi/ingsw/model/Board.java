@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.IllegalSlotException;
 import it.polimi.ingsw.model.exceptions.InvalidPushException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
@@ -110,10 +111,6 @@ public class Board {
             throw new IllegalResourceException();
         strongbox.replace(r,strongbox.get(r)+1);
     }
-
-    public Integer countNresInStrongbox(){
-        return getStrongBox().values().stream().reduce(0,(a,b)->a+b);
-    }
     /**
      * add a map of resources to the strongbox
      * @param prod acquired resources from the production
@@ -143,25 +140,26 @@ public class Board {
      * @param pos the position where the card should be added
      * @param card the development card that has to be added
      */
-    protected void pushDCard (Integer pos, DevelopmentCard card) throws InvalidPushException {
+    protected void pushDCard (Integer pos, DevelopmentCard card) throws  IllegalSlotException {
         if(card.getLevel()==1){
-            if(slots.get(pos).size()==0){
-                slots.get(pos).push(card);
-            }else throw new InvalidPushException();
-        } else if(card.getLevel()==2){
-            if(slots.get(pos).size()==1 && slots.get(pos).get(0).getLevel()==1){
-                slots.get(pos).push(card);
-            }else throw new InvalidPushException();
-        } else if(card.getLevel()==3){
-            if(slots.get(pos).size()==2 && slots.get(pos).get(1).getLevel()==2){
-                slots.get(pos).push(card);
-            }else throw new InvalidPushException();
-        } else throw new InvalidPushException();
-
+            if(getSlots().get(pos).size()>0){
+                throw new IllegalSlotException();
+            }
+        }else if(card.getLevel()==2){
+            if(getSlots().get(pos).size()!=1 || getSlots().get(pos).get(0).getLevel()!=1){
+                throw new IllegalSlotException();
+            }
+        }else if(card.getLevel()==3){
+            if(getSlots().get(pos).size()!=2 || getSlots().get(pos).get(1).getLevel()!=2 || getSlots().get(pos).get(0).getLevel()!=1){
+                throw new IllegalSlotException();
+            }
+        }
+        slots.get(pos).push(card);
         int nCards=0;
         for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : slots.entrySet())
             nCards+=entry.getValue().size();
-        if (nCards==7) notifyObserver();
+        if (nCards==7)
+            notifyObserver();
     }
 
     /**

@@ -64,11 +64,11 @@ class GameTest {
     }
     @Test
     public void TestDiscardColor(){
-        game=new Multiplayer();
-        for(int i=0;i<12;i++){
+        game=new Singleplayer();
+        for(int i=0;i<13;i++){
             game.discardColor(Color.GREEN);
         }
-        //trigger endgame
+        assertTrue(game.isEndGameTrigger());
     }
 
 
@@ -105,7 +105,7 @@ class GameTest {
         game.buyAtMarket('r',2);
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
         assertTrue(game.getCurrPlayer().getBoard().getFaithPath().getPosition()>0);
-        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
+        assertEquals((int) game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE), 0);
     }
     @Test
     public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException, EmptyPlayersException, IllegalResourceException {
@@ -119,7 +119,7 @@ class GameTest {
         game.buyAtMarket('r',1);
         game.buyAtMarket('r',2);
         game.buyAtMarket('c',3);
-        assertTrue(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE)==0);
+        assertEquals((int) game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE), 0);
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
     }
     @RepeatedTest(10)
@@ -263,13 +263,13 @@ class GameTest {
         game.startGame();
         for(Player p : game.getPlayers()){
             if(p.getOrder()==2){
-                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==1);
+                assertEquals((int) p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN), 1);
             }else if(p.getOrder()==3){
-                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==1);
-                assertTrue(p.getBoard().getFaithPath().getPosition()==1);
+                assertEquals((int) p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN), 1);
+                assertEquals((int) p.getBoard().getFaithPath().getPosition(), 1);
             }else if(p.getOrder()==4){
-                assertTrue(p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==2);
-                assertTrue(p.getBoard().getFaithPath().getPosition()==1);
+                assertEquals((int) p.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN), 2);
+                assertEquals((int) p.getBoard().getFaithPath().getPosition(), 1);
             }
         }
     }

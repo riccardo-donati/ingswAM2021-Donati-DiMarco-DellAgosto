@@ -89,7 +89,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderCardRequirement() throws InvalidPushException {
+    void playLeaderCardRequirement() throws IllegalSlotException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));
@@ -115,7 +115,7 @@ class PlayerTest {
     }
 
     @Test
-    void playLeaderLevelCardRequirement() throws InvalidPushException {
+    void playLeaderLevelCardRequirement() throws IllegalSlotException {
         List<ResourceRequirement> requirements = new ArrayList<>();
         requirements.add(new ResourceRequirement(ResourceType.GREY, 1));
         player.getBoard().pushDCard(1, new DevelopmentCard(requirements, 1, Color.GREEN, new Production(), 3));

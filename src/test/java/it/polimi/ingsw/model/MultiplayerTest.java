@@ -87,7 +87,7 @@ class MultiplayerTest {
     }*/
 
     @Test
-    public void TestWinner2() throws FullGameException, InvalidPushException, IllegalResourceException, FullSpaceException {
+    public void TestWinner2() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException {
         game =new Multiplayer();
         game.addPlayer("Jack");     //11 Dcards + 3 storage + 3 leader + 5 pf + 12 faith = 34
         game.addPlayer("Io");       //26 points
@@ -134,7 +134,7 @@ class MultiplayerTest {
     }
 
     @Test
-    public void TestSamePointsWinner() throws FullGameException, IllegalResourceException, InvalidPushException, FullSpaceException {
+    public void TestSamePointsWinner() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException {
         game = new Multiplayer();
         game.addPlayer("Qiqi"); //2+1+25    28 points 1 resources -> winner
         game.addPlayer("Eula"); //3+1+24    28 points 1 resources -> winner
