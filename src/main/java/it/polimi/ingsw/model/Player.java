@@ -19,7 +19,7 @@ public class Player {
     private Map<ResourceType, Integer> whiteTo = new HashMap<>();
     private List<Production> extraProductions = new ArrayList<>();
 
-    private Map<Integer,Map<ResourceType, Integer>> pickedResource=new HashMap<>();
+    private Map<Integer,Map<ResourceType, Integer>> pickedResource = new HashMap<>();
 
     protected void setOrder(int order){
         this.order=order;
@@ -211,21 +211,17 @@ public class Player {
      * @param resourceType discount added
      */
     protected void addDiscount(ResourceType resourceType) {
-        if(discounts.containsKey(resourceType))
-            discounts.replace(resourceType, discounts.get(resourceType) + 1);
-        else discounts.put(resourceType, 1);
+        discounts.merge(resourceType, 1, Integer::sum);
     }
 
     /**
      * Modifies the map for the white marble conversion:
-     *      *  if the resource type is already present, increments its value by 1
-     *      *  if the resource type is not present, it gets added to the map with value 1
+     *  if the resource type is already present, increments its value by 1
+     *  if the resource type is not present, it gets added to the map with value 1
      * @param resourceType conversion added
      */
     protected void addWhiteTo(ResourceType resourceType) {
-        if(whiteTo.containsKey(resourceType))
-            whiteTo.replace(resourceType, whiteTo.get(resourceType) + 1);
-        else whiteTo.put(resourceType, 1);
+        whiteTo.merge(resourceType, 1, Integer::sum);
     }
 
     /**
@@ -237,19 +233,6 @@ public class Player {
     }
 
     /**
-     * Merges two Map<ResourceType, Integer> objects
-     * @param mainMap map that is modified
-     * @param mapToAdd map that is merged to the first one
-     */
-    protected static void mergeResourceTypeMaps(Map<ResourceType, Integer> mainMap, Map<ResourceType, Integer> mapToAdd) {
-        for (ResourceType resourceType : mapToAdd.keySet()) {
-            if (mainMap.containsKey(resourceType))
-                mainMap.replace(resourceType, mainMap.get(resourceType) + mapToAdd.get(resourceType));
-            else mainMap.put(resourceType, mapToAdd.get(resourceType));
-        }
-    }
-
-    /**
      * checks every available production, creating a collective map of all inputs and outputs of selected productions,
      * then if the resources in the map input are available, passes the map output to the strongbox to be added,
      * and passes the map input to the board to be removed
@@ -257,13 +240,13 @@ public class Player {
      * @throws IllegalResourceException if the output contains illegal resources
      * @throws TooManyResourcesException if the resources in pickedResources are too many for the input of the big production
      */
-    protected void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFindException {
+    protected void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFoundException {
         Map<ResourceType, Integer> input = new HashMap<>();
         Map<ResourceType, Integer> output = new HashMap<>();
         for (Production production : extraProductions) {
             if (production.checkSelected()) {
-                mergeResourceTypeMaps(input, production.getInput());
-                mergeResourceTypeMaps(output, production.getOutput());
+                Utilities.mergeResourceTypeMaps(input, production.getInput());
+                Utilities.mergeResourceTypeMaps(output, production.getOutput());
                 production.toggleSelected();
             }
         }
@@ -271,16 +254,16 @@ public class Player {
             for (DevelopmentCard developmentCard : stack) {
                 Production production = developmentCard.getProd();
                 if (production.checkSelected()) {
-                    mergeResourceTypeMaps(input, production.getInput());
-                    mergeResourceTypeMaps(output, production.getOutput());
+                    Utilities.mergeResourceTypeMaps(input, production.getInput());
+                    Utilities.mergeResourceTypeMaps(output, production.getOutput());
                     production.toggleSelected();
                 }
             }
         }
         Production production = board.getBaseProduction();
         if (production.checkSelected()) {
-            mergeResourceTypeMaps(input, production.getInput());
-            mergeResourceTypeMaps(output, production.getOutput());
+            Utilities.mergeResourceTypeMaps(input, production.getInput());
+            Utilities.mergeResourceTypeMaps(output, production.getOutput());
             production.toggleSelected();
         }
         Production bigProd=new Production(input,output);
@@ -289,6 +272,7 @@ public class Player {
         clearPickedUp();
         elaborateOutput(output);
     }
+
     //----------------------------------------------------
 
     /**
@@ -307,6 +291,7 @@ public class Player {
         board.depositInStrongbox(output);
         board.getFaithPath().addToPosition(faithProgression);
     }
+
     /**
      * check in pickedResource map if you have enough resources for activating a certain production
      * @param p is the production
@@ -316,7 +301,7 @@ public class Player {
     protected void checkPickedResourcesForProduction(Production p) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
-            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+            Utilities.mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
         }
         int totResProd=0;
         int totResPick=0;
@@ -341,10 +326,10 @@ public class Player {
      */
     protected void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
         Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
-        mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
+        Utilities.mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
         //add also the picked up resources
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
-            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+            Utilities.mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
         }
         for (ResourceType resourceType : p.getInput().keySet())
             if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
@@ -360,7 +345,7 @@ public class Player {
     protected void checkPickedResourceForDevelopmentCard(DevelopmentCard d) throws ResourcesNotAvailableException, TooManyResourcesException {
         Map<ResourceType, Integer> resourcesAvailable=new HashMap<>();
         for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
-            mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
+            Utilities.mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
         }
         int totResReq=0;
         int totResPick=0;
@@ -417,48 +402,68 @@ public class Player {
             getBoard().getWarehouse().replaceWhiteFromPending(res,n);
         }else throw new IllegalResourceException();
     }
-    protected void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFindException {
-        if(p.getInput().containsKey(ResourceType.UNKNOWN)){
-            int n=p.getInput().get(ResourceType.UNKNOWN);
-            if(n==1) p.getInput().remove(ResourceType.UNKNOWN);
-            else if(n>1) p.getInput().replace(ResourceType.UNKNOWN,n-1);
-            if(p.getInput().containsKey(res)){
-                p.getInput().replace(res,p.getInput().get(res)+1);
-            }else {
-                p.addInput(res, 1);
-            }
-        }else throw new UnknownNotFindException();
-    }
-    protected void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFindException {
-        if(p.getOutput().containsKey(ResourceType.UNKNOWN)){
-            int n=p.getOutput().get(ResourceType.UNKNOWN);
-            if(n==1) p.getOutput().remove(ResourceType.UNKNOWN);
-            else if(n>1) p.getOutput().replace(ResourceType.UNKNOWN,n-1);
-            if(p.getOutput().containsKey(res)){
-                p.getOutput().replace(res,p.getOutput().get(res)+1);
-            }else {
-                p.addOutput(res, 1);
-            }
-        }else throw new UnknownNotFindException();
-    }
+
+//    protected void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFoundException {
+//        if(p.getInput().containsKey(ResourceType.UNKNOWN)){
+//            int n=p.getInput().get(ResourceType.UNKNOWN);
+//            if(n==1) p.getInput().remove(ResourceType.UNKNOWN);
+//            else if(n>1) p.getInput().replace(ResourceType.UNKNOWN,n-1);
+//            if(p.getInput().containsKey(res)){
+//                p.getInput().replace(res,p.getInput().get(res)+1);
+//            }else {
+//                p.addInput(res, 1);
+//            }
+//        }else throw new UnknownNotFoundException();
+//    }
+//
+//    protected void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFoundException {
+//        if(p.getOutput().containsKey(ResourceType.UNKNOWN)){
+//            int n=p.getOutput().get(ResourceType.UNKNOWN);
+//            if(n==1) p.getOutput().remove(ResourceType.UNKNOWN);
+//            else if(n>1) p.getOutput().replace(ResourceType.UNKNOWN,n-1);
+//            if(p.getOutput().containsKey(res)){
+//                p.getOutput().replace(res,p.getOutput().get(res)+1);
+//            }else {
+//                p.addOutput(res, 1);
+//            }
+//        }else throw new UnknownNotFoundException();
+//    }
 
     /**
      * count the total amount of selected productions
      * @return the number of selected productions
      */
-    protected Integer countSelectedProductions(){
+    protected Integer countSelectedProductions() {
         Integer cont=0;
-        if(getBoard().getBaseProduction().checkSelected()) cont++;
-        for(Production p : extraProductions){
-            if(p.checkSelected()) cont++;
+        if (board.getBaseProduction().checkSelected()) cont++;
+
+        for (Production production : extraProductions){
+            if (production.checkSelected()) cont++;
         }
-        for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : getBoard().getSlots().entrySet()) {
-            if(entry.getValue().size()>0) {
-                if (entry.getValue().get(entry.getValue().size() - 1).getProd().checkSelected()) {
+
+        for(Stack<DevelopmentCard> stack : board.getSlots().values()) {
+            if (stack.size() > 0)
+                if (stack.peek().getProd().checkSelected())
                     cont++;
-                }
+        }
+
+        return cont;
+    }
+
+    /**
+     * resets all player's productions, putting back unknowns where they were
+     */
+    protected void resetProductions() {
+        for (Production production : extraProductions) {
+            production.resetProduction();
+        }
+
+        for (Stack<DevelopmentCard> stack : board.getSlots().values()) {
+            for (DevelopmentCard developmentCard : stack) {
+                developmentCard.getProd().resetProduction();
             }
         }
-        return cont;
+
+        board.getBaseProduction().resetProduction();
     }
 }

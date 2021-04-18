@@ -119,8 +119,8 @@ public class Warehouse {
         return extradepots;
     }
 
-    public void chooseResourceToDeposit(Integer id,ResourceType res) throws UnknownNotFindException, FullSpaceException, IllegalResourceException {
-        if(pendingResources.get(ResourceType.UNKNOWN)<=0) throw new UnknownNotFindException();
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws UnknownNotFoundException, FullSpaceException, IllegalResourceException {
+        if(pendingResources.get(ResourceType.UNKNOWN)<=0) throw new UnknownNotFoundException();
         if(!pendingResources.containsKey(res) || res==ResourceType.WHITE || res==ResourceType.EMPTY) throw new IllegalResourceException();
         pendingResources.replace(ResourceType.UNKNOWN,pendingResources.get(ResourceType.UNKNOWN)-1);
         pendingResources.replace(res,pendingResources.get(res)+1);

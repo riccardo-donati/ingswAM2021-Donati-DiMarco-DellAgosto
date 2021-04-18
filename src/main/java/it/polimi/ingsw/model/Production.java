@@ -2,14 +2,20 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
-import it.polimi.ingsw.model.exceptions.UnknownFindException;
+import it.polimi.ingsw.model.exceptions.UnknownFoundException;
+import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Production {
     private Map<ResourceType,Integer> input;
     private Map<ResourceType,Integer> output;
+    private List<ResourceType> inputHistory;
+    private List<ResourceType> outputHistory;
     private boolean selected;
 
     /**
@@ -17,9 +23,11 @@ public class Production {
      * selected is set to false
      */
     protected Production(){
-        input=new HashMap<>();
-        output=new HashMap<>();
-        selected=false;
+        input = new HashMap<>();
+        output = new HashMap<>();
+        inputHistory = new ArrayList<>();
+        outputHistory = new ArrayList<>();
+        selected = false;
     }
 
     /**
@@ -61,16 +69,14 @@ public class Production {
     /**
      * if the attribute selected is true, it becomes false
      * if the attribute selected is false, it becomes true ONLY if the production is valid (doesn't have UNKNOWN resource type in or out)
-     * @throws UnknownFindException if you are trying to select a production not valid
+     * @throws UnknownFoundException if you are trying to select a production not valid
      */
-    protected void toggleSelected() throws UnknownFindException {
-        if(selected)
-            selected=false;
-        else{
-            if(checkValidity()){
-                selected=!selected;
-            }else throw new UnknownFindException();
-        }
+    protected void toggleSelected() throws UnknownFoundException {
+        if (selected)
+            selected = false;
+        else if (checkValidity()) {
+                selected = true;
+        } else throw new UnknownFoundException();
     }
 
     /**
@@ -79,9 +85,7 @@ public class Production {
      * @param quantity quantity of the specified resource
      */
     protected void addInput(ResourceType resourceType, Integer quantity) {
-        if(input.containsKey(resourceType))
-            input.replace(resourceType, input.get(resourceType) + quantity);
-        else input.put(resourceType, quantity);
+        input.merge(resourceType, quantity, Integer::sum);
     }
 
     /**
@@ -90,34 +94,32 @@ public class Production {
      * @param quantity quantity of the specified resource
      */
     protected void addOutput(ResourceType resourceType, Integer quantity) {
-        if(output.containsKey(resourceType))
-            output.replace(resourceType, output.get(resourceType) + quantity);
-        else output.put(resourceType, quantity);
+        output.merge(resourceType, quantity, Integer::sum);
     }
 
-    /**
-     * removes from the input map the quantity of the resource
-     * @param resourceType is the type of the resource
-     * @param quantity of the specified resource
-     * @throws ResourcesNotAvailableException when the resource is not available
-     */
-    protected void removeInput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
-        if(input.containsKey(resourceType) && input.get(resourceType)>=quantity){
-            input.replace(resourceType,input.get(resourceType)-quantity);
-        }else throw new ResourcesNotAvailableException();
-    }
-
-    /**
-     * removes from the output map the quantity of the resource
-     * @param resourceType is the type of the resource
-     * @param quantity of the specified resource
-     * @throws ResourcesNotAvailableException when the resource is not available
-     */
-    protected void removeOutput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
-        if(output.containsKey(resourceType) && output.get(resourceType)>=quantity){
-            output.replace(resourceType,output.get(resourceType)-quantity);
-        }else throw new ResourcesNotAvailableException();
-    }
+//    /**
+//     * removes from the input map the quantity of the resource
+//     * @param resourceType is the type of the resource
+//     * @param quantity of the specified resource
+//     * @throws ResourcesNotAvailableException when the resource is not available
+//     */
+//    protected void removeInput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+//        if (input.containsKey(resourceType) && input.get(resourceType)>=quantity) {
+//            input.replace(resourceType,input.get(resourceType)-quantity);
+//        } else throw new ResourcesNotAvailableException();
+//    }
+//
+//    /**
+//     * removes from the output map the quantity of the resource
+//     * @param resourceType is the type of the resource
+//     * @param quantity of the specified resource
+//     * @throws ResourcesNotAvailableException when the resource is not available
+//     */
+//    protected void removeOutput(ResourceType resourceType, Integer quantity) throws ResourcesNotAvailableException {
+//        if (output.containsKey(resourceType) && output.get(resourceType)>=quantity) {
+//            output.replace(resourceType,output.get(resourceType)-quantity);
+//        } else throw new ResourcesNotAvailableException();
+//    }
 
     /**
      * checks whether the production has any UNKNOWN resource type in the input or output map
@@ -125,11 +127,37 @@ public class Production {
      */
     protected boolean checkValidity(){
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
-            if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;
+            if (entry.getValue()>0 && entry.getKey() == ResourceType.UNKNOWN) return false;
         }
         for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
-            if(entry.getValue()>0 && entry.getKey()==ResourceType.UNKNOWN) return false;
+            if (entry.getValue()>0 && entry.getKey() == ResourceType.UNKNOWN) return false;
         }
         return true;
+    }
+
+    /**
+     * calls replaceUnknown on the input map and input history list
+     * @param resourceType resource type unknown will be changed into
+     * @throws UnknownNotFoundException thrown if the map doesn't contain unknowns
+     */
+    protected void replaceUnknownInput(ResourceType resourceType) throws UnknownNotFoundException {
+        Utilities.replaceUnknown(input, inputHistory, resourceType);
+    }
+
+    /**
+     * calls replaceUnknown on the output map and output history list
+     * @param resourceType resource type unknown will be changed into
+     * @throws UnknownNotFoundException thrown if the map doesn't contain unknowns
+     */
+    protected void replaceUnknownOutput(ResourceType resourceType) throws UnknownNotFoundException {
+        Utilities.replaceUnknown(output, outputHistory, resourceType);
+    }
+
+    /**
+     * calls revertUnknown on the input and output maps passing inputHistory and outputHistory as the backups
+     */
+    protected void resetProduction() {
+        Utilities.revertUnknown(input, inputHistory);
+        Utilities.revertUnknown(output, outputHistory);
     }
 }

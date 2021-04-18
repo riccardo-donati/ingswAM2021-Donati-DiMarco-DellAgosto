@@ -1,16 +1,10 @@
 package it.polimi.ingsw.model;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.interfaces.BoardObserver;
-import it.polimi.ingsw.model.interfaces.Marble;
-import it.polimi.ingsw.model.interfaces.Requirement;
-import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Test;
 
 
@@ -26,7 +20,7 @@ public class PublicInterfaceTest {
     Game game;
 
     @Test
-    public void TestSetUpTurnMultiplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFindException, FullSpaceException {
+    public void TestSetUpTurnMultiplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException {
         game=new Multiplayer();
         game.addPlayer("AAA");
         game.addPlayer("BBB");
@@ -40,7 +34,7 @@ public class PublicInterfaceTest {
         assertThrows(IllegalActionException.class,
                 ()->game.passTurn());
         game.chooseLeader(chosen1);
-        assertThrows(UnknownNotFindException.class,
+        assertThrows(UnknownNotFoundException.class,
                 ()->game.chooseResourceToDeposit(1, ResourceType.YELLOW));
         game.passTurn();
 
@@ -61,7 +55,7 @@ public class PublicInterfaceTest {
         chosen3.add(list.get(2).get(1));
         game.chooseLeader(chosen3);
         game.chooseResourceToDeposit(1,ResourceType.BLUE);
-        assertThrows(UnknownNotFindException.class,
+        assertThrows(UnknownNotFoundException.class,
                 ()->game.chooseResourceToDeposit(2,ResourceType.YELLOW));
         assertEquals(1,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         game.passTurn();
@@ -83,7 +77,7 @@ public class PublicInterfaceTest {
         assertThrows(IllegalActionException.class,
                 ()->game.passTurn());
         game.chooseLeader(chosen1);
-        assertThrows(UnknownNotFindException.class,
+        assertThrows(UnknownNotFoundException.class,
                 ()->game.chooseResourceToDeposit(1, ResourceType.YELLOW));
         game.passTurn();
 
@@ -157,7 +151,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestBaseProduction() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, UnknownNotFindException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+    public void TestBaseProduction() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, UnknownNotFoundException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
         game=Utilities.loadGame("setUpMulti",'m');
         //artificially adding resources to player's warehouse
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
@@ -166,7 +160,7 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2, ResourceType.BLUE);
 
         //set up base production
-        assertThrows(UnknownFindException.class, ()->game.toggleBaseProd());
+        assertThrows(UnknownFoundException.class, ()->game.toggleBaseProd());
         game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
         game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
         game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
@@ -180,7 +174,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestExtraProduction() throws NonEmptyException, IllegalResourceException,  IllegalActionException, FullSpaceException, UnknownNotFindException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
+    public void TestExtraProduction() throws NonEmptyException, IllegalResourceException,  IllegalActionException, FullSpaceException, UnknownNotFoundException, ResourcesNotAvailableException, DepositNotExistingException, IOException {
         game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's warehouse
@@ -191,7 +185,7 @@ public class PublicInterfaceTest {
         ExtraProduction extraProduction = new ExtraProduction(ResourceType.GREY);
         extraProduction.activate(game.getCurrPlayer());
 
-        assertThrows(UnknownFindException.class, ()->game.toggleExtraProd(0));
+        assertThrows(UnknownFoundException.class, ()->game.toggleExtraProd(0));
         game.substituteUnknownInOutputExtraProduction(0, ResourceType.YELLOW);
         assertDoesNotThrow(()->game.toggleExtraProd(0));
 
@@ -278,7 +272,7 @@ public class PublicInterfaceTest {
 
 
     @Test
-    public void TestSingleRevert() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException, DepositNotExistingException, IOException {
+    public void TestSingleRevert() throws NonEmptyException, IllegalResourceException, IllegalActionException, FullSpaceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException, DepositNotExistingException, IOException {
         game=Utilities.loadGame("setUpSingle",'s');
         Utilities.fillDeposits(game.getCurrPlayer(),true);
         game.initializeCardMatrixForTests();
@@ -337,7 +331,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestSaveAndLoadGameStateMulti() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException, IOException {
+    public void TestSaveAndLoadGameStateMulti() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFoundException, FullGameException, IOException {
         TestSetUpTurnMultiplayer();
         game.saveGameStateOnJson("setUpMulti");
         Game g2=Utilities.loadGame("setUpMulti",'m');

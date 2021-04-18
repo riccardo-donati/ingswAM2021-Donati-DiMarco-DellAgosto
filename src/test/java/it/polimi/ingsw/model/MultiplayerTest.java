@@ -164,6 +164,7 @@ class MultiplayerTest {
         game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(24); //+24 ->triggers endgame
 
         Result result = game.endGame();
+        assertEquals(2, result.getWinner().size());
         assertTrue(result.getWinner().contains("Qiqi"));
         assertTrue(result.getWinner().contains("Eula"));
     }

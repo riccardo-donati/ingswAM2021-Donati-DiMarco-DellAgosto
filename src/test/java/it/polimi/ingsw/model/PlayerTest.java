@@ -5,7 +5,6 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
-import java.time.Year;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -196,7 +195,7 @@ class PlayerTest {
         map3.put(ResourceType.BLUE, 2);
         map3.put(ResourceType.GREY, 6);
         map3.put(ResourceType.YELLOW, 4);
-        Player.mergeResourceTypeMaps(map1, map2);
+        Utilities.mergeResourceTypeMaps(map1, map2);
         assertEquals(map1, map3);
     }
 
@@ -621,7 +620,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivate1CardProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownFindException {
+    public void TestActivate1CardProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownFoundException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
         Production p=new Production();
@@ -653,12 +652,12 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
-        assertThrows(UnknownFindException.class,
+    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException {
+        assertThrows(UnknownFoundException.class,
                 ()->player.getBoard().getBaseProduction().toggleSelected());
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
-        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.GREY);
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        player.getBoard().getBaseProduction().replaceUnknownOutput(ResourceType.GREY);
         assertDoesNotThrow(
                 ()->player.getBoard().getBaseProduction().toggleSelected());
 
@@ -676,15 +675,15 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFindException, UnknownFindException {
+    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException {
         Production p=new Production();
         p.addInput(ResourceType.YELLOW,1);
         p.addOutput(ResourceType.RED,1);
         p.addOutput(ResourceType.UNKNOWN,1);
         player.addExtraProduction(p);
-        assertThrows(UnknownFindException.class,
+        assertThrows(UnknownFoundException.class,
                 ()->player.getExtraProductions().get(0).toggleSelected());
-        player.substituteUnknownInOutputProduction(player.getExtraProductions().get(0),ResourceType.BLUE);
+        player.getExtraProductions().get(0).replaceUnknownOutput(ResourceType.BLUE);
         assertDoesNotThrow(
                 ()->player.getExtraProductions().get(0).toggleSelected());
 
@@ -700,7 +699,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateBaseAndCardAndExtraProd() throws ResourcesNotAvailableException, IllegalResourceException, UnknownFindException, TooManyResourcesException, IllegalSlotException, UnknownNotFindException {
+    public void TestActivateBaseAndCardAndExtraProd() throws ResourcesNotAvailableException, IllegalResourceException, UnknownFoundException, TooManyResourcesException, IllegalSlotException, UnknownNotFoundException {
         //----Card----
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
@@ -723,11 +722,11 @@ class PlayerTest {
 
         player.getBoard().getSlots().get(1).get(0).getProd().toggleSelected();
         //----Base----
-        assertThrows(UnknownFindException.class,
+        assertThrows(UnknownFoundException.class,
                 ()->player.getBoard().getBaseProduction().toggleSelected());
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.BLUE);
-        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.GREY);
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.BLUE);
+        player.getBoard().getBaseProduction().replaceUnknownOutput(ResourceType.GREY);
         assertDoesNotThrow(
                 ()->player.getBoard().getBaseProduction().toggleSelected());
 
@@ -742,9 +741,9 @@ class PlayerTest {
         p2.addOutput(ResourceType.RED,1);
         p2.addOutput(ResourceType.UNKNOWN,1);
         player.addExtraProduction(p2);
-        assertThrows(UnknownFindException.class,
+        assertThrows(UnknownFoundException.class,
                 ()->player.getExtraProductions().get(0).toggleSelected());
-        player.substituteUnknownInOutputProduction(player.getExtraProductions().get(0),ResourceType.BLUE);
+        player.getExtraProductions().get(0).replaceUnknownOutput(ResourceType.BLUE);
         assertDoesNotThrow(
                 ()->player.getExtraProductions().get(0).toggleSelected());
 
@@ -761,10 +760,10 @@ class PlayerTest {
     }
 
     @Test
-    public void TestCountSelectedProd() throws UnknownNotFindException, UnknownFindException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException {
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
-        player.substituteUnknownInInputProduction(player.getBoard().getBaseProduction(),ResourceType.BLUE);
-        player.substituteUnknownInOutputProduction(player.getBoard().getBaseProduction(),ResourceType.YELLOW);
+    public void TestCountSelectedProd() throws UnknownNotFoundException, UnknownFoundException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException {
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.BLUE);
+        player.getBoard().getBaseProduction().replaceUnknownOutput(ResourceType.YELLOW);
         player.getBoard().getBaseProduction().toggleSelected();
         player.getExtraProductions().add(new Production());
         player.getExtraProductions().add(new Production());

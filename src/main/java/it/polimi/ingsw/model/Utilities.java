@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Marble;
 import it.polimi.ingsw.model.interfaces.Requirement;
@@ -14,9 +15,56 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public  class Utilities {
+
+    /**
+     * Merges two Map<ResourceType, Integer> objects
+     * @param mainMap map that is modified
+     * @param mapToAdd map that is merged to the first one
+     */
+    protected static void mergeResourceTypeMaps(Map<ResourceType, Integer> mainMap, Map<ResourceType, Integer> mapToAdd) {
+        for (ResourceType resourceType : mapToAdd.keySet())
+            mainMap.merge(resourceType, mapToAdd.get(resourceType), Integer::sum);
+    }
+
+    /**
+     * changes an unknown in the target map into a resource type passed as parameter and tracks the change with the history map
+     * @param map map with the unknown that will be substituted
+     * @param history map that keeps track of the substitutions
+     * @param resourceType resource type unknown will be changed into
+     * @throws UnknownNotFoundException thrown if the map doesn't contain unknowns
+     */
+    protected static void replaceUnknown(Map<ResourceType, Integer> map, List<ResourceType> history, ResourceType resourceType) throws UnknownNotFoundException {
+        if (map.containsKey(ResourceType.UNKNOWN)) {
+            int quantity = map.get(ResourceType.UNKNOWN);
+            if (quantity == 1)
+                map.remove(ResourceType.UNKNOWN);
+            else if (quantity > 1)
+                map.replace(ResourceType.UNKNOWN, quantity - 1);
+            map.merge(resourceType, 1, Integer::sum);
+            history.add(resourceType);
+        } else throw new UnknownNotFoundException();
+    }
+
+    /**
+     * given a map and a list, for each resource type in the list adds an unknown in the map and removes a resource type from the map
+     * @param map map that will be reset
+     * @param history history of the changes of the map
+     */
+    protected static void revertUnknown(Map<ResourceType, Integer> map, List<ResourceType> history) {
+        for (ResourceType resourceType : history) {
+            map.merge(ResourceType.UNKNOWN, 1, Integer::sum);
+            if (map.get(resourceType) == 1)
+                map.remove(resourceType);
+            else if (map.get(resourceType) > 1)
+                map.replace(resourceType, map.get(resourceType) - 1);
+        }
+        history.clear();
+    }
+
     /**
      * load a game from a json file
      * @param name is the name of the json file (just name without .json)

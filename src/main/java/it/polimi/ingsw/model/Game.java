@@ -286,30 +286,36 @@ public abstract class Game implements BoardObserver {
         newPlayer.getBoard().getWarehouse().addObserver(this);
         players.add(newPlayer);
     }
+
     //USER:
-        //SetUpTurn
+
+    //SetUpTurn
     public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
         if(turnPhase==TurnPhase.STARTSETUPTURN) {
             currPlayer.chooseLeaders(l);
             turnPhase=TurnPhase.ENDSETUPTURN;
         }else throw new IllegalActionException();
     }
-    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFindException {
+
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFoundException {
         if(gamePhase==GamePhase.SETUP){
             currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
         }else throw new IllegalResourceException();
     }
-        //NormalTurn
+
+    //NormalTurn
     public void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
             currPlayer.playLeader(currPlayer.getLeadersInHand().get(index));
         else throw new IllegalActionException();
     }
+
     public void discardLeader(int index) throws CardNotAvailableException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
             currPlayer.discardLeader(currPlayer.getLeadersInHand().get(index));
         else throw new IllegalActionException();
     }
+
     public void buyAtMarketInterface(char rc,int index) throws IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.STARTTURN){
             buyAtMarket(rc,index);
@@ -318,6 +324,7 @@ public abstract class Game implements BoardObserver {
             else turnPhase=TurnPhase.DEPOSITPHASE;
         }else throw new IllegalActionException();
     }
+
     public void depositResource(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
             currPlayer.getBoard().getWarehouse().addResourceInDeposit(id,res);
@@ -326,6 +333,7 @@ public abstract class Game implements BoardObserver {
             }
         }else throw new IllegalActionException();
     }
+
     public void discardResource(ResourceType res) throws IllegalActionException, IllegalResourceException, DepositableResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE){
             currPlayer.getBoard().getWarehouse().discardResource(res);
@@ -334,32 +342,38 @@ public abstract class Game implements BoardObserver {
             }
         }else throw new IllegalActionException();
     }
+
     public void transformWhiteIn(ResourceType res) throws IllegalActionException, IllegalResourceException, NoWhiteResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.DEPOSITPHASE) {
             currPlayer.transformWhiteIn(res);
         }else throw new IllegalActionException();
     }
-    public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
-        if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
-            currPlayer.substituteUnknownInInputProduction(currPlayer.getBoard().getBaseProduction(),res);
+
+    public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
+            currPlayer.getBoard().getBaseProduction().replaceUnknownInput(res);
         }else throw new IllegalActionException();
     }
-    public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFindException {
+
+    public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
-            currPlayer.substituteUnknownInOutputProduction(currPlayer.getBoard().getBaseProduction(),res);
+            currPlayer.getBoard().getBaseProduction().replaceUnknownOutput(res);
         }else throw new IllegalActionException();
     }
-    public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
+
+    public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
-            currPlayer.substituteUnknownInOutputProduction(currPlayer.getExtraProductions().get(index), res);
+            currPlayer.getExtraProductions().get(index).replaceUnknownInput(res);
         }else throw new IllegalActionException();
     }
-    public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFindException {
+
+    public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
-            currPlayer.substituteUnknownInInputProduction(currPlayer.getExtraProductions().get(index), res);
+            currPlayer.getExtraProductions().get(index).replaceUnknownOutput(res);
         }else throw new IllegalActionException();
     }
-    public void toggleBaseProd() throws UnknownFindException, IllegalActionException {
+
+    public void toggleBaseProd() throws UnknownFoundException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getBoard().getBaseProduction().toggleSelected();
             if(currPlayer.countSelectedProductions()==0){
@@ -367,7 +381,8 @@ public abstract class Game implements BoardObserver {
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
-    public void toggleExtraProd(Integer index) throws UnknownFindException, IllegalActionException {
+
+    public void toggleExtraProd(Integer index) throws UnknownFoundException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getExtraProductions().get(index).toggleSelected();
             if(currPlayer.countSelectedProductions()==0){
@@ -375,7 +390,8 @@ public abstract class Game implements BoardObserver {
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
-    public void toggleCardProd(Integer slot) throws UnknownFindException, IllegalActionException, IllegalSlotException {
+
+    public void toggleCardProd(Integer slot) throws UnknownFoundException, IllegalActionException, IllegalSlotException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             Stack<DevelopmentCard> tmp=currPlayer.getBoard().getSlots().get(slot);
             if(tmp.size()>0){
@@ -386,30 +402,35 @@ public abstract class Game implements BoardObserver {
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
+
     public void pickUpResourceFromWarehouse(Integer id) throws IllegalActionException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.pickUpResourceFromWarehouse(id);
             turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
+
     public void pickUpResourceFromStrongbox(ResourceType res) throws IllegalActionException, ResourcesNotAvailableException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.pickUpResourceFromStrongbox(res);
             turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
     }
+
     public void revertPickUp() throws IllegalActionException, FullSpaceException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE) {
             currPlayer.revertPickUp();
             turnPhase=TurnPhase.STARTTURN;
         }else throw new IllegalActionException();
     }
-    public void activateProductions() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFindException, IllegalActionException {
+
+    public void activateProductions() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
             currPlayer.activateProductions();
             turnPhase=TurnPhase.ENDTURN;
         }else throw new IllegalActionException();
     }
+
     public void buyCard(Integer row,Integer col,Integer slot) throws ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
             if(cardMatrix[row][col].size()>0) {
@@ -424,7 +445,8 @@ public abstract class Game implements BoardObserver {
             currPlayer.getBoard().getWarehouse().moveResource(dep1,dep2);
         }else throw new IllegalActionException();
     }
-        //GenericTurn
+
+    //GenericTurn
     public void passTurn() throws IllegalActionException {
         if(gamePhase==GamePhase.SETUP){
             if(turnPhase==TurnPhase.ENDSETUPTURN && currPlayer.getBoard().getWarehouse().getPendingResources().get(ResourceType.UNKNOWN)==0){
@@ -432,7 +454,7 @@ public abstract class Game implements BoardObserver {
                     gamePhase=GamePhase.ONGOING;
                     turnPhase=TurnPhase.STARTTURN;
                 }else turnPhase=TurnPhase.STARTSETUPTURN;
-                if(players.size()>1)
+                if(players.size()>1) // si può togliere?
                     nextTurn();
             }else throw new IllegalActionException();
         }else if(gamePhase==GamePhase.ONGOING){
@@ -441,10 +463,12 @@ public abstract class Game implements BoardObserver {
                     gamePhase=GamePhase.ENDGAME;
                     endGame();
                 }
+                currPlayer.resetProductions();
                 nextTurn();
             }else throw new IllegalActionException();
         }
     }
+
     //-----------------------------------------------------------------------------------------------------
     protected void saveGameStateOnJson(String name) {
         for(Player p : players){
