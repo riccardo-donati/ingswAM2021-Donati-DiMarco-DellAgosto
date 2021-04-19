@@ -216,8 +216,8 @@ public abstract class Game implements BoardObserver {
      * @throws EmptyPlayersException if there aren't any players
      * @throws IllegalResourceException if UNKNOWN is illegal (it's not)
      */
-    public void startGame() throws EmptyPlayersException, IllegalResourceException {
-        if(players.size()==0) throw new EmptyPlayersException();
+    public void startGame() throws  IllegalResourceException, GameNotFullException {
+        if(players.size()==0) throw new GameNotFullException();
         Collections.shuffle(players);
         for(int i=0;i<players.size();i++){
             players.get(i).setOrder(i+1);
@@ -247,7 +247,16 @@ public abstract class Game implements BoardObserver {
         }
         return result;
     }
-
+    /**
+     * Factory method for the creation of the Game
+     * @param nPlayers is the number of players
+     * @return the Game instance
+     * @throws IllegalPlayersNumberException if nPlayers<1 or >4
+     */
+    public static Game createGame(Integer nPlayers) throws IllegalPlayersNumberException {
+        if(nPlayers==1) return new Singleplayer();
+        else return new Multiplayer(nPlayers);
+    }
     /**
      * for each player extract 4 leader cards and return them to the controller
      * @return the list of lists of 4 leader cards
@@ -290,7 +299,6 @@ public abstract class Game implements BoardObserver {
     }
 
     //USER:
-
     //SetUpTurn
     public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
         if(turnPhase==TurnPhase.STARTSETUPTURN) {
@@ -442,6 +450,7 @@ public abstract class Game implements BoardObserver {
         }else throw new IllegalActionException();
 
     }
+
     public void moveResource(Integer dep1,Integer dep2) throws IllegalActionException, IllegalResourceException, FullSpaceException, NonEmptyException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.DEPOSITPHASE ||turnPhase==TurnPhase.ENDTURN)) {
             currPlayer.getBoard().getWarehouse().moveResource(dep1,dep2);
@@ -471,7 +480,6 @@ public abstract class Game implements BoardObserver {
             }else throw new IllegalActionException();
         }
     }
-
     //-----------------------------------------------------------------------------------------------------
     protected void saveGameStateOnJson(String name) {
         for(Player p : players){

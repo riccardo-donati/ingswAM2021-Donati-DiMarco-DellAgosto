@@ -21,8 +21,8 @@ public class PublicInterfaceTest {
     Game game;
 
     @Test
-    public void TestSetUpTurnMultiplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException {
-        game=new Multiplayer();
+    public void TestSetUpTurnMultiplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException, IllegalPlayersNumberException, GameNotFullException {
+        game=Game.createGame(3);
         game.addPlayer("AAA");
         game.addPlayer("BBB");
         game.addPlayer("CCC");
@@ -66,8 +66,8 @@ public class PublicInterfaceTest {
         assertEquals(1, (int) game.getCurrPlayer().getOrder());
     }
     @Test
-    public void TestSetUpTurnSingleplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException {
-        game=new Singleplayer();
+    public void TestSetUpTurnSingleplayer() throws FullGameException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, NonEmptyException, GameNotFullException, IllegalPlayersNumberException {
+        game=Game.createGame(1);
         game.addPlayer("Mario");
         game.startGame();
         List<List<LeaderCard>> list=game.divideLeaderCards();
@@ -392,7 +392,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestSaveAndLoadGameStateMulti() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFoundException, FullGameException, IOException {
+    public void TestSaveAndLoadGameStateMulti() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFoundException, FullGameException, IOException, IllegalPlayersNumberException, GameNotFullException {
         TestSetUpTurnMultiplayer();
         game.saveGameStateOnJson("setUpMulti");
         Game g2=Utilities.loadGame("setUpMulti",'m');
@@ -400,7 +400,7 @@ public class PublicInterfaceTest {
         //should be the total equal but i have the override of the equals only in market
     }
     @Test
-    public void TestSaveAndLoadGameStateSingle() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, IOException {
+    public void TestSaveAndLoadGameStateSingle() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullGameException, IOException, GameNotFullException, IllegalPlayersNumberException {
         TestSetUpTurnSingleplayer();
         game.saveGameStateOnJson("setUpSingle");
         Game g2=Utilities.loadGame("setUpSingle",'s');
