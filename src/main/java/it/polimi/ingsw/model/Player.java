@@ -24,6 +24,7 @@ public class Player {
     protected void setOrder(int order){
         this.order=order;
     }
+
     /**
      *pick up a resource from a deposit of warehouse
      * @param id is the id of the deposit
@@ -156,6 +157,24 @@ public class Player {
         return extraProductions;
     }
 
+    /**
+     * calculates the points from the leader cards played and sums them to the board's points
+     * @return the player's total points
+     */
+    protected Integer countPoints(){
+        Integer temp = 0;
+        for (LeaderCard l : leadersInGame){
+            temp += l.getPoints();
+        }
+        return temp + board.countBoardsPoints();
+    }
+
+    /**
+     * Given a list of 2 leader cards, adds them to the leadersInHand list
+     * @param leaderCards list of leader cards chosen
+     * @throws IllegalLeaderCardsException thrown if the list in input doesn't contain exactly two cards
+     * @throws NonEmptyException thrown if the player already has leader cards in their hand
+     */
     void chooseLeaders(List<LeaderCard> leaderCards) throws IllegalLeaderCardsException, NonEmptyException {
         if(leaderCards.size()!=2 || leaderCards.get(0).equals(leaderCards.get(1))){
             throw new IllegalLeaderCardsException();
@@ -165,14 +184,6 @@ public class Player {
         leadersInHand.addAll(leaderCards);
     }
 
-    protected Integer countPoints(){
-        Integer temp = 0;
-        for (LeaderCard l : leadersInGame){
-            temp += l.getPoints();
-        }
-        return temp+board.countBoardsPoints();
-    }
-
     /**
      * if the card passed as parameter is available and its requirements are met,
      * all its abilities get activated, then the card is removed
@@ -180,7 +191,7 @@ public class Player {
      * @param leaderCard card that is activated
      * @throws CardNotAvailableException thrown if leaderCard is not in the leadersInHand list
      */
-    void playLeader(LeaderCard leaderCard) throws CardNotAvailableException, RequirementNotMetException {
+    void playLeader(LeaderCard leaderCard) throws CardNotAvailableException, RequirementNotMetException, IllegalResourceException {
         if(leadersInHand.contains(leaderCard)) {
             for (Requirement requirement : leaderCard.getRequirements()) {
                 if (!requirement.check(this.board))
@@ -204,6 +215,7 @@ public class Player {
             getBoard().getFaithPath().addToPosition(1);
         }else throw new CardNotAvailableException();
     }
+
     /**
      * Modifies the map discounts:
      *  if the resource type is already present, increments its value by 1
@@ -349,20 +361,20 @@ public class Player {
         }
         int totResReq=0;
         int totResPick=0;
-        for(ResourceRequirement rs : d.getCost()){
+        for (ResourceRequirement rs : d.getCost()){
             totResReq+=rs.getQuantity();
-            if(resourcesAvailable.get(rs.getResource())<rs.getQuantity()){
+            if (resourcesAvailable.get(rs.getResource()) < rs.getQuantity()){
                 throw new ResourcesNotAvailableException();
             }
-            if (resourcesAvailable.get(rs.getResource())>rs.getQuantity()){
+            if (resourcesAvailable.get(rs.getResource()) > rs.getQuantity()){
                 throw new TooManyResourcesException();
             }
         }
         //check if there are other resources not considered
         for (Map.Entry<ResourceType, Integer> entry : resourcesAvailable.entrySet()) {
-            totResPick+=entry.getValue();
+            totResPick += entry.getValue();
         }
-        if(totResPick!=totResReq) throw new TooManyResourcesException();
+        if(totResPick != totResReq) throw new TooManyResourcesException();
     }
 
     /**
@@ -376,6 +388,7 @@ public class Player {
         getBoard().pushDCard(slot,d);
         clearPickedUp();
     }
+
     //----------------------------------------------------
 
     /**
@@ -383,37 +396,11 @@ public class Player {
      * @param res is the ResourceType
      */
     protected void transformWhiteIn(ResourceType res) throws NoWhiteResourceException, IllegalResourceException {
-        if(whiteTo.containsKey(res)){
+        if (whiteTo.containsKey(res)){
             int n=whiteTo.get(res);
             getBoard().getWarehouse().replaceWhiteFromPending(res,n);
-        }else throw new IllegalResourceException();
+        } else throw new IllegalResourceException();
     }
-
-//    protected void substituteUnknownInInputProduction(Production p,ResourceType res) throws UnknownNotFoundException {
-//        if(p.getInput().containsKey(ResourceType.UNKNOWN)){
-//            int n=p.getInput().get(ResourceType.UNKNOWN);
-//            if(n==1) p.getInput().remove(ResourceType.UNKNOWN);
-//            else if(n>1) p.getInput().replace(ResourceType.UNKNOWN,n-1);
-//            if(p.getInput().containsKey(res)){
-//                p.getInput().replace(res,p.getInput().get(res)+1);
-//            }else {
-//                p.addInput(res, 1);
-//            }
-//        }else throw new UnknownNotFoundException();
-//    }
-//
-//    protected void substituteUnknownInOutputProduction(Production p,ResourceType res) throws UnknownNotFoundException {
-//        if(p.getOutput().containsKey(ResourceType.UNKNOWN)){
-//            int n=p.getOutput().get(ResourceType.UNKNOWN);
-//            if(n==1) p.getOutput().remove(ResourceType.UNKNOWN);
-//            else if(n>1) p.getOutput().replace(ResourceType.UNKNOWN,n-1);
-//            if(p.getOutput().containsKey(res)){
-//                p.getOutput().replace(res,p.getOutput().get(res)+1);
-//            }else {
-//                p.addOutput(res, 1);
-//            }
-//        }else throw new UnknownNotFoundException();
-//    }
 
     /**
      * count the total amount of selected productions

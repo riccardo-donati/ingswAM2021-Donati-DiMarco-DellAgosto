@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.exceptions.FullGameException;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Test;
 
@@ -21,7 +22,7 @@ class SingleplayerTest {
     }
 
     @Test
-    public void TestPath() throws FullGameException {
+    public void TestPath() throws FullGameException, IllegalResourceException {
         s = new Singleplayer();
         s.addPlayer("Riccardo Ricevuti");
         s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(5);
@@ -35,7 +36,7 @@ class SingleplayerTest {
     }
 
     @Test
-    public void TestPath2() throws FullGameException {                                                        //la bCross raggiunge prima la fine, ma il player è nella zona quindi deve essere attivo
+    public void TestPath2() throws FullGameException, IllegalResourceException {                                                        //la bCross raggiunge prima la fine, ma il player è nella zona quindi deve essere attivo
         s = new Singleplayer();                                                     //il player raggiung eil secondo stato e si attiva, ma la croce raggiunge lo stato finale
         s.addPlayer("Giacomo del Luglio");
         s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(6);
@@ -49,7 +50,7 @@ class SingleplayerTest {
     }
 
     @Test
-    public void TestPath3() throws FullGameException {
+    public void TestPath3() throws FullGameException, IllegalResourceException {
         s = new Singleplayer();
         s.addPlayer("Davide di Davide");            //mi assicuro che anche se il player passi sulle caselle lo stato non cambi
         s.pushBlackCross(23);
@@ -66,7 +67,7 @@ class SingleplayerTest {
     }
 
     @Test
-    public void TestCheckWinner4() throws FullGameException {                   //expected antonio and score 20 faith + 9 Pope = 29
+    public void TestCheckWinner4() throws FullGameException, IllegalResourceException {                   //expected antonio and score 20 faith + 9 Pope = 29
         s = new Singleplayer();
         s.addPlayer("Antoniolo Papillo");
         s.getPlayers().get(0).getBoard().getFaithPath().addToPosition(16);

@@ -174,7 +174,7 @@ class PlayerTest {
     }
 
     @Test
-    void addProduction() {
+    void addProduction() throws IllegalResourceException {
         ExtraProduction extraProduction = new ExtraProduction(ResourceType.YELLOW);
         extraProduction.activate(player);
         assertEquals(1, player.getExtraProductions().size());

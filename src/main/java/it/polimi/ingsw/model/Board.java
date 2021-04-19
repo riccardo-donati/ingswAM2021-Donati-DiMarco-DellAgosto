@@ -30,8 +30,16 @@ public class Board {
         this.warehouse = new Warehouse();
         this.faithpath = new FaithPath();
         this.baseProduction = new Production();
-        baseProduction.addInput(ResourceType.UNKNOWN,2);
-        baseProduction.addOutput(ResourceType.UNKNOWN,1);
+        try {
+            baseProduction.addInput(ResourceType.UNKNOWN,2);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
+        try {
+            baseProduction.addOutput(ResourceType.UNKNOWN,1);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
         slots = new HashMap<>();
         slots.put(1, new Stack<>());
         slots.put(2, new Stack<>());

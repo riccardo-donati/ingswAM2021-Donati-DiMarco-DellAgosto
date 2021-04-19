@@ -272,7 +272,7 @@ public abstract class Game implements BoardObserver {
      * addition of a new player into the game
      * @param nickname of the new player
      */
-    public void addPlayer(String nickname) throws FullGameException {
+    public void addPlayer(String nickname) throws FullGameException, IllegalResourceException {
         if(nickname.equals("")){
             throw new IllegalArgumentException("nickname is empty");
         }
@@ -306,7 +306,7 @@ public abstract class Game implements BoardObserver {
     }
 
     //NormalTurn
-    public void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException {
+    public void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
             currPlayer.playLeader(currPlayer.getLeadersInHand().get(index));
         else throw new IllegalActionException();
@@ -351,25 +351,25 @@ public abstract class Game implements BoardObserver {
         }else throw new IllegalActionException();
     }
 
-    public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException {
+    public void substituteUnknownInInputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.getBoard().getBaseProduction().replaceUnknownInput(res);
         }else throw new IllegalActionException();
     }
 
-    public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException {
+    public void substituteUnknownInOutputBaseProduction(ResourceType res) throws IllegalActionException, UnknownNotFoundException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.getBoard().getBaseProduction().replaceUnknownOutput(res);
         }else throw new IllegalActionException();
     }
 
-    public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException {
+    public void substituteUnknownInInputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.getExtraProductions().get(index).replaceUnknownInput(res);
         }else throw new IllegalActionException();
     }
 
-    public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException {
+    public void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res) throws IllegalActionException, UnknownNotFoundException, IllegalResourceException {
         if(gamePhase==GamePhase.ONGOING &&  (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.PICKUPPHASE)){
             currPlayer.getExtraProductions().get(index).replaceUnknownOutput(res);
         }else throw new IllegalActionException();

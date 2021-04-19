@@ -199,7 +199,7 @@ public class PublicInterfaceTest {
     }
 
     @Test
-    public void TestRegularProduction() throws IOException, IllegalSlotException {
+    public void TestRegularProduction() throws IOException, IllegalSlotException, IllegalResourceException {
         game=Utilities.loadGame("setUpMulti",'m');
 
         //artificially adding resources to player's strongbox

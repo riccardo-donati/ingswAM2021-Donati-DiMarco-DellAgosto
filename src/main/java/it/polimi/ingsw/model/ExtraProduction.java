@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 
 public class ExtraProduction extends SpecialAbility {
 
@@ -14,7 +15,7 @@ public class ExtraProduction extends SpecialAbility {
      * @param player affected
      */
     @Override
-    public void activate(Player player) {
+    public void activate(Player player) throws IllegalResourceException {
         Production production = new Production();
         production.addInput(resourceType, 1);
         production.addOutput(ResourceType.UNKNOWN, 1);

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -40,14 +41,14 @@ class MarketTest {
                 ()->m1.getColumn(4,new Player()));
     }
     @Test
-    public void testExtractRow(){
+    public void testExtractRow() throws IllegalResourceException {
         for(int i=0;i<5;i++){
             m1.getRow(0,new Player("Mario"));
         }
         assertEquals(m1,m2);
     }
     @Test
-    public void testExtractColumn(){
+    public void testExtractColumn() throws IllegalResourceException {
         for(int i=0;i<4;i++){
             m1.getColumn(0,new Player("Mario"));
         }

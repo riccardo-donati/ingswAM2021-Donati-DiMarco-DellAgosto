@@ -73,7 +73,7 @@ class GameTest {
 
 
     @Test
-    public void TestNotifyEndGame() throws FullGameException {
+    public void TestNotifyEndGame() throws FullGameException, IllegalResourceException {
         game=new Multiplayer();
         game.addPlayer("Carlo");
         game.addPlayer("Giuseppe");
@@ -83,7 +83,7 @@ class GameTest {
     }
 
     @Test
-    void testEndGame() throws FullGameException {
+    void testEndGame() throws FullGameException, IllegalResourceException {
         game = new Singleplayer();
         game.addPlayer("Giancarlo Magalli");
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(27);
@@ -199,7 +199,7 @@ class GameTest {
         assertEquals(8,game.getBlackCrossFaithPath().getPosition());
     }
     @Test
-    public void TestAddPlayer() throws FullGameException {
+    public void TestAddPlayer() throws FullGameException, IllegalResourceException {
         game=new Multiplayer();
         assertThrows(IllegalArgumentException.class,
                 ()-> game.addPlayer(""));
@@ -235,7 +235,7 @@ class GameTest {
         assertEquals(4,game.getPlayers().size());
     }
     @Test
-    public void TestDivideLeaderCards() throws FullGameException, EmptyPlayersException {
+    public void TestDivideLeaderCards() throws FullGameException, EmptyPlayersException, IllegalResourceException {
         game=new Multiplayer();
         List<List<LeaderCard>> result;
         assertThrows(EmptyPlayersException.class,

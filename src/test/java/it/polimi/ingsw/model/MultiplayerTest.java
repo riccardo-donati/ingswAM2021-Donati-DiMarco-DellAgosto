@@ -18,7 +18,7 @@ class MultiplayerTest {
     Game game;
 
     @Test
-    public void TestListPlayers() throws FullGameException {
+    public void TestListPlayers() throws FullGameException, IllegalResourceException {
         game = new Multiplayer();
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");
@@ -29,7 +29,7 @@ class MultiplayerTest {
     }
 
     @Test
-    public void TestNotifyPopeFavor() throws FullGameException {
+    public void TestNotifyPopeFavor() throws FullGameException, IllegalResourceException {
         game=new Multiplayer();
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");
