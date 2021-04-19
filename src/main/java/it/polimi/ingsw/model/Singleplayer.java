@@ -18,7 +18,7 @@ public class Singleplayer extends Game {
     private List<Token> tokens;
     private FaithPath blackFaithPath;
 
-    public Singleplayer()  {
+    protected Singleplayer()  {
         super();
         loadTokensFromJSON();
         tokenShuffle();

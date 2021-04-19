@@ -6,3 +6,4 @@
 /dataSources.local.xml
 
 target
+/src/main/it/polimi/ingsw/model/json/gameState

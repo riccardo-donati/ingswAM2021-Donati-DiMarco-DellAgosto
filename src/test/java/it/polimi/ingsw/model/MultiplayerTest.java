@@ -18,22 +18,32 @@ class MultiplayerTest {
     Game game;
 
     @Test
-    public void TestListPlayers() throws FullGameException {
-        game = new Multiplayer();
+    public void TestListPlayers() throws FullGameException, IllegalPlayersNumberException {
+        assertThrows(IllegalPlayersNumberException.class,
+                ()-> game=new Multiplayer(1));
+        assertThrows(IllegalPlayersNumberException.class,
+                ()-> game=new Multiplayer(0));
+        assertThrows(IllegalPlayersNumberException.class,
+                ()-> game=new Multiplayer(5));
+        game = new Multiplayer(3);
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");
         game.addPlayer("Topotizio");
-        for (Player p : game.getPlayers()){
-            System.out.println(p.getNickname());
-        }
+        assertThrows(FullGameException.class,
+                ()->game.addPlayer("sda"));
+        assertEquals("Pluto", game.getPlayers().get(0).getNickname());
+        assertEquals("Pippo", game.getPlayers().get(1).getNickname());
+        assertEquals("Topotizio", game.getPlayers().get(2).getNickname());
+
     }
 
     @Test
-    public void TestNotifyPopeFavor() throws FullGameException {
-        game=new Multiplayer();
+    public void TestNotifyPopeFavor() throws FullGameException, IllegalPlayersNumberException {
+        game=new Multiplayer(3);
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");
         game.addPlayer("Topotizio");
+
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(5);
         game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(8);
 
@@ -60,35 +70,9 @@ class MultiplayerTest {
 
     }
 
-/*    @Test
-    public void TestWinner() throws FullGameException {
-        game=new Multiplayer();
-        game.addPlayer("Tizio forte");
-        game.addPlayer("Tizio mediamente forte");
-        game.addPlayer("Tizio scarso");
-        game.addPlayer("Tizio scarso forte");
-        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(5);
-        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(8);
-
-        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(3);
-        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(2);
-        game.getPlayers().get(2).getBoard().getFaithPath().addToPosition(12);
-        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(4);
-
-        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(5);
-        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(2);
-
-        game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(10);   //points: 12 + 2 + 3 = 17
-        game.getPlayers().get(1).getBoard().getFaithPath().addToPosition(11);   // 20 + 2 + 3 + 4 = 29 winner
-        game.getPlayers().get(2).getBoard().getFaithPath().addToPosition(39);   // 6
-        game.getPlayers().get(3).getBoard().getFaithPath().addToPosition(19);   // 2
-
-        assertTrue(game.isEndGameTrigger());
-    }*/
-
     @Test
-    public void TestWinner2() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException {
-        game =new Multiplayer();
+    public void TestWinner2() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException, IllegalPlayersNumberException {
+        game =new Multiplayer(2);
         game.addPlayer("Jack");     //11 Dcards + 3 storage + 3 leader + 5 pf + 12 faith = 34
         game.addPlayer("Io");       //26 points
 
@@ -134,8 +118,8 @@ class MultiplayerTest {
     }
 
     @Test
-    public void TestSamePointsWinner() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException {
-        game = new Multiplayer();
+    public void TestSamePointsWinner() throws FullGameException, IllegalResourceException, FullSpaceException, IllegalSlotException, IllegalPlayersNumberException {
+        game = new Multiplayer(4);
         game.addPlayer("Qiqi"); //2+1+25    28 points 1 resources -> winner
         game.addPlayer("Eula"); //3+1+24    28 points 1 resources -> winner
         game.addPlayer("Keqing"); //3+1+24  27 points 2 resources

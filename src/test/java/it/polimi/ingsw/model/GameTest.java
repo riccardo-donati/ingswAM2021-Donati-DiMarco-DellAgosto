@@ -73,8 +73,8 @@ class GameTest {
 
 
     @Test
-    public void TestNotifyEndGame() throws FullGameException {
-        game=new Multiplayer();
+    public void TestNotifyEndGame() throws FullGameException, IllegalPlayersNumberException {
+        game=new Multiplayer(2);
         game.addPlayer("Carlo");
         game.addPlayer("Giuseppe");
         game.getPlayers().get(0).getBoard().getFaithPath().addToPosition(22);
@@ -94,8 +94,8 @@ class GameTest {
 
     //-----------------------------------------
     @Test
-    public void TestBuyAtMarket() throws FullGameException, EmptyPlayersException, IllegalResourceException {
-        game=new Multiplayer();
+    public void TestBuyAtMarket() throws FullGameException,  IllegalResourceException, IllegalPlayersNumberException, GameNotFullException {
+        game=new Multiplayer(2);
         game.addPlayer("Beppe");
         game.addPlayer("Carlo");
         game.startGame();
@@ -108,8 +108,8 @@ class GameTest {
         assertEquals((int) game.getCurrPlayer().getBoard().getWarehouse().getPendingResources().get(ResourceType.WHITE), 0);
     }
     @Test
-    public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException, EmptyPlayersException, IllegalResourceException {
-        game=new Multiplayer();
+    public void TestBuyAtMarketWithOneWhiteTo() throws FullGameException, IllegalResourceException, GameNotFullException {
+        game=new Singleplayer();
         game.addPlayer("Floriano");
         game.startGame();
 
@@ -123,8 +123,8 @@ class GameTest {
         assertTrue(game.getCurrPlayer().getBoard().getWarehouse().countPendingResources()>0);
     }
     @RepeatedTest(10)
-    public void TestBuyAtMarketWithTwoWhiteTo() throws FullGameException, EmptyPlayersException, IllegalResourceException {
-        game=new Multiplayer();
+    public void TestBuyAtMarketWithTwoWhiteTo() throws FullGameException, IllegalResourceException, GameNotFullException {
+        game=new Singleplayer();
         game.addPlayer("Floriano");
         game.startGame();
 
@@ -155,8 +155,8 @@ class GameTest {
     }
 
     @Test
-    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException, EmptyPlayersException, DepositableResourceException, FullSpaceException {
-        game=new Multiplayer();
+    public void TestObserverDiscardMulti() throws IllegalResourceException, FullGameException, DepositableResourceException, FullSpaceException, IllegalPlayersNumberException, GameNotFullException {
+        game=new Multiplayer(2);
         game.addPlayer("Giacomo");
         game.addPlayer("Aldo");
         game.startGame();
@@ -179,7 +179,7 @@ class GameTest {
         }
     }
     @Test
-    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException, EmptyPlayersException, DepositableResourceException, FullSpaceException {
+    public void TestObserverDiscardSingle() throws IllegalResourceException, FullGameException, DepositableResourceException, FullSpaceException, GameNotFullException {
         game=new Singleplayer();
         game.addPlayer("Giacomo");
         game.startGame();
@@ -199,8 +199,8 @@ class GameTest {
         assertEquals(8,game.getBlackCrossFaithPath().getPosition());
     }
     @Test
-    public void TestAddPlayer() throws FullGameException {
-        game=new Multiplayer();
+    public void TestAddPlayer() throws FullGameException, IllegalPlayersNumberException {
+        game=new Multiplayer(2);
         assertThrows(IllegalArgumentException.class,
                 ()-> game.addPlayer(""));
         game.addPlayer("Carlo");
@@ -220,8 +220,8 @@ class GameTest {
         assertEquals(1,game.getPlayers().size());
     }
     @Test
-    public void FullGameTestMulti(){
-        game=new Multiplayer();
+    public void FullGameTestMulti() throws IllegalPlayersNumberException {
+        game=new Multiplayer(4);
         assertDoesNotThrow(
                 ()-> {
                     game.addPlayer("Aldo");
@@ -235,8 +235,8 @@ class GameTest {
         assertEquals(4,game.getPlayers().size());
     }
     @Test
-    public void TestDivideLeaderCards() throws FullGameException, EmptyPlayersException {
-        game=new Multiplayer();
+    public void TestDivideLeaderCards() throws FullGameException, EmptyPlayersException, IllegalPlayersNumberException {
+        game=new Multiplayer(3);
         List<List<LeaderCard>> result;
         assertThrows(EmptyPlayersException.class,
                 ()->game.divideLeaderCards());
@@ -255,10 +255,12 @@ class GameTest {
         }
     }
     @Test
-    public void TestOrderPlayer() throws FullGameException, EmptyPlayersException, IllegalResourceException {
-        game=new Multiplayer();
+    public void TestOrderPlayer() throws FullGameException, IllegalResourceException, IllegalPlayersNumberException, GameNotFullException {
+        game=new Multiplayer(3);
         game.addPlayer("AAA");
         game.addPlayer("BOB");
+        assertThrows(GameNotFullException.class,
+                ()->game.startGame());
         game.addPlayer("MAX");
         game.startGame();
         for(Player p : game.getPlayers()){
