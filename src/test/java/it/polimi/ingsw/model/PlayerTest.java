@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import org.junit.jupiter.api.Test;
 
+import java.time.Year;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -153,14 +154,87 @@ class PlayerTest {
     void addDiscount() {
         Discount discount = new Discount(ResourceType.BLUE);
         discount.activate(player);
-        assertEquals(1, player.getDiscounts().get(ResourceType.BLUE));
+        assertEquals(1, player.getDiscounts().get(0).getQuantity());
         discount.activate(player);
-        assertEquals(2, player.getDiscounts().get(ResourceType.BLUE));
+        assertEquals(2, player.getDiscounts().get(0).getQuantity());
         discount = new Discount(ResourceType.GREY);
         discount.activate(player);
-        assertEquals(1, player.getDiscounts().get(ResourceType.GREY));
+        assertEquals(1, player.getDiscounts().get(1).getQuantity());
     }
+    @Test
+    void TestToggleDiscount() throws DiscountNotFoundException {
+        assertThrows(DiscountNotFoundException.class,
+                ()->player.toggleDiscount(ResourceType.GREY));
+        Discount discount1=new Discount(ResourceType.YELLOW);
+        discount1.activate(player);
+        discount1.activate(player);
+        Discount discount2=new Discount(ResourceType.BLUE);
+        discount2.activate(player);
+        assertThrows(DiscountNotFoundException.class,
+                ()->player.toggleDiscount(ResourceType.GREY));
+        player.toggleDiscount(ResourceType.BLUE);
+        player.toggleDiscount(ResourceType.YELLOW);
+        player.toggleDiscount(ResourceType.YELLOW);
+        assertFalse(player.getDiscounts().get(0).isActivated());
+        assertTrue(player.getDiscounts().get(1).isActivated());
+    }
+    @Test
+    void TestWithDiscount1() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, DiscountNotFoundException {
+        Discount discount1=new Discount(ResourceType.YELLOW);
+        discount1.activate(player);
+        discount1.activate(player);
+        Discount discount2=new Discount(ResourceType.BLUE);
+        discount2.activate(player);
+        Utilities.fillDeposits(player,false);
+        ResourceRequirement rr=new ResourceRequirement(ResourceType.YELLOW,3);
+        List<ResourceRequirement> rrlist=new ArrayList<>();
+        rrlist.add(rr);
+        DevelopmentCard d=new DevelopmentCard(rrlist,1,Color.GREEN,new Production(),1);
 
+        player.toggleDiscount(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.buyCard(d,1);
+        assertEquals(d,player.getBoard().getSlots().get(1).pop());
+    }
+    @Test
+    void TestWithDiscount2() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, DiscountNotFoundException {
+        Discount discount1=new Discount(ResourceType.YELLOW);
+        discount1.activate(player);
+        discount1.activate(player);
+        Discount discount2=new Discount(ResourceType.BLUE);
+        discount2.activate(player);
+        Utilities.fillDeposits(player,false);
+        ResourceRequirement rr1=new ResourceRequirement(ResourceType.YELLOW,3);
+        ResourceRequirement rr2=new ResourceRequirement(ResourceType.BLUE,2);
+        List<ResourceRequirement> rrlist=new ArrayList<>();
+        rrlist.add(rr1);
+        rrlist.add(rr2);
+        DevelopmentCard d=new DevelopmentCard(rrlist,1,Color.GREEN,new Production(),1);
+
+        player.toggleDiscount(ResourceType.YELLOW);
+        player.toggleDiscount(ResourceType.BLUE);
+        player.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        player.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        player.buyCard(d,1);
+        assertEquals(d,player.getBoard().getSlots().get(1).pop());
+    }
+    @Test
+    void TestWithDiscount3() throws FullSpaceException, IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, DiscountNotFoundException {
+        Discount discount1=new Discount(ResourceType.YELLOW);
+        discount1.activate(player);
+        Discount discount2=new Discount(ResourceType.YELLOW);
+        discount2.activate(player);
+        ResourceRequirement rr1=new ResourceRequirement(ResourceType.YELLOW,1);
+        List<ResourceRequirement> rrlist=new ArrayList<>();
+        rrlist.add(rr1);
+        DevelopmentCard d=new DevelopmentCard(rrlist,1,Color.GREEN,new Production(),1);
+
+        assertThrows(ResourcesNotAvailableException.class,
+                ()->player.buyCard(d,1));
+        player.toggleDiscount(ResourceType.YELLOW);
+        player.buyCard(d,1);
+        assertEquals(d,player.getBoard().getSlots().get(1).pop());
+    }
     @Test
     void addWhiteTo() {
         WhiteTo whiteTo = new WhiteTo(ResourceType.GREY);

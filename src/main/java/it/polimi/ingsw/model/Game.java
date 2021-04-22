@@ -442,7 +442,8 @@ public abstract class Game implements BoardObserver {
     }
 
     public void buyCard(Integer row,Integer col,Integer slot) throws ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, IllegalActionException {
-        if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.PICKUPPHASE || turnPhase==TurnPhase.STARTTURN && currPlayer.countActivatedDiscounts()>0)){
+            //you can buy in STARTTURN only if you have a selected discounts
             if(cardMatrix[row][col].size()>0) {
                 currPlayer.buyCard(cardMatrix[row][col].pop(), slot);
                 turnPhase = TurnPhase.ENDTURN;
@@ -456,7 +457,11 @@ public abstract class Game implements BoardObserver {
             currPlayer.getBoard().getWarehouse().moveResource(dep1,dep2);
         }else throw new IllegalActionException();
     }
-
+    public void toggleDiscount(ResourceType res) throws IllegalActionException, DiscountNotFoundException {
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)){
+            currPlayer.toggleDiscount(res);
+        }else throw new IllegalActionException();
+    }
     //GenericTurn
     public void passTurn() throws IllegalActionException {
         if(gamePhase==GamePhase.SETUP){

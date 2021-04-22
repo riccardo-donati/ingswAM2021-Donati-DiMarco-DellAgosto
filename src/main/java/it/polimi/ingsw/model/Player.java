@@ -15,7 +15,7 @@ public class Player {
     private List<LeaderCard> leadersInHand = new ArrayList<>();
     private List<LeaderCard> leadersInGame = new ArrayList<>();
 
-    private Map<ResourceType, Integer> discounts = new HashMap<>();
+    private List<ResourceDiscount> discounts = new ArrayList<>();
     private Map<ResourceType, Integer> whiteTo = new HashMap<>();
     private List<Production> extraProductions = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class Player {
         return leadersInGame;
     }
 
-    protected Map<ResourceType, Integer> getDiscounts() {
+    protected List<ResourceDiscount> getDiscounts() {
         return discounts;
     }
 
@@ -223,7 +223,32 @@ public class Player {
      * @param resourceType discount added
      */
     protected void addDiscount(ResourceType resourceType) {
-        discounts.merge(resourceType, 1, Integer::sum);
+        boolean flag=true;
+        for(ResourceDiscount rd : discounts){
+            if(rd.getRes()==resourceType){
+                rd.addQuantity();
+                flag=false;
+            }
+        }
+        if(flag){
+            discounts.add(new ResourceDiscount(resourceType));
+        }
+    }
+
+    /**
+     * toggle a discount of the selected resource type
+     * @param res is the resource type
+     */
+    protected void toggleDiscount(ResourceType res) throws DiscountNotFoundException {
+        boolean find=false;
+        for(ResourceDiscount rd : discounts){
+            if(rd.getRes()==res){
+                rd.toggle();
+                find=true;
+                break;
+            }
+        }
+        if(!find) throw new DiscountNotFoundException();
     }
 
     /**
@@ -349,6 +374,32 @@ public class Player {
     }
 
     /**
+     *
+     * @return the number of activated discounts
+     */
+    protected int countActivatedDiscounts(){
+        int cont=0;
+        for(ResourceDiscount rd : discounts){
+            if(rd.isActivated())
+                cont++;
+        }
+        return cont;
+    }
+    /**
+     * method that tells the discount of a certain resource
+     * @param res is the resourceType
+     * @return the number of discounted resources
+     */
+    protected Integer checkDiscount(ResourceType res){
+        Integer discount=0;
+        for(ResourceDiscount rd : discounts){
+            if(res==rd.getRes() && rd.isActivated()){
+                discount=rd.getQuantity();
+            }
+        }
+        return discount;
+    }
+    /**
      * check in pickedResource map if you have enough resources for buying a certain davelopment card
      * @param d is the development card
      * @throws ResourcesNotAvailableException if you have picked up less resources than the needed
@@ -362,11 +413,16 @@ public class Player {
         int totResReq=0;
         int totResPick=0;
         for (ResourceRequirement rs : d.getCost()){
-            totResReq+=rs.getQuantity();
-            if (resourcesAvailable.get(rs.getResource()) < rs.getQuantity()){
+            int discount=checkDiscount(rs.getResource());
+            int discounted;
+            if(discount>rs.getQuantity())
+                discounted=0;
+            else discounted=rs.getQuantity()-discount;
+            totResReq+=discounted;
+            if (resourcesAvailable.get(rs.getResource()) < discounted){
                 throw new ResourcesNotAvailableException();
             }
-            if (resourcesAvailable.get(rs.getResource()) > rs.getQuantity()){
+            if (resourcesAvailable.get(rs.getResource()) > discounted){
                 throw new TooManyResourcesException();
             }
         }

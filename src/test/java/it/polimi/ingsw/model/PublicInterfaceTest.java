@@ -7,8 +7,6 @@ import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Test;
-
-
 import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -544,6 +542,40 @@ public class PublicInterfaceTest {
         }
         assertTrue(game.isEndGameTrigger());
         assertEquals(GamePhase.ENDGAME,game.getGamePhase());
+    }
+    @Test
+    public void TestDiscount1() throws IOException, FullSpaceException, IllegalResourceException, IllegalActionException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, DiscountNotFoundException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        game.initializeCardMatrixForTests();
+        //1blue 1violet 1yellow r=0 c=3
+        game.getCurrPlayer().addDiscount(ResourceType.YELLOW);
+        game.getCurrPlayer().addDiscount(ResourceType.YELLOW);
+        game.getCurrPlayer().addDiscount(ResourceType.BLUE);
+        Utilities.fillDeposits(game.getCurrPlayer(),false);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.toggleDiscount(ResourceType.YELLOW);
+        game.toggleDiscount(ResourceType.BLUE);
+        game.buyCard(0,3,1);
+
+        assertEquals(game.getCurrPlayer().getBoard().getSlots().get(1).size(), 1);
+    }
+    @Test
+    public void TestDiscount2() throws IOException, IllegalActionException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, DiscountNotFoundException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        game.initializeCardMatrixForTests();
+        //1blue 1violet 1yellow r=0 c=3
+        game.getCurrPlayer().addDiscount(ResourceType.YELLOW);
+        game.getCurrPlayer().addDiscount(ResourceType.VIOLET);
+        game.getCurrPlayer().addDiscount(ResourceType.BLUE);
+
+        game.toggleDiscount(ResourceType.YELLOW);
+        game.toggleDiscount(ResourceType.VIOLET);
+        game.toggleDiscount(ResourceType.BLUE);
+
+        //trying to buy without picking up anything -> 3 discounts
+        game.buyCard(0,3,1);
+
+        assertEquals(game.getCurrPlayer().getBoard().getSlots().get(1).size(), 1);
     }
 
 }
