@@ -18,7 +18,7 @@ class MultiplayerTest {
     Game game;
 
     @Test
-    public void TestListPlayers() throws FullGameException, IllegalPlayersNumberException {
+    public void TestListPlayers() throws FullGameException, IllegalPlayersNumberException, IllegalResourceException {
         assertThrows(IllegalPlayersNumberException.class,
                 ()-> game=new Multiplayer(1));
         assertThrows(IllegalPlayersNumberException.class,
@@ -38,7 +38,7 @@ class MultiplayerTest {
     }
 
     @Test
-    public void TestNotifyPopeFavor() throws FullGameException, IllegalPlayersNumberException {
+    public void TestNotifyPopeFavor() throws FullGameException, IllegalPlayersNumberException, IllegalResourceException {
         game=new Multiplayer(3);
         game.addPlayer("Pluto");
         game.addPlayer("Pippo");

@@ -87,31 +87,6 @@ public class PublicInterfaceTest {
         assertEquals(1, (int) game.getCurrPlayer().getOrder());
     }
 
-    // probably better to test this with smaller tests
-    /*@Test
-    public void TestTurnMultiplayer() throws NonEmptyException, EmptyPlayersException, IllegalResourceException, IllegalLeaderCardsException, IllegalActionException, FullSpaceException, UnknownNotFindException, FullGameException {
-        TestSetUpTurnMultiplayer();
-        assertEquals(1,game.getCurrPlayer().getOrder());
-        game.buyAtMarketInterface('c',0); //is random -> can't test
-        //manual addition of resource in pending
-        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.GREY);
-        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.VIOLET);
-        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.YELLOW);
-        game.getCurrPlayer().getBoard().getWarehouse().addResourceInPending(ResourceType.BLUE);
-        //System.out.println(game.getCurrPlayer().getBoard().getWarehouse().getPendingResources());
-
-        game.depositResource(1,ResourceType.GREY);
-        game.moveResource(1,2);
-        assertThrows(DepositableResourceException.class,
-                ()->game.discardResource(ResourceType.VIOLET));
-        game.depositResource(1,ResourceType.VIOLET);
-        game.moveResource(1,2);
-        game.depositResource(3,ResourceType.YELLOW);
-        assertDoesNotThrow(
-                ()->game.discardResource(ResourceType.BLUE));
-        assertEquals(ResourceType.GREY,game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(0).getSpace()[0]);
-        assertEquals(ResourceType.VIOLET,game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(1).getSpace()[0]);
-    }*/
 
     @Test
     public void TestOneWhiteTo() throws NonEmptyException,  IllegalActionException, FullSpaceException, IllegalResourceException, IOException {

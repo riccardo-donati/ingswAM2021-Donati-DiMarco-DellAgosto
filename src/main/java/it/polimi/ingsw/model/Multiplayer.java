@@ -2,6 +2,9 @@ package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.FullGameException;
+import it.polimi.ingsw.model.exceptions.GameNotFullException;
+import it.polimi.ingsw.model.exceptions.IllegalPlayersNumberException;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -26,7 +29,7 @@ public class Multiplayer extends Game{
 
     //----------------PublicInterface----------------------------------------------------------------------
     @Override
-    public void startGame() throws IllegalResourceException, GameNotFullException {
+    public void startGame() throws IllegalResourceException, GameNotFullException, GameNotFullException {
         if(nPlayers!=getPlayers().size()) throw new GameNotFullException();
         super.startGame();
     }
@@ -37,7 +40,7 @@ public class Multiplayer extends Game{
         return result;
     }
     @Override
-    public void addPlayer(String nick) throws FullGameException {
+    public void addPlayer(String nick) throws FullGameException, IllegalResourceException {
         if(getPlayers().size()==nPlayers) throw new FullGameException();
         super.addPlayer(nick);
     }

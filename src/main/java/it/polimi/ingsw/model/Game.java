@@ -308,7 +308,7 @@ public abstract class Game implements BoardObserver {
     }
 
     public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFoundException {
-        if(gamePhase==GamePhase.SETUP){
+        if(gamePhase==GamePhase.SETUP && turnPhase==TurnPhase.ENDSETUPTURN){
             currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
         }else throw new IllegalResourceException();
     }
