@@ -102,7 +102,7 @@ public  class Utilities {
 
         return g;
     }
-    public static void fillDeposits(Player p,boolean warehouse) throws IllegalResourceException, FullSpaceException {
+    public static void fillDeposits(Player p,boolean warehouse,boolean extradepots) throws IllegalResourceException, FullSpaceException {
         Map<ResourceType, Integer> resMap=new HashMap<>();
         resMap.put(ResourceType.YELLOW,999);
         resMap.put(ResourceType.BLUE,999);
@@ -111,6 +111,10 @@ public  class Utilities {
         p.getBoard().depositInStrongbox(resMap);
 
         if(warehouse) {
+            p.getBoard().getWarehouse().getMaindepot().clear();
+            p.getBoard().getWarehouse().getMaindepot().add(new Deposit(1,ResourceType.EMPTY,1));
+            p.getBoard().getWarehouse().getMaindepot().add(new Deposit(2,ResourceType.EMPTY,2));
+            p.getBoard().getWarehouse().getMaindepot().add(new Deposit(3,ResourceType.EMPTY,3));
             p.getBoard().getWarehouse().getMaindepot().get(0).addResource(ResourceType.YELLOW);
             p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
             p.getBoard().getWarehouse().getMaindepot().get(1).addResource(ResourceType.BLUE);
@@ -118,13 +122,15 @@ public  class Utilities {
             p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
             p.getBoard().getWarehouse().getMaindepot().get(2).addResource(ResourceType.GREY);
 
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
-            p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
+            if(extradepots) {
+                p.getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
+                p.getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
+                p.getBoard().getWarehouse().addExtraDepot(ResourceType.GREY);
+                p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
 
-            p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
-            //p.getBoard().getWarehouse().visualize();
+                p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
+                //p.getBoard().getWarehouse().visualize();
+            }
         }
     }
 }

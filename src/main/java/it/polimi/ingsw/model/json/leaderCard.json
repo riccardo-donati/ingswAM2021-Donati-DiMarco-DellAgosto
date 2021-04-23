@@ -87,8 +87,8 @@
 		"requirements":
 		[
 			{
-				"type":"it.polimi.ingsw.model.CardRequirement",
-				"data":{"color":"YELLOW","quantity":5}
+				"type":"it.polimi.ingsw.model.ResourceRequirement",
+				"data":{"resource":"YELLOW","quantity":5}
 			}
 		],
 		"specialAbilities":
@@ -104,8 +104,8 @@
 		"requirements":
 		[
 			{
-				"type":"it.polimi.ingsw.model.CardRequirement",
-				"data":{"color":"GREY","quantity":5}
+				"type":"it.polimi.ingsw.model.ResourceRequirement",
+				"data":{"resource":"GREY","quantity":5}
 			}
 		],
 		"specialAbilities":
@@ -121,8 +121,8 @@
 		"requirements":
 		[
 			{
-				"type":"it.polimi.ingsw.model.CardRequirement",
-				"data":{"color":"VIOLET","quantity":5}
+				"type":"it.polimi.ingsw.model.ResourceRequirement",
+				"data":{"resource":"VIOLET","quantity":5}
 			}
 		],
 		"specialAbilities":
@@ -138,8 +138,8 @@
 		"requirements":
 		[
 			{
-				"type":"it.polimi.ingsw.model.CardRequirement",
-				"data":{"color":"BLUE","quantity":5}
+				"type":"it.polimi.ingsw.model.ResourceRequirement",
+				"data":{"resource":"BLUE","quantity":5}
 			}
 		],
 		"specialAbilities":

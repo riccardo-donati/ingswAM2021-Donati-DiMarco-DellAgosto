@@ -308,7 +308,20 @@ class WarehouseTest {
         wh.visualize();
 
     }
+    @Test
+    public void TestSwapMainToMain() throws FullSpaceException, IllegalResourceException, NonEmptyException {
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
 
+        assertThrows(FullSpaceException.class,
+                ()->wh.moveResource(2,1));
+        wh.moveResource(2,3);
+        assertEquals(1,wh.getMaindepot().get(2).freeSpaces());
+        assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(2).getType());
+        assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getType());
+    }
     @Test
     public void SingleSwapExtra() throws IllegalResourceException, FullSpaceException, NonEmptyException {
         wh.addResourceInPending(ResourceType.YELLOW);

@@ -198,8 +198,19 @@ public class Warehouse {
                     d1.addResource(r);
             }
         }
+        //swapping between maindepots -> swap everything
+        if(cont1>1 && cont2==0 && id1<=3 && id2<=3 ){
+            if(d2.getDimension()<cont1) throw new FullSpaceException();
+            ResourceType res=d1.getType();
+            for(int i=0;i<cont1;i++){
+                d1.removeResource();
+            }
+            for(int i=0;i<cont1;i++){
+                d2.addResource(res);
+            }
+        }
         //if the second deposit has 0 resource or the second is the same type of the first --> move
-        if(cont1>0 && cont2==0 || cont1>0 && cont2>0 && d1.getType()==d2.getType()){
+        if(cont1==1 && cont2==0 || cont1>0 && d2.freeSpaces()>=cont1 && d1.getType()==d2.getType()){
             ResourceType r1=d1.getType();
             d2.addResource(r1);
             d1.removeResource();

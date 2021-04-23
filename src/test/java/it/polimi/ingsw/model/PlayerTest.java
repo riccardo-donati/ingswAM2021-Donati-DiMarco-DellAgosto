@@ -185,7 +185,7 @@ class PlayerTest {
         discount1.activate(player);
         Discount discount2=new Discount(ResourceType.BLUE);
         discount2.activate(player);
-        Utilities.fillDeposits(player,false);
+        Utilities.fillDeposits(player,false,true);
         ResourceRequirement rr=new ResourceRequirement(ResourceType.YELLOW,3);
         List<ResourceRequirement> rrlist=new ArrayList<>();
         rrlist.add(rr);
@@ -203,7 +203,7 @@ class PlayerTest {
         discount1.activate(player);
         Discount discount2=new Discount(ResourceType.BLUE);
         discount2.activate(player);
-        Utilities.fillDeposits(player,false);
+        Utilities.fillDeposits(player,false,true);
         ResourceRequirement rr1=new ResourceRequirement(ResourceType.YELLOW,3);
         ResourceRequirement rr2=new ResourceRequirement(ResourceType.BLUE,2);
         List<ResourceRequirement> rrlist=new ArrayList<>();
@@ -862,7 +862,7 @@ class PlayerTest {
     @Test
     public void TestTotalResources() throws FullSpaceException, IllegalResourceException {
         Player player = new Player("Riki001");
-        Utilities.fillDeposits(player, true);
+        Utilities.fillDeposits(player, true,true);
         assertEquals(4003, player.getBoard().countTotalResources());
     }
 }
