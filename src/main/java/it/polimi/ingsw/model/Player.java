@@ -357,23 +357,6 @@ public class Player {
     }
 
     /**
-     * check in all the sources if you have enough resources for activating a certain production
-     * @param p is the production
-     * @throws ResourcesNotAvailableException if you have less resources than the needed
-     */
-    protected void checkTotalResourcesForProduction(Production p) throws ResourcesNotAvailableException {
-        Map<ResourceType, Integer> resourcesAvailable = board.getWarehouse().getTotalResources();
-        Utilities.mergeResourceTypeMaps(resourcesAvailable, board.getStrongBox());
-        //add also the picked up resources
-        for (Map.Entry<Integer, Map<ResourceType,Integer>> entry : pickedResource.entrySet()) {
-            Utilities.mergeResourceTypeMaps(resourcesAvailable,entry.getValue());
-        }
-        for (ResourceType resourceType : p.getInput().keySet())
-            if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
-                throw new ResourcesNotAvailableException();
-    }
-
-    /**
      *
      * @return the number of activated discounts
      */

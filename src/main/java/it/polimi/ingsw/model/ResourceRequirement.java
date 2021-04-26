@@ -45,7 +45,7 @@ public class ResourceRequirement implements Requirement {
      */
     @Override
     public boolean check(Board board) {
-        Map<ResourceType, Integer> totalResources = board.getStrongBox();
+        Map<ResourceType, Integer> totalResources = new HashMap<>(board.getStrongBox());
         Utilities.mergeResourceTypeMaps(totalResources, board.getWarehouse().getTotalResources());
 
         return quantity <= totalResources.get(resource);

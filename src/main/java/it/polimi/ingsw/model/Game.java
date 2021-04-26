@@ -445,7 +445,8 @@ public abstract class Game implements BoardObserver {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.PICKUPPHASE || turnPhase==TurnPhase.STARTTURN && currPlayer.countActivatedDiscounts()>0)){
             //you can buy in STARTTURN only if you have a selected discounts
             if(cardMatrix[row][col].size()>0) {
-                currPlayer.buyCard(cardMatrix[row][col].pop(), slot);
+                currPlayer.buyCard(cardMatrix[row][col].get(cardMatrix[row][col].size()-1), slot);
+                cardMatrix[row][col].pop();
                 turnPhase = TurnPhase.ENDTURN;
             }else throw new EmptyStackException();
         }else throw new IllegalActionException();
