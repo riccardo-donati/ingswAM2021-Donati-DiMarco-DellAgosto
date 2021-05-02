@@ -320,7 +320,7 @@ public abstract class Game implements BoardObserver {
         else throw new IllegalActionException();
     }
 
-    public void discardLeader(int index) throws CardNotAvailableException, IllegalActionException {
+    public void discardLeader(int index) throws CardNotAvailableException, IllegalActionException, IndexOutOfBoundsException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
             currPlayer.discardLeader(currPlayer.getLeadersInHand().get(index));
         else throw new IllegalActionException();

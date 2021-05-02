@@ -30,7 +30,7 @@ public class FaithPath {
         pointsPosition.put(24,20);
         popeFavorList = new ArrayList<>();
         popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 2, 5,8));
-        popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 3, 13,16));
+        popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 3, 12,16));
         popeFavorList.add(new PopeFavor(PopeFavorState.UNACTIVE, 4, 19,24));
     }
 

@@ -416,4 +416,46 @@ class WarehouseTest {
         wh.visualize();
 
     }
+
+    @Test
+    public void TestDiscardableRes() throws IllegalResourceException, FullSpaceException {
+        wh.addResourceInPending(ResourceType.BLUE);     //da scartare
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInDeposit(3,ResourceType.GREY);
+        wh.addResourceInDeposit(3,ResourceType.GREY);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+        wh.addResourceInDeposit(2,ResourceType.YELLOW);
+        assertThrows(DepositableResourceException.class, ()->wh.discardResource(ResourceType.BLUE));
+    }
+
+    @Test
+    public void TestDiscardableRes2() throws IllegalResourceException, FullSpaceException, NonEmptyException {
+        wh.addResourceInPending(ResourceType.BLUE);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.YELLOW);       //da scartare
+        wh.addResourceInDeposit(1, ResourceType.BLUE);
+        wh.addResourceInDeposit(2, ResourceType.YELLOW);
+        wh.addResourceInDeposit(3, ResourceType.GREY);
+        assertThrows(DepositableResourceException.class, ()->wh.discardResource(ResourceType.YELLOW));
+        wh.moveResource(2,3);
+        wh.addResourceInDeposit(3, ResourceType.YELLOW);
+        assertThrows(DepositableResourceException.class, ()->wh.discardResource(ResourceType.YELLOW));
+    }
+
+    @Test
+    public void TestDiscardableres3() throws IllegalResourceException, FullSpaceException {
+        wh.addResourceInPending(ResourceType.BLUE);
+        wh.addResourceInPending(ResourceType.BLUE);
+        wh.addResourceInPending(ResourceType.YELLOW);
+        wh.addResourceInPending(ResourceType.GREY);
+        wh.addResourceInDeposit(3, ResourceType.BLUE);
+        assertThrows(DepositableResourceException.class, ()->wh.discardResource(ResourceType.YELLOW));
+        assertThrows(DepositableResourceException.class, ()->wh.discardResource(ResourceType.GREY));
+        assertDoesNotThrow(()->wh.addResourceInDeposit(3, ResourceType.BLUE));
+    }
 }

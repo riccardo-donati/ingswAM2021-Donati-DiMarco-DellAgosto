@@ -1,9 +1,6 @@
 package it.polimi.ingsw.model;
 
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.enums.TurnPhase;
+import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Token;
 import org.junit.jupiter.api.Disabled;
@@ -12,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.BlockingDeque;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -632,7 +630,7 @@ public class PublicInterfaceTest {
         game.passTurn();
         //player 3 has 1 blue in deposit 1
         game.buyAtMarketInterface('r',1);
-        //player 3 2 yellow and 2 grey in pendiong
+        //player 3 2 yellow and 2 grey in pending
         game.depositResource(3,ResourceType.YELLOW);
         game.depositResource(3,ResourceType.YELLOW);
         game.depositResource(2,ResourceType.GREY);
@@ -656,63 +654,62 @@ public class PublicInterfaceTest {
         game.passTurn();
     }
 
-    @Test
-    public void TestWholeGame() throws IllegalPlayersNumberException, IllegalResourceException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException, IOException, ResourcesNotAvailableException, UnknownFoundException, TooManyResourcesException, DepositNotExistingException, CardNotAvailableException, RequirementNotMetException, DepositableResourceException, IllegalSlotException {
-        game = new Multiplayer(3);
+    @Test       //works only if setUpMulti is not modified
+    public void TestWholeGame() throws IllegalResourceException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException, IOException, ResourcesNotAvailableException, UnknownFoundException, TooManyResourcesException, DepositNotExistingException, CardNotAvailableException, RequirementNotMetException, DepositableResourceException, IllegalSlotException{
         //------ SetUp------------
         game = Utilities.loadGame("setUpMulti", 'm');
         game.initializeCardMatrixForTests();
 
         //------Main game------
         //p1 gets resources from the market
-        game.buyAtMarketInterface('r',0);    //white-violet-grey-red
+        game.buyAtMarketInterface('r', 0);    //white-violet-grey-red
         game.depositResource(1, ResourceType.GREY);
         game.depositResource(2, ResourceType.VIOLET);
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(2, ResourceType.GREY));
-        game.moveResource(1,2);
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(2, ResourceType.GREY));
+        game.moveResource(1, 2);
         game.depositResource(2, ResourceType.GREY);
         assertEquals(0, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         game.passTurn();
 
         //p2 gets resources from the market
-        game.buyAtMarketInterface('r',0);    //violet-grey-red-white
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(3, ResourceType.YELLOW));
-        game.moveResource(1,3);
+        game.buyAtMarketInterface('r', 0);    //violet-grey-red-white
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(3, ResourceType.YELLOW));
+        game.moveResource(1, 3);
         game.depositResource(3, ResourceType.YELLOW);
         game.depositResource(2, ResourceType.GREY);
         game.depositResource(2, ResourceType.GREY);
         assertEquals(0, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
-        assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(2).getType());
-        assertNotEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(0).getType());
+        assertEquals(ResourceType.YELLOW, game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(2).getType());
+        assertNotEquals(ResourceType.YELLOW, game.getCurrPlayer().getBoard().getWarehouse().getMaindepot().get(0).getType());
         game.passTurn();
 
         //p3 gets resources from market
-        game.buyAtMarketInterface('r',0);    //grey-red-white-white
-        assertThrows(IllegalResourceException.class, ()->game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(1,ResourceType.BLUE));
-        assertThrows(IllegalResourceException.class, ()->game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2,ResourceType.BLUE));
+        game.buyAtMarketInterface('r', 0);    //grey-red-white-white
+        assertThrows(IllegalResourceException.class, () -> game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(1, ResourceType.BLUE));
+        assertThrows(IllegalResourceException.class, () -> game.getCurrPlayer().getBoard().getWarehouse().addResourceInDeposit(2, ResourceType.BLUE));
         game.depositResource(3, ResourceType.YELLOW);
         game.depositResource(2, ResourceType.GREY);
-        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        assertThrows(IllegalActionException.class, () -> game.passTurn());
         game.discardResource(ResourceType.VIOLET);
         assertEquals(1, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
-        assertEquals(1,game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
-        assertEquals(1,game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(1, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(1, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
         game.passTurn();
 
         //p1 keeps getting resources to buy a card (needs 1 blue, 1 violet, 1 yellow now from market next from baseProd)
-        game.buyAtMarketInterface('r',2);   //blue-blue-yellow-yellow
-        assertThrows(IllegalResourceException.class,()->game.depositResource(2, ResourceType.YELLOW));
-        assertThrows(FullSpaceException.class, ()->game.depositResource(1,ResourceType.VIOLET));
-        game.moveResource(1,3);
+        game.buyAtMarketInterface('r', 2);   //blue-blue-yellow-yellow
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(2, ResourceType.YELLOW));
+        assertThrows(FullSpaceException.class, () -> game.depositResource(1, ResourceType.VIOLET));
+        game.moveResource(1, 3);
         game.depositResource(1, ResourceType.BLUE);
-        game.depositResource(3, ResourceType.VIOLET); //maindep: Blue, 2Grey, 2Violet
+        game.depositResource(3, ResourceType.VIOLET); //Maindepot: Blue, 2Grey, 2Violet
         game.discardResource(ResourceType.YELLOW);
         assertEquals(2, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
         assertEquals(2, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
         assertEquals(1, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
         game.passTurn();
 
-        //p2 uses baseprod to obtain a blue res, next turn he will acquire a violet res and be able to buy a violet card
+        //p2 uses BaseProd to obtain a blue res, next turn he will acquire a violet res and be able to buy a violet card
         game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
         game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
         game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
@@ -720,19 +717,19 @@ public class PublicInterfaceTest {
         game.pickUpResourceFromWarehouse(2);
         game.pickUpResourceFromWarehouse(2);
         game.activateProductions();
-        assertEquals(3,game.getCurrPlayer().getBoard().countTotalResources());
+        assertEquals(3, game.getCurrPlayer().getBoard().countTotalResources());
         game.passTurn();
 
         //p3 needs 5 grey or 5 yellow to use a LCard so buys from market
         game.buyAtMarketInterface('r', 0);      //Violet-grey-yellow-white
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(3,ResourceType.VIOLET));
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(2,ResourceType.VIOLET));
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(1,ResourceType.VIOLET));
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(3, ResourceType.VIOLET));
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(2, ResourceType.VIOLET));
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(1, ResourceType.VIOLET));
         game.discardResource(ResourceType.VIOLET);
         assertEquals(2, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
         assertEquals(3, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
         assertEquals(2, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
-        assertThrows(IllegalActionException.class,()->game.passTurn());
+        assertThrows(IllegalActionException.class, () -> game.passTurn());
         game.depositResource(2, ResourceType.GREY);
         game.depositResource(3, ResourceType.YELLOW);
         game.passTurn();
@@ -740,7 +737,7 @@ public class PublicInterfaceTest {
         //p1 transform 2 grey in 1 yellow, next turn can buy a card (violet?)
         game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
         game.substituteUnknownInOutputBaseProduction(ResourceType.YELLOW);
-        assertThrows(IllegalActionException.class, ()->game.activateProductions()); //try to activate prod with unknown
+        assertThrows(IllegalActionException.class, () -> game.activateProductions()); //try to activate prod with unknown
         game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
         game.toggleBaseProd();
         game.pickUpResourceFromWarehouse(2);
@@ -750,9 +747,9 @@ public class PublicInterfaceTest {
 
         //p2 acquires a violet res e next turn ready to buy a violet card
         game.buyAtMarketInterface('c', 1);  //red-violet-yellow
-        assertThrows(IllegalResourceException.class,()->game.depositResource(1,ResourceType.RED));
-        assertEquals(4,game.getCurrPlayer().getBoard().getFaithPath().getPosition());
-        game.depositResource(3,ResourceType.YELLOW);
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(1, ResourceType.RED));
+        assertEquals(4, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        game.depositResource(3, ResourceType.YELLOW);
         game.depositResource(2, ResourceType.VIOLET);
         game.passTurn();
 
@@ -767,24 +764,24 @@ public class PublicInterfaceTest {
         game.passTurn();
 
         //p1  buys his first DCard (Violet)
-        assertThrows(IllegalActionException.class, ()->game.buyCard(0,3,1));
+        assertThrows(IllegalActionException.class, () -> game.buyCard(0, 3, 1));
         game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
-        assertThrows(ResourcesNotAvailableException.class, ()->game.buyCard(0,3,1));
+        assertThrows(ResourcesNotAvailableException.class, () -> game.buyCard(0, 3, 1));
         game.pickUpResourceFromWarehouse(1);
         game.pickUpResourceFromWarehouse(3);
-        game.buyCard(0,3,1);
+        game.buyCard(0, 3, 1);
         game.passTurn();
 
         //p2 needs a second violet to acquire a violet card [0][3]
         game.buyAtMarketInterface('r', 2);
-        game.depositResource(1,ResourceType.GREY);
+        game.depositResource(1, ResourceType.GREY);
         game.depositResource(2, ResourceType.VIOLET);
         game.passTurn();
 
         //p3 next turn need to produce a yellow res to have 5 and activate LCard
         game.buyAtMarketInterface('r', 0); //yellow-red-grey-blue
         game.depositResource(3, ResourceType.YELLOW);
-        game.moveResource(1,2);
+        game.moveResource(1, 2);
         game.depositResource(2, ResourceType.BLUE);
         game.depositResource(1, ResourceType.GREY);
         assertEquals(2, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
@@ -801,11 +798,11 @@ public class PublicInterfaceTest {
 
         //p2 buys a violet card with 2 violet res
         game.pickUpResourceFromWarehouse(2);
-        assertThrows(ArrayIndexOutOfBoundsException.class, ()->game.buyCard(3,3,1));
-        assertThrows(ArrayIndexOutOfBoundsException.class, ()->game.buyCard(2,4,1));
-        assertThrows(ResourcesNotAvailableException.class, ()->game.buyCard(0,3,1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> game.buyCard(3, 3, 1));
+        assertThrows(ArrayIndexOutOfBoundsException.class, () -> game.buyCard(2, 4, 1));
+        assertThrows(ResourcesNotAvailableException.class, () -> game.buyCard(0, 3, 1));
         game.pickUpResourceFromWarehouse(2);
-        game.buyCard(0,3,1);
+        game.buyCard(0, 3, 1);
         game.passTurn();
 
         //p3 now p3 has 5 yellow res, next turn he can activate a LCard
@@ -829,11 +826,11 @@ public class PublicInterfaceTest {
         assertEquals(3, game.getCurrPlayer().getBoard().countTotalResources());
         game.passTurn();
 
-        //p2 needs Blue Violet and Grey to buy a green Card (2 from the top) Blue is in Strongbox, Grey in maindep]
+        //p2 needs Blue Violet and Grey to buy a green Card (2 from the top) Blue is in Strongbox, Grey in maindep
         game.buyAtMarketInterface('r', 2); //Violet-Yellow-Violet
-        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        assertThrows(IllegalActionException.class, () -> game.passTurn());
         game.depositResource(2, ResourceType.VIOLET);
-        assertThrows(IllegalResourceException.class, ()->game.depositResource(3, ResourceType.VIOLET));
+        assertThrows(IllegalResourceException.class, () -> game.depositResource(3, ResourceType.VIOLET));
         game.depositResource(2, ResourceType.VIOLET);
         game.discardResource(ResourceType.YELLOW);
         assertEquals(3, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
@@ -843,11 +840,11 @@ public class PublicInterfaceTest {
 
         //p3 Activates the Lcard that requires 5 Yellow res, next turn buys a yellow card
         game.pickUpResourceFromWarehouse(3);
-        assertThrows(IllegalActionException.class, ()->game.playLeader(1));
+        assertThrows(IllegalActionException.class, () -> game.playLeader(1));
         game.revertPickUp();
-        assertThrows(RequirementNotMetException.class, ()->game.playLeader(0)); //req 5 grey
+        assertThrows(RequirementNotMetException.class, () -> game.playLeader(0)); //req 5 grey
         game.playLeader(1);
-        game.buyAtMarketInterface('r',0); //red-grey-blue
+        game.buyAtMarketInterface('r', 0); //red-grey-blue
         game.depositResource(1, ResourceType.GREY);
         game.depositResource(2, ResourceType.BLUE);
         assertEquals(3, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
@@ -856,16 +853,740 @@ public class PublicInterfaceTest {
         game.passTurn();
 
         //p1 buys a green card
-        assertThrows(IllegalActionException.class, ()->game.buyCard(0,0,2));
+        assertThrows(IllegalActionException.class, () -> game.buyCard(0, 0, 2));
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        assertThrows(ResourcesNotAvailableException.class, () -> game.buyCard(0, 0, 2));
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        assertThrows(IllegalSlotException.class, () -> game.buyCard(0, 0, 1));
+        game.buyCard(0, 0, 2);
+        game.passTurn();
+
+        //p2 ready to buy a Green card
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.buyCard(0, 0, 3);
+        game.passTurn();
+
+        //p3 has a lot of resources, buys a green card, later will test if someone can buy from an empty stack
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(0, 0, 2);
+        game.passTurn();
+
+        //p1 checks the production and get the game a bit spicy, maybe begin to acquire res for a 2nd Violet card
+        game.buyAtMarketInterface('r', 2);  //Yellow-violet-violet-blue
+        game.depositResource(3, ResourceType.VIOLET);
+        game.depositResource(1, ResourceType.YELLOW);
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p2 Dcard are great but need 1 more green to activate LCard, next turn Baseprod into 1 blue
+        game.buyAtMarketInterface('r', 2);  //red-violet-blue-yellow
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(1, ResourceType.BLUE);
+        game.discardResource(ResourceType.YELLOW);
+        assertEquals(4, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(5, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(6, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 next turn will buy a DCard from (0,1,1/3), get a violet res from BaseProd
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.VIOLET);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.toggleBaseProd();
+        game.activateProductions();
+        game.passTurn();
+
+        //p1 uses base prod to buy a level 1 Violet Card (req: 2 violet-2 grey)
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
+        game.toggleBaseProd();
+        game.activateProductions();
+        game.passTurn();
+
+        //p2 need 2 blue res to buy the last green card avaiable
         game.pickUpResourceFromWarehouse(2);
         game.pickUpResourceFromWarehouse(2);
         assertThrows(ResourcesNotAvailableException.class, ()->game.buyCard(0,0,2));
-        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
-        assertThrows(IllegalSlotException.class, ()->game.buyCard(0,0,1));
-        game.buyCard(0,0,2);
+        game.revertPickUp();
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.toggleBaseProd();
+        assertThrows(ResourcesNotAvailableException.class, ()->game.activateProductions());
+        game.revertPickUp();
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.toggleBaseProd();
+        game.activateProductions();
         game.passTurn();
 
-        //i have to keep testing this Whole game
+        //p3 buys a violet card
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.buyCard(0,1,1);
+        game.passTurn();
+
+        //p1 need a second grey res and he'll take from the market to buy a level 1 DCard Violet
+        game.buyAtMarketInterface('c', 2); //white-red-grey
+        game.depositResource(1, ResourceType.GREY);
+        assertEquals(5, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(5, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(6, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 buys the last green card avaiable, now he can activate LCard
+        assertThrows(RequirementNotMetException.class,()->game.playLeader(1));
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.buyCard(0,0,2);
+        assertThrows(RequirementNotMetException.class, ()->game.playLeader(0));
+        game.playLeader(1);
+        game.passTurn();
+
+        //p3 acquire 4 res from the market and next turn he'll try to use both the DCard, just 4 fun
+        game.buyAtMarketInterface('r',2);
+        game.depositResource(3,ResourceType.VIOLET);
+        game.depositResource(3, ResourceType.VIOLET);
+        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        game.depositResource(2, ResourceType.BLUE);
+        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        game.depositResource(1, ResourceType.YELLOW);
+        assertThrows(IllegalActionException.class, ()->game.buyCard(1,0,2));
+        game.passTurn();
+
+        //p1 ready to buy a 2nd violet card and activate a LCard
+        assertThrows(RequirementNotMetException.class, ()->game.playLeader(0));
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(0,3,2));
+        game.buyCard(0,3,3);
+        assertThrows(RequirementNotMetException.class, ()->game.playLeader(1));
+        game.playLeader(0);
+        game.passTurn();
+
+        //p2 acquire some resources from the market, also to check whiteTo Blue
+        game.pickUpResourceFromWarehouse(3);
+        assertThrows(EmptyStackException.class,()->game.buyCard(0,0,2)); //there are no green cards left
+        game.revertPickUp();
+        game.buyAtMarketInterface('r', 0); //grey-Blue-Grey-WHITE(Blue)
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(2, ResourceType.BLUE);  //this is a white res that has been converted by the LCard
+        assertThrows(DepositableResourceException.class, ()->game.discardResource(ResourceType.GREY));
+        game.depositResource(1, ResourceType.GREY);
+        game.discardResource(ResourceType.GREY);
+        assertEquals(6, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(5, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(7, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 Use both BaseProd and DCard prod to acquire grey res (1 Violet->1 Grey and 1 Yellow+1Blue -> 1 Grey)
+        game.toggleCardProd(1);
+        assertThrows(ResourcesNotAvailableException.class,()->game.activateProductions());
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
+        game.toggleCardProd(1);
+        game.toggleBaseProd();
+        game.activateProductions();
+        game.passTurn();
+
+        //p1 has no resources so try to acquire some due to the fact that has a LCard then whiteto Yellow
+        game.buyAtMarketInterface('r', 2); //Blue-Yellow-Violet-WHITE
+        game.depositResource(1,ResourceType.BLUE);
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.VIOLET);
+        assertEquals(4, game.getCurrPlayer().getBoard().countTotalResources()); //check if worked WhiteTo
+        game.passTurn();
+
+        //p2 can use 1 yellow-> red and 1 grey->1 red from DCard production, and 2 Yellow -> blue (need 5 blue to 2nd LCard)
+        assertThrows(UnknownFoundException.class, ()->game.toggleBaseProd());
+        game.toggleCardProd(1); //grey -> red
+        game.toggleCardProd(2); //yellow -> red
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.activateProductions();                         //CREATES A RED FIELD IN STRONGBOX HASHMAP
+        game.moveResource(2,3); //moves blue to the 3rd shelf
+        assertEquals(6, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(7, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(7, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 can use 1 violet->1 grey but it's better a buyAtMarket, next turn base prod and DCard Prod to have 5 grey
+        game.buyAtMarketInterface('r', 2);  //White-Yellow-Violet-Grey
+        game.depositResource(1, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.GREY);
+        game.passTurn();
+
+        //p1 keep acquiring res from market to buy a lvl 2 card  (3 blue and 3 violet)
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
+        game.toggleCardProd(1);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(3);
+        game.activateProductions();
+        game.passTurn();
+
+        //p2 i have 2 blue in warehouse and 1 in strongbox, so now i acquire from the market and next turn use prods
+        game.buyAtMarketInterface('r', 0); //blue-grey-violet-white   also white to blue so i have to discard one
+        game.depositResource(3, ResourceType.BLUE);
+        game.depositResource(1,ResourceType.GREY);
+        game.depositResource(2, ResourceType.VIOLET);
+        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        game.discardResource(ResourceType.BLUE);
+        assertEquals(7, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(7, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(8, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());  //activates pope favor
+        //Faithpath p1
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        //Faithpath p2
+        assertEquals(PopeFavorState.ACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        //Faithpath p3
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        game.passTurn();
+
+        //p3 Dcard prod to activate the second LCard
+        assertThrows(RequirementNotMetException.class, ()->game.playLeader(0));
+        game.toggleCardProd(1);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(1);
+        game.activateProductions();
+        assertThrows(IllegalActionException.class, ()->game.buyAtMarketInterface('r',1));
+        game.playLeader(0);
+        game.passTurn();
+
+        //p1 need 3 violet resources to buy a lvl 2 card, next turn some prods
+        game.buyAtMarketInterface('r', 2);  //Violet-White(Yellow)-grey-blue
+        assertThrows(IllegalResourceException.class,()->game.depositResource(1, ResourceType.VIOLET));
+        game.moveResource(1,2);
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(1, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.discardResource(ResourceType.GREY);
+        assertEquals(7, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(8, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(9, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 get the resource needed to activate the second card leader, from now on only buy DCard
+        assertThrows(RequirementNotMetException.class, ()->game.playLeader(0)); //eccezione card not avaiable non esiste, non verrà chiamato mai
+        game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.activateProductions();
+        game.playLeader(0);
+        game.passTurn();
+
+        //p3 to buy a card acquire from market, if lv1 or lv2
+        game.buyAtMarketInterface('r',0); //grey-violet-yellow -> i choose this to try use the extradepot
+        game.moveResource(2,1); //se il dep1 è vuoto nonn scambias risorse(?)
+        assertThrows(FullSpaceException.class, ()->game.depositResource(1, ResourceType.GREY));
+        game.depositResource(3,ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.YELLOW);
+        assertThrows(IllegalActionException.class, ()->game.passTurn());
+        game.depositResource(4,ResourceType.GREY);  //this is a extraDep
+        game.moveResource(3,5); //try to use the second extraDep
+        game.moveResource(1,4); //moving all grey to the extraDep
+        game.passTurn();
+
+        //p1 basically i lost a turn because i'm not so smart, next turn buy a 3blue-3violet card lvl2
+        game.buyAtMarketInterface('r', 0); //White(Yellow)-Violet-violet-yellow
+        game.depositResource(3, ResourceType.VIOLET);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.discardResource(ResourceType.YELLOW);
+        game.discardResource(ResourceType.YELLOW);
+        assertEquals(7, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(10, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 card lv 2 needs 3 yellow, 3 blue [1][0], now acquires only one yellow, so idk how to acquire 2 more
+        game.buyAtMarketInterface('r', 0);
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(1, ResourceType.GREY);
+        game.moveResource(2,4);     //trasfer yellow to extra or is forced to discard
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p3 acquire a lvl 2 because lvl 1 are complex, idk anyway get from market something
+        game.buyAtMarketInterface('r', 0);  //yellow-violet-grey
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(1, ResourceType.GREY);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p1 buys a card using 3 blue 3 violet, also need 5 violet to LCard, but used 3 now so rip
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        assertThrows(ResourcesNotAvailableException.class, ()->game.buyCard(1, 3,1));
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.buyCard(1, 3,1);
+        game.passTurn();
+
+        //p2 i basically have 1 lost turn because DCard are useless, so i try to use to get points
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.YELLOW);
+        game.toggleBaseProd();
+        game.toggleCardProd(1);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(1);
+        game.activateProductions();
+        assertEquals(7, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 buys a lvl1 card to fill up slots
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.buyCard(0,1,3);
+        game.moveResource(3,5); //frees a space in warehouse
+        game.passTurn();
+
+        //p1 acquire res from market to use some prod next turn
+        game.buyAtMarketInterface('r', 0);  //Violet-Grey-Violet-white(Yellow)
+        game.moveResource(1,2);
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(1, ResourceType.GREY);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p2 need 3 yellow-3 blue to buy a card
+        game.buyAtMarketInterface('c', 1);
+        game.depositResource(1, ResourceType.GREY);
+        game.depositResource(4,ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.BLUE);
+        game.passTurn();
+
+        //p3 buycard next turn [1][1] needed 3 Yellow 3 Grey
+        game.toggleCardProd(2); //1Grey+1Violet->2Yelow+1Red
+        game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
+        game.substituteUnknownInInputBaseProduction(ResourceType.GREY);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.YELLOW);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(1);    //grey
+        game.pickUpResourceFromWarehouse(4);    //grey
+        game.pickUpResourceFromWarehouse(4);    //grey
+        game.pickUpResourceFromWarehouse(5);    //violet
+        game.activateProductions();
+        game.passTurn();
+
+        //p1 try to get to 5 violet resource using DCard and BaseProd so can activate 2nd LCard
+        game.toggleCardProd(1);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.VIOLET);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(1);
+        game.activateProductions();
+        game.playLeader(0);
+        assertEquals(8, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(12, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 has res to buy a card lvl2
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.buyCard(1,0,3);
+        game.passTurn();
+
+        //p3 buys a lvl2 card
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.buyCard(1,1,1);
+        game.passTurn();
+
+        //p1 will buy card [1][3] with 5 Violet 2nd lvl2 card
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(1,3,1));
+        game.buyCard(1,3,2);
+        game.passTurn();
+
+        //p2 acquire something from market from a [1][0] card that req 5 blue
+        game.buyAtMarketInterface('r', 2); //White(Blue)-Violet-Blue-Blue
+        game.depositResource(3, ResourceType.BLUE);
+        game.depositResource(3, ResourceType.BLUE);
+        game.depositResource(3, ResourceType.BLUE);
+        game.depositResource(2, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p3 lvl2 card 3Violet-2Yellow [1][3]
+        game.buyAtMarketInterface('r',0);   //Grey-Violet-Yellow-Yellow
+        game.depositResource(5,ResourceType.VIOLET);
+        assertThrows(IllegalResourceException.class, ()->game.depositResource(5, ResourceType.VIOLET));
+        game.depositResource(4,ResourceType.GREY);
+        game.depositResource(3, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.YELLOW);
+        game.passTurn();
+
+        //p1 want to acquire some grey res to use prods
+        game.buyAtMarketInterface('r',1);   //White(Yellow)-White(Yellow)-grey-red
+        assertThrows(IllegalResourceException.class,()->game.depositResource(1, ResourceType.RED));
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(2, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.GREY);
+        assertEquals(9, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(12, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 buys a lvl2 card
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.buyCard(1, 0, 2);
+        game.passTurn();
+
+        //p3 keep acquiring from market because using prod wouldn't be as good as buying
+        game.buyAtMarketInterface('r',2);   //Blue-Violet-Blue
+        game.depositResource(1, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(2, ResourceType.BLUE);
+        game.passTurn();
+
+        //p1 acquire more res to do a bigger prod next turn
+        game.toggleCardProd(3); //1Blue-1Yellow -> 2Grey-1Red
+        game.toggleCardProd(1); //1Grey -> 2Violet-1Red
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.activateProductions();
+        assertEquals(11, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(12, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 acquire some res to use Prod next turn
+        game.buyAtMarketInterface('r', 0); //Yellow-Yellow-Violet-White(Blue)
+        assertThrows(FullSpaceException.class, ()->game.depositResource(2, ResourceType.VIOLET));
+        game.moveResource(2,3);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(4, ResourceType.YELLOW);
+        game.depositResource(4, ResourceType.YELLOW);
+        game.passTurn();
+
+        //p3 activates all the production and makes a looooot of points
+        game.toggleCardProd(2); //1Grey-1Violet -> 2Yellow-1Red
+        game.toggleCardProd(1); //1Violet -> 2Grey-1Red
+        game.toggleCardProd(3); //1Blue -> 1Red
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(5);
+        game.pickUpResourceFromWarehouse(4);
+        game.activateProductions();
+        assertEquals(11, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(11, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p1 need 3 violet and 3 grey for the card [1][2]
+        game.buyAtMarketInterface('c',0);   //Grey-Violet-Blue
+        game.depositResource(4, ResourceType.BLUE);
+        game.depositResource(1, ResourceType.GREY);
+        game.depositResource(3, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p2 activate some prods and idk buy something next turn?
+        game.toggleCardProd(1); //1Grey -> 1Red
+        game.toggleCardProd(2); //2Yellow -> 2Grey-2Red
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(1);
+        game.activateProductions();
+        assertEquals(11, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(14, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 I forgot to buy a card 2 turns ago, so i need more res (sorry p3). Need 2 violet [1][3]
+        game.buyAtMarketInterface('r', 0);  //Yellow-Grey-Violet
+        game.depositResource(3, ResourceType.YELLOW);
+        game.depositResource(4, ResourceType.GREY);
+        game.depositResource(5, ResourceType.VIOLET);
+        game.passTurn();
+
+        //p1 buys a lvl2 card and fills all the lvl2 fields, he has 6 cards close to end the match boiii
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(3);
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(1,2,1));
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(1,2,2));
+        game.buyCard(1,2,3);
+        game.passTurn();
+
+        //p2 I did something wrong so he'll be producing some res
+        game.buyAtMarketInterface('c', 0);  //Yellow-Yellow-Blue
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(4,ResourceType.YELLOW);
+        game.depositResource(4, ResourceType.YELLOW);
+        game.passTurn();
+
+        //p3 next turn buys a [1][3]
+        game.moveResource(2,1);
+        game.buyAtMarketInterface('r', 0);  //Blue-Violet-Violet
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.VIOLET);
+        game.discardResource(ResourceType.BLUE);
+        assertEquals(12, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p1 acquire some res to prod next turn
+        game.buyAtMarketInterface('r', 2);  //Blue-Grey-White(Yellow)-White(Yellow)
+        game.moveResource(2,3);
+        game.depositResource(3, ResourceType.YELLOW);
+        game.depositResource(3, ResourceType.YELLOW);
+        game.depositResource(4, ResourceType.BLUE);
+        game.depositResource(1, ResourceType.GREY);
+        game.passTurn();
+
+        //p2 prod some res to buy [2[[2]4 Grey-4 Violet
+        game.toggleCardProd(2); //2Yellow -> 2Grey-2Red
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.VIOLET);
+        game.toggleBaseProd();
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(2);
+        game.activateProductions();
+        assertEquals(12, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(17, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        //Faithpath p1
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(1).getState());    //PROBLEMA COL FATTO CHE IL POPEFAVORSTATE 2 AVEVA INITIAL POSITION SBAGLIATO E NONOSTANTE ORA SIA GIUSTO LA CARTA VIENE SCARTATA
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(0).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        //Faithpath p2
+        assertEquals(PopeFavorState.ACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.ACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getCurrPlayer().getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        //Faithpath p3
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(0).getState());
+        assertEquals(PopeFavorState.ACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(1).getState());
+        assertEquals(PopeFavorState.UNACTIVE,game.getPlayers().get(2).getBoard().getFaithPath().getPopeFavorList().get(2).getState());
+        game.passTurn();
+
+        //p3 buys his 2 lvl2 card
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(5);
+        game.pickUpResourceFromWarehouse(5);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.buyCard(1,3,3);
+        game.passTurn();
+
+        //p1 prods 1Grey -> 2Violet-1Red \ 1Blue ->2Yellow-1Red \ 2Grey -> 2Yellow-2Red
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(1);
+        game.toggleCardProd(1);
+        game.toggleCardProd(3);
+        game.activateProductions();
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(17, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(15, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 buys a card lvl3
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(2,2,1));
+        game.buyCard(2,2,2);
+        game.passTurn();
+
+        //p3        1Violet -> 2Grey-1Red \ 1Grey-1Violet -> 2Yellow-1Red \ 1Yellow-1Violet -> 3Blue
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.BLUE);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(3);
+        game.toggleCardProd(1);
+        game.toggleBaseProd();
+        game.activateProductions();
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(17, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(16, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p1 buy the last card, req: 4Blue-4Yellow
+        game.buyAtMarketInterface('r', 2);  //blue-Yellow-Yellow-Blue
+        game.depositResource(2, ResourceType.BLUE);
+        game.depositResource(4, ResourceType.BLUE);
+        game.discardResource(ResourceType.YELLOW);
+        game.discardResource(ResourceType.YELLOW);
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(19, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(18, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p2 acquire some res because p1 is going to end game soon
+        game.buyAtMarketInterface('r', 1);  //White(Blue)-Yellow-Grey-Red
+        game.depositResource(4, ResourceType.YELLOW);
+        game.depositResource(1, ResourceType.BLUE);
+        game.depositResource(2, ResourceType.GREY);
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(20, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(18, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3 buys a card with 7Grey res
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        game.pickUpResourceFromStrongbox(ResourceType.GREY);
+        assertThrows(ResourcesNotAvailableException.class, ()->game.buyCard(2,2,1));
+        game.pickUpResourceFromWarehouse(4);
+        assertThrows(IllegalSlotException.class, ()->game.buyCard(2,2,2));
+        game.buyCard(2,2,3);
+        game.passTurn();
+
+        //p1 need 1 more blue res, [2][0]
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInInputBaseProduction(ResourceType.VIOLET);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.BLUE);
+        game.toggleBaseProd();
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
+        game.activateProductions();
+        game.passTurn();
+
+        //p2 keep making faith points trough DCards
+        game.toggleCardProd(2); //1Blue -> 1Grey-3Violet
+        game.toggleCardProd(3); //1Yellow ->2Blue-1Red
+        game.toggleCardProd(1); //1Grey -> 1Red
+        game.pickUpResourceFromWarehouse(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(4);
+        game.activateProductions();
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(22, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(18, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //p3  no res for productions, acquire from market, there'll be another turn
+        game.buyAtMarketInterface('r', 0);  //violet-violet-yellow
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(1, ResourceType.YELLOW);
+        game.passTurn();
+
+        //p1 4Blue-4Yellow form the last card in [2][0]
+        game.pickUpResourceFromStrongbox(ResourceType.BLUE);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromStrongbox(ResourceType.YELLOW);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(3);
+        game.pickUpResourceFromWarehouse(2);
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(4);
+        game.buyCard(2,0,3);
+        assertTrue(game.isEndGameTrigger());
+        game.passTurn();
+
+        //p2 acquiring 4 res, he'll get to a total of 10 which are 2 points, better than produce something
+        game.buyAtMarketInterface('r',0);   //Violet-Violet-Yellow-Yelllow
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(2, ResourceType.VIOLET);
+        game.depositResource(4, ResourceType.YELLOW);
+        game.depositResource(4, ResourceType.YELLOW);
+        game.passTurn();
+
+        //p3 produce res to get Faithpoints (1Violet -> 2Grey-1Red \ 1Grey-1Violet -> 2Yellow-1Red)
+        game.toggleCardProd(1);
+        game.pickUpResourceFromWarehouse(2);
+        game.activateProductions();
+        assertEquals(14, game.getPlayers().get(0).getBoard().getFaithPath().getPosition());
+        assertEquals(22, game.getPlayers().get(1).getBoard().getFaithPath().getPosition());
+        assertEquals(19, game.getPlayers().get(2).getBoard().getFaithPath().getPosition());
+        game.passTurn();
+
+        //FINALLY ENDGAME
+        //Player 1 = BBB points [44 DCards + 11 FaithPath + 8 LCard + 0 Deposit] = 63 BRUH VOLEVO FAR VINCERE P2
+        //Player 2 = CCC points [31 DCards + 21 FaithPath + 8 LCard + 2 Deposit] = 62
+        //Player 3 = AAA points [32 DCards + 17 FaithPath + 6 LCard + 1 Deposit] = 56
     }
 }
 

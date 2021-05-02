@@ -226,13 +226,13 @@ public class Warehouse {
     public void discardResource(ResourceType res) throws IllegalResourceException, DepositableResourceException {
         int n=pendingResources.get(res);
         if(n>0){
-            boolean canDiscard=true;
-            boolean depositAlreadyExists=false;
+            boolean canDiscard = true;
             for(Deposit d : maindepot){
-                if((d.getType()==res || d.getType()==ResourceType.EMPTY)&& d.freeSpaces()>0 && !depositAlreadyExists){
-                    canDiscard=false;
+                if(d.getType()==ResourceType.EMPTY) canDiscard = false;
+                else if(d.getType()==res){
+                    canDiscard = d.freeSpaces() == 0;
+                    break;
                 }
-                if(d.getType()==res) depositAlreadyExists=true;
             }
             for(Deposit d : extradepots){
                 if((d.getType()==res || d.getType()==ResourceType.EMPTY) && d.freeSpaces()>0){

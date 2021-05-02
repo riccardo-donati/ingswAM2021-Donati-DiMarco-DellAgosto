@@ -323,7 +323,7 @@ public class Player {
         int faithProgression=0;
         if(output.containsKey(ResourceType.RED)) {
             faithProgression = output.get(ResourceType.RED);
-            output.replace(ResourceType.RED,0);
+            output.remove(ResourceType.RED);
         }
         board.depositInStrongbox(output);
         board.getFaithPath().addToPosition(faithProgression);
@@ -343,7 +343,7 @@ public class Player {
         int totResProd=0;
         int totResPick=0;
         for (ResourceType resourceType : p.getInput().keySet()) {
-            totResProd+=p.getInput().get(resourceType);
+            totResProd += p.getInput().get(resourceType);
             if (!resourcesAvailable.containsKey(resourceType) || resourcesAvailable.get(resourceType) < p.getInput().get(resourceType))
                 throw new ResourcesNotAvailableException();
             if (resourcesAvailable.get(resourceType)>p.getInput().get(resourceType)){

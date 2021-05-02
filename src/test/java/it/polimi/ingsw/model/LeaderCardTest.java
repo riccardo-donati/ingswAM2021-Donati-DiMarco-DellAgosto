@@ -27,7 +27,7 @@ class LeaderCardTest {
     }
 
     @Test
-    public void testRequirementsList() {
+    public void TestRequirementsList() {
         assertTrue(lc1.getRequirements().isEmpty());
         lc1.addRequirement(new LevelCardRequirement(YELLOW, 2, 3));
         lc1.addRequirement(new CardRequirement(Color.GREEN, 3));
