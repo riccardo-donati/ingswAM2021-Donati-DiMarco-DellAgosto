@@ -4,7 +4,7 @@ import com.google.gson.*;
 
 import java.lang.reflect.Type;
 
-class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
+public class InterfaceAdapter<T> implements JsonSerializer<T>, JsonDeserializer<T> {
 
     @Override
     public final JsonElement serialize(final T object, final Type interfaceType, final JsonSerializationContext context) {
