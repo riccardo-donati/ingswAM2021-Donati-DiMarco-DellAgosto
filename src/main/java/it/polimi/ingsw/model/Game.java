@@ -105,7 +105,7 @@ public abstract class Game implements BoardObserver {
         Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
         JsonReader reader = null;
         try {
-            reader = new JsonReader(new FileReader("src/main/java/it/polimi/ingsw/model/json/developmentCard.json"));
+            reader = new JsonReader(new FileReader("src/main/resources/json/developmentCard.json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("DevelopmentCard.json not found");
@@ -125,7 +125,7 @@ public abstract class Game implements BoardObserver {
         Type foundListType=new TypeToken<ArrayList<LeaderCard>>(){}.getType();
         JsonReader reader = null;
         try {
-            reader = new JsonReader(new FileReader("src/main/java/it/polimi/ingsw/model/json/leaderCard.json"));
+            reader = new JsonReader(new FileReader("src/main/resources/json/leaderCard.json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("leaderCard.json not found");
@@ -471,7 +471,7 @@ public abstract class Game implements BoardObserver {
                     gamePhase=GamePhase.ONGOING;
                     turnPhase=TurnPhase.STARTTURN;
                 }else turnPhase=TurnPhase.STARTSETUPTURN;
-                if(players.size()>1) // si può togliere?
+                if(players.size()>1)
                     nextTurn();
             }else throw new IllegalActionException();
         }else if(gamePhase==GamePhase.ONGOING){
@@ -508,7 +508,7 @@ public abstract class Game implements BoardObserver {
         String gameGson=gson.toJson(this);
         FileWriter w;
         try {
-            w=new FileWriter("src/main/java/it/polimi/ingsw/model/json/gameState/"+name+".json");
+            w=new FileWriter("src/main/resources/json/gameState/"+name+".json");
             w.write(gameGson);
             w.close();
         } catch (IOException e) {

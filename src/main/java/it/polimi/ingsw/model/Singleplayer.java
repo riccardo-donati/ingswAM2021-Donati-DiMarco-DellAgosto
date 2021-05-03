@@ -38,7 +38,7 @@ public class Singleplayer extends Game {
 
         JsonReader reader = null;
         try {
-            reader = new JsonReader(new FileReader("src/main/java/it/polimi/ingsw/model/json/token.json"));
+            reader = new JsonReader(new FileReader("src/main/resources/json/token.json"));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
             System.out.println("token.json not found");

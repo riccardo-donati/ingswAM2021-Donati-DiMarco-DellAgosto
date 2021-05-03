@@ -82,7 +82,7 @@ public  class Utilities {
         builder.registerTypeAdapter(Game.class, new InterfaceAdapter<Game>());
 
         Gson gson = builder.create();
-        FileReader fr = new FileReader("src/main/java/it/polimi/ingsw/model/json/gameState/"+name+".json");
+        FileReader fr = new FileReader("src/main/resources/json/gameState/"+name+".json");
         BufferedReader b;
         b=new BufferedReader(fr);
         String json=b.readLine();
