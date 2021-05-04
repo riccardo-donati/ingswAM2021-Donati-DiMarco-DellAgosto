@@ -2,9 +2,8 @@ package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import com.google.gson.reflect.TypeToken;
-import com.google.gson.stream.JsonReader;
 
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 
@@ -46,6 +45,7 @@ public class Server {
             return;
         }
         System.out.println("Welcome to the Masters of Renaissance server!");
+        System.out.println("Waiting for players to connect . . .");
 
         while (true) {
             try {
@@ -118,36 +118,32 @@ public class Server {
     }
 
     public void handleDisconnection(Integer chId){
-        if(clientHandlerNickMap.get(chId)!=null){
-            String nick=clientHandlerNickMap.get(chId);
-            Lobby l=searchLobby(nickLobbyMap.get(nick));
-            l.notifyLobby(new GenericMessage(nick +  " disconnected!"));
-            if(!l.isStarted()){
+        if (clientHandlerNickMap.get(chId) != null){
+            String nick = clientHandlerNickMap.get(chId);
+            Lobby lobby = searchLobby(nickLobbyMap.get(nick));
+            lobby.notifyLobby(new GenericMessage(nick +  " disconnected!"));
+            if(!lobby.isStarted()){
                 try {
                     searchVirtualClient(nick).getClientHandler().closeConnection();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }catch (NullPointerException e){
+                } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
                 }
             }
-
-
         }
     }
 
     public synchronized int checkLobby(){
-        for(Lobby l : lobbies){
-            if(!l.isPiena())
-                return l.getIdLobby();
+        for(Lobby lobby : lobbies){
+            if(!lobby.isFull())
+                return lobby.getIdLobby();
         }
         return -1;
     }
 
     public Lobby searchLobby(int id){
-        for(Lobby l : lobbies){
-            if(l.getIdLobby()==id){
-                return l;
+        for(Lobby lobby : lobbies){
+            if(lobby.getIdLobby() == id){
+                return lobby;
             }
         }
         return null;
@@ -182,7 +178,7 @@ public class Server {
 
     public VirtualClient searchVirtualClient(Integer idCH){
         for(VirtualClient vc : virtualClientList){
-            if(vc.getClientHandler().getId()==idCH)
+            if(vc.getClientHandler().getId() == idCH)
                 return vc;
         }
         return null;
@@ -205,13 +201,13 @@ public class Server {
             l.notifyLobby(new GenericMessage(vLook.getNickname()+" reconnected after server disconnection!"));
             throw new ReconnectionException();
         }
-        if(vLook!=null && vLook.getClientHandler().isConnesso()){
+        if(vLook!=null && vLook.getClientHandler().isConnected()){
             //caso nickname già preso
             vc.getClientHandler().getOut().println(gson.toJson(new GenericMessage("Nickname already taken"),Message.class));
             vc.getClientHandler().getOut().println(gson.toJson(new RegisterRequest(),Message.class));
             vc.getClientHandler().getOut().flush();
             throw new IllegalArgumentException();
-        }else if(vLook!=null && !vLook.getClientHandler().isConnesso()){
+        }else if(vLook!=null && !vLook.getClientHandler().isConnected()){
             //caso riconnessione dopo disconnessione del client
             reconnect(vc,vLook);
             int idLobby=nickLobbyMap.get(vLook.getNickname());
@@ -237,7 +233,7 @@ public class Server {
                         virtualClientList.add(vc);
                         nickLobbyMap.put(vc.getNickname(), l.getIdLobby());
                         l.notifyLobby(new LobbyInfoMessage(l.getNames()));
-                        if (l.isPiena()) {
+                        if (l.isFull()) {
                             l.startGame();
                             //saveServerStatus();
                         }
@@ -259,18 +255,16 @@ public class Server {
         return virtualClientList;
     }
 
-    public synchronized void createNewLobby(int nPlayers, ClientHandler ch){
-        for(VirtualClient vc: waitingList){
-            if(vc.getClientHandler().equals(ch)){
-                Lobby newLobby=new Lobby(nPlayers,vc);
+    public synchronized void createNewLobby(int nPlayers, ClientHandler clientHandler){
+        for(VirtualClient vc: waitingList) {
+            if(vc.getClientHandler().equals(clientHandler)) {
+                Lobby newLobby = new Lobby(nPlayers, vc);
                 lobbies.add(newLobby);
                 virtualClientList.add(vc);
                 waitingList.remove(vc);
-                nickLobbyMap.put(vc.getNickname(),newLobby.getIdLobby());
-                Message r=new GenericMessage("Lobby creata");
-                vc.getClientHandler().getOut().println(gson.toJson(r,Message.class));
-                vc.getClientHandler().getOut().flush();
-                if(newLobby.isPiena()){
+                nickLobbyMap.put(vc.getNickname(), newLobby.getIdLobby());
+                vc.getClientHandler().send(new GenericMessage("Lobby created"));
+                if(newLobby.isFull()){
                     newLobby.startGame();
                     //saveServerStatus();
                 }
@@ -279,32 +273,26 @@ public class Server {
         }
     }
 
-        private static Integer loadPortNumber() throws FileNotFoundException, NullPointerException {
-        JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
-        Map<String, Integer> map = new Gson().fromJson(reader, new TypeToken<Map<String, Integer>>() {}.getType());
-        return map.get("portNumber");
-    }
-
     public static void main(String[] args) {
-        Integer port = 0;
+        Integer port;
         try {
-            port = loadPortNumber();
+            port = Utilities.loadServerPortNumber();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            System.out.println("serverSettings.json file not found");
-            System.out.println("Closing . . .");
+            System.err.println("serverSettings.json file not found");
+            System.err.println("Closing . . .");
             return;
         }
 
         if (port == null) {
-            System.out.println("Port number value not found");
-            System.out.println("Closing . . .");
+            System.err.println("Port number value not found");
+            System.err.println("Closing . . .");
             return;
         } else if (port < 1000 || port > 10000) {
-            System.out.println("The port number value has to be between 1000 and 9999");
-            System.out.println("Closing . . .");
+            System.err.println("The port number value has to be between 1000 and 9999");
+            System.err.println("Closing . . .");
             return;
-        } else System.out.println("Port number value loaded successfully");
+        } //else System.err.println("port number value loaded successfully\n");
 
         Server server = new Server(port);
         server.startServer();

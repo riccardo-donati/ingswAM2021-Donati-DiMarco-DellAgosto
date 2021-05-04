@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class Lobby {
     @Expose
     private boolean started;
     @Expose
-    private static int n=0;
+    private static int n = 0;
     private Gson gson;
     //private Game game;
 
@@ -35,16 +36,18 @@ public class Lobby {
     }
 
     public List<String> getNames(){
-        List<String > names=new ArrayList<>();
+        List<String> names = new ArrayList<>();
         for(VirtualClient vc : players){
             names.add(vc.getNickname());
         }
         return names;
     }
-    public List<VirtualClient> getPlayers() {
+    public List<VirtualClient>
+    getPlayers() {
         return players;
     }
-    public boolean isPiena(){
+
+    public boolean isFull(){
         return nPlayers==players.size();
     }
 
@@ -53,7 +56,7 @@ public class Lobby {
         this.idLobby=n;
         this.nPlayers=nPlayers;
         this.players.add(firstPlayer);
-        gson=Utilities.initializeGsonMessage();
+        gson= Utilities.initializeGsonMessage();
         started=false;
     }
 
@@ -68,13 +71,12 @@ public class Lobby {
                 vc.getClientHandler().getOut().flush();
             }
         }
-
     }
+
     public void removePlayer(VirtualClient player){
-        if(players.contains(player))
-            players.remove(player);
-
+        players.remove(player);
     }
+
     public void startGame(){
         notifyLobby(new GenericMessage("Game starting . . ."));
         //game=new Game(nPlayers);
@@ -89,5 +91,4 @@ public class Lobby {
     public void addPlayer(VirtualClient vc){
         players.add(vc);
     }
-
 }

@@ -14,19 +14,23 @@ import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
     private int id;
+
     private Socket socket;
-    private Scanner in;
-    private PrintWriter out;
     private Server server;
-    private Gson gson;
     private Thread pinger;
     private Thread timer;
-    private boolean connesso;
+
+    private Scanner in;
+    private PrintWriter out;
+
+    private Gson gson;
+
+    private boolean isConnected;
     private boolean ping;
     private boolean timeout;
-    private ServerVisitorHandler serverHandlerVisitor;
+    private ServerVisitorHandler serverVisitorHandler;
 
-    private static int cont=0;
+    private static int globalCounter = 0;
 
     public int getId() {
         return id;
@@ -37,9 +41,9 @@ public class ClientHandler implements Runnable {
     }
 
     public void closeConnection() throws InterruptedException {
-        Message m=new DisconnectionMessage();
-        out.println(gson.toJson(m,Message.class));
-        out.flush();
+        Message message = new DisconnectionMessage();
+
+        out.println(gson.toJson(message, Message.class));
         server.removeVirtualClient(id);
         Thread.sleep(3000);
         out.close();
@@ -49,16 +53,15 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        System.out.println("User disconnected with id: "+id);
-
+        System.out.println("User disconnected with id: " + id);
     }
 
-    public boolean isConnesso() {
-        return connesso;
+    public boolean isConnected() {
+        return isConnected;
     }
 
-    public void setConnesso(boolean connesso) {
-        this.connesso = connesso;
+    public void setConnected(boolean connected) {
+        this.isConnected = connected;
     }
 
     public Thread getPinger() {
@@ -66,17 +69,16 @@ public class ClientHandler implements Runnable {
     }
 
     public void stopTimer(){
-        if(timer!=null){
+        if(timer != null){
             timer.interrupt();
-            timer=null;
+            timer = null;
         }
     }
     public void startTimer(int ms){
-        timer=new Thread(()->{
+        timer = new Thread(() -> {
             try {
                 Thread.sleep(ms);
                 timeout=true;
-
             } catch (InterruptedException e) {  }
         });
         timer.start();
@@ -85,36 +87,30 @@ public class ClientHandler implements Runnable {
 
     public PrintWriter getOut() { return out; }
 
-    public void send(Message m){
-        out.println(gson.toJson(m,Message.class));
-        out.flush();
-    }
-
     public ClientHandler(Socket socket, Server server) {
-        this.serverHandlerVisitor=new ServerVisitorHandler();
         this.socket = socket;
-        this.server=server;
-        this.connesso=true;
-        cont++;
-        this.id=cont;
-        this.timeout=false;
+        this.server = server;
+        this.isConnected = true;
+        this.serverVisitorHandler = new ServerVisitorHandler();
+        globalCounter++;
+        this.id = globalCounter;
+        this.timeout = false;
         this.pinger = new Thread(() -> {
-            ping=true;
-            while(ping) {
+            ping = true;
+            while (ping) {
                 try {
-                    ping=false;
+                    ping = false;
                     send(new PingRequest());
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
                     break;
                 }
             }
-            System.out.println("Player sconnesso");
+            System.out.println("Player disconnected");
             server.handleDisconnection(id);
-            connesso=false;
+            isConnected = false;
         });
     }
-
 
     public void run() {
         GsonBuilder builder = new GsonBuilder();
@@ -123,33 +119,34 @@ public class ClientHandler implements Runnable {
         builder.registerTypeAdapter(Message.class, new InterfaceAdapter<Message>());
         gson = builder.create();
         try {
-
             in = new Scanner(socket.getInputStream());
-            out = new PrintWriter(socket.getOutputStream());
+            out = new PrintWriter(socket.getOutputStream(), true);
 
-            Message req=new RegisterRequest();
-            out.println(gson.toJson(req,Message.class));
-            out.flush();
+            send(new RegisterRequest());
             startTimer(50000);
-            //
-            String line="";
-            while (line!="quit") {
+
+            String jsonString = "";
+            while (!jsonString.equals("quit")) {
                 try {
-                    line = in.nextLine();
-                }catch (NoSuchElementException e){
-                    System.out.println("disconnecting Client Handler number "+id+" . . .");
+                    jsonString = in.nextLine();
+                } catch (NoSuchElementException e){
+                    System.out.println("Disconnecting client handler number " + id + " . . .");
                     return;
                 }
-                Message mex=gson.fromJson(line,Message.class);
-                handleMessage(mex);
+                Message message = gson.fromJson(jsonString, Message.class);
+                handleMessage(message);
             }
-            // Chiudo gli stream e il socket
+            // closing streams and socket
             in.close();
             out.close();
             socket.close();
         } catch (IOException e) {
             System.err.println(e.getMessage());
         }
+    }
+
+    public void send(Message message) { //it's one line but it's nice to have for other classes
+        out.println(gson.toJson(message, Message.class));
     }
 
     public boolean isTimeout() {
@@ -168,8 +165,8 @@ public class ClientHandler implements Runnable {
         this.ping = ping;
     }
 
-    public void handleMessage(Message m) {
-        ServerMessage r = (ServerMessage) m;
-        r.accept(serverHandlerVisitor, this);
+    public void handleMessage(Message message) {
+        ServerMessage serverMessage = (ServerMessage) message;
+        serverMessage.accept(serverVisitorHandler, this);
     }
 }

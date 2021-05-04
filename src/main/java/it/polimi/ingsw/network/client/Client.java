@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.polimi.ingsw.model.InterfaceAdapter;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
 import java.io.BufferedReader;
@@ -16,21 +17,22 @@ import java.util.Scanner;
 
 public class Client {
     String hostName = "127.0.0.1";
-    int portNumber = 1234;
     PrintWriter out;
     Scanner in;
     BufferedReader stdIn;
     Socket echoSocket;
     Gson gson;
     ClientVisitorHandler clientHandlerVisitor=new ClientVisitorHandler();
-    public void run() throws IOException {
+
+    public void run(int serverPortNumber) {
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(ServerMessage.class, new InterfaceAdapter<ServerMessage>());
         builder.registerTypeAdapter(ClientMessage.class, new InterfaceAdapter<ClientMessage>());
         builder.registerTypeAdapter(Message.class, new InterfaceAdapter<Message>());
         gson = builder.create();
+
         try {
-            echoSocket = new Socket(hostName, portNumber);
+            echoSocket = new Socket(hostName, serverPortNumber);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new Scanner(echoSocket.getInputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
@@ -38,21 +40,22 @@ public class Client {
             System.out.println("Server not available");
             return;
         }
-        String l= null;
-        Message mex;
+        String jsonString;
+        Message message;
         while(!echoSocket.isClosed()){
             try {
-                l = in.nextLine();
-            }catch (NoSuchElementException e){
-                System.out.println("Error mi disconnetto  . . .");
+                jsonString = in.nextLine();
+            } catch (NoSuchElementException e){
+                System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
                 break;
             }
-            mex=gson.fromJson(l,Message.class);
-            try { handleMessage(mex);
+            message = gson.fromJson(jsonString, Message.class);
+            try {
+                handleMessage(message);
             } catch (IOException e) {
-                System.out.println("Error mi disconnetto. . .");
+                System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
                 break;
@@ -81,54 +84,13 @@ public class Client {
     }
 
     public void handleMessage(Message m) throws IOException {
-        ClientMessage cm=(ClientMessage)m;
-        cm.accept(clientHandlerVisitor,this);
-        /*if(m instanceof DisconnectionMessage){
-            System.out.println(m.getMessage());
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            in.close();
-            out.close();
-            echoSocket.close();
-            return;
-        }
-        if(m instanceof GenericMessage) {
-            System.out.println(m.getMessage());
-        }
-        if(m instanceof RegisterRequest) {
-            RegisterRequest rr = (RegisterRequest) m;
-            System.out.println(rr.getMessage());
-            String userInput = stdIn.readLine();
-            Message a = new RegisterResponse(userInput);
-            out.println(gson.toJson(a, Message.class));
-
-        }
-        if(m instanceof PlayerNumberRequest){
-            System.out.println(m.getMessage());
-            int n=Integer.parseInt(stdIn.readLine());
-            Message m2=new PlayerNumberResponse(n);
-            out.println(gson.toJson(m2,Message.class));
-        }
-        if(m instanceof LobbyInfoMessage){
-            LobbyInfoMessage li=(LobbyInfoMessage)m;
-            for(String n : li.getNickList()){
-                System.out.println("LobbyPlayer: "+n);
-            }
-        }
-        if(m instanceof PingRequest){
-            Message pr=new PingResponse();
-            //System.out.println(m.getMessage());
-            out.println(gson.toJson(pr,Message.class));
-            out.flush();
-        }
-
-         */
+        ClientMessage clientMessage = (ClientMessage) m;
+        clientMessage.accept(clientHandlerVisitor,this);
     }
+
     public static void main(String[] args) throws IOException {
-        new Client().run();
+        Integer serverPortNumber = Utilities.loadServerPortNumber();
+        new Client().run(serverPortNumber);
     }
 
 }
