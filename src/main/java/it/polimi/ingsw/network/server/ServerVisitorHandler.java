@@ -5,63 +5,63 @@ import it.polimi.ingsw.network.messages.*;
 
 public class ServerVisitorHandler implements ServerVisitor {
     @Override
-    public void visit(RegisterResponse res,ClientHandler ch) {
-        ch.stopTimer();
-        if(ch.isTimeout()) {
+    public void visit(RegisterResponse response, ClientHandler clientHandler) {
+        clientHandler.stopTimer();
+
+        if(clientHandler.isTimeout()) {
             try {
-                ch.closeConnection();
+                clientHandler.closeConnection();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }else {
-            String nickname = res.getMessage();
-            if(nickname.equals("")){
-                ch.send(new GenericMessage("Illegal nickname"));
-                ch.send(new RegisterRequest());
+        } else {
+            String nickname = response.getMessage();
+            if(nickname == null || nickname.equals("")) {
+                clientHandler.send(new GenericMessage("Illegal nickname"));
+                clientHandler.send(new RegisterRequest());
                 return;
             }
-            VirtualClient vc = new VirtualClient(nickname, ch);
+            VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
             try {
-                ch.getServer().addVirtualClient(vc);
+                clientHandler.getServer().addVirtualClient(virtualClient);
             }catch (IllegalArgumentException e){
                 return;
             } catch (ReconnectionException e) {
-                ch.getPinger().start();
+                clientHandler.getPinger().start();
                 return;
             }
-            synchronized (ch.getServer()) {
-                if (ch.getServer().getNickLobbyMap().get(vc.getNickname()) == null) {
+            synchronized (clientHandler.getServer()) {
+                if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     ClientMessage req = new PlayerNumberRequest();
-                    ch.getOut().println(ch.getGson().toJson(req, ClientMessage.class));
-                    ch.getOut().flush();
-                    ch.startTimer(50000);
-                    String l = ch.getIn().nextLine();
-                    ch.handleMessage(ch.getGson().fromJson(l, Message.class));
-                } else ch.getPinger().start();
+                    clientHandler.getOut().println(clientHandler.getGson().toJson(req, ClientMessage.class));
+                    clientHandler.startTimer(50000);
+                    String l = clientHandler.getIn().nextLine();
+                    clientHandler.handleMessage(clientHandler.getGson().fromJson(l, Message.class));
+                } else clientHandler.getPinger().start();
             }
 
         }
     }
 
     @Override
-    public void visit(PlayerNumberResponse pnr,ClientHandler ch) {
-        ch.stopTimer();
-        if(ch.isTimeout()) {
+    public void visit(PlayerNumberResponse response, ClientHandler clientHandler) {
+        clientHandler.stopTimer();
+
+        if(clientHandler.isTimeout()) {
             try {
-                ch.closeConnection();
+                clientHandler.closeConnection();
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-        }else {
-            int nPlayers = pnr.getNPlayers();
-            ch.getServer().createNewLobby(nPlayers, ch);
-            ch.getPinger().start();
+        } else {
+            clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
+            clientHandler.getPinger().start();
         }
     }
 
     @Override
-    public void visit(PingResponse pr,ClientHandler ch) {
-        System.out.println(pr.getMessage()+" "+ch.getId());
-        ch.setPing(true);
+    public void visit(PingResponse response, ClientHandler clientHandler) {
+        System.out.println(response.getMessage() + " " + clientHandler.getId());
+        clientHandler.setPing(true);
     }
 }
