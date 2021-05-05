@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.server;
 
 import com.google.gson.annotations.Expose;
+import it.polimi.ingsw.network.messages.Message;
 
 public class VirtualClient {
     @Expose
@@ -12,6 +13,10 @@ public class VirtualClient {
         this.clientHandler=clientHandler;
     }
 
+    public void send(Message m){
+        clientHandler.getOut().println(clientHandler.getGson().toJson(m,Message.class));
+        clientHandler.getOut().flush();
+    }
 
     public String getNickname() {
         return nickname;

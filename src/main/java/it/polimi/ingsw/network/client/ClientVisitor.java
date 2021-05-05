@@ -9,4 +9,5 @@ public interface ClientVisitor {
     void visit(PingRequest message, Client client);
     void visit(PlayerNumberRequest message, Client client);
     void visit(RegisterRequest message, Client client);
+    void visit(StartGameMessage message, Client client);
 }

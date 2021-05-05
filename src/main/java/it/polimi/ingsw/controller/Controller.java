@@ -1,13 +1,12 @@
 package it.polimi.ingsw.controller;
 
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.Player;
 import it.polimi.ingsw.model.Utilities;
-import it.polimi.ingsw.model.exceptions.FullGameException;
-import it.polimi.ingsw.model.exceptions.GameNotFullException;
-import it.polimi.ingsw.model.exceptions.IllegalPlayersNumberException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,12 @@ import java.util.Map;
 public class Controller {
     private Game game;
     private Map<String,Integer> nickOrderMap=new HashMap<>();
+
     public Map<String, Integer> getNickOrderMap() {
         return nickOrderMap;
     }
+
+    public List<String> getOrderPlayerList() { return game.getListNickname(); }
 
     /**
      * @return the nickname of the current player
@@ -65,6 +67,21 @@ public class Controller {
                 }
             }
         }
+    }
+
+    /**
+     * @return  get the list of the 4 leaderCards for each player
+     */
+    public List<List<LeaderCard>> getLeaderCards(){
+        List<List<LeaderCard>> lists = null;
+        try {
+            lists=game.divideLeaderCards();
+        } catch (EmptyPlayersException e) {
+            System.out.println("No players in game");
+        } catch (NullPointerException e){
+            System.out.println("Game not initialized");
+        }
+        return lists;
     }
 
     /**

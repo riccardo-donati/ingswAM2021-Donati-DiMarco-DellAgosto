@@ -240,6 +240,17 @@ public abstract class Game implements BoardObserver {
         }
         return  map;
     }
+    /**
+     * useful for the controller
+     * @return a list of the ordered nicknames
+     */
+    public List<String> getListNickname(){
+        List<String> list=new ArrayList<>();
+        for(Player p : players){
+            list.add(p.getNickname());
+        }
+        return list;
+    }
     public List<Player> getPlayers() { return players; }
     /**
      * Give the players a random order and the related bonus resources

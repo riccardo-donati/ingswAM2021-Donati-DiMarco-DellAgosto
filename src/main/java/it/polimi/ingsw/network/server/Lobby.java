@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.Game;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
@@ -94,6 +95,21 @@ public class Lobby {
         gameController.addPlayers(getNicknames());
         gameController.start();
         started=true;
+        List<List<LeaderCard>> lists=gameController.getLeaderCards();
+        if(lists.size()!=players.size()){
+            System.out.println("Internal Error, please reinitialize the game");
+            return;
+        }
+
+        for(int i=0;i<players.size();i++){
+            List<String> l=new ArrayList<>();
+            for(int j=0;j<4;j++){
+                //l.add(lists.get(i).get(j).getName()); da aggiungere il nome dell'immagine
+                l.add("Prova");
+            }
+            Message m=new StartGameMessage(gameController.getOrderPlayerList(),l);
+            players.get(i).send(m);
+        }
         notifyLobby(new GenericMessage("Game started!"));
     }
 
