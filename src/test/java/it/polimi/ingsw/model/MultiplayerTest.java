@@ -178,4 +178,16 @@ class MultiplayerTest {
         assertTrue(result.getWinner().contains("Qiqi"));
         assertTrue(result.getWinner().contains("Eula"));
     }
+
+    @Test
+    public void TestDisconnectedPlayer() throws IllegalPlayersNumberException, FullGameException, GameNotFullException, IllegalResourceException {
+        game=new Multiplayer(2);
+        game.addPlayer("a");
+        game.addPlayer("b");
+        game.startGame();
+        game.getPlayers().get(0).setActive(false);
+        assertDoesNotThrow(()->game.passTurn());
+        assertThrows(IllegalActionException.class,
+                ()->game.passTurn());
+    }
 }

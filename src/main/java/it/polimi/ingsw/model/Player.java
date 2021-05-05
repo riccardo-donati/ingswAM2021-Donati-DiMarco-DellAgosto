@@ -21,6 +21,8 @@ public class Player {
 
     private Map<Integer,Map<ResourceType, Integer>> pickedResource = new HashMap<>();
 
+    private boolean inactive;
+
     protected void setOrder(int order){
         this.order=order;
     }
@@ -115,6 +117,10 @@ public class Player {
 
     }
 
+    protected boolean isActive() { return !inactive; }
+
+    protected void setActive(boolean active) { this.inactive = !active; }
+
     /**
      * under implementation
      * @param nickname player name
@@ -123,6 +129,7 @@ public class Player {
         this.nickname = nickname;
         this.order = -1;
         board = new Board();
+        this.inactive=false;
 
         initializePickedResource();
     }
@@ -191,7 +198,7 @@ public class Player {
      * @param leaderCard card that is activated
      * @throws CardNotAvailableException thrown if leaderCard is not in the leadersInHand list
      */
-    void playLeader(LeaderCard leaderCard) throws CardNotAvailableException, RequirementNotMetException, IllegalResourceException {
+    protected void playLeader(LeaderCard leaderCard) throws CardNotAvailableException, RequirementNotMetException, IllegalResourceException {
         if(leadersInHand.contains(leaderCard)) {
             for (Requirement requirement : leaderCard.getRequirements()) {
                 if (!requirement.check(this.board))

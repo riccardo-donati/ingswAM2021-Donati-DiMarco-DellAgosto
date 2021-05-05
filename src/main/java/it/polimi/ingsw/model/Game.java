@@ -29,7 +29,6 @@ public abstract class Game implements BoardObserver {
     private boolean endGameTrigger;
 
     protected boolean isEndGameTrigger() { return endGameTrigger; }
-    protected List<Player> getPlayers() { return players; }
     protected List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }
@@ -210,6 +209,38 @@ public abstract class Game implements BoardObserver {
 
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
+
+    /**
+     * set the active parameter of a players in caso of disconnection/reconnection
+     * @param player is the nickname of the player
+     * @param active is the state that we want
+     */
+    public void setActive(String player,boolean active){
+        for(Player p : players){
+            if(p.getNickname().equals(player)){
+                p.setActive(active);
+            }
+        }
+    }
+
+    /**
+     * useful fot the controller
+     * @return the nickname of the current player
+     */
+    public String getCurrentNickname(){return currPlayer.getNickname();}
+
+    /**
+     * useful for the controller
+     * @return a map that link the nicknames with the orders
+     */
+    public Map<String,Integer> getNickOrderMap(){
+        Map<String,Integer> map=new HashMap<>();
+        for(Player p : players){
+            map.put(p.getNickname(),p.getOrder());
+        }
+        return  map;
+    }
+    public List<Player> getPlayers() { return players; }
     /**
      * Give the players a random order and the related bonus resources
      * Set the currentPlayer and the SETUP phases
@@ -277,11 +308,14 @@ public abstract class Game implements BoardObserver {
         }
         return result;
     }
+
     /**
      * addition of a new player into the game
      * @param nickname of the new player
+     * @throws FullGameException if the game is already full
+     * @throws IllegalArgumentException if the nickname is illegal
      */
-    public void addPlayer(String nickname) throws FullGameException, IllegalResourceException {
+    public void addPlayer(String nickname) throws FullGameException,IllegalArgumentException {
         if(nickname.equals("")){
             throw new IllegalArgumentException("nickname is empty");
         }

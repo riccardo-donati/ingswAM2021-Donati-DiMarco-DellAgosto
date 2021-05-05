@@ -112,7 +112,7 @@ public class Singleplayer extends Game {
      * @throws FullGameException if there is already a player
      */
     @Override
-    public void addPlayer(String nick) throws FullGameException, IllegalResourceException {
+    public void addPlayer(String nick) throws FullGameException {
         if(getPlayers().size()==1){
             throw new FullGameException();
         }

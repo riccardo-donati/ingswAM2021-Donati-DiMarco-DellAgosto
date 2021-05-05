@@ -1,10 +1,7 @@
 package it.polimi.ingsw.model;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.exceptions.FullGameException;
-import it.polimi.ingsw.model.exceptions.GameNotFullException;
-import it.polimi.ingsw.model.exceptions.IllegalPlayersNumberException;
-import it.polimi.ingsw.model.exceptions.IllegalResourceException;
+import it.polimi.ingsw.model.exceptions.*;
 
 import java.io.FileNotFoundException;
 import java.util.List;
@@ -40,9 +37,18 @@ public class Multiplayer extends Game{
         return result;
     }
     @Override
-    public void addPlayer(String nick) throws FullGameException, IllegalResourceException {
+    public void addPlayer(String nick) throws FullGameException {
         if(getPlayers().size()==nPlayers) throw new FullGameException();
         super.addPlayer(nick);
+    }
+
+    @Override
+    public void passTurn() throws IllegalActionException {
+        if(!getCurrPlayer().isActive()){ //disconnected player case
+            nextTurn();
+            return;
+        }
+        super.passTurn();
     }
     //-----------------------------------------------------------------------------------------------------
 

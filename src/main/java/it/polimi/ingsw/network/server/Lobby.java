@@ -2,6 +2,8 @@ package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
+import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
@@ -20,7 +22,7 @@ public class Lobby {
     @Expose
     private static int n = 0;
     private Gson gson;
-    //private Game game;
+    private Controller gameController;
 
 
     public static void setN(int n) {
@@ -56,6 +58,7 @@ public class Lobby {
         this.idLobby=n;
         this.nPlayers=nPlayers;
         this.players.add(firstPlayer);
+        this.gameController=new Controller();
         gson= Utilities.initializeGsonMessage();
         started=false;
     }
@@ -77,11 +80,21 @@ public class Lobby {
         players.remove(player);
     }
 
+    public List<String> getNicknames(){
+        List<String> nicknames=new ArrayList<>();
+        for(VirtualClient vc : players){
+            nicknames.add(vc.getNickname());
+        }
+        return nicknames;
+    }
+
     public void startGame(){
         notifyLobby(new GenericMessage("Game starting . . ."));
-        //game=new Game(nPlayers);
-        notifyLobby(new GenericMessage("Game started!"));
+        gameController.initializeGame(nPlayers);
+        gameController.addPlayers(getNicknames());
+        gameController.start();
         started=true;
+        notifyLobby(new GenericMessage("Game started!"));
     }
 
     public boolean isStarted() {
