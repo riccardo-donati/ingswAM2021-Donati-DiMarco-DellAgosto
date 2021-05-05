@@ -8,7 +8,7 @@ public class ServerVisitorHandler implements ServerVisitor {
     public void visit(RegisterResponse response, ClientHandler clientHandler) {
         clientHandler.stopTimer();
 
-        if(clientHandler.isTimeout()) {
+        if (clientHandler.isTimeout()) {
             try {
                 clientHandler.closeConnection();
             } catch (InterruptedException e) {
@@ -16,15 +16,16 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
         } else {
             String nickname = response.getMessage();
-            if(nickname == null || nickname.equals("")) {
+            if (nickname == null || nickname.equals("")) {
                 clientHandler.send(new GenericMessage("Illegal nickname"));
                 clientHandler.send(new RegisterRequest());
                 return;
             }
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
+            System.out.println("Created virtual client for " + nickname);
             try {
                 clientHandler.getServer().addVirtualClient(virtualClient);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e){
                 return;
             } catch (ReconnectionException e) {
                 clientHandler.getPinger().start();
@@ -32,14 +33,14 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
             synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
-                    ClientMessage req = new PlayerNumberRequest();
-                    clientHandler.getOut().println(clientHandler.getGson().toJson(req, ClientMessage.class));
+                    clientHandler.send(new PlayerNumberRequest());
                     clientHandler.startTimer(50000);
-                    String l = clientHandler.getIn().nextLine();
-                    clientHandler.handleMessage(clientHandler.getGson().fromJson(l, Message.class));
+                    String jsonString = clientHandler.getIn().nextLine();
+                    Message message = clientHandler.getGson().fromJson(jsonString, Message.class);
+                    clientHandler.handleMessage(message);
+                    System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
                 } else clientHandler.getPinger().start();
             }
-
         }
     }
 
@@ -61,7 +62,7 @@ public class ServerVisitorHandler implements ServerVisitor {
 
     @Override
     public void visit(PingResponse response, ClientHandler clientHandler) {
-        System.out.println(response.getMessage() + " " + clientHandler.getId());
+        //System.out.println(response.getMessage() + " " + clientHandler.getId());
         clientHandler.setPing(true);
     }
 }

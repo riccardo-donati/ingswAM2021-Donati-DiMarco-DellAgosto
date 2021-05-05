@@ -29,9 +29,8 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(LobbyInfoMessage message, Client client) {
-        for(String nickname : message.getNickList()){
-            System.out.println("LobbyPlayer: " + nickname);
-        }
+        System.out.print("Lobby players: ");
+        System.out.println(message.getNickList().toString().replace("[","").replace("]",""));
     }
 
     @Override

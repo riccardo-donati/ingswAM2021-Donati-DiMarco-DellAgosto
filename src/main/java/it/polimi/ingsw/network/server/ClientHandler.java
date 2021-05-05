@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.polimi.ingsw.model.InterfaceAdapter;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
 import java.io.IOException;
@@ -40,32 +41,40 @@ public class ClientHandler implements Runnable {
         this.server = server;
     }
 
-    public void closeConnection() throws InterruptedException {
-        Message message = new DisconnectionMessage();
-
-        out.println(gson.toJson(message, Message.class));
-        server.removeVirtualClient(id);
-        Thread.sleep(3000);
-        out.close();
-        in.close();
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        System.out.println("User disconnected with id: " + id);
+    public Thread getPinger() {
+        return pinger;
     }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
+    public Scanner getIn() { return in; }
+
+    public PrintWriter getOut() { return out; }
 
     public boolean isConnected() {
         return isConnected;
+    }
+
+    public boolean isTimeout() {
+        return timeout;
+    }
+
+    public void setPing(boolean ping) {
+        this.ping = ping;
     }
 
     public void setConnected(boolean connected) {
         this.isConnected = connected;
     }
 
-    public Thread getPinger() {
-        return pinger;
+    public void send(Message message) { //it's one line but it's nice to have for other classes
+        out.println(gson.toJson(message, Message.class));
     }
 
     public void stopTimer(){
@@ -74,18 +83,18 @@ public class ClientHandler implements Runnable {
             timer = null;
         }
     }
+
     public void startTimer(int ms){
         timer = new Thread(() -> {
             try {
                 Thread.sleep(ms);
-                timeout=true;
-            } catch (InterruptedException e) {  }
+                timeout = true;
+            } catch (InterruptedException e) {
+                //e.printStackTrace();
+            }
         });
         timer.start();
     }
-    public Scanner getIn() { return in; }
-
-    public PrintWriter getOut() { return out; }
 
     public ClientHandler(Socket socket, Server server) {
         this.socket = socket;
@@ -113,11 +122,8 @@ public class ClientHandler implements Runnable {
     }
 
     public void run() {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(ServerMessage.class, new InterfaceAdapter<ServerMessage>());
-        builder.registerTypeAdapter(ClientMessage.class, new InterfaceAdapter<ClientMessage>());
-        builder.registerTypeAdapter(Message.class, new InterfaceAdapter<Message>());
-        gson = builder.create();
+        gson = Utilities.initializeGsonMessage();
+
         try {
             in = new Scanner(socket.getInputStream());
             out = new PrintWriter(socket.getOutputStream(), true);
@@ -133,8 +139,7 @@ public class ClientHandler implements Runnable {
                     System.out.println("Disconnecting client handler number " + id + " . . .");
                     return;
                 }
-                Message message = gson.fromJson(jsonString, Message.class);
-                handleMessage(message);
+                handleMessage(gson.fromJson(jsonString, Message.class));
             }
             // closing streams and socket
             in.close();
@@ -145,28 +150,22 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void send(Message message) { //it's one line but it's nice to have for other classes
-        out.println(gson.toJson(message, Message.class));
-    }
-
-    public boolean isTimeout() {
-        return timeout;
-    }
-
-    public Server getServer() {
-        return server;
-    }
-
-    public Gson getGson() {
-        return gson;
-    }
-
-    public void setPing(boolean ping) {
-        this.ping = ping;
-    }
-
     public void handleMessage(Message message) {
         ServerMessage serverMessage = (ServerMessage) message;
         serverMessage.accept(serverVisitorHandler, this);
+    }
+
+    public void closeConnection() throws InterruptedException {
+        send(new DisconnectionMessage());
+        server.removeVirtualClient(id);
+        Thread.sleep(3000);
+        out.close();
+        in.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Disconnected user with id: " + id);
     }
 }

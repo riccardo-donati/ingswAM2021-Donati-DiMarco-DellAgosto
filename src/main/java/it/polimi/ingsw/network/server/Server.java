@@ -106,7 +106,7 @@ public class Server {
             l.setGson(Utilities.initializeGsonMessage());
         }
         for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
-            if(entry.getValue()>Lobby.getN()) Lobby.setN(entry.getValue());
+            if(entry.getValue()>Lobby.getGlobalID()) Lobby.setGlobalID(entry.getValue());
             VirtualClient vc=s.searchVirtualClient(entry.getKey());
             Lobby l= s.searchLobby(entry.getValue());
             l.addPlayer(vc);
@@ -190,51 +190,47 @@ public class Server {
         clientHandlerNickMap.put(oldVc.getClientHandler().getId(),oldVc.getNickname());
     }
 
-    public synchronized void addVirtualClient(VirtualClient vc) throws ReconnectionException {
-        VirtualClient vLook=searchVirtualClient(vc.getNickname());
-        if(vLook!=null && vLook.getClientHandler()==null){
-            //caso riconnessione dopo disconnessione del server
+    public synchronized void addVirtualClient(VirtualClient vc) throws ReconnectionException, IllegalArgumentException {
+        VirtualClient vLook = searchVirtualClient(vc.getNickname());
+        if (vLook != null && vLook.getClientHandler() == null) {
+            //player reconnecting after server crashed
             vLook.setClientHandler(vc.getClientHandler());
-            clientHandlerNickMap.put(vc.getClientHandler().getId(),vc.getNickname());
-            int idLobby=nickLobbyMap.get(vLook.getNickname());
-            Lobby l=searchLobby(idLobby);
-            l.notifyLobby(new GenericMessage(vLook.getNickname()+" reconnected after server disconnection!"));
+            clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
+            Lobby lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
+            lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected after server disconnection!"));
             throw new ReconnectionException();
         }
-        if(vLook!=null && vLook.getClientHandler().isConnected()){
-            //caso nickname già preso
-            vc.getClientHandler().getOut().println(gson.toJson(new GenericMessage("Nickname already taken"),Message.class));
-            vc.getClientHandler().getOut().println(gson.toJson(new RegisterRequest(),Message.class));
-            vc.getClientHandler().getOut().flush();
+        if (vLook != null && vLook.getClientHandler().isConnected()) {
+            //nickname is not unique
+            vc.getClientHandler().send(new GenericMessage("Nickname already taken"));
+            vc.getClientHandler().send(new RegisterRequest());
             throw new IllegalArgumentException();
-        }else if(vLook!=null && !vLook.getClientHandler().isConnected()){
-            //caso riconnessione dopo disconnessione del client
-            reconnect(vc,vLook);
-            int idLobby=nickLobbyMap.get(vLook.getNickname());
-            Lobby l=searchLobby(idLobby);
-            l.notifyLobby(new GenericMessage(vLook.getNickname()+" reconnected!"));
+        } else if (vLook != null && !vLook.getClientHandler().isConnected()) {
+            //player reconnecting after disconnection
+            reconnect(vc, vLook);
+            Lobby lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
+            lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected!"));
             throw new ReconnectionException();
-        }else {
-            //caso nickname nuovo
+        } else {
+            //nickname is unique
             waitingList.add(vc);
             clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
-            for (VirtualClient v : virtualClientList) {
-                if(v.getClientHandler()!=null) {
-                    Message m = new GenericMessage(vc.getNickname() + " si è connesso!");
-                    v.getClientHandler().getOut().println(gson.toJson(m, Message.class));
-                    v.getClientHandler().getOut().flush();
-                }
-            }
+//            maybe not needed to notify players in another lobbies?
+//            for (VirtualClient v : virtualClientList)
+//                if (v.getClientHandler() != null)
+//                    v.getClientHandler().send(new GenericMessage(vc.getNickname() + " joined the server!"));
             if (checkLobby() != -1) {
-                for (Lobby l : lobbies) {
-                    if (l.getIdLobby() == checkLobby()) {
-                        l.addPlayer(vc);
+                for (Lobby lobby : lobbies) {
+                    if (lobby.getIdLobby() == checkLobby()) {
+                        lobby.notifyLobby(new GenericMessage(vc.getNickname() + " joined the lobby"));
+                        lobby.addPlayer(vc);
+                        vc.getClientHandler().send(new GenericMessage("You joined a lobby!"));
+                        vc.getClientHandler().send(new LobbyInfoMessage(lobby.getNames()));
                         waitingList.remove(vc);
                         virtualClientList.add(vc);
-                        nickLobbyMap.put(vc.getNickname(), l.getIdLobby());
-                        l.notifyLobby(new LobbyInfoMessage(l.getNames()));
-                        if (l.isFull()) {
-                            l.startGame();
+                        nickLobbyMap.put(vc.getNickname(), lobby.getIdLobby());
+                        if (lobby.isFull()) {
+                            lobby.startGame();
                             //saveServerStatus();
                         }
                     }
@@ -294,7 +290,6 @@ public class Server {
             return;
         } //else System.err.println("port number value loaded successfully\n");
 
-        Server server = new Server(port);
-        server.startServer();
+        new Server(port).startServer();
     }
 }
