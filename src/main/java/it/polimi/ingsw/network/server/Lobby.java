@@ -17,21 +17,21 @@ public class Lobby {
     @Expose
     private int nPlayers;
     @Expose
-    private List<VirtualClient> players=new ArrayList<>();
+    private List<VirtualClient> players = new ArrayList<>();
     @Expose
     private boolean started;
     @Expose
-    private static int n = 0;
+    private static int globalID = 0;
     private Gson gson;
     private Controller gameController;
 
 
-    public static void setN(int n) {
-        Lobby.n = n;
+    public static void setGlobalID(int id) {
+        Lobby.globalID = id;
     }
 
-    public static int getN() {
-        return n;
+    public static int getGlobalID() {
+        return globalID;
     }
 
     public int getIdLobby() {
@@ -46,17 +46,18 @@ public class Lobby {
         return names;
     }
     public List<VirtualClient>
+
     getPlayers() {
         return players;
     }
 
     public boolean isFull(){
-        return nPlayers==players.size();
+        return nPlayers == players.size();
     }
 
     public Lobby(int nPlayers, VirtualClient firstPlayer){
-        n++;
-        this.idLobby=n;
+        globalID++;
+        this.idLobby = globalID;
         this.nPlayers=nPlayers;
         this.players.add(firstPlayer);
         this.gameController=new Controller();
@@ -68,11 +69,10 @@ public class Lobby {
         this.gson = gson;
     }
 
-    public void notifyLobby(Message m){
-        for(VirtualClient vc : players){
-            if(vc.getClientHandler()!=null) {
-                vc.getClientHandler().getOut().println(gson.toJson(m, Message.class));
-                vc.getClientHandler().getOut().flush();
+    public void notifyLobby(Message message){
+        for(VirtualClient virtualClient : players){
+            if(virtualClient.getClientHandler() != null) {
+                virtualClient.getClientHandler().send(message);
             }
         }
     }

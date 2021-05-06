@@ -27,9 +27,10 @@ public class ServerVisitorHandler implements ServerVisitor {
                 return;
             }
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
+            System.out.println("Created virtual client for " + nickname);
             try {
                 clientHandler.getServer().addVirtualClient(virtualClient);
-            }catch (IllegalArgumentException e){
+            } catch (IllegalArgumentException e){
                 return;
             } catch (ReconnectionException e) {
                 //clientHandler.getPinger().start();
@@ -37,13 +38,15 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
             synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
-                    ClientMessage req = new PlayerNumberRequest();
-                    clientHandler.getOut().println(clientHandler.getGson().toJson(req, ClientMessage.class));
+                    clientHandler.send(new PlayerNumberRequest());
                     clientHandler.startTimer(50000);
-                    String l = clientHandler.getIn().nextLine();
-                    clientHandler.handleMessage(clientHandler.getGson().fromJson(l, Message.class));
-                } else {//clientHandler.getPinger().start();
-                     }
+                    String jsonString = clientHandler.getIn().nextLine();
+                    Message message = clientHandler.getGson().fromJson(jsonString, Message.class);
+                    clientHandler.handleMessage(message);
+                    System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
+                } else {
+                   // clientHandler.getPinger().start();
+                }
             }
 
         }
@@ -67,7 +70,7 @@ public class ServerVisitorHandler implements ServerVisitor {
 
     @Override
     public void visit(PingResponse response, ClientHandler clientHandler) {
-        System.out.println(response.getMessage() + " " + clientHandler.getId());
+        //System.out.println(response.getMessage() + " " + clientHandler.getId());
         clientHandler.setPing(true);
     }
 

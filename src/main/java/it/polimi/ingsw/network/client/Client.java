@@ -1,9 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
-import it.polimi.ingsw.model.InterfaceAdapter;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
@@ -22,14 +20,10 @@ public class Client {
     BufferedReader stdIn;
     Socket echoSocket;
     Gson gson;
-    ClientVisitorHandler clientHandlerVisitor=new ClientVisitorHandler();
+    ClientVisitorHandler clientHandlerVisitor = new ClientVisitorHandler();
 
     public void run(int serverPortNumber) {
-        GsonBuilder builder = new GsonBuilder();
-        builder.registerTypeAdapter(ServerMessage.class, new InterfaceAdapter<ServerMessage>());
-        builder.registerTypeAdapter(ClientMessage.class, new InterfaceAdapter<ClientMessage>());
-        builder.registerTypeAdapter(Message.class, new InterfaceAdapter<Message>());
-        gson = builder.create();
+        gson = Utilities.initializeGsonMessage();
 
         try {
             echoSocket = new Socket(hostName, serverPortNumber);
@@ -37,24 +31,22 @@ public class Client {
             in = new Scanner(echoSocket.getInputStream());
 
             stdIn = new BufferedReader(new InputStreamReader(System.in));
-        }catch (Exception e){
+        } catch (Exception e){
             System.out.println("Server not available");
             return;
         }
         String jsonString;
-        Message message;
-        while(!echoSocket.isClosed()){
+        while (!echoSocket.isClosed()) {
             try {
                 jsonString = in.nextLine();
-            } catch (NoSuchElementException e){
+            } catch (NoSuchElementException e) {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
                 break;
             }
-            message = gson.fromJson(jsonString, Message.class);
             try {
-                handleMessage(message);
+                handleMessage(gson.fromJson(jsonString, Message.class));
             } catch (IOException e) {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
@@ -93,5 +85,4 @@ public class Client {
         Integer serverPortNumber = Utilities.loadServerPortNumber();
         new Client().run(serverPortNumber);
     }
-
 }
