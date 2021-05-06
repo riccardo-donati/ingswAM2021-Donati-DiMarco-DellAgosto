@@ -14,7 +14,6 @@ import java.util.Map;
 public class Controller {
     private Game game;
     private Map<String,Integer> nickOrderMap=new HashMap<>();
-
     public Map<String, Integer> getNickOrderMap() {
         return nickOrderMap;
     }
@@ -103,4 +102,5 @@ public class Controller {
     public Game getGame() {
         return game;
     }
+
 }

@@ -1,8 +1,10 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class ClientVisitorHandler implements ClientVisitor{
@@ -67,7 +69,7 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(StartGameMessage message, Client client) {
-        System.out.println(message.getMessage());
+       // System.out.println(message.getMessage());
         System.out.println("-------------\n Game order:");
         List<String> nick=message.getPlayerOrder();
         for(String n : nick){
@@ -78,6 +80,22 @@ public class ClientVisitorHandler implements ClientVisitor{
         for(String l : leaders){
             System.out.println(l);
         }
+
+        List<String> choosenLeaders=new ArrayList<>();
+        try {
+            String choosenArray[]=client.getStdIn().readLine().split(" ");
+            if(choosenArray.length==2) {
+                choosenLeaders.add(choosenArray[0]);
+                choosenLeaders.add(choosenArray[1]);
+            }else {
+                System.out.println("ERROR, do again");
+                visit(message,client);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Message m=new ChooseLeadersCommand(choosenLeaders);
+        client.getOut().println(client.getGson().toJson(m,Message.class));
 
     }
 }

@@ -1,7 +1,12 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
+
+import java.util.ArrayList;
+import java.util.Map;
 
 public class ServerVisitorHandler implements ServerVisitor {
     @Override
@@ -27,7 +32,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             }catch (IllegalArgumentException e){
                 return;
             } catch (ReconnectionException e) {
-                clientHandler.getPinger().start();
+                //clientHandler.getPinger().start();
                 return;
             }
             synchronized (clientHandler.getServer()) {
@@ -37,7 +42,8 @@ public class ServerVisitorHandler implements ServerVisitor {
                     clientHandler.startTimer(50000);
                     String l = clientHandler.getIn().nextLine();
                     clientHandler.handleMessage(clientHandler.getGson().fromJson(l, Message.class));
-                } else clientHandler.getPinger().start();
+                } else {//clientHandler.getPinger().start();
+                     }
             }
 
         }
@@ -55,7 +61,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
         } else {
             clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
-            clientHandler.getPinger().start();
+            //clientHandler.getPinger().start();
         }
     }
 
@@ -63,5 +69,24 @@ public class ServerVisitorHandler implements ServerVisitor {
     public void visit(PingResponse response, ClientHandler clientHandler) {
         System.out.println(response.getMessage() + " " + clientHandler.getId());
         clientHandler.setPing(true);
+    }
+
+    @Override
+    public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
+        int idCH=clientHandler.getId();
+        Server server=clientHandler.getServer();
+        Map<String,Integer> nickLobby=server.getNickLobbyMap();
+        Map<Integer,String> chNick=server.getClientHandlerNickMap();
+        Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
+        boolean response=command.doAction(c.getGame(),chNick.get(idCH));
+        if(response){
+            //update
+            clientHandler.send(new GenericMessage("DONE!"));
+        }else{
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+            Message m=new StartGameMessage(new ArrayList<>(),new ArrayList<>());
+            clientHandler.send(m);
+        }
     }
 }

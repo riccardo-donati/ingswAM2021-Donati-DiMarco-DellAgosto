@@ -89,6 +89,10 @@ public class Lobby {
         return nicknames;
     }
 
+    public Controller getGameController() {
+        return gameController;
+    }
+
     public void startGame(){
         notifyLobby(new GenericMessage("Game starting . . ."));
         gameController.initializeGame(nPlayers);
@@ -100,17 +104,16 @@ public class Lobby {
             System.out.println("Internal Error, please reinitialize the game");
             return;
         }
-
+        notifyLobby(new GenericMessage("Game started!"));
         for(int i=0;i<players.size();i++){
             List<String> l=new ArrayList<>();
             for(int j=0;j<4;j++){
-                //l.add(lists.get(i).get(j).getName()); da aggiungere il nome dell'immagine
-                l.add("Prova");
+                l.add(lists.get(i).get(j).getName());
             }
             Message m=new StartGameMessage(gameController.getOrderPlayerList(),l);
             players.get(i).send(m);
         }
-        notifyLobby(new GenericMessage("Game started!"));
+
     }
 
     public boolean isStarted() {

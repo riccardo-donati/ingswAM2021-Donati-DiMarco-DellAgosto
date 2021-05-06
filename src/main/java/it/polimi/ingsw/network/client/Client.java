@@ -35,6 +35,7 @@ public class Client {
             echoSocket = new Socket(hostName, serverPortNumber);
             out = new PrintWriter(echoSocket.getOutputStream(), true);
             in = new Scanner(echoSocket.getInputStream());
+
             stdIn = new BufferedReader(new InputStreamReader(System.in));
         }catch (Exception e){
             System.out.println("Server not available");

@@ -28,6 +28,8 @@ public abstract class Game implements BoardObserver {
     private TurnPhase turnPhase;
     private boolean endGameTrigger;
 
+    private Map<String,LeaderCard> nameLeaderCardMap;
+
     protected boolean isEndGameTrigger() { return endGameTrigger; }
     protected List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
@@ -116,6 +118,7 @@ public abstract class Game implements BoardObserver {
      * Using GSON we initialize the leaderCard list
      */
     protected void loadLeaderCardsFromJSON() {
+        nameLeaderCardMap=new HashMap<>();
         GsonBuilder builder = new GsonBuilder();
         builder.registerTypeAdapter(Requirement.class, new InterfaceAdapter<Requirement>());
         builder.registerTypeAdapter(SpecialAbility.class, new InterfaceAdapter<SpecialAbility>());
@@ -130,6 +133,9 @@ public abstract class Game implements BoardObserver {
             System.out.println("leaderCard.json not found");
         }
         leaderCards=gson.fromJson(reader,foundListType);
+        for(LeaderCard ld :leaderCards){
+            nameLeaderCardMap.put(ld.getName(),ld);
+        }
     }
 
     /**
@@ -209,6 +215,7 @@ public abstract class Game implements BoardObserver {
 
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
+    public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
 
     /**
      * set the active parameter of a players in caso of disconnection/reconnection

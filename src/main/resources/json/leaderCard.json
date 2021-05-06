@@ -18,7 +18,8 @@
 				"data":{"resourceType":"VIOLET"}
 			}
 		],
-		"points":2
+		"points":2,
+		"name": "1L"
 	},
 	{
 		"requirements":
@@ -39,7 +40,8 @@
 				"data":{"resourceType":"BLUE"}
 			}
 		],
-		"points":2
+		"points":2,
+		"name": "2L"
 	},
 	{
 		"requirements":
@@ -60,7 +62,8 @@
 				"data":{"resourceType":"GREY"}
 			}
 		],
-		"points":2
+		"points":2,
+		"name": "3L"
 	},
 	{
 		"requirements":
@@ -81,7 +84,8 @@
 				"data":{"resourceType":"YELLOW"}
 			}
 		],
-		"points":2
+		"points":2,
+		"name": "4L"
 	},
 	{
 		"requirements":
@@ -98,7 +102,8 @@
 				"data":{"resourceType":"GREY"}
 			}
 		],
-		"points":3
+		"points":3,
+		"name": "5L"
 	},
 	{
 		"requirements":
@@ -115,7 +120,8 @@
 				"data":{"resourceType":"VIOLET"}
 			}
 		],
-		"points":3
+		"points":3,
+		"name": "6L"
 	},
 	{
 		"requirements":
@@ -132,7 +138,8 @@
 				"data":{"resourceType":"BLUE"}
 			}
 		],
-		"points":3
+		"points":3,
+		"name": "7L"
 	},
 	{
 		"requirements":
@@ -149,7 +156,8 @@
 				"data":{"resourceType":"YELLOW"}
 			}
 		],
-		"points":3
+		"points":3,
+		"name": "8L"
 	},
 	{
 		"requirements":
@@ -170,7 +178,8 @@
 				"data":{"resourceType":"VIOLET"}
 			}
 		],
-		"points":5
+		"points":5,
+		"name": "9L"
 	},
 	{
 		"requirements":
@@ -191,7 +200,8 @@
 				"data":{"resourceType":"BLUE"}
 			}
 		],
-		"points":5
+		"points":5,
+		"name": "10L"
 	},
 	{
 		"requirements":
@@ -212,7 +222,8 @@
 				"data":{"resourceType":"GREY"}
 			}
 		],
-		"points":5
+		"points":5,
+		"name": "11L"
 	},
 	{
 		"requirements":
@@ -233,7 +244,8 @@
 				"data":{"resourceType":"YELLOW"}
 			}
 		],
-		"points":5
+		"points":5,
+		"name": "12L"
 	},
 	{
 		"requirements":
@@ -250,7 +262,8 @@
 				"data":{"resourceType":"BLUE"}
 			}
 		],
-		"points":4
+		"points":4,
+		"name": "13L"
 	},
 	{
 		"requirements":
@@ -267,7 +280,8 @@
 				"data":{"resourceType":"VIOLET"}
 			}
 		],
-		"points":4
+		"points":4,
+		"name": "14L"
 	},
 	{
 		"requirements":
@@ -284,7 +298,8 @@
 				"data":{"resourceType":"GREY"}
 			}
 		],
-		"points":4
+		"points":4,
+		"name": "15L"
 	},
 	{
 		"requirements":
@@ -301,6 +316,7 @@
 				"data":{"resourceType":"YELLOW"}
 			}
 		],
-		"points":4
+		"points":4,
+		"name": "16L"
 	}
 ]

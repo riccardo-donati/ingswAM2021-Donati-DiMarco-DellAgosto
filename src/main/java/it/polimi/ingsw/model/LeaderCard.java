@@ -9,6 +9,11 @@ public class LeaderCard {
     private List<Requirement> requirements = new ArrayList<>();
     private List<SpecialAbility> specialAbilities = new ArrayList<>();
     private Integer points;
+    private String name;
+
+    public String getName() {
+        return name;
+    }
 
     /**
      * for testing purposes
