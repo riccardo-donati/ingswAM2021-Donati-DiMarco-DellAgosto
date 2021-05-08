@@ -215,7 +215,7 @@ public class Server {
             //nickname is unique
             waitingList.add(vc);
             clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
-//            maybe not needed to notify players in another lobbies?
+//            maybe not needed to notify players in other lobbies?
 //            for (VirtualClient v : virtualClientList)
 //                if (v.getClientHandler() != null)
 //                    v.getClientHandler().send(new GenericMessage(vc.getNickname() + " joined the server!"));
