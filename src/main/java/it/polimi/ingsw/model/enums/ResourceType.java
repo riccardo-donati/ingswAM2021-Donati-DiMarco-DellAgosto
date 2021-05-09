@@ -1,16 +1,28 @@
 package it.polimi.ingsw.model.enums;
 
 public enum ResourceType {
-    YELLOW,
-    GREY,
-    VIOLET,
-    BLUE,
-    RED,
-    WHITE,
-    UNKNOWN,
-    EMPTY,
+    YELLOW("coin"),
+    GREY("stone"),
+    VIOLET("servant"),
+    BLUE("shield"),
+    RED(""),
+    WHITE(""),
+    UNKNOWN(""),
+    EMPTY("");
 
+    String label;
 
+    ResourceType(String type) {
+        label = type;
+    }
 
+    public static ResourceType valueOfLabel(String label) {
+        for (ResourceType resourceType : values()) {
+            if (resourceType.label.equals(label)) {
+                return resourceType;
+            }
+        }
+        return null;
+    }
 
 }

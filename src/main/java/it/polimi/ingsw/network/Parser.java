@@ -1,19 +1,24 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.model.enums.Color;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Parser {
 
     public static Message parse(String string, Client client) throws IllegalCommandException {
         List<String> resources = Arrays.asList("shield", "coin", "servant", "stone");
-        List<String> colors = Arrays.asList("green", "purple", "yellow", "blue");
+        List<String> colors = Stream.of(Color.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.toList());
 
         string = string.toLowerCase();
         StringTokenizer tokenizer;
@@ -32,14 +37,11 @@ public class Parser {
                 //return new passMessage();
                 break;
             case "toggle base production":
-                //message select base production
-                break;
+                return new ToggleProductionCommand(0);
             case "activate productions":
-                break;
+                return new ActivateProductionsCommand();
             case "revert pickup":
-                break;
-            case "toggle discount":
-                break;
+                return new RevertPickUpCommand();
             case "display board":
                 break;
             case "display faith path":
@@ -121,14 +123,14 @@ public class Parser {
                 if (production.equals("extra")) {
                     if (tokenizer.nextToken().equals("production")) {
                         int position = Integer.parseInt(tokenizer.nextToken());
-                        if (position > 0 && !tokenizer.hasMoreTokens());
-                        //here toggle extra production in position 'position'
+                        if (position > 0 && !tokenizer.hasMoreTokens())
+                            return new ToggleExtraProductionCommand(position);
                     }
                 }
                 if (production.equals("production")) {
                     int position = Integer.parseInt(tokenizer.nextToken());
-                    if (position > 0 && !tokenizer.hasMoreTokens());
-                    //here toggle production in position 'position'
+                    if (position > 0 && !tokenizer.hasMoreTokens())
+                        return new ToggleProductionCommand(position);
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
@@ -143,8 +145,8 @@ public class Parser {
                     String in = tokenizer.nextToken();
                     if (in.equals("in")) {
                         int position = Integer.parseInt(tokenizer.nextToken());
-                        if (position > 0 && !tokenizer.hasMoreTokens());
-                        // place 'resource' in deposit 'position'
+                        if (position > 0 && !tokenizer.hasMoreTokens())
+                            return new ChooseBonusResourceCommand(ResourceType.valueOfLabel(resource), position);
                     }
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
@@ -158,13 +160,13 @@ public class Parser {
                 String source = tokenizer.nextToken();
                 if (source.equals("warehouse")) {
                     int position = Integer.parseInt(tokenizer.nextToken());
-                    if (position >= 0 && !tokenizer.hasMoreTokens());
-                    // do it here
+                    if (position >= 0 && !tokenizer.hasMoreTokens())
+                        return new WarehousePickUpCommand(position);
                 }
                 if (source.equals("strongbox")) {
                     String resource = tokenizer.nextToken();
-                    if (resources.contains(resource) && !tokenizer.hasMoreTokens());
-                    // do it here
+                    if (resources.contains(resource) && !tokenizer.hasMoreTokens())
+                        return new StrongboxPickUpCommand(ResourceType.valueOfLabel(resource));
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
@@ -179,8 +181,8 @@ public class Parser {
                     if (tokenizer.nextToken().equals("in")) {
                         if (tokenizer.nextToken().equals("warehouse")) {
                             int position = Integer.parseInt(tokenizer.nextToken());
-                            if (position > 0 && !tokenizer.hasMoreElements());
-                            //here deposit 'resource' in deposit number 'position'
+                            if (position > 0 && !tokenizer.hasMoreElements())
+                                return new DepositResourceCommand(ResourceType.valueOfLabel(resource), position);
                         }
                     }
                 }
@@ -195,8 +197,8 @@ public class Parser {
                 int source = Integer.parseInt(tokenizer.nextToken());
                 if (tokenizer.nextToken().equals("to")) {
                     int destination = Integer.parseInt(tokenizer.nextToken());
-                    if (source >= 0 && destination >= 0 && !tokenizer.hasMoreElements());
-                    // move resource from 'source' to 'destination'
+                    if (source >= 0 && destination >= 0 && !tokenizer.hasMoreElements())
+                        return new MoveResourceCommand(source, destination);
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
@@ -208,8 +210,8 @@ public class Parser {
             try {
                 String resource = tokenizer.nextToken();
                 if (resources.contains(resource)) {
-                    if (!tokenizer.hasMoreElements());
-                    // discard 'resource'
+                    if (!tokenizer.hasMoreElements())
+                        return new DiscardResourceCommand(ResourceType.valueOfLabel(resource));
                 }
             } catch (NoSuchElementException e) {
                 throw new IllegalCommandException();
@@ -225,8 +227,8 @@ public class Parser {
                         int level = Integer.parseInt(tokenizer.nextToken());
                         if (tokenizer.nextToken().equals("slot")) {
                             int slot = Integer.parseInt(tokenizer.nextToken());
-                            if (tokenizer.hasMoreElements());
-                            // buy 'color' card level 'level' and place in slot 'slot'
+                            if (tokenizer.hasMoreElements())
+                                return new BuyCardCommand(level - 1, colors.indexOf(color), slot);
                         }
                     }
                 }
@@ -235,12 +237,23 @@ public class Parser {
             }
         }
 
+        if (string.startsWith("toggle discount")) {
+            tokenizer = new StringTokenizer(string.substring("toggle discount".length()));
+            try {
+                String resource = tokenizer.nextToken();
+                if (resources.contains(resource) && !tokenizer.hasMoreTokens())
+                    return new ToggleDiscountCommand(ResourceType.valueOfLabel(resource));
+            } catch (NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
         if (string.startsWith("transform white in")) {
             tokenizer = new StringTokenizer(string.substring("transform white in".length()));
             try {
                 String resource = tokenizer.nextToken();
-                if (resources.contains(resource) && !tokenizer.hasMoreElements());
-                    // transform white into 'resource'
+                if (resources.contains(resource) && !tokenizer.hasMoreElements())
+                    return new TransformWhiteCommand(ResourceType.valueOfLabel(resource));
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -253,7 +266,7 @@ public class Parser {
                 if (line.equals("row") || line.equals("column")) {
                     int position = Integer.parseInt(tokenizer.nextToken());
                     if (!tokenizer.hasMoreTokens() && position > 0);
-                        //return new activateMarketMessage(line.charAt(0), position);
+                        return new BuyFromMarketCommand(line.charAt(0), position);
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
@@ -275,8 +288,8 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("base production input unknown to".length()));
             try {
                 String resource = tokenizer.nextToken();
-                if (resources.contains(resource) && !tokenizer.hasMoreElements());
-                // transform white into 'resource'
+                if (resources.contains(resource) && !tokenizer.hasMoreElements())
+                    return new BaseProductionUnknownCommand("input", ResourceType.valueOfLabel(resource));
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -286,8 +299,8 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("base production input unknown to".length()));
             try {
                 String resource = tokenizer.nextToken();
-                if (resources.contains(resource) && !tokenizer.hasMoreElements());
-                // transform white into 'resource'
+                if (resources.contains(resource) && !tokenizer.hasMoreElements())
+                    return new BaseProductionUnknownCommand("output", ResourceType.valueOfLabel(resource));
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -313,7 +326,6 @@ public class Parser {
                 throw new IllegalCommandException();
             }
         }
-
 
         throw new IllegalCommandException();
     }

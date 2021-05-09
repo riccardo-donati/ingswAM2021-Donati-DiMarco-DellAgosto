@@ -14,15 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 public class ChooseLeadersCommand implements Command {
-    private List<String> choosenLeaders=new ArrayList<>();
+    private List<String> chosenLeaders;
 
-    public List<String> getChoosenLeaders() {
-        return choosenLeaders;
+    public List<String> getchosenLeaders() {
+        return chosenLeaders;
     }
 
 
     public ChooseLeadersCommand(List<String> cl){
-        this.choosenLeaders=cl;
+        this.chosenLeaders=cl;
     }
     @Override
     public String getMessage() {
@@ -36,23 +36,19 @@ public class ChooseLeadersCommand implements Command {
 
 
     public boolean doAction(Controller c,String nickname){
-        if(!c.getPlayerLeaderCardList(nickname).containsAll(choosenLeaders)) return false;
+        if(!c.getPlayerLeaderCardList(nickname).containsAll(chosenLeaders)) return false;
         Game g=c.getGame();
         if(check() && g.getCurrentNickname().equals(nickname)) {
             Map<String, LeaderCard> map = g.getNameLeaderCardMap();
             List<LeaderCard> l = new ArrayList<>();
-            l.add(map.get(choosenLeaders.get(0)));
-            l.add(map.get(choosenLeaders.get(1)));
+            l.add(map.get(chosenLeaders.get(0)));
+            l.add(map.get(chosenLeaders.get(1)));
             for(LeaderCard lc : l){
                 if(lc==null)return false;
             }
             try {
                 g.chooseLeader(l);
-            } catch (NonEmptyException e) {
-                return false;
-            } catch (IllegalLeaderCardsException e) {
-                return false;
-            } catch (IllegalActionException e) {
+            } catch (NonEmptyException | IllegalLeaderCardsException | IllegalActionException | IndexOutOfBoundsException | NullPointerException e) {
                 return false;
             }
             return true;
@@ -61,8 +57,8 @@ public class ChooseLeadersCommand implements Command {
 
     @Override
     public boolean check() {
-        if(choosenLeaders.size()!=2) return false;
-        for(String ld : choosenLeaders){
+        if(chosenLeaders.size()!=2) return false;
+        for(String ld : chosenLeaders){
             if(ld==null || ld.equals("")) return false;
         }
         return true;

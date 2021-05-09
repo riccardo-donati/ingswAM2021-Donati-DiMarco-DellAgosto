@@ -24,13 +24,7 @@ public class ChooseBonusResourceCommand implements Command {
         if(check() && g.getCurrentNickname().equals(nickname)){
             try {
                 g.chooseResourceToDeposit(id,res);
-            } catch (IllegalActionException e) {
-                return false;
-            } catch (FullSpaceException e) {
-                return false;
-            } catch (UnknownNotFoundException e) {
-                 return false;
-            } catch (IllegalResourceException e) {
+            } catch (IllegalActionException | FullSpaceException | UnknownNotFoundException | IllegalResourceException | IndexOutOfBoundsException | NullPointerException e) {
                 return false;
             }
             return true;
@@ -40,8 +34,7 @@ public class ChooseBonusResourceCommand implements Command {
     @Override
     public boolean check() {
         if(res==null || id==null) return false;
-        if(id<0 || id>3) return false;
-        return true;
+        return id >= 0 && id <= 3;
     }
 
     @Override

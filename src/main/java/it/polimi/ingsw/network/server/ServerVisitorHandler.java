@@ -125,4 +125,158 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new GenericMessage("Illegal ACTION"));
         }
     }
+
+    @Override
+    public void visit(ToggleExtraProductionCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(ToggleProductionCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(ActivateProductionsCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(StrongboxPickUpCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(WarehousePickUpCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(DepositResourceCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(MoveResourceCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(DiscardResourceCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(RevertPickUpCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(BuyCardCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(TransformWhiteCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(BuyFromMarketCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(BaseProductionUnknownCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(ToggleDiscountCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
 }

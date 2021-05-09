@@ -262,7 +262,7 @@ public abstract class Game implements BoardObserver {
     /**
      * Give the players a random order and the related bonus resources
      * Set the currentPlayer and the SETUP phases
-     * @throws EmptyPlayersException if there aren't any players
+     * @throws GameNotFullException if the expected number of players is not met
      * @throws IllegalResourceException if UNKNOWN is illegal (it's not)
      */
     public void startGame() throws  IllegalResourceException, GameNotFullException {
@@ -444,7 +444,7 @@ public abstract class Game implements BoardObserver {
         }else throw new IllegalActionException();
     }
 
-    public void toggleExtraProd(Integer index) throws UnknownFoundException, IllegalActionException {
+    public void toggleExtraProd(Integer index) throws UnknownFoundException, IllegalActionException, IndexOutOfBoundsException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getExtraProductions().get(index).toggleSelected();
             if(currPlayer.countSelectedProductions()==0){
