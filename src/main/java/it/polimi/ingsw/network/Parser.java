@@ -1,18 +1,13 @@
 package it.polimi.ingsw.network;
 
-import it.polimi.ingsw.model.enums.Color;
-import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.*;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.StringTokenizer;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 public class Parser {
 
@@ -326,6 +321,7 @@ public class Parser {
                 throw new IllegalCommandException();
             }
         }
+
 
         throw new IllegalCommandException();
     }

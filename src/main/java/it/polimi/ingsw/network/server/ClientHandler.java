@@ -140,7 +140,8 @@ public class ClientHandler implements Runnable {
                     System.out.println("Disconnecting client handler number " + id + " . . .");
                     return;
                 }
-                handleMessage(gson.fromJson(jsonString, Message.class));
+                ServerMessage message=gson.fromJson(jsonString, ServerMessage.class);
+                message.accept(serverVisitorHandler,this);
             }
             // closing streams and socket
             in.close();
@@ -151,9 +152,8 @@ public class ClientHandler implements Runnable {
         }
     }
 
-    public void handleMessage(Message message) {
-        ServerMessage serverMessage = (ServerMessage) message;
-        serverMessage.accept(serverVisitorHandler, this);
+    public ServerVisitorHandler getServerVisitorHandler() {
+        return serverVisitorHandler;
     }
 
     public void closeConnection() throws InterruptedException {
