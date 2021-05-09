@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
+import it.polimi.ingsw.network.messages.*;
 
 import java.util.Arrays;
 import java.util.List;
@@ -9,8 +10,9 @@ import java.util.StringTokenizer;
 
 public class Parser {
 
-    public static void parse(String string) throws IllegalCommandException {
+    public static Message parse(String string) throws IllegalCommandException {
         List<String> resources = Arrays.asList("shield", "coin", "servant", "stone");
+        List<String> colors = Arrays.asList("green", "purple", "yellow", "blue");
 
         string = string.toLowerCase();
         StringTokenizer tokenizer;
@@ -35,13 +37,142 @@ public class Parser {
                 break;
             case "toggle discount":
                 break;
+            case "revert pickup":
+                break;
         }
 
-        if (string.startsWith("play leaders")) {
-            tokenizer = new StringTokenizer(string.substring("play leaders".length()));
+        if (string.startsWith("register")) {
+            tokenizer = new StringTokenizer(string.substring("register".length()));
+            try {
+                String nickname = tokenizer.nextToken();
+                if (!tokenizer.hasMoreElements()) {
+                    return new RegisterResponse(nickname);
+                }
+            } catch (NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("numberofplayers")) {
+            tokenizer = new StringTokenizer(string.substring("numberofplayers".length()));
+            try {
+                int number = Integer.parseInt(tokenizer.nextToken());
+                if (!tokenizer.hasMoreElements()) {
+                    return new PlayerNumberResponse(number);
+                }
+            } catch (NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("buy")) {
+            tokenizer = new StringTokenizer(string.substring("buy".length()));
+            try {
+                String color = tokenizer.nextToken();
+                if (colors.contains(color)) {
+                    if (tokenizer.nextToken().equals("card") && tokenizer.nextToken().equals("level")) {
+                        int level = Integer.parseInt(tokenizer.nextToken());
+                        if (tokenizer.nextToken().equals("slot")) {
+                            int slot = Integer.parseInt(tokenizer.nextToken());
+                            if (tokenizer.hasMoreElements());
+                            // buy 'color' card level 'level' and place in slot 'slot'
+                        }
+                    }
+                }
+            } catch (NumberFormatException | NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("discard")) {
+            tokenizer = new StringTokenizer(string.substring("discard".length()));
+            try {
+                String resource = tokenizer.nextToken();
+                if (resources.contains(resource)) {
+                    if (!tokenizer.hasMoreElements());
+                        // discard 'resource'
+                }
+            } catch (NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("move from")) {
+            tokenizer = new StringTokenizer(string.substring("move from".length()));
+            try {
+                int source = Integer.parseInt(tokenizer.nextToken());
+                if (tokenizer.nextToken().equals("to")) {
+                    int destination = Integer.parseInt(tokenizer.nextToken());
+                    if (source >= 0 && destination >= 0 && !tokenizer.hasMoreElements());
+                        // move resource from 'source' to 'destination'
+                }
+            } catch (NumberFormatException | NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("deposit")) {
+            tokenizer = new StringTokenizer(string.substring("deposit".length()));
+            try {
+                String resource = tokenizer.nextToken();
+                if (resources.contains(resource)) {
+                    if (tokenizer.nextToken().equals("in")) {
+                        if (tokenizer.nextToken().equals("warehouse")) {
+                            int position = Integer.parseInt(tokenizer.nextToken());
+                            if (position > 0 && !tokenizer.hasMoreElements());
+                                //here deposit 'resource' in deposit number 'position'
+                        }
+                    }
+                }
+            } catch (NumberFormatException | NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("toggle")) {
+            tokenizer = new StringTokenizer(string.substring("toggle".length()));
+            try {
+                String production = tokenizer.nextToken();
+                if (production.equals("base")) {
+                    if (tokenizer.nextToken().equals("production")) {
+                        if (!tokenizer.hasMoreTokens());
+                            //here toggle base production
+                    }
+                }
+                if (production.equals("extra")) {
+                    if (tokenizer.nextToken().equals("production")) {
+                        int position = Integer.parseInt(tokenizer.nextToken());
+                        if (position > 0 && !tokenizer.hasMoreTokens());
+                            //here toggle extra production in position 'position'
+                    }
+                }
+                if (production.equals("production")) {
+                    int position = Integer.parseInt(tokenizer.nextToken());
+                    if (position > 0 && !tokenizer.hasMoreTokens());
+                        //here toggle production in position 'position'
+                }
+            } catch (NumberFormatException | NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        if (string.startsWith("play leader")) {
+            tokenizer = new StringTokenizer(string.substring("play leader".length()));
             try {
                 int index = Integer.parseInt(tokenizer.nextToken());
+                if (index > 0 && tokenizer.hasMoreTokens());
+                    //here play leader in position 'index'
+            } catch (NumberFormatException | NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
 
+        if (string.startsWith("discard leader")) {
+            tokenizer = new StringTokenizer(string.substring("discard leader".length()));
+            try {
+                int index = Integer.parseInt(tokenizer.nextToken());
+                if (index > 0 && tokenizer.hasMoreTokens());
+                    //here
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -51,14 +182,9 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("choose leaders".length()));
             try {
                 int first = Integer.parseInt(tokenizer.nextToken());
-                try {
-                    int second = Integer.parseInt(tokenizer.nextToken());
-                    if (first < 1 || first > 4 || second < 1 || second > 4 || tokenizer.hasMoreTokens())
-                        throw new IllegalCommandException();
+                int second = Integer.parseInt(tokenizer.nextToken());
+                if (!tokenizer.hasMoreTokens());
                     // do it here
-                } catch (NumberFormatException | NoSuchElementException e) {
-                    throw new IllegalCommandException();
-                }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -68,25 +194,15 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("place bonus".length()));
             try {
                 String resource = tokenizer.nextToken();
-                if (!resources.contains(resource))
-                    throw new IllegalCommandException();
-                try {
+                if (resources.contains(resource)) {
                     String in = tokenizer.nextToken();
-                    if (!in.equals("in"))
-                        throw new IllegalCommandException();
-                    int position;
-                    try {
-                        position = Integer.parseInt(tokenizer.nextToken());
-                        if (position < 1 || position > 4 || tokenizer.hasMoreTokens())
-                            throw new IllegalCommandException();
-                        // --> here <--
-                    } catch (NumberFormatException | NoSuchElementException e) {
-                        throw new IllegalCommandException();
+                    if (in.equals("in")) {
+                        int position = Integer.parseInt(tokenizer.nextToken());
+                        if (position > 0 && !tokenizer.hasMoreTokens());
+                            // place 'resource' in deposit 'position'
                     }
-                } catch (NoSuchElementException e) {
-                    throw new IllegalCommandException();
                 }
-            } catch (NoSuchElementException e) {
+            } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
         }
@@ -96,28 +212,16 @@ public class Parser {
             try {
                 String source = tokenizer.nextToken();
                 if (source.equals("warehouse")) {
-                    int position;
-                    try {
-                        position = Integer.parseInt(tokenizer.nextToken());
-                    } catch (NumberFormatException | NoSuchElementException e) {
-                        throw new IllegalCommandException();
-                    }
+                    int position = Integer.parseInt(tokenizer.nextToken());
                     if (position < 0 || tokenizer.hasMoreTokens())
                         throw new IllegalCommandException();
                     // do it here
                 }
                 if (source.equals("strongbox")) {
-                    String resource;
-                    try {
-                        resource = tokenizer.nextToken();
-                    } catch (NoSuchElementException e) {
-                        throw new IllegalCommandException();
-                    }
-                    if (!resources.contains(resource) || tokenizer.hasMoreTokens())
-                        throw new IllegalCommandException();
-                    // do it here
+                    String resource = tokenizer.nextToken();
+                    if (resources.contains(resource) && !tokenizer.hasMoreTokens());
+                        // do it here
                 }
-                throw new IllegalCommandException();
             } catch (NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -127,28 +231,16 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("activate market".length()));
             try {
                 String line = tokenizer.nextToken();
-                if (!(line.equals("row") || line.equals("column")))
-                    throw new IllegalCommandException();
-                try {
-                    int position;
-                    try {
-                        position = Integer.parseInt(tokenizer.nextToken());
-                    } catch (NumberFormatException e) {
-                        throw new IllegalCommandException();
-                    }
-                    if (position < 1 || (line.equals("row") && position > 3) || (line.equals("column") && position > 4))
-                        throw new IllegalCommandException();
-                    if (tokenizer.hasMoreTokens())
-                        throw new IllegalCommandException();
-                    //return new activateMarketMessage(line.charAt(0), position);
-                } catch (NoSuchElementException e) {
-                    throw new IllegalCommandException();
+                if (line.equals("row") || line.equals("column")) {
+                    int position = Integer.parseInt(tokenizer.nextToken());
+                    if (!tokenizer.hasMoreTokens());
+                        //return new activateMarketMessage(line.charAt(0), position);
                 }
-            } catch (NoSuchElementException e) {
+            } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
         }
 
-        // throw new InvalidCommandException();
+        throw new IllegalCommandException();
     }
 }
