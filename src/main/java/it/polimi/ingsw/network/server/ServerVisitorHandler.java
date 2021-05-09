@@ -50,8 +50,8 @@ public class ServerVisitorHandler implements ServerVisitor {
                     clientHandler.send(new PlayerNumberRequest());
                     clientHandler.startTimer(50000);
                     String jsonString = clientHandler.getIn().nextLine();
-                    Message message = clientHandler.getGson().fromJson(jsonString, Message.class);
-                    clientHandler.handleMessage(message);
+                    ServerMessage message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
+                    message.accept(clientHandler.getServerVisitorHandler(),clientHandler);
                     System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
                 } else {
                    clientHandler.getPinger().start();

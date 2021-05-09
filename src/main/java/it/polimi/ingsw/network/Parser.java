@@ -1,16 +1,15 @@
 package it.polimi.ingsw.network;
 
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class Parser {
 
-    public static Message parse(String string) throws IllegalCommandException {
+    public static Message parse(String string, Client client) throws IllegalCommandException {
         List<String> resources = Arrays.asList("shield", "coin", "servant", "stone");
         List<String> colors = Arrays.asList("green", "purple", "yellow", "blue");
 
@@ -183,8 +182,13 @@ public class Parser {
             try {
                 int first = Integer.parseInt(tokenizer.nextToken());
                 int second = Integer.parseInt(tokenizer.nextToken());
-                if (!tokenizer.hasMoreTokens());
-                    // do it here
+                if (!tokenizer.hasMoreTokens()){
+                    Map<Integer,String> map=client.getIdNameLeaderMap();
+                    List<String> listNames=new ArrayList<>();
+                    listNames.add(map.get(first));
+                    listNames.add(map.get(second));
+                    return new ChooseLeadersCommand(listNames);
+                }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }

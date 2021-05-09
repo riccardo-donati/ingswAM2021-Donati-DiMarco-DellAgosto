@@ -11,8 +11,6 @@ public interface ClientVisitor {
     void visit(PlayerNumberRequest message, Client client);
     void visit(RegisterRequest message, Client client);
     void visit(StartGameMessage message, Client client);
-
-    void visit(NewTurnMessage newTurnMessage, Client client);
-
+    void visit(NewTurnMessage message, Client client);
     void visit(BonusResourceMessage message, Client client);
 }

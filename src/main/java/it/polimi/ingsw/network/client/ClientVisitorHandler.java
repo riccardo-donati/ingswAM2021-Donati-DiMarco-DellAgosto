@@ -1,11 +1,9 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 import it.polimi.ingsw.network.messages.commands.NewTurnMessage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class ClientVisitorHandler implements ClientVisitor{
@@ -20,7 +18,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         client.getIn().close();
         client.getOut().close();
         try {
-            client.getEchoSocket().close();
+            client.getSocket().close();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -38,63 +36,40 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(PingRequest message, Client client) {
-        //System.out.println(message.getMessage());
         client.getOut().println(client.getGson().toJson(new PingResponse(), Message.class));
     }
 
     @Override
     public void visit(PlayerNumberRequest message, Client client) {
         System.out.println(message.getMessage());
-        int players = 0;
-        try {
-            players = Integer.parseInt(client.getStdIn().readLine());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        client.getOut().println(client.getGson().toJson(new PlayerNumberResponse(players), Message.class));
+        client.setCurrCommand("numberofplayers ");
     }
 
     @Override
     public void visit(RegisterRequest message, Client client) {
         System.out.println(message.getMessage());
-        String userInput = null;
-        try {
-            userInput = client.getStdIn().readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        client.getOut().println(client.getGson().toJson(new RegisterResponse(userInput), Message.class));
+        client.setCurrCommand("register ");
     }
 
     @Override
     public void visit(StartGameMessage message, Client client) {
-       System.out.println(message.getMessage());
-        List<String> choosenLeaders=new ArrayList<>();
-        try {
-            String choosenArray[]=client.getStdIn().readLine().split(" ");
-            if(choosenArray.length==2) {
-                choosenLeaders.add(choosenArray[0]);
-                choosenLeaders.add(choosenArray[1]);
-            }else {
-                System.out.println("ERROR, do again");
-                visit(message,client);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+        System.out.println(message.getMessage());
+        List<String> cards=message.getCards();
+        for(int i=0;i<cards.size();i++) {
+            client.putIdNameLeadersMap(i+1,cards.get(i));
         }
-        Message m=new ChooseLeadersCommand(choosenLeaders);
-        client.getOut().println(client.getGson().toJson(m,Message.class));
-
+        client.setCurrCommand("");
+        client.setPlayersOrder(message.getPlayerOrder());
     }
 
     @Override
-    public void visit(NewTurnMessage newTurnMessage, Client client) {
-
+    public void visit(NewTurnMessage message, Client client) {
+        System.out.println(message.getMessage());
     }
 
     @Override
     public void visit(BonusResourceMessage message, Client client) {
-
+        System.out.println(message.getMessage());
     }
 }
 
