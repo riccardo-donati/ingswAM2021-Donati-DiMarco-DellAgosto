@@ -3,12 +3,20 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
+import it.polimi.ingsw.network.messages.commands.*;
 
-import java.util.ArrayList;
 import java.util.Map;
 
 public class ServerVisitorHandler implements ServerVisitor {
+    private Server server;
+    private Map<Integer,String> chNick;
+    private Map<String,Integer> nickLobby;
+
+    public  ServerVisitorHandler(Server server){
+        this.server=server;
+        chNick=server.getClientHandlerNickMap();
+        nickLobby=server.getNickLobbyMap();
+    }
     @Override
     public void visit(RegisterResponse response, ClientHandler clientHandler) {
         clientHandler.stopTimer();
@@ -23,6 +31,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             String nickname = response.getMessage();
             if(nickname == null || nickname.equals("")) {
                 clientHandler.send(new GenericMessage("Illegal nickname"));
+                clientHandler.startTimer(50000);
                 clientHandler.send(new RegisterRequest());
                 return;
             }
@@ -33,7 +42,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             } catch (IllegalArgumentException e){
                 return;
             } catch (ReconnectionException e) {
-                //clientHandler.getPinger().start();
+                clientHandler.getPinger().start();
                 return;
             }
             synchronized (clientHandler.getServer()) {
@@ -45,7 +54,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                     clientHandler.handleMessage(message);
                     System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
                 } else {
-                   // clientHandler.getPinger().start();
+                   clientHandler.getPinger().start();
                 }
             }
 
@@ -64,7 +73,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
         } else {
             clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
-            //clientHandler.getPinger().start();
+            clientHandler.getPinger().start();
         }
     }
 
@@ -74,22 +83,46 @@ public class ServerVisitorHandler implements ServerVisitor {
         clientHandler.setPing(true);
     }
 
+    private boolean executeCommand(ClientHandler ch, Command cmd){
+        int idCH=ch.getId();
+        Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
+        return cmd.doAction(c,chNick.get(idCH));
+    }
     @Override
     public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
-        int idCH=clientHandler.getId();
-        Server server=clientHandler.getServer();
-        Map<String,Integer> nickLobby=server.getNickLobbyMap();
-        Map<Integer,String> chNick=server.getClientHandlerNickMap();
-        Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
-        boolean response=command.doAction(c.getGame(),chNick.get(idCH));
+        boolean response=executeCommand(clientHandler,command);
+        if(response){
+            //update
+            int nBonus=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId()))).getGameController().getNickOrderMap().get(chNick.get(clientHandler.getId()));
+            clientHandler.send(new BonusResourceMessage(nBonus));
+        }else{
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(ChooseBonusResourceCommand command, ClientHandler clientHandler) {
+        boolean response=executeCommand(clientHandler,command);
         if(response){
             //update
             clientHandler.send(new GenericMessage("DONE!"));
         }else{
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
-            Message m=new StartGameMessage(new ArrayList<>(),new ArrayList<>());
-            clientHandler.send(m);
+        }
+    }
+
+    @Override
+    public void visit(PassCommand command, ClientHandler clientHandler) {
+        boolean response=executeCommand(clientHandler,command);
+        if(response){
+            //update
+            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
+            l.notifyLobby(new NewTurnMessage(l.getGameController().getGame().getCurrentNickname()));
+        }else{
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
         }
     }
 }

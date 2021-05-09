@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import it.polimi.ingsw.model.InterfaceAdapter;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 
@@ -100,7 +101,7 @@ public class ClientHandler implements Runnable {
         this.socket = socket;
         this.server = server;
         this.isConnected = true;
-        this.serverVisitorHandler = new ServerVisitorHandler();
+        this.serverVisitorHandler = new ServerVisitorHandler(server);
         globalCounter++;
         this.id = globalCounter;
         this.timeout = false;
@@ -135,7 +136,7 @@ public class ClientHandler implements Runnable {
             while (!jsonString.equals("quit")) {
                 try {
                     jsonString = in.nextLine();
-                } catch (NoSuchElementException e){
+                } catch (NoSuchElementException | IllegalStateException e){
                     System.out.println("Disconnecting client handler number " + id + " . . .");
                     return;
                 }

@@ -105,13 +105,10 @@ public class Lobby {
             return;
         }
         notifyLobby(new GenericMessage("Game started!"));
-        for(int i=0;i<players.size();i++){
-            List<String> l=new ArrayList<>();
-            for(int j=0;j<4;j++){
-                l.add(lists.get(i).get(j).getName());
-            }
+        for(VirtualClient vc : players){
+            List<String> l=gameController.getPlayerLeaderCardList(vc.getNickname());
             Message m=new StartGameMessage(gameController.getOrderPlayerList(),l);
-            players.get(i).send(m);
+            vc.send(m);
         }
 
     }

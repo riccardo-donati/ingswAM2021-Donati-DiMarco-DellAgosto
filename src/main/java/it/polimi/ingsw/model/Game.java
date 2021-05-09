@@ -359,10 +359,10 @@ public abstract class Game implements BoardObserver {
         }else throw new IllegalActionException();
     }
 
-    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException, UnknownNotFoundException {
+    public void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException {
         if(gamePhase==GamePhase.SETUP && turnPhase==TurnPhase.ENDSETUPTURN){
             currPlayer.getBoard().getWarehouse().chooseResourceToDeposit(id,res);
-        }else throw new IllegalResourceException();
+        }else throw new IllegalActionException();
     }
 
     //NormalTurn

@@ -3,7 +3,9 @@ package it.polimi.ingsw.network.messages;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientVisitable;
 import it.polimi.ingsw.network.client.ClientVisitor;
+import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,6 +33,15 @@ public class StartGameMessage implements ClientMessage, ClientVisitable {
 
     @Override
     public String getMessage() {
-        return "Game started!";
+        StringBuilder message= new StringBuilder("-------------\n Game order:\n");
+        for(int i=0;i<playerOrder.size()-1;i++){
+            message.append(playerOrder.get(i)).append("->");
+        }
+        message.append(playerOrder.get(playerOrder.size()-1));
+        message.append("\n-------------\nLeaderCards to choose:\n");
+        for(String l : cards){
+            message.append(l).append(" ");
+        }
+        return message.toString();
     }
 }

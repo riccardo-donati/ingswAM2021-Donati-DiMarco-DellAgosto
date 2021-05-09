@@ -14,6 +14,15 @@ import java.util.Map;
 public class Controller {
     private Game game;
     private Map<String,Integer> nickOrderMap=new HashMap<>();
+    private List<List<LeaderCard>> lists;
+
+    public List<String> getPlayerLeaderCardList(String nick){
+        List<String> list=new ArrayList<>();
+        for(LeaderCard ld : lists.get(nickOrderMap.get(nick)-1)){
+            list.add(ld.getName());
+        }
+        return list;
+    }
     public Map<String, Integer> getNickOrderMap() {
         return nickOrderMap;
     }
@@ -72,7 +81,6 @@ public class Controller {
      * @return  get the list of the 4 leaderCards for each player
      */
     public List<List<LeaderCard>> getLeaderCards(){
-        List<List<LeaderCard>> lists = null;
         try {
             lists=game.divideLeaderCards();
         } catch (EmptyPlayersException e) {

@@ -35,7 +35,9 @@ public class ChooseLeadersCommand implements Command {
     }
 
 
-    public boolean doAction(Game g,String nickname){
+    public boolean doAction(Controller c,String nickname){
+        if(!c.getPlayerLeaderCardList(nickname).containsAll(choosenLeaders)) return false;
+        Game g=c.getGame();
         if(check() && g.getCurrentNickname().equals(nickname)) {
             Map<String, LeaderCard> map = g.getNameLeaderCardMap();
             List<LeaderCard> l = new ArrayList<>();
@@ -47,11 +49,11 @@ public class ChooseLeadersCommand implements Command {
             try {
                 g.chooseLeader(l);
             } catch (NonEmptyException e) {
-                e.printStackTrace();
+                return false;
             } catch (IllegalLeaderCardsException e) {
-                e.printStackTrace();
+                return false;
             } catch (IllegalActionException e) {
-                e.printStackTrace();
+                return false;
             }
             return true;
         }else return false;

@@ -14,7 +14,9 @@ public class LobbyInfoMessage implements ClientMessage {
 
     @Override
     public String getMessage() {
-        return null;
+        String message="Lobby players:\n ";
+        message+=nicknamesList.toString().replace("[","").replace("]","");
+        return message;
     }
 
     public List<String> getNickList(){
