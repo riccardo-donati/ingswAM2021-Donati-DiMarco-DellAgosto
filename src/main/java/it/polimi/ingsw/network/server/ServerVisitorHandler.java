@@ -259,7 +259,18 @@ public class ServerVisitorHandler implements ServerVisitor {
     }
 
     @Override
-    public void visit(BaseProductionUnknownCommand command, ClientHandler clientHandler) {
+    public void visit(ProductionUnknownCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(ExtraProductionUnknownCommand command, ClientHandler clientHandler) {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update

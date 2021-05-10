@@ -27,7 +27,7 @@ public class BuyCardCommand implements Command{
         Game game = c.getGame();
         if (check() && game.getCurrentNickname().equals(nickname)) {
             try {
-                game.buyCard(row, column, slot);
+                game.buyCard(row, column, slot - 1);
             } catch (IllegalActionException | IndexOutOfBoundsException | NullPointerException | ResourcesNotAvailableException | IllegalSlotException | TooManyResourcesException e) {
                 return false;
             }

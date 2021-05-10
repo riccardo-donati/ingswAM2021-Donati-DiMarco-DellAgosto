@@ -5,18 +5,19 @@ import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
 import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
 import it.polimi.ingsw.network.server.ClientHandler;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
-public class BaseProductionUnknownCommand implements Command{
+public class ExtraProductionUnknownCommand implements Command{
     String target;
     ResourceType resourceType;
+    int index;
 
-    public BaseProductionUnknownCommand(String target, ResourceType resourceType) {
+    public ExtraProductionUnknownCommand(String target, ResourceType resourceType, int index) {
         this.target = target;
         this.resourceType = resourceType;
+        this.index = index;
     }
 
     @Override
@@ -30,8 +31,8 @@ public class BaseProductionUnknownCommand implements Command{
         if (check() && game.getCurrentNickname().equals(nickname)) {
             try {
                 if (target.equals("input"))
-                    game.substituteUnknownInInputBaseProduction(resourceType);
-                else game.substituteUnknownInOutputBaseProduction(resourceType);
+                    game.substituteUnknownInInputExtraProduction(index, resourceType);
+                else game.substituteUnknownInOutputExtraProduction(index, resourceType);
             } catch (IllegalActionException | IndexOutOfBoundsException | NullPointerException | IllegalResourceException | UnknownNotFoundException e) {
                 return false;
             }
@@ -41,7 +42,7 @@ public class BaseProductionUnknownCommand implements Command{
 
     @Override
     public boolean check() {
-        return target.equals("input") || target.equals("output");
+        return (target.equals("input") || target.equals("output")) && index >= 0;
     }
 
     @Override
