@@ -6,7 +6,6 @@ import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.NewTurnMessage;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,9 +31,10 @@ public class Client {
         return idNameLeadersMap;
     }
 
-    public Client(){
-
+    public List<String> getPlayersOrder() {
+        return playersOrder;
     }
+
     public void handleStdIn(){
         String line="";
         while(!socket.isClosed()) {
@@ -52,6 +52,7 @@ public class Client {
             }
         }
     }
+
     public void run(int serverPortNumber) {
         gson = Utilities.initializeGsonMessage();
 

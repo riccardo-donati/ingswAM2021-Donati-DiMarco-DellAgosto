@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.NewTurnMessage;
+import it.polimi.ingsw.network.messages.NewTurnMessage;
 
 public interface ClientVisitor {
     void visit(DisconnectionMessage message, Client client);
@@ -13,4 +13,5 @@ public interface ClientVisitor {
     void visit(StartGameMessage message, Client client);
     void visit(NewTurnMessage message, Client client);
     void visit(BonusResourceMessage message, Client client);
+    void visit(PendingResourcesMessage message, Client client);
 }

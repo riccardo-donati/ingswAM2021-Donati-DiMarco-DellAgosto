@@ -38,11 +38,6 @@ public class ChooseBonusResourceCommand implements Command {
     }
 
     @Override
-    public String getMessage() {
-        return null;
-    }
-
-    @Override
     public void accept(ServerVisitor visitor, ClientHandler clientHandler) {
         visitor.visit(this,clientHandler);
     }

@@ -350,6 +350,10 @@ public abstract class Game implements BoardObserver {
         players.add(newPlayer);
     }
 
+    public List<ResourceType> getCurrentPlayerPending() {
+        return currPlayer.getBoard().getWarehouse().getPendingList();
+    }
+
     //USER:
     //SetUpTurn
     public void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException {
@@ -515,6 +519,7 @@ public abstract class Game implements BoardObserver {
             currPlayer.toggleDiscount(res);
         }else throw new IllegalActionException();
     }
+
     //GenericTurn
     public void passTurn() throws IllegalActionException {
         if(gamePhase==GamePhase.SETUP){

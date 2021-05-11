@@ -7,10 +7,7 @@ import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.StringTokenizer;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -31,16 +28,15 @@ public class Parser {
                 // display available commands
                 break;
             case "players":
-                // display players list
-                break;
+                System.out.println(client.getPlayersOrder().toString().replace("[","").replace("]",""));
+                return null;
             case "pass":
-                //return new passMessage();
-                break;
+                return new PassCommand();
             case "toggle base production":
                 return new ToggleProductionCommand(0);
             case "activate productions":
                 return new ActivateProductionsCommand();
-            case "revert pickup":
+            case "revert pick up":
                 return new RevertPickUpCommand();
             case "display board":
                 break;
@@ -87,8 +83,13 @@ public class Parser {
             try {
                 int first = Integer.parseInt(tokenizer.nextToken());
                 int second = Integer.parseInt(tokenizer.nextToken());
-                if (first > 0 && second > 0 && !tokenizer.hasMoreTokens());
-                // do it here
+                if (first > 0 && second > 0 && !tokenizer.hasMoreTokens()) {
+                    Map<Integer, String> map = client.getIdNameLeaderMap();
+                    List<String> listNames = new ArrayList<>();
+                    listNames.add(map.get(first));
+                    listNames.add(map.get(second));
+                    return new ChooseLeadersCommand(listNames);
+                }
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -98,8 +99,8 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("play leader".length()));
             try {
                 int index = Integer.parseInt(tokenizer.nextToken());
-                if (index > 0 && tokenizer.hasMoreTokens());
-                //here play leader in position 'index'
+                if (index > 0 && !tokenizer.hasMoreTokens())
+                    return new PlayLeaderCommand(index - 1);
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -109,8 +110,8 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("discard leader".length()));
             try {
                 int index = Integer.parseInt(tokenizer.nextToken());
-                if (index > 0 && tokenizer.hasMoreTokens());
-                //here
+                if (index > 0 && !tokenizer.hasMoreTokens())
+                    return new DiscardLeaderCommand(index - 1);
             } catch (NumberFormatException | NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
@@ -179,11 +180,9 @@ public class Parser {
                 String resource = tokenizer.nextToken();
                 if (resources.contains(resource)) {
                     if (tokenizer.nextToken().equals("in")) {
-                        if (tokenizer.nextToken().equals("warehouse")) {
-                            int position = Integer.parseInt(tokenizer.nextToken());
-                            if (position > 0 && !tokenizer.hasMoreElements())
-                                return new DepositResourceCommand(ResourceType.valueOfLabel(resource), position);
-                        }
+                        int position = Integer.parseInt(tokenizer.nextToken());
+                        if (position > 0 && !tokenizer.hasMoreElements())
+                            return new DepositResourceCommand(ResourceType.valueOfLabel(resource), position);
                     }
                 }
             } catch (NumberFormatException | NoSuchElementException e) {

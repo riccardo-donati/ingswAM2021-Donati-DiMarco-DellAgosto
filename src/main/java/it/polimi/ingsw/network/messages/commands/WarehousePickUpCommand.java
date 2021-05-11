@@ -14,11 +14,6 @@ public class WarehousePickUpCommand implements Command{
     }
 
     @Override
-    public String getMessage() {
-        return null;
-    }
-
-    @Override
     public boolean doAction(Controller c, String nickname) {
         Game game = c.getGame();
         if (check() && game.getCurrentNickname().equals(nickname)) {

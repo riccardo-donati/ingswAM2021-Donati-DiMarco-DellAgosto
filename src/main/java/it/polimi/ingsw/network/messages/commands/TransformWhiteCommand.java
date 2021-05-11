@@ -18,11 +18,6 @@ public class TransformWhiteCommand implements Command{
     }
 
     @Override
-    public String getMessage() {
-        return null;
-    }
-
-    @Override
     public boolean doAction(Controller c, String nickname) {
         Game game = c.getGame();
         if (game.getCurrentNickname().equals(nickname)) {

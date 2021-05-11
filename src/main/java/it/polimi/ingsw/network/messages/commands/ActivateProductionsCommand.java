@@ -7,10 +7,6 @@ import it.polimi.ingsw.network.server.ClientHandler;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 public class ActivateProductionsCommand implements Command {
-    @Override
-    public String getMessage() {
-        return null;
-    }
 
     @Override
     public boolean doAction(Controller c, String nickname) {

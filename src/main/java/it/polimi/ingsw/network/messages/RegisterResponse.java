@@ -10,8 +10,7 @@ public class RegisterResponse implements ServerMessage {
         this.nickname = nickname;
     }
 
-    @Override
-    public String getMessage() {
+    public String getNickname() {
         return nickname;
     }
 

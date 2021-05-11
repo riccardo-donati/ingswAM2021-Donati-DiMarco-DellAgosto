@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.commands.NewTurnMessage;
+import it.polimi.ingsw.network.messages.NewTurnMessage;
 
 import java.io.IOException;
 import java.util.List;
@@ -69,6 +69,11 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(BonusResourceMessage message, Client client) {
+        System.out.println(message.getMessage());
+    }
+
+    @Override
+    public void visit(PendingResourcesMessage message, Client client) {
         System.out.println(message.getMessage());
     }
 }

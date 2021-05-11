@@ -28,7 +28,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                 e.printStackTrace();
             }
         } else {
-            String nickname = response.getMessage();
+            String nickname = response.getNickname();
             if(nickname == null || nickname.equals("")) {
                 clientHandler.send(new GenericMessage("Illegal nickname"));
                 clientHandler.startTimer(50000);
@@ -88,6 +88,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
         return cmd.doAction(c,chNick.get(idCH));
     }
+
     @Override
     public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
         boolean response=executeCommand(clientHandler,command);
@@ -131,6 +132,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -142,6 +144,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -153,6 +156,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -164,6 +168,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -175,6 +180,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -186,6 +192,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -197,6 +204,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -208,6 +216,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -219,6 +228,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -230,6 +240,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -241,6 +252,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -252,6 +264,11 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+
+            int idCH=clientHandler.getId();
+            Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
+
+            clientHandler.send(new PendingResourcesMessage(c.getGame().getCurrentPlayerPending()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -263,6 +280,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -274,6 +292,31 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(PlayLeaderCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+            clientHandler.send(new GenericMessage("DONE!"));
+        } else {
+            //illegal action
+            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        }
+    }
+
+    @Override
+    public void visit(DiscardLeaderCommand command, ClientHandler clientHandler) {
+        boolean response = executeCommand(clientHandler,command);
+        if (response) {
+            //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -285,6 +328,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
+            clientHandler.send(new GenericMessage("DONE!"));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));

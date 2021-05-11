@@ -311,6 +311,20 @@ public class Warehouse {
     public Map<ResourceType, Integer> getPendingResources() { return pendingResources; }
 
     /**
+     * transforms the pending resources map into a list
+     * @return the pending resources map as a list
+     */
+    public List<ResourceType> getPendingList() {
+        List<ResourceType> pending = new ArrayList<>();
+        for (ResourceType key : pendingResources.keySet()){
+            for (int i = 0; i < pendingResources.get(key); i++) {
+                pending.add(key);
+            }
+        }
+        return pending;
+    }
+
+    /**
      * count the resource in pending
      * @return the sum of the resource of the map
      */

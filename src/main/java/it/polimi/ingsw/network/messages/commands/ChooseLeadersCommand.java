@@ -16,17 +16,13 @@ import java.util.Map;
 public class ChooseLeadersCommand implements Command {
     private List<String> chosenLeaders;
 
-    public List<String> getchosenLeaders() {
+    public List<String> getChosenLeaders() {
         return chosenLeaders;
     }
 
 
     public ChooseLeadersCommand(List<String> cl){
         this.chosenLeaders=cl;
-    }
-    @Override
-    public String getMessage() {
-        return null;
     }
 
     @Override

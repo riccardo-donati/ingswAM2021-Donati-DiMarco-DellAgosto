@@ -9,6 +9,9 @@ public interface ServerVisitor {
     void visit(PingResponse message, ClientHandler clientHandler);
 
     void visit(ChooseLeadersCommand command, ClientHandler clientHandler);
+    void visit(PlayLeaderCommand command, ClientHandler clientHandler);
+    void visit(DiscardLeaderCommand command, ClientHandler clientHandler);
+
     void visit(ChooseBonusResourceCommand command, ClientHandler clientHandler);
     void visit(PassCommand command, ClientHandler clientHandler);
 
@@ -31,4 +34,5 @@ public interface ServerVisitor {
 
     void visit(ProductionUnknownCommand command, ClientHandler clientHandler);
     void visit(ExtraProductionUnknownCommand command, ClientHandler clientHandler);
+
 }
