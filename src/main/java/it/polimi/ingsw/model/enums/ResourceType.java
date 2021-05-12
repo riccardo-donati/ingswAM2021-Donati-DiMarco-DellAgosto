@@ -10,7 +10,7 @@ public enum ResourceType {
     UNKNOWN(""),
     EMPTY("");
 
-    String label;
+    public String label;
 
     ResourceType(String type) {
         label = type;

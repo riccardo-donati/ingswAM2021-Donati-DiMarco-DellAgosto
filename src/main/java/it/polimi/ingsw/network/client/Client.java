@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 
@@ -21,18 +22,18 @@ public class Client {
     private BufferedReader stdIn;
     private Socket socket;
     private Gson gson;
-    private ClientPhase phase;
     private ClientVisitorHandler clientHandlerVisitor = new ClientVisitorHandler();
-    private List<String> playersOrder;
+    //private List<String> playersOrder;
     private String currCommand="";
-    private Map<Integer,String> idNameLeadersMap=new HashMap<>();
+    //private Map<Integer,String> idNameLeadersMap=new HashMap<>();
+    //private String nickname;
+    private ClientModel clientModel;
 
-    public Map<Integer, String> getIdNameLeaderMap() {
-        return idNameLeadersMap;
+    public Client(){
+        clientModel=new ClientModel();
     }
-
-    public List<String> getPlayersOrder() {
-        return playersOrder;
+    public ClientModel getClientModel() {
+        return clientModel;
     }
 
     public void handleStdIn(){
@@ -60,7 +61,6 @@ public class Client {
             socket = new Socket(hostName, serverPortNumber);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new Scanner(socket.getInputStream());
-            phase=ClientPhase.START;
             stdIn = new BufferedReader(new InputStreamReader(System.in));
             new Thread(()->handleStdIn()).start();
 
@@ -103,19 +103,8 @@ public class Client {
         return gson;
     }
 
-    public void setPhase(ClientPhase phase) {
-        this.phase = phase;
-    }
-
     public void setCurrCommand(String currCommand) {
         this.currCommand = currCommand;
-    }
-    public void putIdNameLeadersMap(Integer id, String name){
-        idNameLeadersMap.put(id,name);
-    }
-
-    public void setPlayersOrder(List<String> playersOrder) {
-        this.playersOrder = playersOrder;
     }
 
     public static void main(String[] args) throws IOException {

@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.InterfaceAdapter;
 import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.SpecialAbility;
@@ -75,6 +76,19 @@ public class Utilities {
         list=gson.fromJson(reader,foundListType);
         return list;
     }
+    public static List<DevelopmentCard> loadDevelopmentCardsFromJSON() {
+        Gson gson=new Gson();
+        Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new FileReader("src/main/resources/json/developmentCard.json"));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.out.println("DevelopmentCard.json not found");
+        }
+        return gson.fromJson(reader,foundListType);
+    }
+
 
 
 

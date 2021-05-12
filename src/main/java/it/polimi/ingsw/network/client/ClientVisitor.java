@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.NewTurnMessage;
+import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 
 public interface ClientVisitor {
     void visit(DisconnectionMessage message, Client client);
@@ -14,4 +15,7 @@ public interface ClientVisitor {
     void visit(NewTurnMessage message, Client client);
     void visit(BonusResourceMessage message, Client client);
     void visit(PendingResourcesMessage message, Client client);
+    void visit(ReconnectMessage message, Client client);
+
+    void visit(DepositUpdate update, Client client);
 }

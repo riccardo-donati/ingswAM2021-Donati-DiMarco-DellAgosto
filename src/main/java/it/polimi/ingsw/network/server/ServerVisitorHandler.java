@@ -1,9 +1,11 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
+import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 
 import java.util.Map;
 
@@ -192,7 +194,8 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
-            clientHandler.send(new GenericMessage("DONE!"));
+            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
+            l.notifyLobby(new DepositUpdate(command.getId(), Resource.valueOf(command.getResourceType().label.toUpperCase())));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));

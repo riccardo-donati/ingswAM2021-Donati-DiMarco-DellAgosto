@@ -28,7 +28,7 @@ public class Parser {
                 // display available commands
                 break;
             case "players":
-                System.out.println(client.getPlayersOrder().toString().replace("[","").replace("]",""));
+                System.out.println(client.getClientModel().getPlayersInOrder().toString().replace("[","").replace("]",""));
                 return null;
             case "pass":
                 return new PassCommand();
@@ -59,6 +59,7 @@ public class Parser {
             try {
                 String nickname = tokenizer.nextToken();
                 if (!tokenizer.hasMoreElements()) {
+                    client.getClientModel().setNickname(nickname);
                     return new RegisterResponse(nickname);
                 }
             } catch (NoSuchElementException e) {
@@ -84,7 +85,7 @@ public class Parser {
                 int first = Integer.parseInt(tokenizer.nextToken());
                 int second = Integer.parseInt(tokenizer.nextToken());
                 if (first > 0 && second > 0 && !tokenizer.hasMoreTokens()) {
-                    Map<Integer, String> map = client.getIdNameLeaderMap();
+                    Map<Integer, String> map = client.getClientModel().getIdNameLeadersMap();
                     List<String> listNames = new ArrayList<>();
                     listNames.add(map.get(first));
                     listNames.add(map.get(second));

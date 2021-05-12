@@ -209,7 +209,7 @@ public class Server {
             //player reconnecting after disconnection
             reconnect(vc, vLook);
             Lobby lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
-            lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected!"));
+            lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             throw new ReconnectionException();
         } else {
             //nickname is unique

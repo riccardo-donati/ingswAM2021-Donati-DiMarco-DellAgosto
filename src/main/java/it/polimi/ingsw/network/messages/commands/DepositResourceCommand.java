@@ -8,12 +8,20 @@ import it.polimi.ingsw.network.server.ClientHandler;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 public class DepositResourceCommand implements Command{
-    ResourceType resourceType;
-    int index;
+    private ResourceType resourceType;
+    private int id;
 
-    public DepositResourceCommand(ResourceType resourceType, int index) {
+    public DepositResourceCommand(ResourceType resourceType, int id) {
         this.resourceType = resourceType;
-        this.index = index;
+        this.id = id;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public ResourceType getResourceType() {
+        return resourceType;
     }
 
     @Override
@@ -21,7 +29,7 @@ public class DepositResourceCommand implements Command{
         Game game = c.getGame();
         if (check() && game.getCurrentNickname().equals(nickname)) {
             try {
-                game.depositResource(index, resourceType);
+                game.depositResource(id, resourceType);
             } catch (IllegalActionException | IndexOutOfBoundsException | NullPointerException | FullSpaceException | IllegalResourceException e) {
                 return false;
             }
@@ -31,7 +39,7 @@ public class DepositResourceCommand implements Command{
 
     @Override
     public boolean check() {
-        return index >= 0;
+        return id >= 0;
     }
 
     @Override
