@@ -1,13 +1,14 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.model.Deposit;
+import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
-import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
-import it.polimi.ingsw.network.messages.updates.NewTurnUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 
 import java.util.Map;
 
@@ -128,7 +129,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             if(l.getnPlayers()==1){
                 l.notifyLobby(new LorenzoUpdate(l.getGameController().getLorenzoUpdate()));
             }
-            l.notifyLobby(new NewTurnUpdate(l.getGameController().getGame().getCurrentNickname()));
+            l.setGamePhase(l.getGameController().getGame().getGamePhase());
+            l.notifyLobby(new NewTurnUpdate(l.getGameController().getGame().getCurrentNickname(),l.getGamePhase()));
 
         }else{
             //illegal action
@@ -203,6 +205,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             //update
             Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
             l.notifyLobby(new DepositUpdate(command.getId(), Utilities.resourceTypeToResource(command.getResourceType())));
+            clientHandler.send(new PendingResourcesMessage(l.getGameController().getGame().getCurrentPlayerPending()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -214,7 +217,14 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response = executeCommand(clientHandler,command);
         if (response) {
             //update
-            clientHandler.send(new GenericMessage("DONE!"));
+            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
+            ResourceType[] d1=new ResourceType[0];
+            ResourceType[] d2=new ResourceType[0];
+            try{
+                d1=l.getGameController().getGame().getDepositResources(command.getSource()-1);
+                d2=l.getGameController().getGame().getDepositResources(command.getDestination()-1);
+            }catch (IndexOutOfBoundsException | NullPointerException e){}
+            l.notifyLobby(new MoveResourceUpdate(d1,d2,command.getSource(),command.getDestination()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -276,9 +286,11 @@ public class ServerVisitorHandler implements ServerVisitor {
             //update
 
             int idCH=clientHandler.getId();
-            Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
+            Lobby l=server.searchLobby(nickLobby.get(chNick.get(idCH)));
+            Controller c=l.getGameController();
 
             clientHandler.send(new PendingResourcesMessage(c.getGame().getCurrentPlayerPending()));
+            l.notifyLobby(new FaithPathUpdate(c.getGame().getCurrentFaithPath()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));

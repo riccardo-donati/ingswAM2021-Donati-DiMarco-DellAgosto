@@ -26,6 +26,7 @@ public class Parser {
         switch (string) {
             case "help":
                 // display available commands
+                System.out.println(client.getClientModel().getIdNameLeadersMap());
                 break;
             case "players":
                 System.out.println(client.getClientModel().getPlayersInOrder().toString().replace("[","").replace("]",""));

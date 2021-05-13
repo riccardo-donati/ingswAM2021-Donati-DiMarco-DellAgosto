@@ -10,21 +10,21 @@ import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class StartGameUpdate implements Update, ClientVisitable {
     private List<String> playerOrder=new ArrayList<>();
     private List<String> cards=new ArrayList<>();
-    private Integer nPlayer;
+    private Map<String,Integer> faithPaths=new HashMap<>();
 
-    public StartGameUpdate(List<String> playerOrder, List<String> cards){
+    public StartGameUpdate(List<String> playerOrder, List<String> cards,Map<String,Integer> faithPaths){
         this.playerOrder=playerOrder;
         this.cards=cards;
+        this.faithPaths=faithPaths;
     }
 
-    public Integer getnPlayer() {
-        return nPlayer;
-    }
 
     public List<String> getCards() {
         return cards;
@@ -65,5 +65,8 @@ public class StartGameUpdate implements Update, ClientVisitable {
             clientModel.putBoard(player,new ClientBoard());
         }
         if(playerOrder.size()==1)clientModel.setUpSinglePlayer();
+        for(String player :playerOrder){
+            clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
+        }
     }
 }

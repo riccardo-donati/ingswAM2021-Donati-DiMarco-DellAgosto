@@ -15,6 +15,14 @@ public class MoveResourceCommand implements Command{
         this.destination = destination;
     }
 
+    public int getDestination() {
+        return destination;
+    }
+
+    public int getSource() {
+        return source;
+    }
+
     @Override
     public boolean doAction(Controller c, String nickname) {
         Game game = c.getGame();

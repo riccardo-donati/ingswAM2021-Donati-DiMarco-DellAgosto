@@ -29,10 +29,20 @@ public class ClientDeposits {
     public void deposit(Resource r, Integer idD){
         Shelf s=getShelf(idD);
         for(int i=0;i<s.getSpaces().length;i++){
-            if(s.getSpaces()[i]==null || s.getSpaces()[i]=="") {
+            if(s.getSpaces()[i]==null || s.getSpaces()[i]=="  ") {
                 s.put(i, r);
                 return;
             }
+        }
+    }
+    public void deposit(List<Resource> r,Integer idD){
+        Shelf s=getShelf(idD);
+        if(s!=null && r.size()<=s.getSpaces().length){
+            s.clear();
+            for(int i=0;i<r.size();i++){
+                s.put(i,r.get(i));
+            }
+            return;
         }
     }
     public void removeResourceFromStrongbox(Resource res){

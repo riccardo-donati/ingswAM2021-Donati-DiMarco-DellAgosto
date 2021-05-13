@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.messages.updates;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
@@ -7,11 +8,16 @@ import it.polimi.ingsw.network.messages.ClientMessage;
 
 public class NewTurnUpdate implements Update {
     private String currNickname;
+    private GamePhase gamePhase;
 
-    public NewTurnUpdate(String currNickname){
+    public NewTurnUpdate(String currNickname,GamePhase gamePhase){
         this.currNickname=currNickname;
+        this.gamePhase=gamePhase;
     }
 
+    public GamePhase getGamePhase() {
+        return gamePhase;
+    }
 
     @Override
     public void accept(ClientVisitor visitor, Client client) {
@@ -26,5 +32,6 @@ public class NewTurnUpdate implements Update {
     @Override
     public void update(ClientModel clientModel) {
         clientModel.setCurrentNickname(currNickname);
+        clientModel.setGamePhase(gamePhase);
     }
 }

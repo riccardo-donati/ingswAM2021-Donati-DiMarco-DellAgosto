@@ -29,7 +29,9 @@ public class ClientFaithPath  {
             popeFavor.replace(id,Color.ANSI_RED.escape()+"▄"+Color.RESET);
         }
     }
-
+    public void setPosition(Integer position){
+        this.position=position;
+    }
     public void setLorenzoPosition(Integer lorenzoPosition) {
         this.lorenzoPosition = lorenzoPosition;
     }

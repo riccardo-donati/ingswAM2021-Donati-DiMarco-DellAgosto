@@ -1,10 +1,7 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
-import it.polimi.ingsw.network.messages.updates.NewTurnUpdate;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
-import it.polimi.ingsw.network.messages.updates.StartGameUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 
 public interface ClientVisitor {
     void visit(DisconnectionMessage message, Client client);
@@ -20,4 +17,8 @@ public interface ClientVisitor {
     void visit(ReconnectMessage message, Client client);
     void visit(DepositUpdate message, Client client);
     void visit(LorenzoUpdate message, Client client);
+
+    void visit(FaithPathUpdate message, Client client);
+
+    void visit(MoveResourceUpdate message, Client client);
 }

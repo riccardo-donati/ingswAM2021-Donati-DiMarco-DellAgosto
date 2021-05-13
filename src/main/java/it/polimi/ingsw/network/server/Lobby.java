@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.controller.Controller;
 import it.polimi.ingsw.model.LeaderCard;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.StartGameUpdate;
@@ -19,11 +20,12 @@ public class Lobby {
     @Expose
     private List<VirtualClient> players = new ArrayList<>();
     @Expose
-    private boolean started;
+    private GamePhase gamePhase;
     @Expose
     private static int globalID = 0;
     private Gson gson;
     private Controller gameController;
+
 
 
     public int getnPlayers() {
@@ -66,7 +68,7 @@ public class Lobby {
         this.players.add(firstPlayer);
         this.gameController=new Controller();
         gson= Utilities.initializeGsonMessage();
-        started=false;
+        gamePhase=GamePhase.NOTSTARTED;
     }
 
     public void setGson(Gson gson) {
@@ -102,7 +104,7 @@ public class Lobby {
         gameController.initializeGame(nPlayers);
         gameController.addPlayers(getNicknames());
         gameController.start();
-        started=true;
+        gamePhase= GamePhase.SETUP;
         List<List<LeaderCard>> lists=gameController.getLeaderCards();
         if(lists.size()!=players.size()){
             System.out.println("Internal Error, please reinitialize the game");
@@ -111,14 +113,18 @@ public class Lobby {
         notifyLobby(new GenericMessage("Game started!"));
         for(VirtualClient vc : players){
             List<String> l=gameController.getPlayerLeaderCardList(vc.getNickname());
-            Message m=new StartGameUpdate(gameController.getOrderPlayerList(),l);
+            Message m=new StartGameUpdate(gameController.getOrderPlayerList(),l,gameController.getGame().getFaithPathsMap());
             vc.send(m);
         }
 
     }
 
-    public boolean isStarted() {
-        return started;
+    public void setGamePhase(GamePhase gamePhase) {
+        this.gamePhase = gamePhase;
+    }
+
+    public GamePhase getGamePhase() {
+        return gamePhase;
     }
 
     public void addPlayer(VirtualClient vc){

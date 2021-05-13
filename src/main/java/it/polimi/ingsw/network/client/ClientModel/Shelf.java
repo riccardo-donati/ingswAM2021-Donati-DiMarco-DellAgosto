@@ -14,6 +14,11 @@ public class Shelf {
     public int getId() {
         return id;
     }
+    public void clear(){
+        for(int i=0;i<spaces.length;i++){
+            spaces[i]="  ";
+        }
+    }
 
     public Shelf(int n, int id){
         spaces=new String[n];

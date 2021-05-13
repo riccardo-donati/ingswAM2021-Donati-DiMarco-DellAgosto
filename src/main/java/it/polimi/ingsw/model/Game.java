@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Marble;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.model.interfaces.Token;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -46,7 +47,6 @@ public abstract class Game implements BoardObserver {
     protected List<Token> getTokens(){return null;}
     protected FaithPath getBlackCrossFaithPath(){return null;}
     protected void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
-    protected GamePhase getGamePhase() { return gamePhase; }
     protected TurnPhase getTurnPhase() { return turnPhase; }
     protected Stack<Token> getTokenStack() {return  null; }
     protected void setGamePhase(GamePhase gamePhase) { this.gamePhase = gamePhase; }
@@ -216,6 +216,38 @@ public abstract class Game implements BoardObserver {
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
     public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
+
+    /**
+     * usefulfor the controller
+     * @return a map with the nickname and the faithpath position
+     */
+    public Map<String,Integer> getFaithPathsMap(){
+        Map<String,Integer> map=new HashMap<>();
+        for(Player p : players){
+            map.put(p.getNickname(),p.getBoard().getFaithPath().getPosition());
+        }
+        return map;
+    }
+
+    /**
+     * fot the move resource update
+     * @return the spaces of the selected deposit
+     */
+    public ResourceType[] getDepositResources(int id){
+        if(id<=3) {
+            return currPlayer.getBoard().getWarehouse().getMaindepot().get(id).getSpace();
+        }else{
+            return currPlayer.getBoard().getWarehouse().getExtradepots().get(id-3).getSpace();
+        }
+    }
+    public GamePhase getGamePhase() { return gamePhase; }
+    /**
+     * for the updates
+     * @return the current player faithpath position
+     */
+    public Integer getCurrentFaithPath(){
+        return currPlayer.getBoard().getFaithPath().getPosition();
+    }
 
     /**
      * interface method for retrieving the position of lorenzo

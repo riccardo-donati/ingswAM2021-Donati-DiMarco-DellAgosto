@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.server;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
@@ -122,7 +123,7 @@ public class Server {
             String nick = clientHandlerNickMap.get(chId);
             Lobby lobby = searchLobby(nickLobbyMap.get(nick));
             lobby.notifyLobby(new GenericMessage(nick +  " disconnected!"));
-            if(!lobby.isStarted()){
+            if(lobby.getGamePhase()== GamePhase.NOTSTARTED){
                 try {
                     searchVirtualClient(nick).getClientHandler().closeConnection();
                 } catch (InterruptedException | NullPointerException e) {

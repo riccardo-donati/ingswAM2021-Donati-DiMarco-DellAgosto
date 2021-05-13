@@ -98,10 +98,14 @@ public class ClientModel {
     public void visualizeDeposits(String nick){
         if(boards.get(nick)!=null){
             StringBuilder sb = new StringBuilder();
-            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
+            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(boards.get(nick).getDeposits());
             System.out.println(sb.toString());
         }
+    }
+
+    public GamePhase getGamePhase() {
+        return gamePhase;
     }
 
     public Map<String, ClientBoard> getBoards() {

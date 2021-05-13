@@ -1,12 +1,11 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
-import it.polimi.ingsw.network.messages.updates.NewTurnUpdate;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
-import it.polimi.ingsw.network.messages.updates.StartGameUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 
 import java.io.IOException;
 import java.util.List;
@@ -60,16 +59,25 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(StartGameUpdate message, Client client) {
         message.update(client.getClientModel());
         client.setCurrCommand("");
+        client.getClientModel().setGamePhase(GamePhase.SETUP);
         //if cli mode
         System.out.println(client.getClientModel());
+        System.out.println(Color.ANSI_GREEN.escape()+"SETUP PHASE BEGIN"+Color.RESET);
         System.out.println(message.getMessage());
 
     }
 
     @Override
     public void visit(NewTurnUpdate message, Client client) {
+        GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
+        //if CLI
+        if(client.getClientModel().getGamePhase()==GamePhase.ONGOING  && client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
+            System.out.println(client.getClientModel());
         System.out.println(message.getMessage());
+        if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
+            System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
+        }
     }
 
     @Override
@@ -105,6 +113,20 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
         //if CLI
         System.out.println(client.getClientModel());
+    }
+
+    @Override
+    public void visit(FaithPathUpdate message, Client client) {
+        message.update(client.getClientModel());
+    }
+
+    @Override
+    public void visit(MoveResourceUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
+            System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).getDeposits());
     }
 }
 
