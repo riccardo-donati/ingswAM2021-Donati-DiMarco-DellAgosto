@@ -1,11 +1,13 @@
 package it.polimi.ingsw.network.server;
 
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 import it.polimi.ingsw.network.messages.updates.DepositUpdate;
+import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
+import it.polimi.ingsw.network.messages.updates.NewTurnUpdate;
 
 import java.util.Map;
 
@@ -109,7 +111,8 @@ public class ServerVisitorHandler implements ServerVisitor {
         boolean response=executeCommand(clientHandler,command);
         if(response){
             //update
-            clientHandler.send(new GenericMessage("DONE!"));
+            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
+            l.notifyLobby(new DepositUpdate(command.getId(),Utilities.resourceTypeToResource(command.getRes())));
         }else{
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -122,7 +125,11 @@ public class ServerVisitorHandler implements ServerVisitor {
         if(response){
             //update
             Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            l.notifyLobby(new NewTurnMessage(l.getGameController().getGame().getCurrentNickname()));
+            if(l.getnPlayers()==1){
+                l.notifyLobby(new LorenzoUpdate(l.getGameController().getLorenzoUpdate()));
+            }
+            l.notifyLobby(new NewTurnUpdate(l.getGameController().getGame().getCurrentNickname()));
+
         }else{
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -195,7 +202,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         if (response) {
             //update
             Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            l.notifyLobby(new DepositUpdate(command.getId(), Resource.valueOf(command.getResourceType().label.toUpperCase())));
+            l.notifyLobby(new DepositUpdate(command.getId(), Utilities.resourceTypeToResource(command.getResourceType())));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));

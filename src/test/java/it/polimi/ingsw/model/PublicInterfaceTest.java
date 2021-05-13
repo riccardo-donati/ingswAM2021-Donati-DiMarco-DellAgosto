@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 
+import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import java.util.concurrent.BlockingDeque;
@@ -1587,6 +1588,22 @@ public class PublicInterfaceTest {
         //Player 1 = BBB points [44 DCards + 11 FaithPath + 8 LCard + 0 Deposit] = 63 BRUH VOLEVO FAR VINCERE P2
         //Player 2 = CCC points [31 DCards + 21 FaithPath + 8 LCard + 2 Deposit] = 62
         //Player 3 = AAA points [32 DCards + 17 FaithPath + 6 LCard + 1 Deposit] = 56
+    }
+    @Test
+    public void TestSingleDiscard() throws IOException, IllegalActionException, FullSpaceException, IllegalResourceException, DepositableResourceException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        game.setMarket(new Market());
+        int pos=game.getBlackCrossFaithPath().getPosition();
+        game.buyAtMarketInterface('r',2); //YELLOW YELLOW VIOLET VIOLET
+        game.depositResource(3,ResourceType.YELLOW);
+        game.depositResource(3,ResourceType.YELLOW);
+        game.depositResource(2,ResourceType.VIOLET);
+        game.depositResource(2,ResourceType.VIOLET);
+        game.passTurn();
+        game.buyAtMarketInterface('r',1);//GREY GREY BLUE BLUE
+        game.depositResource(1,ResourceType.BLUE);
+        game.discardResource(ResourceType.BLUE);
+        assertEquals(pos+1,game.getBlackCrossFaithPath().getPosition());
     }
 }
 

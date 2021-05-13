@@ -9,7 +9,9 @@ import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.InterfaceAdapter;
 import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.SpecialAbility;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.server.ClientHandler;
 import it.polimi.ingsw.network.server.Server;
@@ -87,6 +89,9 @@ public class Utilities {
             System.out.println("DevelopmentCard.json not found");
         }
         return gson.fromJson(reader,foundListType);
+    }
+    public static Resource resourceTypeToResource(ResourceType res){
+        return Resource.valueOf(res.label.toUpperCase());
     }
 
 

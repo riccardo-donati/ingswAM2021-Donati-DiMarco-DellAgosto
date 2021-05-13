@@ -3,10 +3,11 @@ package it.polimi.ingsw.network.messages.updates;
 import it.polimi.ingsw.model.Deposit;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 import it.polimi.ingsw.network.messages.ClientMessage;
 
-public class DepositUpdate implements ClientMessage {
+public class DepositUpdate implements Update {
     private int idDeposit;
     private Resource res;
 
@@ -25,11 +26,17 @@ public class DepositUpdate implements ClientMessage {
 
     @Override
     public String getMessage() {
-        return res+" deposited";
+        return "deposited "+res.label+" in "+idDeposit;
     }
 
     @Override
     public void accept(ClientVisitor visitor, Client client) {
         visitor.visit(this,client);
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().deposit(res,idDeposit);
+
     }
 }

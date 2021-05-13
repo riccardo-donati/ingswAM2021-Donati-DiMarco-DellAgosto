@@ -1,21 +1,29 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitable;
 import it.polimi.ingsw.network.client.ClientVisitor;
+import it.polimi.ingsw.network.messages.ClientMessage;
 import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StartGameMessage implements ClientMessage, ClientVisitable {
+public class StartGameUpdate implements Update, ClientVisitable {
     private List<String> playerOrder=new ArrayList<>();
     private List<String> cards=new ArrayList<>();
+    private Integer nPlayer;
 
-    public StartGameMessage(List<String> playerOrder,List<String> cards){
+    public StartGameUpdate(List<String> playerOrder, List<String> cards){
         this.playerOrder=playerOrder;
         this.cards=cards;
+    }
+
+    public Integer getnPlayer() {
+        return nPlayer;
     }
 
     public List<String> getCards() {
@@ -43,5 +51,19 @@ public class StartGameMessage implements ClientMessage, ClientVisitable {
             message.append(l).append(" ");
         }
         return message.toString();
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        for(int i=0;i<cards.size();i++) {
+            clientModel.putIdNameLeadersMap(i+1,cards.get(i));
+        }
+
+        clientModel.setPlayersOrder(playerOrder);
+        clientModel.setCurrentNickname(playerOrder.get(0));
+        for(String player : playerOrder){
+            clientModel.putBoard(player,new ClientBoard());
+        }
+        if(playerOrder.size()==1)clientModel.setUpSinglePlayer();
     }
 }

@@ -238,7 +238,6 @@ public class Singleplayer extends Game {
     @Override
     public void discardResource(ResourceType res) throws IllegalActionException, DepositableResourceException, IllegalResourceException {
         super.discardResource(res);
-        getBlackCrossFaithPath().addToPosition(1);
         if(isEndGameTrigger()){
             updateEndGame();
             setGamePhase(GamePhase.ENDGAME);

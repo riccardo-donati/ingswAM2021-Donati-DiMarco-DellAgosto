@@ -3,10 +3,10 @@ package it.polimi.ingsw.network.server;
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.updates.StartGameUpdate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +25,10 @@ public class Lobby {
     private Gson gson;
     private Controller gameController;
 
+
+    public int getnPlayers() {
+        return nPlayers;
+    }
 
     public static void setGlobalID(int id) {
         Lobby.globalID = id;
@@ -107,7 +111,7 @@ public class Lobby {
         notifyLobby(new GenericMessage("Game started!"));
         for(VirtualClient vc : players){
             List<String> l=gameController.getPlayerLeaderCardList(vc.getNickname());
-            Message m=new StartGameMessage(gameController.getOrderPlayerList(),l);
+            Message m=new StartGameUpdate(gameController.getOrderPlayerList(),l);
             vc.send(m);
         }
 

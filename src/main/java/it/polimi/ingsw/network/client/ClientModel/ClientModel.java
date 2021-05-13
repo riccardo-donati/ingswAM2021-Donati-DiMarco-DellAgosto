@@ -69,6 +69,9 @@ public class ClientModel {
 
     public String getNickname() { return myNickname; }
 
+    public void setUpSinglePlayer(){
+        boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
+    }
     public String toString(){
         if(myNickname!=null) {
             StringBuilder sb = new StringBuilder();
@@ -92,12 +95,16 @@ public class ClientModel {
             System.out.println(sb.toString());
         }
     }
-    public void handleUpdate(Message m){
-        if(m instanceof DepositUpdate){
-            boards.get(currentNickname).getDeposits().deposit(((DepositUpdate) m).getRes(),((DepositUpdate) m).getIdDeposit());
-            visualizeBoard(currentNickname);
-        }
+
+    public Map<String, ClientBoard> getBoards() {
+        return boards;
     }
+
+    public String getCurrentNickname() {
+        return currentNickname;
+    }
+
+
     public static void main(String[] args) {
         ClientModel cm=new ClientModel();
         List<String> listInOrder=new ArrayList<>();

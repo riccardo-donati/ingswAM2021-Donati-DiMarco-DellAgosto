@@ -1,13 +1,14 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 import it.polimi.ingsw.network.messages.ClientMessage;
 
-public class NewTurnMessage implements ClientMessage {
+public class NewTurnUpdate implements Update {
     private String currNickname;
 
-    public NewTurnMessage(String currNickname){
+    public NewTurnUpdate(String currNickname){
         this.currNickname=currNickname;
     }
 
@@ -20,5 +21,10 @@ public class NewTurnMessage implements ClientMessage {
     @Override
     public String getMessage() {
         return "New turn -> "+currNickname;
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        clientModel.setCurrentNickname(currNickname);
     }
 }

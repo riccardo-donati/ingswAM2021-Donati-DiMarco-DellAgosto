@@ -18,6 +18,15 @@ public class ChooseBonusResourceCommand implements Command {
         this.res=res;
         this.id=id;
     }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public ResourceType getRes() {
+        return res;
+    }
+
     @Override
     public boolean doAction(Controller c, String nickname) {
         Game g=c.getGame();

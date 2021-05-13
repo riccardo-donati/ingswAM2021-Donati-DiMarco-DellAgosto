@@ -3,8 +3,10 @@ package it.polimi.ingsw.network.client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.NewTurnMessage;
+import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
+import it.polimi.ingsw.network.messages.updates.NewTurnUpdate;
 import it.polimi.ingsw.network.messages.updates.DepositUpdate;
+import it.polimi.ingsw.network.messages.updates.StartGameUpdate;
 
 import java.io.IOException;
 import java.util.List;
@@ -55,22 +57,18 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
-    public void visit(StartGameMessage message, Client client) {
-        System.out.println(message.getMessage());
-        List<String> cards=message.getCards();
-        for(int i=0;i<cards.size();i++) {
-            client.getClientModel().putIdNameLeadersMap(i+1,cards.get(i));
-        }
+    public void visit(StartGameUpdate message, Client client) {
+        message.update(client.getClientModel());
         client.setCurrCommand("");
-        client.getClientModel().setPlayersOrder(message.getPlayerOrder());
-        client.getClientModel().setCurrentNickname(message.getPlayerOrder().get(0));
-        for(String player : message.getPlayerOrder()){
-            client.getClientModel().putBoard(player,new ClientBoard());
-        }
+        //if cli mode
+        System.out.println(client.getClientModel());
+        System.out.println(message.getMessage());
+
     }
 
     @Override
-    public void visit(NewTurnMessage message, Client client) {
+    public void visit(NewTurnUpdate message, Client client) {
+        message.update(client.getClientModel());
         System.out.println(message.getMessage());
     }
 
@@ -94,10 +92,19 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
-    public void visit(DepositUpdate update, Client client) {
-        Resource r=update.getRes();
-        Integer idDeposit= update.getIdDeposit();
-        client.getClientModel().handleUpdate(update);
+    public void visit(DepositUpdate message, Client client) {
+        message.update(client.getClientModel());
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname()))
+            client.getClientModel().visualizeBoard(client.getClientModel().getNickname());
+        else System.out.println(client.getClientModel().getCurrentNickname()+" "+message.getMessage());
+    }
+
+    @Override
+    public void visit(LorenzoUpdate message, Client client) {
+        message.update(client.getClientModel());
+        //if CLI
+        System.out.println(client.getClientModel());
     }
 }
 

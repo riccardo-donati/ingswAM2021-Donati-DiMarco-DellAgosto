@@ -12,7 +12,7 @@ public class ClientFaithPath  {
     private Map<Integer,String> popeFavor=new HashMap<>();
 
     public ClientFaithPath(){
-     position=1;
+     position=0;
      popeFavor.put(1,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
      popeFavor.put(2,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
      popeFavor.put(3,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
@@ -42,13 +42,13 @@ public class ClientFaithPath  {
     public String toString() {
         StringBuilder b=new StringBuilder();
         b.append(Color.ANSI_PURPLE.escape()+"FAITHPATH:\n"+Color.RESET);
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(" ");
             if(i<10) b.append("  "+i+"  ");
             else b.append(" "+i+"  ");
         }
         b.append("\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"┌─────");
             else if(i>5 && i<8)b.append("─────");
             else if(i==8 || i==15 ||i==24)b.append("─────┐");
@@ -57,17 +57,17 @@ public class ClientFaithPath  {
             else b.append("     ");
         }
         b.append(Color.RESET+"\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16 || i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
-            if(i%3==0) b.append(Color.ANSI_YELLOW.escape());
+            if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╔═══╗");
             b.append(Color.RESET);
         }
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append("\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16||i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
-            if(i%3==0) {
+            if(i%3==0 && i!=0) {
                 b.append(Color.ANSI_YELLOW.escape());
                 if (position == i) {
                     if(lorenzoPosition!=null && lorenzoPosition==position)b.append("║" + Color.ANSI_RED.escape() + "♰" +Color.RESET+" ♰"+ Color.ANSI_YELLOW.escape() + "║");
@@ -85,15 +85,15 @@ public class ClientFaithPath  {
         }
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append("\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
-            if(i%3==0) b.append(Color.ANSI_YELLOW.escape());
+            if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╚═══╝"+Color.RESET);
         }
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append("\n");
         b.append(Color.ANSI_YELLOW.escape());
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
             if(i==3) b.append(Color.ANSI_YELLOW.escape()+"  1  ");
             else if(i==6)b.append(Color.ANSI_YELLOW.escape()+"  2  ");
@@ -107,7 +107,7 @@ public class ClientFaithPath  {
         }
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append(Color.RESET+"\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"└─────");
             else if(i>5 && i<8)b.append("─────");
             else if(i==8 || i==15|| i==24)b.append("─────┘");
@@ -117,14 +117,14 @@ public class ClientFaithPath  {
         }
         b.append("\n");
         //popefavor
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==6||i==13||i==21){
                 b.append(Color.ANSI_BLUE.escape()+" ╔════════╗ ");
             }else if(i==7 || i==14 || i==22) b.append("");
             else b.append("     ");
         }
         b.append("\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==6) {
                 b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 2 + Color.ANSI_BLUE.escape() + "  "+popeFavor.get(1)+Color.ANSI_BLUE.escape()+"  ║ ");
             }else if(i==13) {
@@ -135,7 +135,7 @@ public class ClientFaithPath  {
             else b.append("     ");
         }
         b.append("\n");
-        for(int i=1;i<25;i++){
+        for(int i=0;i<25;i++){
             if(i==6||i==13||i==21){
                 b.append(Color.ANSI_BLUE.escape()+" ╚════════╝ ");
             }else if(i==7 || i==14 || i==22) b.append("");

@@ -218,6 +218,16 @@ public abstract class Game implements BoardObserver {
     public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
 
     /**
+     * interface method for retrieving the position of lorenzo
+     * @return the blackCrossFaith position
+     */
+    public Integer getLorenzoPosition(){
+        if(getBlackCrossFaithPath()!=null)
+            return getBlackCrossFaithPath().getPosition();
+        else
+            return 10;
+    }
+    /**
      * set the active parameter of a players in caso of disconnection/reconnection
      * @param player is the nickname of the player
      * @param active is the state that we want

@@ -90,7 +90,9 @@ public class Controller {
         }
         return lists;
     }
-
+    public Integer getLorenzoUpdate(){
+        return game.getLorenzoPosition();
+    }
     /**
      * start the game and get a map with the order of the players
      */
