@@ -95,6 +95,14 @@ public class ClientModel {
             System.out.println(sb.toString());
         }
     }
+    public void visualizeDeposits(String nick){
+        if(boards.get(nick)!=null){
+            StringBuilder sb = new StringBuilder();
+            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
+            sb.append(boards.get(nick).getDeposits());
+            System.out.println(sb.toString());
+        }
+    }
 
     public Map<String, ClientBoard> getBoards() {
         return boards;

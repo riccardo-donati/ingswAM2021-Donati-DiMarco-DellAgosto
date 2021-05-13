@@ -96,7 +96,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
         //if CLI
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname()))
-            client.getClientModel().visualizeBoard(client.getClientModel().getNickname());
+            client.getClientModel().visualizeDeposits(client.getClientModel().getNickname());
         else System.out.println(client.getClientModel().getCurrentNickname()+" "+message.getMessage());
     }
 
