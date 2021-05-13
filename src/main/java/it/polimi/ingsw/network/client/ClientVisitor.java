@@ -21,4 +21,6 @@ public interface ClientVisitor {
     void visit(FaithPathUpdate message, Client client);
 
     void visit(MoveResourceUpdate message, Client client);
+
+    void visit(MarketUpdate message, Client client);
 }

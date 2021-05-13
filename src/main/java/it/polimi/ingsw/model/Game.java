@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.interfaces.BoardObserver;
 import it.polimi.ingsw.model.interfaces.Marble;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.model.interfaces.Token;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -229,6 +228,28 @@ public abstract class Game implements BoardObserver {
         return map;
     }
 
+    public List<ResourceType> getMarblesInList(){
+        List<ResourceType> list=new ArrayList<>();
+        Marble[][] marbles=market.getMarbles();
+        for(int r=0;r<ROW;r++){
+            for(int c=0;c<COL;c++){
+                if(marbles[r][c] instanceof WhiteMarble ) list.add(ResourceType.WHITE);
+                if(marbles[r][c] instanceof RedMarble ) list.add(ResourceType.RED);
+                if(marbles[r][c] instanceof ResourceMarble ) {
+                    ResourceMarble rs=(ResourceMarble)marbles[r][c];
+                    list.add(rs.getType());
+                }
+            }
+        }
+        if(market.getPendingMarble() instanceof WhiteMarble)list.add(ResourceType.WHITE);
+        if(market.getPendingMarble() instanceof RedMarble)list.add(ResourceType.RED);
+        if(market.getPendingMarble() instanceof ResourceMarble) {
+            ResourceMarble rs=(ResourceMarble)market.getPendingMarble();
+            list.add(rs.getType());
+        }
+        return list;
+
+    }
     /**
      * fot the move resource update
      * @return the spaces of the selected deposit

@@ -128,5 +128,12 @@ public class ClientVisitorHandler implements ClientVisitor{
         if(client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
             System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).getDeposits());
     }
+
+    @Override
+    public void visit(MarketUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+
+    }
 }
 

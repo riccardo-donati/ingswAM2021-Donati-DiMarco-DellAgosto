@@ -34,4 +34,7 @@ public class ResourceMarble implements Marble {
         return type == that.type;
     }
 
+    protected ResourceType getType() {
+        return type;
+    }
 }

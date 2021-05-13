@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.messages.updates;
 
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitable;
@@ -18,11 +20,13 @@ public class StartGameUpdate implements Update, ClientVisitable {
     private List<String> playerOrder=new ArrayList<>();
     private List<String> cards=new ArrayList<>();
     private Map<String,Integer> faithPaths=new HashMap<>();
+    private List<ResourceType> marbles=new ArrayList<>();
 
-    public StartGameUpdate(List<String> playerOrder, List<String> cards,Map<String,Integer> faithPaths){
+    public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles){
         this.playerOrder=playerOrder;
         this.cards=cards;
         this.faithPaths=faithPaths;
+        this.marbles=marbles;
     }
 
 
@@ -68,5 +72,7 @@ public class StartGameUpdate implements Update, ClientVisitable {
         for(String player :playerOrder){
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
         }
+        clientModel.getMarket().setMarbles(marbles);
+
     }
 }

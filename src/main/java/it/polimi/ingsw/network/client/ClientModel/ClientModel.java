@@ -28,9 +28,12 @@ public class ClientModel {
     private List<DevelopmentCard> developmentCards;
     private List<LeaderCard> leaderCards;
 
+    private ClientMarket market;
+
     public ClientModel(){
         leaderCards= Utilities.loadLeaderCardsFromJSON();
         developmentCards=Utilities.loadDevelopmentCardsFromJSON();
+        market=new ClientMarket();
     }
 
     public List<String> getPlayersInOrder() {
@@ -69,6 +72,8 @@ public class ClientModel {
 
     public String getNickname() { return myNickname; }
 
+    public ClientMarket getMarket() { return market; }
+
     public void setUpSinglePlayer(){
         boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
     }
@@ -83,6 +88,8 @@ public class ClientModel {
             sb.append("\n");
             sb.append("════"+myNickname+" Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(boards.get(myNickname));
+            sb.append(market);
+            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             return sb.toString();
         }
         return "";

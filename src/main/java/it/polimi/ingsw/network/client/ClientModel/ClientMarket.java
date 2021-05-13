@@ -13,7 +13,7 @@ public class ClientMarket {
         this.marbles = marbles;
     }
 
-    public void initializeMarbles(){
+    private void initializeMarbles(){
         marbles.add(ResourceType.YELLOW);
         marbles.add(ResourceType.VIOLET);
         marbles.add(ResourceType.EMPTY);
@@ -81,6 +81,7 @@ public class ClientMarket {
         sb.append("\n   ╚═ ══╩═ ══╩═ ══╩═ ══╝\n");
         sb.append("     ↑    ↑    ↑    ↑   "/* + getMarbleType(marbles, n)*/); //
         sb.append("\n   Pending Marble: " + getMarbleType(marbles, n));
+        sb.append("\n");
         return sb.toString();
     }
 

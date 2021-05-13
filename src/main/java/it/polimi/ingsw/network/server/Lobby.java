@@ -113,7 +113,7 @@ public class Lobby {
         notifyLobby(new GenericMessage("Game started!"));
         for(VirtualClient vc : players){
             List<String> l=gameController.getPlayerLeaderCardList(vc.getNickname());
-            Message m=new StartGameUpdate(gameController.getOrderPlayerList(),l,gameController.getGame().getFaithPathsMap());
+            Message m=new StartGameUpdate(gameController.getOrderPlayerList(),l,gameController.getGame().getFaithPathsMap(),gameController.getGame().getMarblesInList());
             vc.send(m);
         }
 

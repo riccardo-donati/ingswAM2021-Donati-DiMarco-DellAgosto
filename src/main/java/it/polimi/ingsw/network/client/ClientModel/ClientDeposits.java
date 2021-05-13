@@ -29,7 +29,7 @@ public class ClientDeposits {
     public void deposit(Resource r, Integer idD){
         Shelf s=getShelf(idD);
         for(int i=0;i<s.getSpaces().length;i++){
-            if(s.getSpaces()[i]==null || s.getSpaces()[i]=="  ") {
+            if(s.getSpaces()[i]==null || s.getSpaces()[i].equals("  ")) {
                 s.put(i, r);
                 return;
             }
@@ -135,7 +135,7 @@ public class ClientDeposits {
              }
             sb.append("\n");
         }
-        sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════");
+        sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
 
         return sb.toString();
     }

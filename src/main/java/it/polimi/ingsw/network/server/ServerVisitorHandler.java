@@ -205,7 +205,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             //update
             Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
             l.notifyLobby(new DepositUpdate(command.getId(), Utilities.resourceTypeToResource(command.getResourceType())));
-            clientHandler.send(new PendingResourcesMessage(l.getGameController().getGame().getCurrentPlayerPending()));
+            if(l.getGameController().getGame().getCurrentPlayerPending().size()>0)
+                clientHandler.send(new PendingResourcesMessage(l.getGameController().getGame().getCurrentPlayerPending()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
@@ -289,8 +290,10 @@ public class ServerVisitorHandler implements ServerVisitor {
             Lobby l=server.searchLobby(nickLobby.get(chNick.get(idCH)));
             Controller c=l.getGameController();
 
-            clientHandler.send(new PendingResourcesMessage(c.getGame().getCurrentPlayerPending()));
+            if(c.getGame().getCurrentPlayerPending().size()>0)
+                clientHandler.send(new PendingResourcesMessage(c.getGame().getCurrentPlayerPending()));
             l.notifyLobby(new FaithPathUpdate(c.getGame().getCurrentFaithPath()));
+            l.notifyLobby(new MarketUpdate(c.getGame().getMarblesInList()));
         } else {
             //illegal action
             clientHandler.send(new GenericMessage("Illegal ACTION"));
