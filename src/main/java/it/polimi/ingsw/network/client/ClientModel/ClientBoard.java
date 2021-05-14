@@ -1,12 +1,11 @@
 package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class ClientBoard {
     private ClientFaithPath faithPath;
@@ -14,7 +13,8 @@ public class ClientBoard {
     private Map<Integer, Stack<DevelopmentCard>> slots=new HashMap<>();
     private Integer totalSlotPoints;
     private Integer totalCardsBought;
-    //leaders
+    private List<LeaderCard> leadersInHand=new ArrayList<>();
+    private List<LeaderCard> leadersInBoard=new ArrayList<>();
 
     public ClientBoard(){
         deposits=new ClientDeposits();
@@ -25,10 +25,20 @@ public class ClientBoard {
         totalSlotPoints=0;
         totalCardsBought=0;
     }
+
+    public List<LeaderCard> getLeadersInBoard() {
+        return leadersInBoard;
+    }
+
+    public List<LeaderCard> getLeadersInHand() {
+        return leadersInHand;
+    }
+
     public String toString(){
         String stringBoard= faithPath.toString();
         stringBoard+=deposits.toString();
         stringBoard+=stringifySlots();
+        stringBoard+=stringifyLeaders();
         return stringBoard;
     }
     public void push(Integer slot,DevelopmentCard d){
@@ -42,6 +52,23 @@ public class ClientBoard {
         if(slot!=null && slots.get(slot)!=null && slots.get(slot).size()>0){
             slots.get(slot).pop();
         }
+    }
+    public String stringifyLeaders(){
+        StringBuilder sb=new StringBuilder();
+        sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+        sb.append(Color.ANSI_PURPLE.escape()+"LEADERS IN HAND: "+Color.RESET);
+        for(LeaderCard ld : leadersInHand){
+            sb.append(Utilities.stringify(ld));
+            sb.append("\n                 ");
+        }
+        sb.append("\n");
+        sb.append(Color.ANSI_PURPLE.escape()+"LEADERS IN BOARD: "+Color.RESET);
+        for(LeaderCard ld : leadersInBoard){
+            sb.append(Utilities.stringify(ld));
+            sb.append("\n                  ");
+        }
+        sb.append("\n");
+        return sb.toString();
     }
     public String recapSlots(){
         StringBuilder sb=new StringBuilder();

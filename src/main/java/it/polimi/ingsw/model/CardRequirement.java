@@ -24,7 +24,7 @@ public class CardRequirement implements Requirement {
     /**
      * @return the requirement color
      */
-    protected Color getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -32,7 +32,7 @@ public class CardRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    protected Integer getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 

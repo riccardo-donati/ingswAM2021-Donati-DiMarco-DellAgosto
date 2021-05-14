@@ -127,7 +127,7 @@ public class Utilities {
 
         return sb.toString();
     }
-    public static String stringifyLeaders(LeaderCard ld){
+    public static String stringify(LeaderCard ld){
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
         List<Requirement> rList=ld.getRequirements();
@@ -138,7 +138,42 @@ public class Utilities {
                 sb.append(rr.getQuantity()+Utilities.resourceTypeToResource(rr.getResource()).label);
                 sb.append(" ");
             }
+            if(req instanceof CardRequirement){
+                CardRequirement cr=(CardRequirement)req;
+                sb.append(cr.getQuantity()+Utilities.modelColorToClientColor(cr.getColor()).escape()+"■"+Color.RESET);
+                sb.append(" ");
+            }
+            if(req instanceof LevelCardRequirement){
+                LevelCardRequirement lcr=(LevelCardRequirement)req;
+                sb.append(lcr.getQuantity()+"("+Utilities.modelColorToClientColor(lcr.getColor()).escape()+"■"+Color.RESET+" lvl"+lcr.getLevel()+")");
+                sb.append(" ");
+            }
         }
+        sb.append("| "+Color.ANSI_GREEN.escape()+"SPECIAL ABILITIES: "+Color.RESET);
+        List<SpecialAbility> sList=ld.getSpecialAbilities();
+        for(SpecialAbility spec : sList){
+            if(spec instanceof Discount){
+                Discount d=(Discount)spec;
+                sb.append("-1 "+Utilities.resourceTypeToResource(d.getResourceType()).label);
+                sb.append(" ");
+            }
+            if(spec instanceof WhiteTo){
+                WhiteTo wt=(WhiteTo) spec;
+                sb.append("● ⇒ "+Utilities.resourceTypeToResource(wt.getResourceType()).label);
+                sb.append(" ");
+            }
+            if(spec instanceof ExtraDeposit){
+                ExtraDeposit ed=(ExtraDeposit) spec;
+                sb.append("[ ][ ] of "+Utilities.resourceTypeToResource(ed.getResourceType()).label);
+                sb.append(" ");
+            }
+            if(spec instanceof ExtraProduction){
+                ExtraProduction ep=(ExtraProduction) spec;
+                sb.append(Utilities.resourceTypeToResource(ep.getResourceType()).label+" ⇒ ("+Resource.FAITH.label+" + "+Resource.QUESTIONMARK.label+")");
+                sb.append(" ");
+            }
+        }
+        sb.append("| "+Color.ANSI_GREEN.escape()+"POINTS: "+Color.ANSI_YELLOW.escape()+ ld.getPoints()+Color.RESET);
         sb.append(" ]");
         return sb.toString();
     }

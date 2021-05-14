@@ -22,7 +22,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement color
      */
-    protected Color getColor() {
+    public Color getColor() {
         return color;
     }
 
@@ -30,7 +30,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    protected Integer getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -38,7 +38,7 @@ public class LevelCardRequirement implements Requirement {
      *
      * @return the requirement level
      */
-    protected Integer getLevel() {
+    public Integer getLevel() {
         return level;
     }
 

@@ -6,7 +6,8 @@ public enum Resource {
     SHIELD(Color.ANSI_BLUE.escape()+"▣"+Color.RESET),
     SERVANT(Color.ANSI_PURPLE.escape()+"▼"+Color.RESET),
     STONE("▨"),
-    FAITH(Color.ANSI_RED.escape()+"♰"+Color.RESET);
+    FAITH(Color.ANSI_RED.escape()+"♰"+Color.RESET),
+    QUESTIONMARK("?");
 
     public String label;
 

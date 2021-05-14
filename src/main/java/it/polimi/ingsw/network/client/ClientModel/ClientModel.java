@@ -152,9 +152,19 @@ public class ClientModel {
         cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(40));
 
         cm.getMarket().initializeMarbles();
-        //System.out.println(cm);
+        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(12));
+        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(0));
+        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(8));
+        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(15));
 
-        System.out.println(Utilities.stringifyLeaders(cm.leaderCards.get(4)));
+        System.out.println(cm);
+/*
+        System.out.println(Utilities.stringify(cm.leaderCards.get(12)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(1)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(4)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(8)));
+
+ */
     }
 
 }

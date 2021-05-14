@@ -8,6 +8,10 @@ public abstract class SpecialAbility {
     protected ResourceType resourceType;
 
 
+    public ResourceType getResourceType() {
+        return resourceType;
+    }
+
     protected SpecialAbility(ResourceType resourceType) {
         this.resourceType = resourceType;
     }

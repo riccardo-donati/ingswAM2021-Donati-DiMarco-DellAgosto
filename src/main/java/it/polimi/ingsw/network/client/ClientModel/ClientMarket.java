@@ -89,9 +89,9 @@ public class ClientMarket {
         if(marbles.get(pos) == ResourceType.YELLOW) return Color.ANSI_YELLOW.escape()+"●"+Color.RESET;
         if(marbles.get(pos) == ResourceType.VIOLET) return Color.ANSI_PURPLE.escape()+"●"+Color.RESET;
         if(marbles.get(pos) == ResourceType.BLUE) return Color.ANSI_BLUE.escape()+"●"+Color.RESET;
-        if(marbles.get(pos) == ResourceType.GREY) return "●";
+        if(marbles.get(pos) == ResourceType.GREY) return "○";
         if(marbles.get(pos) == ResourceType.RED) return Color.ANSI_RED.escape()+"●"+ Color.RESET;
-        else return "○";
+        else return "●";
     }
 
     public static void main(String[] args) {
