@@ -15,4 +15,6 @@ public enum Color {
     public String escape() {
         return escape;
     }
+
+
 }

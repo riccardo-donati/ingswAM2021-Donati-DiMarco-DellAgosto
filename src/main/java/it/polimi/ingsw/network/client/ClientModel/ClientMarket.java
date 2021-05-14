@@ -13,7 +13,7 @@ public class ClientMarket {
         this.marbles = marbles;
     }
 
-    private void initializeMarbles(){
+    public void initializeMarbles(){
         marbles.add(ResourceType.YELLOW);
         marbles.add(ResourceType.VIOLET);
         marbles.add(ResourceType.EMPTY);

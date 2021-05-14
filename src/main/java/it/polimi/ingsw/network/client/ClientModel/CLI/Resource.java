@@ -5,7 +5,9 @@ public enum Resource {
     COIN(Color.ANSI_YELLOW.escape()+"◉"+Color.RESET),
     SHIELD(Color.ANSI_BLUE.escape()+"▣"+Color.RESET),
     SERVANT(Color.ANSI_PURPLE.escape()+"▼"+Color.RESET),
-    STONE("▨");
+    STONE("▨"),
+    FAITH(Color.ANSI_RED.escape()+"♰"+Color.RESET);
+
     public String label;
 
     Resource(String type) {

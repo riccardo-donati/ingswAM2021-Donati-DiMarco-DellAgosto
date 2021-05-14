@@ -5,12 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.InterfaceAdapter;
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.SpecialAbility;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -92,6 +90,57 @@ public class Utilities {
     }
     public static Resource resourceTypeToResource(ResourceType res){
         return Resource.valueOf(res.label.toUpperCase());
+    }
+    public static Color modelColorToClientColor(it.polimi.ingsw.model.enums.Color color){
+        if(color== it.polimi.ingsw.model.enums.Color.BLUE) return Color.ANSI_BLUE;
+        if(color== it.polimi.ingsw.model.enums.Color.VIOLET) return Color.ANSI_PURPLE;
+        if(color== it.polimi.ingsw.model.enums.Color.GREEN) return Color.ANSI_GREEN;
+        if(color== it.polimi.ingsw.model.enums.Color.YELLOW) return Color.ANSI_YELLOW;
+
+        return Color.ANSI_BLUE; //default
+
+    }
+    public static String stringify(DevelopmentCard d) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        sb.append(Color.ANSI_GREEN.escape() + "COLOR: " + Utilities.modelColorToClientColor(d.getColor()).escape() + "■" + Color.RESET + " | ");
+        sb.append(Color.ANSI_GREEN.escape() + "LEVEL: " + Color.RESET + d.getLevel() + " | ");
+        sb.append(Color.ANSI_GREEN.escape() + "COST:" + Color.RESET);
+        List<ResourceRequirement> rrList = d.getCost();
+        for (ResourceRequirement rr : rrList) {
+            sb.append(rr.getQuantity() + Utilities.resourceTypeToResource(rr.getResource()).label + " ");
+        }
+        sb.append("| ");
+        sb.append(Color.ANSI_GREEN.escape() + "PRODUCTION: " + Color.RESET);
+        Map<ResourceType, Integer> input = d.getProd().getInput();
+        Map<ResourceType, Integer> output = d.getProd().getOutput();
+        sb.append("Input:");
+        for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
+            sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
+        }
+        sb.append(Color.ANSI_RED.escape() + "⇒" + Color.RESET + " Output:");
+        for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
+            sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
+        }
+        sb.append("|"+Color.ANSI_GREEN.escape() + " POINTS: " + Color.ANSI_YELLOW.escape() + d.getPoints() + Color.RESET);
+        sb.append(" ]");
+
+        return sb.toString();
+    }
+    public static String stringifyLeaders(LeaderCard ld){
+        StringBuilder sb = new StringBuilder();
+        sb.append("[ ");
+        List<Requirement> rList=ld.getRequirements();
+        sb.append(Color.ANSI_GREEN.escape()+"REQUIREMENTS: "+Color.RESET);
+        for(Requirement req : rList){
+            if(req instanceof ResourceRequirement){
+                ResourceRequirement rr=(ResourceRequirement)req;
+                sb.append(rr.getQuantity()+Utilities.resourceTypeToResource(rr.getResource()).label);
+                sb.append(" ");
+            }
+        }
+        sb.append(" ]");
+        return sb.toString();
     }
 
 

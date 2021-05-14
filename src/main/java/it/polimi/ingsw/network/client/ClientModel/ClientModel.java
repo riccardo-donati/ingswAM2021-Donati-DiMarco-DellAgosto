@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
@@ -28,12 +29,14 @@ public class ClientModel {
     private List<DevelopmentCard> developmentCards;
     private List<LeaderCard> leaderCards;
 
+
     private ClientMarket market;
 
     public ClientModel(){
         leaderCards= Utilities.loadLeaderCardsFromJSON();
         developmentCards=Utilities.loadDevelopmentCardsFromJSON();
         market=new ClientMarket();
+
     }
 
     public List<String> getPlayersInOrder() {
@@ -88,6 +91,7 @@ public class ClientModel {
             sb.append("\n");
             sb.append("════"+myNickname+" Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(boards.get(myNickname));
+            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(market);
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             return sb.toString();
@@ -124,8 +128,10 @@ public class ClientModel {
     }
 
 
+
     public static void main(String[] args) {
         ClientModel cm=new ClientModel();
+
         List<String> listInOrder=new ArrayList<>();
         listInOrder.add("Da");
         listInOrder.add("giec");
@@ -139,7 +145,16 @@ public class ClientModel {
         cm.boards.get("Da").getFaithPath().addToPos(10);
         cm.boards.get("Riki").getFaithPath().addToPos(2);
         //System.out.println(cm);
-        cm.visualizeBoard("giec");
+        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(1));
+        cm.getBoards().get(cm.getNickname()).push(2,cm.developmentCards.get(10));
+        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(12));
+        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(2));
+        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(40));
+
+        cm.getMarket().initializeMarbles();
+        //System.out.println(cm);
+
+        System.out.println(Utilities.stringifyLeaders(cm.leaderCards.get(4)));
     }
 
 }

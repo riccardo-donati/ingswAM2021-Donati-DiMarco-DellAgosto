@@ -26,7 +26,7 @@ public class ResourceRequirement implements Requirement {
      *
      * @return the requirement quantity
      */
-    protected Integer getQuantity() {
+    public Integer getQuantity() {
         return quantity;
     }
 
@@ -34,7 +34,7 @@ public class ResourceRequirement implements Requirement {
      *
      * @return the requirement resource type
      */
-    protected ResourceType getResource() {
+    public ResourceType getResource() {
         return resource;
     }
 

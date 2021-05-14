@@ -49,7 +49,7 @@ public class Production {
      * input get
      * @return the input of the production
      */
-    protected Map<ResourceType, Integer> getInput() {
+    public Map<ResourceType, Integer> getInput() {
         return input;
     }
 
@@ -57,7 +57,7 @@ public class Production {
      * output get
      * @return the output of the production
      */
-    protected Map<ResourceType, Integer> getOutput() {
+    public Map<ResourceType, Integer> getOutput() {
         return output;
     }
 

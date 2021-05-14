@@ -32,7 +32,7 @@ public class LeaderCard {
      * requirements list getter
      * @return list of requirements
      */
-    protected List<Requirement> getRequirements() {
+    public List<Requirement> getRequirements() {
         return requirements;
     }
 

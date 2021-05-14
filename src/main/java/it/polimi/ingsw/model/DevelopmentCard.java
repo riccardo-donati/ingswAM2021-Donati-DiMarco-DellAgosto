@@ -23,13 +23,13 @@ public class DevelopmentCard {
      * getter of the attribute color
      * @return the card's color
      */
-    protected Color getColor(){return color;}
+    public Color getColor(){return color;}
 
     /**
      * getter of the attribute livello
      * @return the card's level
      */
-    protected Integer getLevel() {
+    public Integer getLevel() {
         return level;
     }
 
@@ -37,7 +37,7 @@ public class DevelopmentCard {
      * getter of the card's cost
      * @return the list of resource requirements
      */
-    protected List<ResourceRequirement> getCost() {
+    public List<ResourceRequirement> getCost() {
         return cost;
     }
 
@@ -45,7 +45,7 @@ public class DevelopmentCard {
      * getter of the card's production
      * @return the card's production
      */
-    protected Production getProd() {
+    public Production getProd() {
         return production;
     }
 
@@ -53,5 +53,7 @@ public class DevelopmentCard {
      * getter for the relative card's points
      * @return the card's points
      */
-    protected Integer getPoints(){ return points;}
+    public Integer getPoints(){ return points;}
+
+
 }
