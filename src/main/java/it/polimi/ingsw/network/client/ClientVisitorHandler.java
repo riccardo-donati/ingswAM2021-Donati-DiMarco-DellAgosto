@@ -135,5 +135,11 @@ public class ClientVisitorHandler implements ClientVisitor{
 
 
     }
+
+    @Override
+    public void visit(ErrorMessage message, Client client) {
+        //if cli
+        System.out.println(Color.ANSI_RED.escape()+message.getMessage()+Color.RESET);
+    }
 }
 

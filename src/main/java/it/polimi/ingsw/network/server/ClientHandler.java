@@ -31,8 +31,13 @@ public class ClientHandler implements Runnable {
     private boolean ping;
     private boolean timeout;
     private ServerVisitorHandler serverVisitorHandler;
+    private Controller lobby;
 
     private static int globalCounter = 0;
+
+    public Controller getLobby() { return lobby; }
+
+    public void setLobby(Controller lobby) { this.lobby = lobby; }
 
     public int getId() {
         return id;

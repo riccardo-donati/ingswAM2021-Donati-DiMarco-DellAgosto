@@ -23,4 +23,6 @@ public interface ClientVisitor {
     void visit(MoveResourceUpdate message, Client client);
 
     void visit(MarketUpdate message, Client client);
+
+    void visit(ErrorMessage message, Client client);
 }

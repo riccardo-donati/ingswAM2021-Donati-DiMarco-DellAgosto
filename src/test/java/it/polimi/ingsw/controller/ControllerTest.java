@@ -8,7 +8,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ControllerTest {
-    Controller c=new Controller();
+    ControllerTOELIMINATE c=new ControllerTOELIMINATE();
 
     @Test
     public void TestInitializeMulti(){

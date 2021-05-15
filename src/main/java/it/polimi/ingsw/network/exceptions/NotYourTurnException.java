@@ -1,8 +1,8 @@
 package it.polimi.ingsw.network.exceptions;
 
-public class IllegalCommandException extends Exception{
+public class NotYourTurnException extends Exception{
     @Override
     public String getMessage() {
-        return "Illegal command";
+        return "It's not your turn";
     }
 }

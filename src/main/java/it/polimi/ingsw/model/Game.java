@@ -5,16 +5,13 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.model.interfaces.BoardObserver;
-import it.polimi.ingsw.model.interfaces.Marble;
-import it.polimi.ingsw.model.interfaces.Requirement;
-import it.polimi.ingsw.model.interfaces.Token;
+import it.polimi.ingsw.model.interfaces.*;
 
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public abstract class Game implements BoardObserver {
+public abstract class Game implements BoardObserver, PublicInterface {
     protected static final Integer ROW=3;
     protected static final Integer COL=4;
 
@@ -256,9 +253,9 @@ public abstract class Game implements BoardObserver {
      */
     public ResourceType[] getDepositResources(int id){
         if(id<=3) {
-            return currPlayer.getBoard().getWarehouse().getMaindepot().get(id).getSpace();
+            return currPlayer.getBoard().getWarehouse().getMaindepot().get(id-1).getSpace();
         }else{
-            return currPlayer.getBoard().getWarehouse().getExtradepots().get(id-3).getSpace();
+            return currPlayer.getBoard().getWarehouse().getExtradepots().get(id-4).getSpace();
         }
     }
     public GamePhase getGamePhase() { return gamePhase; }

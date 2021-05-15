@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Controller {
+public class ControllerTOELIMINATE {
     private Game game;
     private Map<String,Integer> nickOrderMap=new HashMap<>();
     private List<List<LeaderCard>> lists;

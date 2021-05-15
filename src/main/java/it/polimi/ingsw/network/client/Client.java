@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 
 import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
@@ -16,18 +17,16 @@ import java.net.Socket;
 import java.util.*;
 
 public class Client {
-    private String hostName = "127.0.0.1";
+    private String hostName = "127.0.0.1"; //da sostituire con richiesta al player
     private PrintWriter out;
     private Scanner in;
     private BufferedReader stdIn;
     private Socket socket;
     private Gson gson;
     private ClientVisitorHandler clientHandlerVisitor = new ClientVisitorHandler();
-    //private List<String> playersOrder;
-    private String currCommand="";
-    //private Map<Integer,String> idNameLeadersMap=new HashMap<>();
-    //private String nickname;
     private ClientModel clientModel;
+
+    private String currCommand="";
 
     public Client(){
         clientModel=new ClientModel();
@@ -46,7 +45,7 @@ public class Client {
                     m= Parser.parse(currCommand+line,this);
                     out.println(gson.toJson(m,Message.class));
                 } catch (IllegalCommandException e) {
-                    System.out.println("Wrong syntax");
+                    System.out.println(Color.ANSI_RED.escape()+"Wrong syntax"+Color.RESET);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

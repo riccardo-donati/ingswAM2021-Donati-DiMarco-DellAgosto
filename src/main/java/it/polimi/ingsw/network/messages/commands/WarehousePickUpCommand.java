@@ -1,9 +1,12 @@
 package it.polimi.ingsw.network.messages.commands;
 
-import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.ControllerTOELIMINATE;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.network.exceptions.IllegalCommandException;
+import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
+import it.polimi.ingsw.network.server.Controller;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 public class WarehousePickUpCommand implements Command{
@@ -14,16 +17,9 @@ public class WarehousePickUpCommand implements Command{
     }
 
     @Override
-    public boolean doAction(Controller c, String nickname) {
-        Game game = c.getGame();
-        if (check() && game.getCurrentNickname().equals(nickname)) {
-            try {
-                game.pickUpResourceFromWarehouse(index);
-            } catch (IllegalActionException | IndexOutOfBoundsException | NullPointerException | ResourcesNotAvailableException | DepositNotExistingException | NonEmptyException e) {
-                return false;
-            }
-            return true;
-        } else return false;
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException {
+       if(check())c.pickUpResourceFromWarehouse(index,nickname);
+       else throw new IllegalCommandException();
     }
 
     @Override

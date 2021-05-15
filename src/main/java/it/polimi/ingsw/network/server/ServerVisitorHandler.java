@@ -1,31 +1,25 @@
 package it.polimi.ingsw.network.server;
 
-import it.polimi.ingsw.controller.Controller;
-import it.polimi.ingsw.model.Deposit;
-import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.exceptions.IllegalCommandException;
+import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
-import java.util.Map;
+import java.util.List;
 
 public class ServerVisitorHandler implements ServerVisitor {
-    private Server server;
-    private Map<Integer,String> chNick;
-    private Map<String,Integer> nickLobby;
+    private String nickname;
 
     public  ServerVisitorHandler(Server server){
-        this.server=server;
-        chNick=server.getClientHandlerNickMap();
-        nickLobby=server.getNickLobbyMap();
     }
     @Override
     public void visit(RegisterResponse response, ClientHandler clientHandler) {
         clientHandler.stopTimer();
-
         if(clientHandler.isTimeout()) {
             try {
                 clientHandler.closeConnection();
@@ -42,6 +36,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
             System.out.println("Created virtual client for " + nickname);
+            this.nickname=nickname;
             try {
                 clientHandler.getServer().addVirtualClient(virtualClient);
             } catch (IllegalArgumentException e){
@@ -87,276 +82,243 @@ public class ServerVisitorHandler implements ServerVisitor {
         //System.out.println(response.getMessage() + " " + clientHandler.getId());
         clientHandler.setPing(true);
     }
-
-    private boolean executeCommand(ClientHandler ch, Command cmd){
-        int idCH=ch.getId();
-        Controller c=server.searchLobby(nickLobby.get(chNick.get(idCH))).getGameController();
-        return cmd.doAction(c,chNick.get(idCH));
-    }
-
     @Override
     public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
-        boolean response=executeCommand(clientHandler,command);
-        if(response){
-            //update
-            int nBonus=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId()))).getGameController().getNickOrderMap().get(chNick.get(clientHandler.getId()));
-            clientHandler.send(new BonusResourceMessage(nBonus));
-        }else{
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        try {
+            command.doAction(clientHandler.getLobby(),nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | NonEmptyException | IllegalLeaderCardsException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(ChooseBonusResourceCommand command, ClientHandler clientHandler) {
-        boolean response=executeCommand(clientHandler,command);
-        if(response){
-            //update
-            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            l.notifyLobby(new DepositUpdate(command.getId(),Utilities.resourceTypeToResource(command.getRes())));
-        }else{
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | FullSpaceException | UnknownNotFoundException | IllegalResourceException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(PassCommand command, ClientHandler clientHandler) {
-        boolean response=executeCommand(clientHandler,command);
-        if(response){
-            //update
-            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            if(l.getnPlayers()==1){
-                l.notifyLobby(new LorenzoUpdate(l.getGameController().getLorenzoUpdate()));
-            }
-            l.setGamePhase(l.getGameController().getGame().getGamePhase());
-            l.notifyLobby(new NewTurnUpdate(l.getGameController().getGame().getCurrentNickname(),l.getGamePhase()));
-
-        }else{
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | IllegalActionException | NotYourTurnException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(ToggleExtraProductionCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | UnknownFoundException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(ToggleProductionCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | UnknownFoundException | IllegalActionException | NotYourTurnException | IllegalSlotException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(ActivateProductionsCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | IllegalActionException | NotYourTurnException | UnknownFoundException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(StrongboxPickUpCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | ResourcesNotAvailableException | NotYourTurnException | IllegalActionException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(WarehousePickUpCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException e) {
+            e.printStackTrace();
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(DepositResourceCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            l.notifyLobby(new DepositUpdate(command.getId(), Utilities.resourceTypeToResource(command.getResourceType())));
-            if(l.getGameController().getGame().getCurrentPlayerPending().size()>0)
-                clientHandler.send(new PendingResourcesMessage(l.getGameController().getGame().getCurrentPlayerPending()));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (NotYourTurnException | IllegalCommandException | IllegalResourceException | IllegalActionException | FullSpaceException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(MoveResourceCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            Lobby l=server.searchLobby(nickLobby.get(chNick.get(clientHandler.getId())));
-            ResourceType[] d1=new ResourceType[0];
-            ResourceType[] d2=new ResourceType[0];
-            try{
-                d1=l.getGameController().getGame().getDepositResources(command.getSource()-1);
-                d2=l.getGameController().getGame().getDepositResources(command.getDestination()-1);
-            }catch (IndexOutOfBoundsException | NullPointerException e){}
-            l.notifyLobby(new MoveResourceUpdate(d1,d2,command.getSource(),command.getDestination()));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | IllegalResourceException | NotYourTurnException | IllegalActionException | NonEmptyException | FullSpaceException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(DiscardResourceCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (NotYourTurnException | IllegalResourceException | DepositableResourceException | IllegalActionException | IllegalCommandException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(RevertPickUpCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (NotYourTurnException | IllegalResourceException | IllegalActionException | FullSpaceException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(BuyCardCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | TooManyResourcesException | IllegalSlotException | IllegalCommandException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(TransformWhiteCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (NoWhiteResourceException | NotYourTurnException | IllegalResourceException | IllegalActionException | IllegalCommandException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(BuyFromMarketCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-
-            int idCH=clientHandler.getId();
-            Lobby l=server.searchLobby(nickLobby.get(chNick.get(idCH)));
-            Controller c=l.getGameController();
-
-            if(c.getGame().getCurrentPlayerPending().size()>0)
-                clientHandler.send(new PendingResourcesMessage(c.getGame().getCurrentPlayerPending()));
-            l.notifyLobby(new FaithPathUpdate(c.getGame().getCurrentFaithPath()));
-            l.notifyLobby(new MarketUpdate(c.getGame().getMarblesInList()));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalActionException | NotYourTurnException | IllegalCommandException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
 
     @Override
     public void visit(ProductionUnknownCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | UnknownNotFoundException | IllegalActionException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(ExtraProductionUnknownCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | UnknownNotFoundException | IllegalResourceException | IllegalActionException | NotYourTurnException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(PlayLeaderCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | RequirementNotMetException | IllegalActionException | CardNotAvailableException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(DiscardLeaderCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
     public void visit(ToggleDiscountCommand command, ClientHandler clientHandler) {
-        boolean response = executeCommand(clientHandler,command);
-        if (response) {
-            //update
-            clientHandler.send(new GenericMessage("DONE!"));
-        } else {
-            //illegal action
-            clientHandler.send(new GenericMessage("Illegal ACTION"));
+        Controller l=clientHandler.getLobby();
+        try {
+            command.doAction(l,nickname);
+        } catch (IllegalCommandException  | NotYourTurnException | IllegalActionException | DiscountNotFoundException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            return;
         }
+        //update
+        clientHandler.send(new GenericMessage("Done"));
     }
 }

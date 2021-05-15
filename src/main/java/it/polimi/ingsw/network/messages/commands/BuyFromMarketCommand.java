@@ -1,11 +1,12 @@
 package it.polimi.ingsw.network.messages.commands;
 
-import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.ControllerTOELIMINATE;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
-import it.polimi.ingsw.model.exceptions.IllegalSlotException;
-import it.polimi.ingsw.model.exceptions.UnknownFoundException;
+import it.polimi.ingsw.network.exceptions.IllegalCommandException;
+import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
+import it.polimi.ingsw.network.server.Controller;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 public class BuyFromMarketCommand implements Command{
@@ -18,21 +19,16 @@ public class BuyFromMarketCommand implements Command{
     }
 
     @Override
-    public boolean doAction(Controller c, String nickname) {
-        Game game = c.getGame();
-        if (check() && game.getCurrentNickname().equals(nickname)) {
-            try {
-                game.buyAtMarketInterface(line, position - 1);
-            } catch (IllegalActionException | IndexOutOfBoundsException | NullPointerException e) {
-                return false;
-            }
-            return true;
-        } else return false;
+    public void doAction(Controller c, String nickname) throws IllegalActionException, NotYourTurnException, IllegalCommandException {
+        if(check()) c.buyAtMarketInterface(line,position-1,nickname);
+        else throw new IllegalCommandException();
     }
 
     @Override
     public boolean check() {
-        return (line == 'r' || line == 'c') && position >= 1;
+        if(line=='r' && position>0 && position<4) return true;
+        else if(line=='c' && position>0 && position<5) return true;
+        else return false;
     }
 
     @Override

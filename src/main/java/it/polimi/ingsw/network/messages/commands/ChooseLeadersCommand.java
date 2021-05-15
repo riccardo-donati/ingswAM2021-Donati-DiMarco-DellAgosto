@@ -1,12 +1,15 @@
 package it.polimi.ingsw.network.messages.commands;
 
-import it.polimi.ingsw.controller.Controller;
+import it.polimi.ingsw.controller.ControllerTOELIMINATE;
 import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalLeaderCardsException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.network.exceptions.IllegalCommandException;
+import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
+import it.polimi.ingsw.network.server.Controller;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 import java.util.ArrayList;
@@ -31,24 +34,9 @@ public class ChooseLeadersCommand implements Command {
     }
 
 
-    public boolean doAction(Controller c,String nickname){
-        if(!c.getPlayerLeaderCardList(nickname).containsAll(chosenLeaders)) return false;
-        Game g=c.getGame();
-        if(check() && g.getCurrentNickname().equals(nickname)) {
-            Map<String, LeaderCard> map = g.getNameLeaderCardMap();
-            List<LeaderCard> l = new ArrayList<>();
-            l.add(map.get(chosenLeaders.get(0)));
-            l.add(map.get(chosenLeaders.get(1)));
-            for(LeaderCard lc : l){
-                if(lc==null)return false;
-            }
-            try {
-                g.chooseLeader(l);
-            } catch (NonEmptyException | IllegalLeaderCardsException | IllegalActionException | IndexOutOfBoundsException | NullPointerException e) {
-                return false;
-            }
-            return true;
-        }else return false;
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, NonEmptyException, IllegalLeaderCardsException {
+        if(check())c.chooseLeader(chosenLeaders,nickname);
+        else throw new IllegalCommandException();
     }
 
     @Override

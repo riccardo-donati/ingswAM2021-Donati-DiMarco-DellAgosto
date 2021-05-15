@@ -80,6 +80,7 @@ public class ClientModel {
     public void setUpSinglePlayer(){
         boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
     }
+
     public String toString(){
         if(myNickname!=null) {
             StringBuilder sb = new StringBuilder();
