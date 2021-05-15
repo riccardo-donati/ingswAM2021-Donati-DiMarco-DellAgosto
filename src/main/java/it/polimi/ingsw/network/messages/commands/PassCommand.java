@@ -1,4 +1,5 @@
 package it.polimi.ingsw.network.messages.commands;
+
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;

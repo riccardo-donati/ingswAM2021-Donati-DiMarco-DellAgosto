@@ -1,7 +1,5 @@
 package it.polimi.ingsw.network.messages.commands;
 
-import it.polimi.ingsw.controller.ControllerTOELIMINATE;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;

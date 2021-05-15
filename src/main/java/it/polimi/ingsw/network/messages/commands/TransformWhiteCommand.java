@@ -1,7 +1,5 @@
 package it.polimi.ingsw.network.messages.commands;
 
-import it.polimi.ingsw.controller.ControllerTOELIMINATE;
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;

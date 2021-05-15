@@ -140,8 +140,8 @@ public class Parser {
             }
         }
 
-        if (string.startsWith("place bonus")) {
-            tokenizer = new StringTokenizer(string.substring("place bonus".length()));
+        if (string.startsWith("deposit bonus")) {
+            tokenizer = new StringTokenizer(string.substring("deposit bonus".length()));
             try {
                 String resource = tokenizer.nextToken();
                 if (resources.contains(resource)) {
