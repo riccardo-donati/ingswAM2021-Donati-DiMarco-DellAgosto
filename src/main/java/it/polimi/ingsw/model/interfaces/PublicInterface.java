@@ -15,6 +15,7 @@ public interface PublicInterface {
      Map<String,Integer> getFaithPathsMap();
      List<ResourceType> getMarblesInList();
      ResourceType[] getDepositResources(int id);
+     List<Production> getCurrentActiveProductions();
      Integer getCurrentFaithPath();
      Integer getLorenzoPosition();
      Warehouse getCurrentWarehouse();

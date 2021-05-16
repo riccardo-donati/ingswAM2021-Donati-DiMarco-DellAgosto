@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.client;
 
+import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
@@ -182,6 +184,31 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+        }
+    }
+
+    @Override
+    public void visit(ToggleProductionUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        System.out.print("Active productions: ");
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            for(Production p : client.getClientModel().getCurrentBoard().getActiveProductions()){
+                System.out.print("["+ Utilities.stringify(p)+"]");
+            }
+        }
+    }
+
+    @Override
+    public void visit(UnknownProductionUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(message.getIndex()==-1){
+            //base prod
+            System.out.println(Color.ANSI_PURPLE.escape()+"BASE PRODUCTION: "+Color.RESET+Utilities.stringify(client.getClientModel().getCurrentBoard().getBaseProduction()));
+
         }
     }
 

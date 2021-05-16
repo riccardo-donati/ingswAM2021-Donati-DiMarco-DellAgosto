@@ -120,8 +120,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -133,8 +131,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -266,8 +262,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override

@@ -23,7 +23,7 @@ public class Production {
      * constructor that creates an empty production
      * selected is set to false
      */
-    protected Production(){
+    public Production(){
         input = new HashMap<>();
         output = new HashMap<>();
         inputHistory = new ArrayList<>();
@@ -37,7 +37,7 @@ public class Production {
      * @param input map that represents the input of the production
      * @param output map that represents the output of the production
      */
-    protected Production(Map<ResourceType,Integer> input, Map<ResourceType, Integer> output){
+    public Production(Map<ResourceType,Integer> input, Map<ResourceType, Integer> output){
         this.input = input;
         this.output = output;
         inputHistory = new ArrayList<>();
@@ -65,7 +65,7 @@ public class Production {
      * selected get
      * @return true if the production is selected
      */
-    protected boolean checkSelected(){
+    public boolean checkSelected(){
         return selected;
     }
 
@@ -74,7 +74,7 @@ public class Production {
      * if the attribute selected is false, it becomes true ONLY if the production is valid (doesn't have UNKNOWN resource type in or out)
      * @throws UnknownFoundException if you are trying to select a production not valid
      */
-    protected void toggleSelected() throws UnknownFoundException {
+    public void toggleSelected() throws UnknownFoundException {
         if (selected)
             selected = false;
         else if (checkValidity()) {
@@ -87,7 +87,7 @@ public class Production {
      * @param resourceType type of input to be added
      * @param quantity quantity of the specified resource
      */
-    protected void addInput(ResourceType resourceType, Integer quantity) throws IllegalResourceException {
+    public void addInput(ResourceType resourceType, Integer quantity) throws IllegalResourceException {
         if(resourceType.equals(ResourceType.EMPTY) || resourceType.equals(ResourceType.WHITE))
             throw new IllegalResourceException();
         input.merge(resourceType, quantity, Integer::sum);
@@ -98,7 +98,7 @@ public class Production {
      * @param resourceType type of output to be added
      * @param quantity quantity of the specified resource
      */
-    protected void addOutput(ResourceType resourceType, Integer quantity) throws IllegalResourceException {
+    public void addOutput(ResourceType resourceType, Integer quantity) throws IllegalResourceException {
         if(resourceType.equals(ResourceType.EMPTY) || resourceType.equals(ResourceType.WHITE))
             throw new IllegalResourceException();
         output.merge(resourceType, quantity, Integer::sum);
@@ -108,7 +108,7 @@ public class Production {
      * checks whether the production has any UNKNOWN resource type in the input or output map
      * @return false if the production has any UNKNOWN resource type in the input or output map, true otherwise
      */
-    protected boolean checkValidity(){
+    public boolean checkValidity(){
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             if (entry.getValue() > 0 && entry.getKey() == ResourceType.UNKNOWN) return false;
         }
@@ -123,7 +123,7 @@ public class Production {
      * @param resourceType resource type unknown will be changed into
      * @throws UnknownNotFoundException thrown if the map doesn't contain unknowns
      */
-    protected void replaceUnknownInput(ResourceType resourceType) throws UnknownNotFoundException, IllegalResourceException {
+    public void replaceUnknownInput(ResourceType resourceType) throws UnknownNotFoundException, IllegalResourceException {
         if(resourceType.equals(ResourceType.EMPTY) || resourceType.equals(ResourceType.WHITE))
             throw new IllegalResourceException();
         Utilities.replaceUnknown(input, inputHistory, resourceType);
@@ -134,7 +134,7 @@ public class Production {
      * @param resourceType resource type unknown will be changed into
      * @throws UnknownNotFoundException thrown if the map doesn't contain unknowns
      */
-    protected void replaceUnknownOutput(ResourceType resourceType) throws UnknownNotFoundException, IllegalResourceException {
+    public void replaceUnknownOutput(ResourceType resourceType) throws UnknownNotFoundException, IllegalResourceException {
         if(resourceType.equals(ResourceType.EMPTY) || resourceType.equals(ResourceType.WHITE))
             throw new IllegalResourceException();
         Utilities.replaceUnknown(output, outputHistory, resourceType);
@@ -143,7 +143,7 @@ public class Production {
     /**
      * calls revertUnknown on the input and output maps passing inputHistory and outputHistory as the backups
      */
-    protected void resetProduction() {
+    public void resetProduction() {
         Utilities.revertUnknown(input, inputHistory);
         Utilities.revertUnknown(output, outputHistory);
     }

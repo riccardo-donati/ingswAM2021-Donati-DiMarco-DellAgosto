@@ -230,6 +230,24 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Warehouse getCurrentWarehouse(){
        return currPlayer.getBoard().getWarehouse();
     }
+    public List<Production> getCurrentActiveProductions(){
+        List<Production> productions=new ArrayList<>();
+        if(currPlayer.getBoard().getBaseProduction().checkSelected()){
+            productions.add(currPlayer.getBoard().getBaseProduction());
+        }
+        for(Production p : currPlayer.getExtraProductions()){
+            if(p.checkSelected())productions.add(p);
+        }
+        for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : currPlayer.getBoard().getSlots().entrySet()) {
+            if(entry.getValue().size()>0){
+                Production p=entry.getValue().get(entry.getValue().size()-1).getProd();
+                if(p.checkSelected()){
+                    productions.add(p);
+                }
+            }
+        }
+        return productions;
+    }
     public List<ResourceType> getMarblesInList(){
         List<ResourceType> list=new ArrayList<>();
         Marble[][] marbles=market.getMarbles();

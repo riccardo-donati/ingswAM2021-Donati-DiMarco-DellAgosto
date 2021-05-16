@@ -2,6 +2,9 @@ package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard;
+import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 
@@ -16,6 +19,9 @@ public class ClientBoard {
     private List<LeaderCard> leadersInHand=new ArrayList<>();
     private List<LeaderCard> leadersInBoard=new ArrayList<>();
 
+    private List<Production> activeProductions=new ArrayList<>();
+    Production baseProduction;
+
     public ClientBoard(){
         deposits=new ClientDeposits();
         faithPath=new ClientFaithPath();
@@ -24,10 +30,30 @@ public class ClientBoard {
         slots.put(3,new Stack<>());
         totalSlotPoints=0;
         totalCardsBought=0;
+        baseProduction=new Production();
+        try {
+            baseProduction.addInput(ResourceType.UNKNOWN,2);
+            baseProduction.addOutput(ResourceType.UNKNOWN,1);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public Production getBaseProduction() {
+        return baseProduction;
+    }
+
+    public void setActiveProductions(List<Production> activeProductions) {
+        this.activeProductions = activeProductions;
     }
 
     public void setLeadersInHand(List<LeaderCard> leadersInHand) {
         this.leadersInHand = leadersInHand;
+    }
+
+    public List<Production> getActiveProductions() {
+        return activeProductions;
     }
 
     public List<LeaderCard> getLeadersInBoard() {
@@ -43,6 +69,7 @@ public class ClientBoard {
         stringBoard+=deposits.toString();
         stringBoard+=stringifySlots();
         stringBoard+=stringifyLeaders();
+        stringBoard+=stringifyBaseProduction();
         return stringBoard;
     }
     public void push(Integer slot,DevelopmentCard d){
@@ -57,6 +84,13 @@ public class ClientBoard {
             return slots.get(slot).pop();
         }
         return null;
+    }
+    public String stringifyBaseProduction(){
+        StringBuilder sb=new StringBuilder();
+        sb.append("\n═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+        sb.append(Color.ANSI_PURPLE.escape()).append("BASE PRODUCTION: ").append(Color.RESET).append(Utilities.stringify(baseProduction));
+        sb.append("\n");
+        return sb.toString();
     }
     public String stringifyLeaders(){
         StringBuilder sb=new StringBuilder();
