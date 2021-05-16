@@ -33,7 +33,7 @@ public class ClientCardMatrix {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape()+"\nCARD MARKET: \n"+Color.RESET);
+        sb.append(Color.ANSI_PURPLE.escape()+"\nPRODUCTION CARDS: \n"+Color.RESET);
         for(int column=0; column <=3; column++){
             if(column == 0) c = Color.ANSI_GREEN;
             else if (column == 1) c = Color.ANSI_BLUE;

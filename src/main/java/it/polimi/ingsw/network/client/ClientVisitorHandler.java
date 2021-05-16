@@ -185,5 +185,25 @@ public class ClientVisitorHandler implements ClientVisitor{
         }
     }
 
+    @Override
+    public void visit(PickUpWarehouseUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+        }
+    }
+
+    @Override
+    public void visit(PickUpStrongboxUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+        }
+    }
+
 }
 

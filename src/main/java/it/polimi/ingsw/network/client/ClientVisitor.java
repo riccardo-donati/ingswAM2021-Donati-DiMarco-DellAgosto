@@ -31,4 +31,7 @@ public interface ClientVisitor {
     void visit(SlotUpdate message, Client client);
 
     void visit(WarehouseUpdate message, Client client);
+
+    void visit(PickUpWarehouseUpdate message, Client client);
+    void visit(PickUpStrongboxUpdate message, Client client);
 }

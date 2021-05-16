@@ -113,7 +113,7 @@ public class Utilities {
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
         }
-        sb.append(Color.ANSI_RED.escape() + "⇒" + Color.RESET);
+        sb.append(Color.ANSI_RED.escape() + "⇒ " + Color.RESET);
         for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
         }
@@ -140,7 +140,7 @@ public class Utilities {
             }
             if(req instanceof LevelCardRequirement){
                 LevelCardRequirement lcr=(LevelCardRequirement)req;
-                sb.append(lcr.getQuantity()+"("+Utilities.modelColorToClientColor(lcr.getColor()).escape()+"■"+Color.RESET+" lvl"+lcr.getLevel()+")");
+                sb.append(lcr.getQuantity()+"("+Utilities.modelColorToClientColor(lcr.getColor()).escape()+"■"+Color.RESET+" lv"+lcr.getLevel()+")");
                 sb.append(" ");
             }
         }

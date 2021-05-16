@@ -1,0 +1,33 @@
+package it.polimi.ingsw.network.messages.updates;
+
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
+import it.polimi.ingsw.network.client.ClientVisitor;
+
+public class PickUpStrongboxUpdate implements Update {
+    Resource resource;
+
+    public PickUpStrongboxUpdate(Resource resource) {
+        this.resource = resource;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    @Override
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this,client);
+    }
+
+    @Override
+    public String getMessage() {
+        return "picked up " + resource + " from the strongbox";
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().removeResourceFromStrongbox(resource);
+    }
+}

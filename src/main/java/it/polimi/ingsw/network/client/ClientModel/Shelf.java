@@ -24,8 +24,12 @@ public class Shelf {
         spaces=new String[n];
         this.id=id;
     }
+
     public void put(int index, Resource res){
         spaces[index]=res.label;
     }
 
+    public void remove(int index){
+        spaces[index] = "  ";
+    }
 }

@@ -369,13 +369,19 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void pickUpResourceFromWarehouse(Integer id,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.pickUpResourceFromWarehouse(id);
+            notifyLobby(new PickUpWarehouseUpdate(id));
+            getVirtualClient(nickname).send(new PendingResourcesMessage(getCurrentPlayerPending()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void pickUpResourceFromStrongbox(ResourceType res,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.pickUpResourceFromStrongbox(res);
+            notifyLobby(new PickUpStrongboxUpdate(Utilities.resourceTypeToResource(res)));
+            getVirtualClient(nickname).send(new PendingResourcesMessage(getCurrentPlayerPending()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void revertPickUp(String nickname) throws IllegalResourceException, FullSpaceException, IllegalActionException, NotYourTurnException {

@@ -11,6 +11,7 @@ import java.util.Map;
 public class ClientDeposits {
     List<Shelf> shelves=new ArrayList<>();
     Map<Resource, Integer> strongbox=new HashMap<>();
+
     public ClientDeposits(){
         strongbox.put(Resource.COIN,0);
         strongbox.put(Resource.SHIELD,0);
@@ -20,12 +21,14 @@ public class ClientDeposits {
         shelves.add(new Shelf(2,2));
         shelves.add(new Shelf(3,3));
     }
+
     public Shelf getShelf(int id){
         for(Shelf s : shelves){
             if(s.getId()==id)return s;
         }
         return null;
     }
+
     public void deposit(Resource r, Integer idD){
         Shelf s=getShelf(idD);
         for(int i=0;i<s.getSpaces().length;i++){
@@ -35,6 +38,7 @@ public class ClientDeposits {
             }
         }
     }
+
     public void deposit(List<Resource> r,Integer idD){
         Shelf s=getShelf(idD);
         if(s!=null && r.size()<=s.getSpaces().length){
@@ -42,24 +46,32 @@ public class ClientDeposits {
             for(int i=0;i<r.size();i++){
                 s.put(i,r.get(i));
             }
-            return;
         }
     }
-    public void removeResourceFromStrongbox(Resource res){
-        if(strongbox.get(res)!=0){
-            strongbox.replace(res,strongbox.get(res)-1);
+
+    public void remove(Integer idD){
+        Shelf s=getShelf(idD);
+        for(int i = s.getSpaces().length - 1; i >= 0; i--){
+            if(s.getSpaces()[i]!=null && !s.getSpaces()[i].equals("  ")) {
+                s.remove(i);
+                return;
+            }
         }
     }
-    public void putResourceInStrongbox(Resource res){
-        if(strongbox.get(res)!=null){
-            strongbox.replace(res,strongbox.get(res)+1);
-        }else{
-            strongbox.put(res,1);
-        }
+
+    public void removeResourceFromStrongbox(Resource resource){
+        if(strongbox.get(resource) > 0)
+            strongbox.replace(resource, strongbox.get(resource) - 1);
     }
+
+    public void putResourceInStrongbox(Resource resource){
+        strongbox.merge(resource, 1, Integer::sum);
+    }
+
     public void addShelf(Shelf s){
         shelves.add(s);
     }
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
