@@ -100,26 +100,25 @@ public class Utilities {
     public static String stringify(DevelopmentCard d) {
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
-        sb.append(Color.ANSI_GREEN.escape() + "COLOR: " + Utilities.modelColorToClientColor(d.getColor()).escape() + "■" + Color.RESET + " | ");
-        sb.append(Color.ANSI_GREEN.escape() + "LEVEL: " + Color.RESET + d.getLevel() + " | ");
-        sb.append(Color.ANSI_GREEN.escape() + "COST:" + Color.RESET);
+        sb.append("COLOR: " + Utilities.modelColorToClientColor(d.getColor()).escape() + "■" + Color.RESET+" | ");
+        sb.append("LEVEL: "+ d.getLevel() + " | ");
+        sb.append("COST: ");
         List<ResourceRequirement> rrList = d.getCost();
         for (ResourceRequirement rr : rrList) {
             sb.append(rr.getQuantity() + Utilities.resourceTypeToResource(rr.getResource()).label + " ");
         }
         sb.append("| ");
-        sb.append(Color.ANSI_GREEN.escape() + "PRODUCTION: " + Color.RESET);
+        sb.append( "PRODUCTION: ");
         Map<ResourceType, Integer> input = d.getProd().getInput();
         Map<ResourceType, Integer> output = d.getProd().getOutput();
-        sb.append("Input:");
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
         }
-        sb.append(Color.ANSI_RED.escape() + "⇒" + Color.RESET + " Output:");
+        sb.append(Color.ANSI_RED.escape() + "⇒" + Color.RESET);
         for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
         }
-        sb.append("|"+Color.ANSI_GREEN.escape() + " POINTS: " + Color.ANSI_YELLOW.escape() + d.getPoints() + Color.RESET);
+        sb.append("| POINTS: " + Color.ANSI_YELLOW.escape() + d.getPoints() + Color.RESET);
         sb.append(" ]");
 
         return sb.toString();

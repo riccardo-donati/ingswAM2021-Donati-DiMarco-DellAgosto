@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientCardMatrix;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.Message;
@@ -159,6 +160,22 @@ public class ClientModel {
         cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(15));
 
         System.out.println(cm);
+
+        ClientCardMatrix ccm = new ClientCardMatrix();
+        ccm.push(0, 3, cm.developmentCards.get(1));
+        ccm.push(1, 1, cm.developmentCards.get(10));
+        ccm.push(1, 2, cm.developmentCards.get(12));
+        ccm.push(0, 1, cm.developmentCards.get(2));
+        ccm.push(2, 3, cm.developmentCards.get(40));
+        ccm.push(2, 1, cm.developmentCards.get(41));
+        ccm.push(2, 1, cm.developmentCards.get(32));
+        ccm.push(1, 1, cm.developmentCards.get(24));
+        ccm.push(2, 3, cm.developmentCards.get(27));
+        ccm.push(2, 1, cm.developmentCards.get(28));
+        ccm.push(2, 0, cm.developmentCards.get(30));
+        ccm.push(0, 2, cm.developmentCards.get(33));
+        ccm.push(1, 1, cm.developmentCards.get(15));
+        System.out.println(ccm.toString());
 /*
         System.out.println(Utilities.stringify(cm.leaderCards.get(12)));
         System.out.println(Utilities.stringify(cm.leaderCards.get(1)));
