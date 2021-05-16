@@ -10,6 +10,7 @@ public class DevelopmentCard {
     private Color color;
     private Production production;
     private Integer points;
+    private String name;
 
     public DevelopmentCard(List<ResourceRequirement> cost, Integer level, Color color, Production production, Integer points) {
         this.cost = cost;
@@ -17,6 +18,10 @@ public class DevelopmentCard {
         this.color = color;
         this.production = production;
         this.points = points;
+    }
+
+    public String getName() {
+        return name;
     }
 
     /**

@@ -2,8 +2,6 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
-import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
@@ -60,11 +58,28 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
         client.setCurrCommand("");
         client.getClientModel().setGamePhase(GamePhase.SETUP);
+
         //if cli mode
         System.out.println(client.getClientModel());
         System.out.println(Color.ANSI_GREEN.escape()+"SETUP PHASE BEGIN"+Color.RESET);
-        System.out.println(message.getMessage());
 
+        StringBuilder sb=new StringBuilder();
+        sb.append("------------------------------------------------------------------------------------\n");
+        sb.append("Player Order:\n");
+        List<String> playerOrder=message.getPlayerOrder();
+        for(int i=0;i<playerOrder.size()-1;i++){
+            sb.append(Color.ANSI_GREEN.escape()).append(playerOrder.get(i)).append(Color.RESET);
+            sb.append(" -> ");
+        }
+        sb.append(Color.ANSI_GREEN.escape()).append(playerOrder.get(playerOrder.size() - 1)).append(Color.RESET+"\n");
+
+        sb.append("Choose 2 leader cards: \n");
+        List<String> leaderCards=message.getCards();
+        for(int i=0;i<leaderCards.size();i++){
+            sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().getLeaderCardStringified(leaderCards.get(i))).append("\n");
+        }
+        sb.append("------------------------------------------------------------------------------------");
+        System.out.println(sb.toString());
     }
 
     @Override
@@ -141,5 +156,34 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         System.out.println(Color.ANSI_RED.escape()+message.getMessage()+Color.RESET);
     }
+
+    @Override
+    public void visit(LeadersInHandUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).stringifyLeaders());
+    }
+
+    @Override
+    public void visit(SlotUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().stringifySlots());
+        }
+    }
+
+    @Override
+    public void visit(WarehouseUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if cli
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+        }
+    }
+
 }
 

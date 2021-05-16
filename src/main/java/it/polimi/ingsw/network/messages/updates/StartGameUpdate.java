@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.messages.updates;
 
+import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
@@ -11,22 +12,21 @@ import it.polimi.ingsw.network.messages.ClientMessage;
 import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class StartGameUpdate implements Update, ClientVisitable {
     private List<String> playerOrder=new ArrayList<>();
     private List<String> cards=new ArrayList<>();
     private Map<String,Integer> faithPaths=new HashMap<>();
     private List<ResourceType> marbles=new ArrayList<>();
+    private Stack<DevelopmentCard>[][] cardMatrix;
 
-    public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles){
+    public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles,Stack<DevelopmentCard>[][] cardMatrix){
         this.playerOrder=playerOrder;
         this.cards=cards;
         this.faithPaths=faithPaths;
         this.marbles=marbles;
+        this.cardMatrix=cardMatrix;
     }
 
 
@@ -45,16 +45,7 @@ public class StartGameUpdate implements Update, ClientVisitable {
 
     @Override
     public String getMessage() {
-        StringBuilder message= new StringBuilder("-------------\n Game order:\n");
-        for(int i=0;i<playerOrder.size()-1;i++){
-            message.append(playerOrder.get(i)).append("->");
-        }
-        message.append(playerOrder.get(playerOrder.size()-1));
-        message.append("\n-------------\nLeaderCards to choose:\n");
-        for(String l : cards){
-            message.append(l).append(" ");
-        }
-        return message.toString();
+        return null;
     }
 
     @Override
@@ -73,6 +64,6 @@ public class StartGameUpdate implements Update, ClientVisitable {
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
         }
         clientModel.getMarket().setMarbles(marbles);
-
+        clientModel.getCardMatrix().setDCard(cardMatrix);
     }
 }

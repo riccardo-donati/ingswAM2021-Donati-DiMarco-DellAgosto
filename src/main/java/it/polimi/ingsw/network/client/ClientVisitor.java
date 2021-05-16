@@ -25,4 +25,10 @@ public interface ClientVisitor {
     void visit(MarketUpdate message, Client client);
 
     void visit(ErrorMessage message, Client client);
+
+    void visit(LeadersInHandUpdate message, Client client);
+
+    void visit(SlotUpdate message, Client client);
+
+    void visit(WarehouseUpdate message, Client client);
 }

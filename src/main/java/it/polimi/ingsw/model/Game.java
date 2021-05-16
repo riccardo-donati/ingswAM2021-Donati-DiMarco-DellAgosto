@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.*;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -26,6 +27,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     private boolean endGameTrigger;
 
     private Map<String,LeaderCard> nameLeaderCardMap;
+    private Map<String,DevelopmentCard> nameDevelopmentCardMap;
 
     protected boolean isEndGameTrigger() { return endGameTrigger; }
     protected List<DevelopmentCard> getDevelopmentCards() {
@@ -33,9 +35,6 @@ public abstract class Game implements BoardObserver, PublicInterface {
     }
     protected List<LeaderCard> getLeaderCards() {
         return leaderCards;
-    }
-    protected Stack<DevelopmentCard>[][] getCardMatrix() {
-        return cardMatrix;
     }
     protected Player getCurrPlayer() { return currPlayer; }
     protected void pushBlackCross(Integer push){}
@@ -98,6 +97,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
      * Using GSON we initialize the developmentCard list
      */
     protected void loadDevelopmentCardsFromJSON() {
+        nameDevelopmentCardMap=new HashMap<>();
         Gson gson=new Gson();
         Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
         JsonReader reader = null;
@@ -108,6 +108,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
             System.out.println("DevelopmentCard.json not found");
         }
         developmentCards=gson.fromJson(reader,foundListType);
+        for(DevelopmentCard dc :developmentCards){
+            nameDevelopmentCardMap.put(dc.getName(),dc);
+        }
     }
 
     /**
@@ -212,7 +215,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
     public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
-
+    public Map<String,DevelopmentCard> getNameDevelopmentCardMap(){return nameDevelopmentCardMap;}
     /**
      * usefulfor the controller
      * @return a map with the nickname and the faithpath position
@@ -224,7 +227,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return map;
     }
-
+    public Warehouse getCurrentWarehouse(){
+       return currPlayer.getBoard().getWarehouse();
+    }
     public List<ResourceType> getMarblesInList(){
         List<ResourceType> list=new ArrayList<>();
         Marble[][] marbles=market.getMarbles();
@@ -289,7 +294,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
             }
         }
     }
-
+    public Stack<DevelopmentCard>[][] getCardMatrix(){
+        return cardMatrix;
+    }
     /**
      * useful fot the controller
      * @return the nickname of the current player
@@ -306,6 +313,18 @@ public abstract class Game implements BoardObserver, PublicInterface {
             map.put(p.getNickname(),p.getOrder());
         }
         return  map;
+    }
+
+    /**
+     *
+     * @return the current player leadersInHand names
+     */
+    public List<String> getCurrentLeadersInHand(){
+        List<String> listNamesLeaders=new ArrayList<>();
+        for(LeaderCard l : currPlayer.getLeadersInHand()){
+            listNamesLeaders.add(l.getName());
+        }
+        return listNamesLeaders;
     }
     /**
      * useful for the controller

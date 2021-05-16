@@ -2,23 +2,21 @@ package it.polimi.ingsw.network.server;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
-import it.polimi.ingsw.model.Game;
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Result;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.PublicInterface;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class Controller {
     @Expose
@@ -182,7 +180,7 @@ public class Controller {
         notifyLobby(new GenericMessage("Game started!"));
         for(VirtualClient vc : players){
             List<String> l=getPlayerLeaderCardList(vc.getNickname());
-            Message m=new StartGameUpdate(getOrderPlayerList(),l,getFaithPathsMap(),getMarblesInList());
+            Message m=new StartGameUpdate(getOrderPlayerList(),l,getFaithPathsMap(),getMarblesInList(),getCardMatrix());
             vc.send(m);
         }
     }
@@ -193,9 +191,9 @@ public class Controller {
     }
 
     //interface try catch?
-    public synchronized Map<String, LeaderCard> getNameLeaderCardMap(){
-        return game.getNameLeaderCardMap();
-    }
+    public synchronized Stack<DevelopmentCard>[][] getCardMatrix(){return game.getCardMatrix();}
+    public synchronized Map<String, LeaderCard> getNameLeaderCardMap(){ return game.getNameLeaderCardMap(); }
+    public synchronized Map<String,DevelopmentCard> getNameDevelopmentCardMap(){return game.getNameDevelopmentCardMap();}
     public synchronized Map<String,Integer> getFaithPathsMap(){
         return game.getFaithPathsMap();
     }
@@ -272,10 +270,15 @@ public class Controller {
             }
             game.chooseLeader(list);
             //update
+            getVirtualClient(nickname).send(new LeadersInHandUpdate(getCurrentLeadersInHand()));
             int nBonus=getNickOrderMap().get(nickname);
             getVirtualClient(nickname).send(new BonusResourceMessage(nBonus));
+
         }
         else throw new NotYourTurnException();
+    }
+    public synchronized List<String> getCurrentLeadersInHand(){
+        return game.getCurrentLeadersInHand();
     }
     public synchronized void chooseResourceToDeposit(Integer id,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalActionException, IllegalResourceException, FullSpaceException {
         if(getCurrentNickname().equals(nickname)) {
@@ -380,14 +383,31 @@ public class Controller {
             game.revertPickUp();
         else throw new NotYourTurnException();
     }
+    public synchronized List<ClientDeposit> getCurrentWarehouse(){
+        List<ClientDeposit> list=new ArrayList<>();
+        Warehouse wh=game.getCurrentWarehouse();
+        for(Deposit d : wh.getMaindepot()){
+            ClientDeposit cd=Utilities.depositToClientDeposit(d,'m');
+            if(cd!=null)list.add(cd);
+        }
+        for(Deposit d: wh.getExtradepots()){
+            ClientDeposit cd=Utilities.depositToClientDeposit(d,'e');
+            if(cd!=null)list.add(cd);
+        }
+        return list;
+    }
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname))
             game.activateProductions();
         else throw new NotYourTurnException();
     }
     public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
-            game.buyCard(row,col,slot);
+        if(getCurrentNickname().equals(nickname)) {
+            game.buyCard(row, col, slot);
+            //update
+            notifyLobby(new SlotUpdate(slot,row,col));
+            notifyLobby(new WarehouseUpdate(getCurrentWarehouse()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void moveResource(Integer dep1,Integer dep2,String nickname) throws IllegalActionException, NonEmptyException, FullSpaceException, IllegalResourceException, NotYourTurnException {

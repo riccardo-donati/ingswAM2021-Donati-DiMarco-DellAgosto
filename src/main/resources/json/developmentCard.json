@@ -11,7 +11,8 @@
 			"RED":1
 		}
 	},
-	"points":1
+	"points":1,
+	 "name": "1D"
  },
  {
 	"cost":[{"quantity":3,"resource":"VIOLET"}],
@@ -27,7 +28,8 @@
 			"GREY":1
 		}
 	},
-	"points":3
+	"points":3,
+	 "name": "2D"
  },
  {
 	"cost":[{"quantity":3,"resource":"YELLOW"}],
@@ -43,7 +45,8 @@
 			"BLUE":1
 		}
 	},
-	"points":3
+	"points":3,
+	 "name": "3D"
  },
  {
 	"cost":[{"quantity":3,"resource":"GREY"}],
@@ -59,7 +62,8 @@
 			"GREY":1
 		}
 	},
-	"points":3
+	"points":3,
+	 "name": "4D"
  },
  {
 	"cost":[{"quantity":2,"resource":"BLUE"},{"quantity":2,"resource":"YELLOW"}],
@@ -75,7 +79,8 @@
 			"RED":1
 		}
 	},
-	"points":4
+	"points":4,
+	 "name": "5D"
  },
  {
 	"cost":[{"quantity":2,"resource":"VIOLET"},{"quantity":2,"resource":"GREY"}],
@@ -91,7 +96,8 @@
 			"RED":1
 		}
 	},
-	"points":4
+	"points":4,
+	 "name": "6D"
  },
  {
 	"cost":[{"quantity":2,"resource":"YELLOW"},{"quantity":2,"resource":"VIOLET"}],
@@ -107,7 +113,8 @@
 			"RED":1
 		}
 	},
-	"points":4
+	"points":4,
+	 "name": "7D"
  },
  {
 	"cost":[{"quantity":2,"resource":"GREY"},{"quantity":2,"resource":"BLUE"}],
@@ -123,7 +130,8 @@
 			"RED":1
 		}
 	},
-	"points":4
+	"points":4,
+	 "name": "8D"
  },
  {
 	"cost":[{"quantity":4,"resource":"BLUE"}],
@@ -137,7 +145,8 @@
 			"RED":2
 		}
 	},
-	"points":5
+	"points":5,
+	 "name": "9D"
  },
  {
 	"cost":[{"quantity":4,"resource":"VIOLET"}],
@@ -151,7 +160,8 @@
 			"RED":2
 		}
 	},
-	"points":5
+	"points":5,
+	 "name": "10D"
  },
  {
 	"cost":[{"quantity":4,"resource":"YELLOW"}],
@@ -165,7 +175,8 @@
 			"RED":2
 		}
 	},
-	"points":5
+	"points":5,
+	 "name": "11D"
  },
  {
 	"cost":[{"quantity":2,"resource":"VIOLET"}],
@@ -179,7 +190,8 @@
 			"RED":1
 		}
 	},
-	"points":1
+	"points":1,
+	 "name": "12D"
  },
  {
 	"cost":[{"quantity":4,"resource":"GREY"}],
@@ -193,7 +205,8 @@
 			"RED":2
 		}
 	},
-	"points":5
+	"points":5,
+	 "name": "13D"
  },
  {
 	"cost":[{"quantity":3,"resource":"BLUE"},{"quantity":2,"resource":"VIOLET"}],
@@ -208,7 +221,8 @@
 			"GREY":3
 		}
 	},
-	"points":6
+	"points":6,
+	 "name": "14D"
  },
  {
 	"cost":[{"quantity":3,"resource":"VIOLET"},{"quantity":2,"resource":"YELLOW"}],
@@ -223,7 +237,8 @@
 			"BLUE":3
 		}
 	},
-	"points":6
+	"points":6,
+	 "name": "15D"
  },
  {
 	"cost":[{"quantity":3,"resource":"YELLOW"},{"quantity":2,"resource":"GREY"}],
@@ -238,7 +253,8 @@
 			"VIOLET":3
 		}
 	},
-	"points":6
+	"points":6,
+	 "name": "16D"
  },
  {
 	"cost":[{"quantity":3,"resource":"GREY"},{"quantity":2,"resource":"BLUE"}],
@@ -253,7 +269,8 @@
 			"YELLOW":3
 		}
 	},
-	"points":6
+	"points":6,
+	 "name": "17D"
  },
  {
 	"cost":[{"quantity":5,"resource":"BLUE"}],
@@ -268,7 +285,8 @@
 			"RED":2
 		}
 	},
-	"points":7
+	"points":7,
+	 "name": "18D"
  },
  {
 	"cost":[{"quantity":5,"resource":"VIOLET"}],
@@ -283,7 +301,8 @@
 			"RED":2
 		}
 	},
-	"points":7
+	"points":7,
+	 "name": "19D"
  },
  {
 	"cost":[{"quantity":5,"resource":"YELLOW"}],
@@ -298,7 +317,8 @@
 			"RED":2
 		}
 	},
-	"points":7
+	"points":7,
+	 "name": "20D"
  },
  {
 	"cost":[{"quantity":5,"resource":"GREY"}],
@@ -313,7 +333,8 @@
 			"RED":2
 		}
 	},
-	"points":7
+	"points":7,
+	 "name": "21D"
  },
  {
 	"cost":[{"quantity":3,"resource":"BLUE"},{"quantity":3,"resource":"YELLOW"}],
@@ -328,7 +349,8 @@
 			"RED":1
 		}
 	},
-	"points":8
+	"points":8,
+	 "name": "22D"
  },
  {
 	"cost":[{"quantity":2,"resource":"YELLOW"}],
@@ -342,7 +364,8 @@
 			"RED":1
 		}
 	},
-	"points":1
+	"points":1,
+	 "name": "23D"
  },
  {
 	"cost":[{"quantity":3,"resource":"VIOLET"},{"quantity":3,"resource":"BLUE"}],
@@ -357,7 +380,8 @@
 			"RED":1
 		}
 	},
-	"points":8
+	"points":8,
+	 "name": "24D"
  },
  {
 	"cost":[{"quantity":3,"resource":"YELLOW"},{"quantity":3,"resource":"GREY"}],
@@ -372,7 +396,8 @@
 			"RED":1
 		}
 	},
-	"points":8
+	"points":8,
+	 "name": "25D"
  },
  {
 	"cost":[{"quantity":3,"resource":"GREY"},{"quantity":3,"resource":"VIOLET"}],
@@ -387,7 +412,8 @@
 			"RED":1
 		}
 	},
-	"points":8
+	"points":8,
+	 "name": "26D"
  },
  {
 	"cost":[{"quantity":6,"resource":"BLUE"}],
@@ -402,7 +428,8 @@
 			"RED":2
 		}
 	},
-	"points":9
+	"points":9,
+	 "name": "27D"
  },
  {
 	"cost":[{"quantity":6,"resource":"VIOLET"}],
@@ -417,7 +444,8 @@
 			"RED":2
 		}
 	},
-	"points":9
+	"points":9,
+	 "name": "28D"
  },
  {
 	"cost":[{"quantity":6,"resource":"YELLOW"}],
@@ -432,7 +460,8 @@
 			"RED":2
 		}
 	},
-	"points":9
+	"points":9,
+	 "name": "29D"
  },
  {
 	"cost":[{"quantity":6,"resource":"GREY"}],
@@ -447,7 +476,8 @@
 			"RED":2
 		}
 	},
-	"points":9
+	"points":9,
+	 "name": "30D"
  },
  {
 	"cost":[{"quantity":5,"resource":"BLUE"},{"quantity":2,"resource":"VIOLET"}],
@@ -464,7 +494,8 @@
 			"RED":1
 		}
 	},
-	"points":10
+	"points":10,
+	 "name": "31D"
  },
  {
 	"cost":[{"quantity":5,"resource":"VIOLET"},{"quantity":2,"resource":"YELLOW"}],
@@ -481,7 +512,8 @@
 			"RED":1
 		}
 	},
-	"points":10
+	"points":10,
+	 "name": "32D"
  },
  {
 	"cost":[{"quantity":5,"resource":"YELLOW"},{"quantity":2,"resource":"GREY"}],
@@ -498,7 +530,8 @@
 			"RED":1
 		}
 	},
-	"points":10
+	"points":10,
+	 "name": "33D"
  },
  {
 	"cost":[{"quantity":2,"resource":"GREY"}],
@@ -512,7 +545,8 @@
 			"RED":1
 		}
 	},
-	"points":1
+	"points":1,
+	 "name": "34D"
  },
  {
 	"cost":[{"quantity":5,"resource":"GREY"},{"quantity":2,"resource":"VIOLET"}],
@@ -529,7 +563,8 @@
 			"RED":1
 		}
 	},
-	"points":10
+	"points":10,
+	 "name": "35D"
  },
  {
 	"cost":[{"quantity":7,"resource":"BLUE"}],
@@ -544,7 +579,8 @@
 			"RED":3
 		}
 	},
-	"points":11
+	"points":11,
+	 "name": "36D"
  },
  {
 	"cost":[{"quantity":7,"resource":"VIOLET"}],
@@ -559,7 +595,8 @@
 			"RED":3
 		}
 	},
-	"points":11
+	"points":11,
+	 "name": "37D"
  },
  {
 	"cost":[{"quantity":7,"resource":"YELLOW"}],
@@ -574,7 +611,8 @@
 			"RED":3
 		}
 	},
-	"points":11
+	"points":11,
+	 "name": "38D"
  },
  {
 	"cost":[{"quantity":7,"resource":"GREY"}],
@@ -589,7 +627,8 @@
 			"RED":3
 		}
 	},
-	"points":11
+	"points":11,
+	 "name": "39D"
  },
  {
 	"cost":[{"quantity":4,"resource":"BLUE"},{"quantity":4,"resource":"YELLOW"}],
@@ -604,7 +643,8 @@
 			"BLUE":3
 		}
 	},
-	"points":12
+	"points":12,
+	 "name": "40D"
  },
  {
 	"cost":[{"quantity":4,"resource":"VIOLET"},{"quantity":4,"resource":"BLUE"}],
@@ -619,7 +659,8 @@
 			"VIOLET":1
 		}
 	},
-	"points":12
+	"points":12,
+	 "name": "41D"
  },
  {
 	"cost":[{"quantity":4,"resource":"YELLOW"},{"quantity":4,"resource":"GREY"}],
@@ -634,7 +675,8 @@
 			"BLUE":3
 		}
 	},
-	"points":12
+	"points":12,
+	 "name": "42D"
  },
  {
 	"cost":[{"quantity":4,"resource":"GREY"},{"quantity":4,"resource":"VIOLET"}],
@@ -649,7 +691,8 @@
 			"VIOLET":3
 		}
 	},
-	"points":12
+	"points":12,
+	 "name": "43D"
  },
  {
 	"cost":[{"quantity":1,"resource":"BLUE"},{"quantity":1,"resource":"VIOLET"},{"quantity":1,"resource":"GREY"}],
@@ -663,7 +706,8 @@
 			"VIOLET":1
 		}
 	},
-	"points":2
+	"points":2,
+	 "name": "44D"
  },
  {
 	"cost":[{"quantity":1,"resource":"BLUE"},{"quantity":1,"resource":"VIOLET"},{"quantity":1,"resource":"YELLOW"}],
@@ -677,7 +721,8 @@
 			"BLUE":1
 		}
 	},
-	"points":2
+	"points":2,
+	 "name": "45D"
  },
  {
 	"cost":[{"quantity":1,"resource":"YELLOW"},{"quantity":1,"resource":"VIOLET"},{"quantity":1,"resource":"GREY"}],
@@ -691,7 +736,8 @@
 			"GREY":1
 		}
 	},
-	"points":2
+	"points":2,
+	 "name": "46D"
  },
  {
 	"cost":[{"quantity":1,"resource":"BLUE"},{"quantity":1,"resource":"GREY"},{"quantity":1,"resource":"YELLOW"}],
@@ -705,7 +751,8 @@
 			"YELLOW":1
 		}
 	},
-	"points":2
+	"points":2,
+	 "name": "47D"
  },
  {
 	"cost":[{"quantity":3,"resource":"BLUE"}],
@@ -721,6 +768,7 @@
 			"GREY":1
 		}
 	},
-	"points":3
+	"points":3,
+	 "name": "48D"
  }
 ]

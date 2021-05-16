@@ -26,6 +26,10 @@ public class ClientBoard {
         totalCardsBought=0;
     }
 
+    public void setLeadersInHand(List<LeaderCard> leadersInHand) {
+        this.leadersInHand = leadersInHand;
+    }
+
     public List<LeaderCard> getLeadersInBoard() {
         return leadersInBoard;
     }
@@ -48,10 +52,11 @@ public class ClientBoard {
             totalCardsBought++;
         }
     }
-    public void pop(Integer slot){
+    public DevelopmentCard pop(Integer slot){
         if(slot!=null && slots.get(slot)!=null && slots.get(slot).size()>0){
-            slots.get(slot).pop();
+            return slots.get(slot).pop();
         }
+        return null;
     }
     public String stringifyLeaders(){
         StringBuilder sb=new StringBuilder();
@@ -70,6 +75,11 @@ public class ClientBoard {
         sb.append("\n");
         return sb.toString();
     }
+
+    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
+        return slots;
+    }
+
     public String recapSlots(){
         StringBuilder sb=new StringBuilder();
         for(int i=1;i<4;i++){

@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client.ClientModel.CLI;
+package it.polimi.ingsw.network.client.ClientModel;
 
 import java.util.*;
 
@@ -11,15 +11,21 @@ public class ClientCardMatrix {
     Color c;
 
     public ClientCardMatrix(){
-        Stack<DevelopmentCard>[][] newCardMatrix=new Stack[3][4];
+        dCard=new Stack[3][4];
         for(int r = 0; r < 3; r++){
             for(int c = 0; c < 4; c++){
-                newCardMatrix[r][c]=new Stack<>();
+                dCard[r][c]=new Stack<>();
             }
         }
-        dCard = newCardMatrix;
     }
 
+    public Stack<DevelopmentCard>[][] getdCard() {
+        return dCard;
+    }
+
+    public DevelopmentCard pop(int row, int col){
+        return dCard[row][col].pop();
+    }
     public void push(int row, int column, DevelopmentCard developmentCard){
         dCard[row][column].push(developmentCard);
     }
@@ -46,6 +52,12 @@ public class ClientCardMatrix {
         this.dCard = dCard;
     }
 
+    public static void main(String[] args) {
+        List<DevelopmentCard> list=Utilities.loadDevelopmentCardsFromJSON();
+        ClientCardMatrix ccd=new ClientCardMatrix();
+        ccd.push(1,1,list.get(2));
+
+    }
 }
 
 

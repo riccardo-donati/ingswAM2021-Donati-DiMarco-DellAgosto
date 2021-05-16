@@ -30,7 +30,7 @@ public class Deposit {
      * get of id
      * @return id
      */
-    protected Integer getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -46,7 +46,7 @@ public class Deposit {
      * get of space
      * @return the space array
      */
-    protected ResourceType[] getSpace() {
+    public ResourceType[] getSpace() {
         return space;
     }
 

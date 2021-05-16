@@ -2,19 +2,11 @@ package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.ClientCardMatrix;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
-import it.polimi.ingsw.network.messages.Message;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ClientModel {
     private Map<String, ClientBoard> boards=new HashMap<>();
@@ -30,14 +22,26 @@ public class ClientModel {
     private List<DevelopmentCard> developmentCards;
     private List<LeaderCard> leaderCards;
 
-
     private ClientMarket market;
+    private ClientCardMatrix cardMatrix;
+
+    public List<LeaderCard> getLeaderCards() {
+        return leaderCards;
+    }
+
+    public List<DevelopmentCard> getDevelopmentCards() {
+        return developmentCards;
+    }
 
     public ClientModel(){
         leaderCards= Utilities.loadLeaderCardsFromJSON();
         developmentCards=Utilities.loadDevelopmentCardsFromJSON();
         market=new ClientMarket();
+        cardMatrix=new ClientCardMatrix();
+    }
 
+    public ClientCardMatrix getCardMatrix() {
+        return cardMatrix;
     }
 
     public List<String> getPlayersInOrder() {
@@ -82,6 +86,33 @@ public class ClientModel {
         boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
     }
 
+    public LeaderCard getLeaderCard(String name){
+        for(LeaderCard l : leaderCards){
+            if(l.getName().equals(name)){
+                return l;
+            }
+        }
+        return null;
+    }
+    public DevelopmentCard getDevelopmentCard(String name){
+        for(DevelopmentCard d : developmentCards){
+            if(d.getName().equals(name)) return d;
+        }
+        return null;
+    }
+    public String getDevelopmentCardStringified(String name){
+        DevelopmentCard d=getDevelopmentCard(name);
+        if(d!=null) return Utilities.stringify(d);
+        return "";
+    }
+    public String getLeaderCardStringified(String name){
+        LeaderCard l=getLeaderCard(name);
+        if(l!=null) return Utilities.stringify(l);
+        return "";
+    }
+    public ClientBoard getCurrentBoard(){
+        return boards.get(currentNickname);
+    }
     public String toString(){
         if(myNickname!=null) {
             StringBuilder sb = new StringBuilder();
@@ -95,6 +126,8 @@ public class ClientModel {
             sb.append(boards.get(myNickname));
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(market);
+            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+            sb.append(cardMatrix);
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             return sb.toString();
         }

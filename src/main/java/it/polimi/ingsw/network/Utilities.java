@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.server.Server;
 
@@ -17,9 +18,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Utilities {
 
@@ -172,6 +171,41 @@ public class Utilities {
         sb.append("| "+Color.ANSI_GREEN.escape()+"POINTS: "+Color.ANSI_YELLOW.escape()+ ld.getPoints()+Color.RESET);
         sb.append(" ]");
         return sb.toString();
+    }
+    public static Stack<DevelopmentCard>[][] initializeCardMatrix(List<DevelopmentCard> list){
+        Stack<DevelopmentCard>[][] cardMatrix = new Stack[3][4];
+        for (int r = 0; r < 3; r++){
+            for (int c = 0; c < 4; c++){
+                cardMatrix[r][c] = new Stack<>();
+            }
+        }
+        List<DevelopmentCard> copy=new ArrayList<>(list);
+        Random rn=new Random();
+        for(int i=0;i<list.size();i++){
+            int n=rn.nextInt(copy.size());
+            DevelopmentCard dc=copy.get(n);
+            cardMatrix[dc.getLevel()-1][dc.getColor().ordinal()].push(dc);
+            copy.remove(dc);
+        }
+        return cardMatrix;
+    }
+
+    /**
+     * convert a deposit in a client deposit
+     * @param d is the deposit
+     * @param me is a char, 'm'-> main, 'e'->extra deposit
+     * @return
+     */
+    public static ClientDeposit depositToClientDeposit(Deposit d,char me){
+        List<Resource> listRes=new ArrayList<>();
+        for(int i=0;i<d.getSpace().length;i++){
+            if(d.getSpace()[i]!=ResourceType.EMPTY){
+                listRes.add(Utilities.resourceTypeToResource(d.getSpace()[i]));
+            }
+        }
+        if(me=='m') return new ClientDeposit(d.getId(),listRes);
+        else if(me=='e')return new ClientDeposit(d.getId()+3,listRes);
+        else return null;
     }
 
 

@@ -35,6 +35,7 @@ public class Client {
         return clientModel;
     }
 
+
     public void handleStdIn(){
         String line="";
         while(!socket.isClosed()) {

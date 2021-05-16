@@ -1,23 +1,23 @@
 package it.polimi.ingsw.model.interfaces;
 
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.Player;
-import it.polimi.ingsw.model.Result;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public interface PublicInterface {
      Map<String, LeaderCard> getNameLeaderCardMap();
+     Map<String, DevelopmentCard> getNameDevelopmentCardMap();
      Map<String,Integer> getFaithPathsMap();
      List<ResourceType> getMarblesInList();
      ResourceType[] getDepositResources(int id);
      Integer getCurrentFaithPath();
      Integer getLorenzoPosition();
-
+     Warehouse getCurrentWarehouse();
      void startGame() throws IllegalResourceException, GameNotFullException;
      GamePhase getGamePhase();
      Result endGame();
@@ -30,7 +30,8 @@ public interface PublicInterface {
      List<Player> getPlayers();
      List<List<LeaderCard>> divideLeaderCards() throws EmptyPlayersException;
      List<ResourceType> getCurrentPlayerPending();
-
+     Stack<DevelopmentCard>[][] getCardMatrix();
+     List<String> getCurrentLeadersInHand();
      void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
      void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException;
 
