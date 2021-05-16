@@ -7,7 +7,7 @@ public enum ResourceType {
     BLUE("shield"),
     RED("faith"),
     WHITE(""),
-    UNKNOWN(""),
+    UNKNOWN("questionmark"),
     EMPTY("");
 
     public String label;

@@ -334,13 +334,19 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInInputBaseProduction(ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.substituteUnknownInInputBaseProduction(res);
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'i'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInOutputBaseProduction(ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.substituteUnknownInOutputBaseProduction(res);
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'o'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInInputExtraProduction(Integer index,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
@@ -354,18 +360,27 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void toggleBaseProd(String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.toggleBaseProd();
+            VirtualClient vc = getVirtualClient(nickname);
+            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void toggleExtraProd(Integer index,String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.toggleExtraProd(index);
+            VirtualClient vc = getVirtualClient(nickname);
+            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void toggleCardProd(Integer slot,String nickname) throws IllegalActionException, IllegalSlotException, UnknownFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.toggleCardProd(slot);
+            VirtualClient vc = getVirtualClient(nickname);
+            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void pickUpResourceFromWarehouse(Integer id,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException, NotYourTurnException {
@@ -401,6 +416,9 @@ public class Controller {
             if(cd!=null)list.add(cd);
         }
         return list;
+    }
+    public synchronized List<Production> getCurrentActiveProductions(){
+        return game.getCurrentActiveProductions();
     }
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname))

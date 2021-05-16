@@ -32,6 +32,10 @@ public interface ClientVisitor {
 
     void visit(WarehouseUpdate message, Client client);
 
+    void visit(ToggleProductionUpdate message, Client client);
+
+    void visit(UnknownProductionUpdate message, Client client);
+
     void visit(PickUpWarehouseUpdate message, Client client);
     void visit(PickUpStrongboxUpdate message, Client client);
 }

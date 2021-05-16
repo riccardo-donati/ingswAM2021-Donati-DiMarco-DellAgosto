@@ -108,7 +108,7 @@ public class Utilities {
         }
         sb.append("| ");
         sb.append( "PRODUCTION: ");
-        Map<ResourceType, Integer> input = d.getProd().getInput();
+        /*Map<ResourceType, Integer> input = d.getProd().getInput();
         Map<ResourceType, Integer> output = d.getProd().getOutput();
         for (Map.Entry<ResourceType, Integer> entry : input.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
@@ -116,10 +116,24 @@ public class Utilities {
         sb.append(Color.ANSI_RED.escape() + "⇒ " + Color.RESET);
         for (Map.Entry<ResourceType, Integer> entry : output.entrySet()) {
             sb.append(entry.getValue() + Utilities.resourceTypeToResource(entry.getKey()).label + " ");
-        }
+        }*/
+        sb.append(Utilities.stringify(d.getProd()));
         sb.append("| POINTS: " + Color.ANSI_YELLOW.escape() + d.getPoints() + Color.RESET);
         sb.append(" ]");
 
+        return sb.toString();
+    }
+    public static String stringify(Production p){
+        StringBuilder sb=new StringBuilder();
+        sb.append("(");
+        for (Map.Entry<ResourceType, Integer> entry : p.getInput().entrySet()) {
+            sb.append(entry.getValue()).append(Utilities.resourceTypeToResource(entry.getKey()).label);
+        }
+        sb.append(")").append(Color.ANSI_RED.escape()+"⇒"+ Color.RESET+"(");
+        for (Map.Entry<ResourceType, Integer> entry : p.getOutput().entrySet()) {
+            sb.append(entry.getValue()).append(Utilities.resourceTypeToResource(entry.getKey()).label);
+        }
+        sb.append(")");
         return sb.toString();
     }
     public static String stringify(LeaderCard ld){
