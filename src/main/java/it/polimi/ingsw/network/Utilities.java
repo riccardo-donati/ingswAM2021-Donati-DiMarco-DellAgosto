@@ -24,8 +24,14 @@ public class Utilities {
 
     public static Integer loadServerPortNumber() throws FileNotFoundException, NullPointerException {
         JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
-        Map<String, Integer> map = new Gson().fromJson(reader, new TypeToken<Map<String, Integer>>() {}.getType());
-        return map.get("portNumber");
+        Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {}.getType());
+        return Integer.parseInt(map.get("portNumber"));
+    }
+
+    public static String loadServerIP() throws FileNotFoundException, NullPointerException {
+        JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
+        Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {}.getType());
+        return map.get("ip");
     }
 
     public static void saveServerStatus(Server server, Gson gson){
@@ -54,6 +60,7 @@ public class Utilities {
         builder.enableComplexMapKeySerialization();
         return builder.excludeFieldsWithoutExposeAnnotation().create();
     }
+
     public static List<LeaderCard> loadLeaderCardsFromJSON() {
         List<LeaderCard> list;
         GsonBuilder builder = new GsonBuilder();

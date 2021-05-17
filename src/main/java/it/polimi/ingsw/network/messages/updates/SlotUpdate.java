@@ -18,7 +18,7 @@ public class SlotUpdate implements Update {
 
     @Override
     public void update(ClientModel clientModel) {
-        DevelopmentCard dc=clientModel.getCardMatrix().pop(row,col);
+        DevelopmentCard dc=clientModel.getCardMatrix().popCard(row,col);
         if(dc!=null) clientModel.getCurrentBoard().push(slot,dc);
     }
 

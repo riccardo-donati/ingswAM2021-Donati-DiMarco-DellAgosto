@@ -13,20 +13,18 @@ public class ClientMarket {
         this.marbles = marbles;
     }
 
-    public void initializeMarbles(){
-        marbles.add(ResourceType.YELLOW);
-        marbles.add(ResourceType.VIOLET);
-        marbles.add(ResourceType.EMPTY);
-        marbles.add(ResourceType.VIOLET);
-        marbles.add(ResourceType.GREY);
-        marbles.add(ResourceType.RED);
-        marbles.add(ResourceType.BLUE);
-        marbles.add(ResourceType.YELLOW);
-        marbles.add(ResourceType.GREY);
-        marbles.add(ResourceType.EMPTY);
-        marbles.add(ResourceType.BLUE);
-        marbles.add(ResourceType.EMPTY);
-        marbles.add(ResourceType.EMPTY);
+    /**
+     * given the position of a marble in the marbles array, returns its visual representation
+     * @param pos - position of the marble in the marbles array
+     * @return representation of the specified marble
+     */
+    private String getMarbleType(int pos){
+        if(marbles.get(pos) == ResourceType.YELLOW) return Color.ANSI_YELLOW.escape()+"●"+Color.RESET;
+        if(marbles.get(pos) == ResourceType.VIOLET) return Color.ANSI_PURPLE.escape()+"●"+Color.RESET;
+        if(marbles.get(pos) == ResourceType.BLUE) return Color.ANSI_BLUE.escape()+"●"+Color.RESET;
+        if(marbles.get(pos) == ResourceType.GREY) return "○";
+        if(marbles.get(pos) == ResourceType.RED) return Color.ANSI_RED.escape()+"●"+ Color.RESET;
+        else return "●";
     }
 
     @Override
@@ -46,7 +44,7 @@ public class ClientMarket {
             else if (i % 2 == 0) sb.append(" ");
             else {
                 //sb.append("●");
-                sb.append(getMarbleType(marbles, n));
+                sb.append(getMarbleType(n));
                 n++;
             }
         }
@@ -60,7 +58,7 @@ public class ClientMarket {
             else if (i % 2 == 0) sb.append(" ");
             else {
                 //sb.append("●");
-                sb.append(getMarbleType(marbles, n));
+                sb.append(getMarbleType(n));
                 n++;
             }
         }
@@ -74,24 +72,31 @@ public class ClientMarket {
             else if (i % 2 == 0) sb.append(" ");
             else {
                 //sb.append("●");
-                sb.append(getMarbleType(marbles, n));
+                sb.append(getMarbleType(n));
                 n++;
             }
         }
         sb.append("\n   ╚═ ══╩═ ══╩═ ══╩═ ══╝\n");
         sb.append("     ↑    ↑    ↑    ↑   "/* + getMarbleType(marbles, n)*/); //
-        sb.append("\n   Pending Marble: " + getMarbleType(marbles, n));
+        sb.append("\n   Pending Marble: " + getMarbleType(n));
         sb.append("\n");
         return sb.toString();
     }
 
-    public String getMarbleType(List<ResourceType> m, int pos){
-        if(marbles.get(pos) == ResourceType.YELLOW) return Color.ANSI_YELLOW.escape()+"●"+Color.RESET;
-        if(marbles.get(pos) == ResourceType.VIOLET) return Color.ANSI_PURPLE.escape()+"●"+Color.RESET;
-        if(marbles.get(pos) == ResourceType.BLUE) return Color.ANSI_BLUE.escape()+"●"+Color.RESET;
-        if(marbles.get(pos) == ResourceType.GREY) return "○";
-        if(marbles.get(pos) == ResourceType.RED) return Color.ANSI_RED.escape()+"●"+ Color.RESET;
-        else return "●";
+    public void initializeMarbles(){
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.VIOLET);
+        marbles.add(ResourceType.EMPTY);
+        marbles.add(ResourceType.VIOLET);
+        marbles.add(ResourceType.GREY);
+        marbles.add(ResourceType.RED);
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.GREY);
+        marbles.add(ResourceType.EMPTY);
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.EMPTY);
+        marbles.add(ResourceType.EMPTY);
     }
 
     public static void main(String[] args) {
@@ -99,5 +104,4 @@ public class ClientMarket {
         cm.initializeMarbles();
         System.out.println(cm.toString());
     }
-
 }

@@ -37,11 +37,11 @@ public class UpdatesTest {
     @Test
     public void TestSlotUpdate(){
         //get of the top development card in the stack 2,3
-        DevelopmentCard dc=cm.getCardMatrix().getdCard()[2][3].get(cm.getCardMatrix().getdCard()[2][3].size()-1);
+        DevelopmentCard dc=cm.getCardMatrix().getCards()[2][3].get(cm.getCardMatrix().getCards()[2][3].size()-1);
         SlotUpdate su=new SlotUpdate(1,2,3);
         su.update(cm);
         assertEquals(dc,cm.getCurrentBoard().getSlots().get(1).get(cm.getCurrentBoard().getSlots().get(1).size()-1));
-        assertEquals(3,cm.getCardMatrix().getdCard()[2][3].size());
+        assertEquals(3,cm.getCardMatrix().getCards()[2][3].size());
         System.out.println(cm);
     }
     @Test

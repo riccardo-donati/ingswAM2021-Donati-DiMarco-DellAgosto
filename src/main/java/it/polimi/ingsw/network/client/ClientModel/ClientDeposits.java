@@ -9,9 +9,12 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientDeposits {
-    List<Shelf> shelves=new ArrayList<>();
-    Map<Resource, Integer> strongbox=new HashMap<>();
+    List<Shelf> shelves = new ArrayList<>();
+    Map<Resource, Integer> strongbox = new HashMap<>();
 
+    /**
+     * constructor - sets up empty strongbox and warehouse shelves
+     */
     public ClientDeposits(){
         strongbox.put(Resource.COIN,0);
         strongbox.put(Resource.SHIELD,0);
@@ -23,55 +26,81 @@ public class ClientDeposits {
     }
 
     public Shelf getShelf(int id){
-        for(Shelf s : shelves){
-            if(s.getId()==id)return s;
+        for(Shelf shelf : shelves){
+            if (shelf.getId() == id) return shelf;
         }
         return null;
     }
 
-    public void deposit(Resource r, Integer idD){
-        Shelf s=getShelf(idD);
-        for(int i=0;i<s.getSpaces().length;i++){
-            if(s.getSpaces()[i]==null || s.getSpaces()[i].equals("  ")) {
-                s.put(i, r);
+    public void addShelf(Shelf shelf){
+        shelves.add(shelf);
+    }
+
+    /**
+     * deposits a single resource in the specified shelf
+     * @param resource - resource to be added
+     * @param id - shelf id
+     */
+    public void deposit(Resource resource, Integer id){
+        Shelf shelf = getShelf(id);
+        for (int i = 0; i < shelf.getSpaces().length; i++) {
+            if (shelf.getSpaces()[i] == null || shelf.getSpaces()[i].equals("  ")) {
+                shelf.put(i, resource);
                 return;
             }
         }
     }
 
-    public void deposit(List<Resource> r,Integer idD){
-        Shelf s=getShelf(idD);
-        if(s!=null && r.size()<=s.getSpaces().length){
+    /**
+     * clears the specified shelf and deposits a list of resource
+     * @param resource - list of resources to be added
+     * @param id - shelf id
+     */
+    public void deposit(List<Resource> resource,Integer id){
+        Shelf s = getShelf(id);
+        if (s != null && resource.size() <= s.getSpaces().length) {
             s.clear();
-            for(int i=0;i<r.size();i++){
-                s.put(i,r.get(i));
+            for (int i = 0; i < resource.size(); i++) {
+                s.put(i, resource.get(i));
             }
         }
     }
 
-    public void remove(Integer idD){
-        Shelf s=getShelf(idD);
-        for(int i = s.getSpaces().length - 1; i >= 0; i--){
-            if(s.getSpaces()[i]!=null && !s.getSpaces()[i].equals("  ")) {
+    /**
+     * removes a resource from the specified shelf
+     * @param id - shelf id
+     */
+    public void remove(Integer id){
+        Shelf s = getShelf(id);
+        for (int i = s.getSpaces().length - 1; i >= 0; i--) {
+            if (s.getSpaces()[i]!=null && !s.getSpaces()[i].equals("  ")) {
                 s.remove(i);
                 return;
             }
         }
     }
 
+    /**
+     * removes a resource from the strongbox
+     * @param resource - resource to be removed
+     */
     public void removeResourceFromStrongbox(Resource resource){
         if(strongbox.get(resource) > 0)
             strongbox.replace(resource, strongbox.get(resource) - 1);
     }
 
+    /**
+     * adds a resource to the strongbox
+     * @param resource - resource to be added
+     */
     public void putResourceInStrongbox(Resource resource){
         strongbox.merge(resource, 1, Integer::sum);
     }
 
-    public void addShelf(Shelf s){
-        shelves.add(s);
-    }
-
+    /**
+     * transforms the warehouse, strongbox and extra deposits in a string
+     * @return string that depicts the whole resource deposit
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
@@ -115,6 +144,7 @@ public class ClientDeposits {
                     sb.append("║ "+s.getSpaces()[i]+" ║");
                 }
             }
+
             //strongbox
             if(s.getId()==1) {
                 sb.append("            ║");
@@ -133,6 +163,7 @@ public class ClientDeposits {
             for(int i=0;i<s.getSpaces().length;i++){
                 sb.append("╚══ ═╝");
             }
+
             //strongbox
             if(s.getId()==1) {
                 sb.append("            ║");

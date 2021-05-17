@@ -1,3 +1,4 @@
 {
-  "portNumber": 1234
+  "portNumber": "1234",
+  "ip": "127.0.0.1"
 }

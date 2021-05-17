@@ -43,7 +43,7 @@ public class ClientFaithPath  {
     @Override
     public String toString() {
         StringBuilder b=new StringBuilder();
-        b.append(Color.ANSI_PURPLE.escape()+"FAITHPATH:\n"+Color.RESET);
+        b.append(Color.ANSI_PURPLE.escape()+"FAITH PATH:\n"+Color.RESET);
         for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(" ");
             if(i<10) b.append("  "+i+"  ");

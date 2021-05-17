@@ -195,19 +195,19 @@ public class ClientModel {
         System.out.println(cm);
 
         ClientCardMatrix ccm = new ClientCardMatrix();
-        ccm.push(0, 3, cm.developmentCards.get(1));
-        ccm.push(1, 1, cm.developmentCards.get(10));
-        ccm.push(1, 2, cm.developmentCards.get(12));
-        ccm.push(0, 1, cm.developmentCards.get(2));
-        ccm.push(2, 3, cm.developmentCards.get(40));
-        ccm.push(2, 1, cm.developmentCards.get(41));
-        ccm.push(2, 1, cm.developmentCards.get(32));
-        ccm.push(1, 1, cm.developmentCards.get(24));
-        ccm.push(2, 3, cm.developmentCards.get(27));
-        ccm.push(2, 1, cm.developmentCards.get(28));
-        ccm.push(2, 0, cm.developmentCards.get(30));
-        ccm.push(0, 2, cm.developmentCards.get(33));
-        ccm.push(1, 1, cm.developmentCards.get(15));
+        ccm.pushCard(0, 3, cm.developmentCards.get(1));
+        ccm.pushCard(1, 1, cm.developmentCards.get(10));
+        ccm.pushCard(1, 2, cm.developmentCards.get(12));
+        ccm.pushCard(0, 1, cm.developmentCards.get(2));
+        ccm.pushCard(2, 3, cm.developmentCards.get(40));
+        ccm.pushCard(2, 1, cm.developmentCards.get(41));
+        ccm.pushCard(2, 1, cm.developmentCards.get(32));
+        ccm.pushCard(1, 1, cm.developmentCards.get(24));
+        ccm.pushCard(2, 3, cm.developmentCards.get(27));
+        ccm.pushCard(2, 1, cm.developmentCards.get(28));
+        ccm.pushCard(2, 0, cm.developmentCards.get(30));
+        ccm.pushCard(0, 2, cm.developmentCards.get(33));
+        ccm.pushCard(1, 1, cm.developmentCards.get(15));
         System.out.println(ccm.toString());
 /*
         System.out.println(Utilities.stringify(cm.leaderCards.get(12)));

@@ -9,44 +9,73 @@ import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
 public class Client {
-    private String hostName = "127.0.0.1"; //da sostituire con richiesta al player
+    private final String serverIP;
+    private final Integer serverPortNumber;
+    private Socket socket;
+
     private PrintWriter out;
     private Scanner in;
     private BufferedReader stdIn;
-    private Socket socket;
+
     private Gson gson;
-    private ClientVisitorHandler clientHandlerVisitor = new ClientVisitorHandler();
-    private ClientModel clientModel;
 
-    private String currCommand="";
+    private final ClientVisitorHandler clientVisitorHandler;
+    private final ClientModel clientModel;
 
-    public Client(){
-        clientModel=new ClientModel();
+    private String currCommand = "";
+
+    public Client(String serverIP, Integer serverPortNumber){
+        this.serverIP = serverIP;
+        this.serverPortNumber = serverPortNumber;
+        clientModel = new ClientModel();
+        clientVisitorHandler = new ClientVisitorHandler();
     }
+
+    public Socket getSocket() {
+        return socket;
+    }
+
+    public PrintWriter getOut() {
+        return out;
+    }
+
+    public Scanner getIn() {
+        return in;
+    }
+
+    public BufferedReader getStdIn() {
+        return stdIn;
+    }
+
+    public Gson getGson() {
+        return gson;
+    }
+
     public ClientModel getClientModel() {
         return clientModel;
     }
 
+    public void setCurrCommand(String currCommand) {
+        this.currCommand = currCommand;
+    }
 
     public void handleStdIn(){
-        String line="";
-        while(!socket.isClosed()) {
+        String line;
+        while (!socket.isClosed()) {
             try {
                 line = stdIn.readLine();
-                Message m;
+                Message message;
                 try {
-                    m= Parser.parse(currCommand+line,this);
-                    out.println(gson.toJson(m,Message.class));
+                    message = Parser.parse(currCommand + line, this);
+                    if (message != null)
+                        out.println(gson.toJson(message, Message.class));
                 } catch (IllegalCommandException e) {
-                    System.out.println(Color.ANSI_RED.escape()+"Wrong syntax"+Color.RESET);
+                    System.out.println(Color.ANSI_RED.escape() + "Wrong syntax" + Color.RESET);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
@@ -54,16 +83,15 @@ public class Client {
         }
     }
 
-    public void run(int serverPortNumber) {
+    public void run() {
         gson = Utilities.initializeGsonMessage();
 
         try {
-            socket = new Socket(hostName, serverPortNumber);
+            socket = new Socket(serverIP, serverPortNumber);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new Scanner(socket.getInputStream());
             stdIn = new BufferedReader(new InputStreamReader(System.in));
-            new Thread(()->handleStdIn()).start();
-
+            new Thread(this::handleStdIn).start();
         } catch (Exception e){
             System.out.println("Server not available");
             return;
@@ -78,37 +106,24 @@ public class Client {
                 out.close();
                 break;
             }
-            ClientMessage message=gson.fromJson(jsonString, ClientMessage.class);
-            message.accept(clientHandlerVisitor,this);
+            ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
+            message.accept(clientVisitorHandler, this);
         }
     }
 
-    public Scanner getIn() {
-        return in;
-    }
-
-    public PrintWriter getOut() {
-        return out;
-    }
-
-    public Socket getSocket() {
-        return socket;
-    }
-
-    public BufferedReader getStdIn() {
-        return stdIn;
-    }
-
-    public Gson getGson() {
-        return gson;
-    }
-
-    public void setCurrCommand(String currCommand) {
-        this.currCommand = currCommand;
-    }
-
     public static void main(String[] args) throws IOException {
-        Integer serverPortNumber = Utilities.loadServerPortNumber();
-        new Client().run(serverPortNumber);
+        String serverIP;
+        Integer serverPortNumber;
+        try {
+            serverIP = Utilities.loadServerIP();
+            serverPortNumber = Utilities.loadServerPortNumber();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+            System.err.println("serverSettings.json file not found");
+            System.err.println("Closing . . .");
+            return;
+        }
+
+        new Client(serverIP, serverPortNumber).run();
     }
 }

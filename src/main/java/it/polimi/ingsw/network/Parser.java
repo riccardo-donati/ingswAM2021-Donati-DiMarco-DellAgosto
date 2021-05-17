@@ -40,19 +40,27 @@ public class Parser {
             case "revert pick up":
                 return new RevertPickUpCommand();
             case "display board":
-                break;
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).toString());
+                return null;
             case "display faith path":
-                break;
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).getFaithPath().toString());
+                return null;
             case "display development cards":
-                break;
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).stringifySlots());
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).recapSlots());
+                return null;
             case "display leader cards":
-                break;
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).stringifyLeaders());
+                return null;
             case "display deposits":
-                break;
+                System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).getDeposits().toString());
+                return null;
             case "display available development cards":
-                break;
+                System.out.println(client.getClientModel().getCardMatrix().toString());
+                return null;
             case "display market":
-                break;
+                System.out.println(client.getClientModel().getMarket().toString());
+                return null;
         }
 
         if (string.startsWith("register")) {
@@ -274,13 +282,15 @@ public class Parser {
             }
         }
 
-        if (string.startsWith("display opponent board")) {
-            tokenizer = new StringTokenizer(string.substring("transform white in".length()));
+        if (string.startsWith("display player board")) {
+            tokenizer = new StringTokenizer(string.substring("display player board".length()));
             try {
-                int number = Integer.parseInt(tokenizer.nextToken());
-                if (number > 0 && !tokenizer.hasMoreElements());
-                // show player's number 'number' board
-            } catch (NumberFormatException | NoSuchElementException e) {
+                String nickname = tokenizer.nextToken();
+                if (!tokenizer.hasMoreElements()) {
+                    System.out.println(client.getClientModel().getBoards().get(nickname).toString());
+                    return null;
+                }
+            } catch (NoSuchElementException e) {
                 throw new IllegalCommandException();
             }
         }
