@@ -245,6 +245,33 @@ public class ClientVisitorHandler implements ClientVisitor{
         }
     }
 
+    @Override
+    public void visit(ToggleDiscountUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().stringifyActiveDiscounts());
+        }
+    }
+
+    @Override
+    public void visit(DiscardResourceUpdate message, Client client) {
+        message.update(client.getClientModel());
+    }
+
+    @Override
+    public void visit(DiscardLeaderUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().getFaithPath());
+            System.out.println(client.getClientModel().getCurrentBoard().stringifyLeaders());
+
+        }
+    }
+
 
 }
 

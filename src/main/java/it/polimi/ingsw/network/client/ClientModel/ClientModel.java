@@ -162,8 +162,9 @@ public class ClientModel {
         return currentNickname;
     }
 
-
-
+    public ClientBoard getMyBoard(){
+        return boards.get(myNickname);
+    }
     public static void main(String[] args) {
         ClientModel cm=new ClientModel();
 
@@ -177,8 +178,8 @@ public class ClientModel {
         cm.putBoard("Da",new ClientBoard());
         cm.putBoard("giec",new ClientBoard());
         cm.setNickname("Riki");
-        cm.boards.get("Da").getFaithPath().addToPos(10);
-        cm.boards.get("Riki").getFaithPath().addToPos(2);
+        cm.boards.get("Da").getFaithPath().addToFaithPath(10);
+        cm.boards.get("Riki").getFaithPath().addToFaithPath(2);
         //System.out.println(cm);
         cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(1));
         cm.getBoards().get(cm.getNickname()).push(2,cm.developmentCards.get(10));

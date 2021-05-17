@@ -41,4 +41,9 @@ public interface ClientVisitor {
 
     void visit(PlayLeaderUpdate message, Client client);
 
+    void visit(ToggleDiscountUpdate message, Client client);
+
+    void visit(DiscardResourceUpdate message, Client client);
+
+    void visit(DiscardLeaderUpdate message, Client client);
 }

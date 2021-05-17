@@ -301,8 +301,10 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.discardLeader(index);
+
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void buyAtMarketInterface(char rc,int index,String nickname) throws NotYourTurnException, IllegalActionException {
@@ -331,9 +333,15 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void discardResource(ResourceType res,String nickname) throws NotYourTurnException, IllegalResourceException, DepositableResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.discardResource(res);
-        else throw new NotYourTurnException();
+            notifyLobby(new DiscardResourceUpdate());
+            List<ResourceType> list=getCurrentPlayerPending();
+            if(list.size()>0) {
+                VirtualClient vc = getVirtualClient(nickname);
+                if(vc!=null) vc.send(new PendingResourcesMessage(list));
+            }
+        }else throw new NotYourTurnException();
     }
     public synchronized void transformWhiteIn(ResourceType res,String nickname) throws IllegalResourceException, IllegalActionException, NoWhiteResourceException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname))
@@ -477,8 +485,10 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void toggleDiscount(ResourceType res,String nickname) throws IllegalActionException, DiscountNotFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.toggleDiscount(res);
+
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.ClientModel;
 
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 
@@ -9,13 +10,17 @@ import java.util.Map;
 public class ClientFaithPath  {
     private Integer position;
     private Integer lorenzoPosition;
-    private Map<Integer,String> popeFavor=new HashMap<>();
+    private Map<Integer, ClientPopeFavorState> popeFavor=new HashMap<>();
 
     public ClientFaithPath(){
      position=0;
-     popeFavor.put(1,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
-     popeFavor.put(2,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
-     popeFavor.put(3,Color.ANSI_BLUE.escape()+"▄"+Color.RESET);
+     popeFavor.put(1,ClientPopeFavorState.UNACTIVE);
+     popeFavor.put(2,ClientPopeFavorState.UNACTIVE);
+     popeFavor.put(3,ClientPopeFavorState.UNACTIVE);
+    }
+
+    public Integer getLorenzoPosition() {
+        return lorenzoPosition;
     }
 
     public Integer getPosition() {
@@ -24,10 +29,13 @@ public class ClientFaithPath  {
 
     public void setPopeFavor(int id, boolean activated){
         if(activated){
-            popeFavor.replace(id,Color.ANSI_GREEN.escape()+"▄"+Color.RESET);
+            popeFavor.replace(id,ClientPopeFavorState.ACTIVE);
         }else{
-            popeFavor.replace(id,Color.ANSI_RED.escape()+"▄"+Color.RESET);
+            popeFavor.replace(id,ClientPopeFavorState.DISCARDED);
         }
+    }
+    public void addToFaithPath(Integer n){
+        position+=n;
     }
     public void setPosition(Integer position){
         this.position=position;
@@ -128,11 +136,11 @@ public class ClientFaithPath  {
         b.append("\n");
         for(int i=0;i<25;i++){
             if(i==6) {
-                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 2 + Color.ANSI_BLUE.escape() + "  "+popeFavor.get(1)+Color.ANSI_BLUE.escape()+"  ║ ");
+                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 2 + Color.ANSI_BLUE.escape() + "  "+popeFavor.get(1).label+Color.ANSI_BLUE.escape()+"  ║ ");
             }else if(i==13) {
-                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 3 + Color.ANSI_BLUE.escape()+"  "+popeFavor.get(2)+Color.ANSI_BLUE.escape()+ "  ║ ");
+                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 3 + Color.ANSI_BLUE.escape()+"  "+popeFavor.get(2).label+Color.ANSI_BLUE.escape()+ "  ║ ");
             }else if(i==21){
-                b.append(Color.ANSI_BLUE.escape()+" ║  "+Color.ANSI_YELLOW.escape()+4+Color.ANSI_BLUE.escape()+"  "+popeFavor.get(3)+Color.ANSI_BLUE.escape()+"  ║ ");
+                b.append(Color.ANSI_BLUE.escape()+" ║  "+Color.ANSI_YELLOW.escape()+4+Color.ANSI_BLUE.escape()+"  "+popeFavor.get(3).label+Color.ANSI_BLUE.escape()+"  ║ ");
             }else if(i==7 || i==14 || i==22) b.append("");
             else b.append("     ");
         }
@@ -147,10 +155,6 @@ public class ClientFaithPath  {
         b.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
         return b.toString();
     }
-    public void addToPos(int pos){
-        position+=pos;
-    }
-
 
     /*public static void main(String[] args) {
         ClientFaithPath cfp=new ClientFaithPath();

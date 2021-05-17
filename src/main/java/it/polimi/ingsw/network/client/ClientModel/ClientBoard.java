@@ -34,11 +34,23 @@ public class ClientBoard {
         }
         extraProductions.add(p);
     }
+    public void toggleDiscount(ResourceType res){
+        for(ResourceDiscount rd :discounts){
+            if(rd.getRes()==res) rd.toggle();
+        }
+    }
+
     public void addDiscount(ResourceType res){
         ResourceDiscount rd=new ResourceDiscount(res);
         discounts.add(rd);
     }
-
+    public List<ResourceDiscount> getActiveDiscounts(){
+        List<ResourceDiscount> list=new ArrayList<>();
+        for(ResourceDiscount rd : discounts) {
+            if (rd.isActivated()) list.add(rd);
+        }
+        return list;
+    }
     public List<Production> getExtraProductions() {
         return extraProductions;
     }
@@ -105,6 +117,14 @@ public class ClientBoard {
             return slots.get(slot).pop();
         }
         return null;
+    }
+    public String stringifyActiveDiscounts(){
+        StringBuilder sb=new StringBuilder();
+        sb.append(Color.ANSI_PURPLE.escape()+"Active discounts: "+Color.RESET);
+        for(ResourceDiscount rd: discounts){
+            if(rd.isActivated()) sb.append("-").append(rd.getQuantity()).append(Utilities.resourceTypeToResource(rd.getRes()).label).append(" ");
+        }
+        return sb.toString();
     }
     public String stringifyProductions(){
         StringBuilder sb=new StringBuilder();

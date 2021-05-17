@@ -142,8 +142,51 @@ public class UpdatesTest {
         assertEquals(2,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
         assertEquals(3,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
         System.out.println(cm.getCurrentBoard().getDeposits());
+    }
 
+    @Test
+    public void TestToggleDiscountUpdate(){
+        cm.getCurrentBoard().addDiscount(ResourceType.YELLOW);
+        cm.getCurrentBoard().addDiscount(ResourceType.GREY);
+        ToggleDiscountUpdate tdu1=new ToggleDiscountUpdate(ResourceType.YELLOW);
+        tdu1.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
+        assertEquals(ResourceType.YELLOW,cm.getCurrentBoard().getActiveDiscounts().get(0).getRes());
 
+        ToggleDiscountUpdate tdu2=new ToggleDiscountUpdate(ResourceType.GREY);
+        tdu2.update(cm);
+        assertEquals(ResourceType.GREY,cm.getCurrentBoard().getActiveDiscounts().get(1).getRes());
+        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
+
+        tdu1.update(cm);
+        assertEquals(ResourceType.GREY,cm.getCurrentBoard().getActiveDiscounts().get(0).getRes());
+        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
+    }
+
+    @Test
+    public void TestDiscardResource(){
+        DiscardResourceUpdate dru=new DiscardResourceUpdate();
+        //multiplayer
+        dru.update(cm);
+        assertEquals(0,cm.getCurrentBoard().getFaithPath().getPosition());
+        assertEquals(1,cm.getBoards().get("dona").getFaithPath().getPosition());
+
+        //singleplayer
+        cm.getCurrentBoard().getFaithPath().setLorenzoPosition(0);
+        dru.update(cm);
+        assertEquals(0,cm.getCurrentBoard().getFaithPath().getPosition());
+        assertEquals(1,cm.getCurrentBoard().getFaithPath().getLorenzoPosition());
+    }
+
+    @Test
+    public void TestDiscardLeader(){
+        cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("10L"));
+        DiscardLeaderUpdate dlu=new DiscardLeaderUpdate(0);
+        dlu.update(cm);
+        System.out.println(cm.getCurrentBoard().getFaithPath());
+        System.out.println(cm.getCurrentBoard().stringifyLeaders());
+        assertEquals(0,cm.getCurrentBoard().getLeadersInHand().size());
+        assertEquals(1,cm.getCurrentBoard().getFaithPath().getPosition());
 
     }
 }

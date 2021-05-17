@@ -22,7 +22,7 @@ public class PlayLeaderUpdate implements Update {
             clientModel.getCurrentBoard().getLeadersInBoard().add(ld);
             for(SpecialAbility sp : ld.getSpecialAbilities()){
                 if(sp instanceof Discount){
-
+                    clientModel.getCurrentBoard().addDiscount(sp.getResourceType());
                 }
             }
         }
