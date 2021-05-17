@@ -10,14 +10,14 @@ import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientModel.Shelf;
-import it.polimi.ingsw.network.messages.updates.SlotUpdate;
-import it.polimi.ingsw.network.messages.updates.ToggleProductionUpdate;
-import it.polimi.ingsw.network.messages.updates.WarehouseUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -29,8 +29,9 @@ public class UpdatesTest {
         cm.setCurrentNickname("rick");
         cm.setNickname("rick");
         cm.putBoard("rick",new ClientBoard());
+        cm.putBoard("dona",new ClientBoard());
         cm.setPlayersOrder(new ArrayList<>());
-        cm.getCardMatrix().setDCard(Utilities.initializeCardMatrix(cm.getDevelopmentCards()));
+        cm.getCardMatrix().setCards(Utilities.initializeCardMatrix(cm.getDevelopmentCards()));
         cm.getMarket().initializeMarbles();
         System.out.println(cm);
     }
@@ -42,7 +43,7 @@ public class UpdatesTest {
         su.update(cm);
         assertEquals(dc,cm.getCurrentBoard().getSlots().get(1).get(cm.getCurrentBoard().getSlots().get(1).size()-1));
         assertEquals(3,cm.getCardMatrix().getCards()[2][3].size());
-        System.out.println(cm);
+        //System.out.println(cm);
     }
     @Test
     public void TestWarehouseUpdate(){
@@ -69,7 +70,9 @@ public class UpdatesTest {
         clientDeposits.add(cd3);
         clientDeposits.add(cd4);
 
-        WarehouseUpdate whu=new WarehouseUpdate(clientDeposits);
+        Map<Resource,Integer> strongbox=new HashMap<>();
+
+        DepositsUpdate whu=new DepositsUpdate(clientDeposits,strongbox);
         whu.update(cm);
         System.out.println(cm);
     }
@@ -95,5 +98,52 @@ public class UpdatesTest {
         for(Production p : cm.getCurrentBoard().getActiveProductions()){
             System.out.print("["+Utilities.stringify(p)+"]");
         }
+    }
+    @Test
+    public void TestPlayLeader(){
+        cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("5L"));
+        System.out.println(cm);
+        PlayLeaderUpdate plu=new PlayLeaderUpdate(0);
+        assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInHand().get(0));
+        plu.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyLeaders());
+        assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInBoard().get(0));
+    }
+    @Test
+    public void TestUnknownProductions(){
+        cm.getCurrentBoard().addExtraProd(ResourceType.YELLOW);
+        cm.getCurrentBoard().addExtraProd(ResourceType.GREY);
+        //base prod input ? -> violet
+        UnknownProductionUpdate upu1=new UnknownProductionUpdate(-1,ResourceType.VIOLET,'i');
+        upu1.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyProductions());
+        UnknownProductionUpdate upu2=new UnknownProductionUpdate(1,ResourceType.BLUE,'o');
+        upu2.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyProductions());
+        assertEquals(1,cm.getCurrentBoard().getBaseProduction().getInput().get(ResourceType.VIOLET));
+        assertEquals(1,cm.getCurrentBoard().getExtraProductions().get(1).getOutput().get(ResourceType.BLUE));
+    }
+    @Test
+    public void TestStrongBoxUpdate(){
+        cm.getCurrentBoard().getDeposits().putResourceInStrongbox(Resource.SHIELD);
+        cm.getCurrentBoard().getDeposits().putResourceInStrongbox(Resource.COIN);
+
+        Map<Resource,Integer> strongbox=new HashMap<>();
+        strongbox.put(Resource.SHIELD,2);
+        strongbox.put(Resource.COIN,3);
+        strongbox.put(Resource.FAITH,1);
+        strongbox.put(Resource.SERVANT,0);
+        strongbox.put(Resource.STONE,0);
+        DepositsUpdate sbu=new DepositsUpdate(new ArrayList<>(),strongbox);
+        System.out.println(cm.getCurrentBoard().getDeposits());
+        assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
+        assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
+        sbu.update(cm);
+        assertEquals(2,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
+        assertEquals(3,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
+        System.out.println(cm.getCurrentBoard().getDeposits());
+
+
+
     }
 }

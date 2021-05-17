@@ -127,9 +127,14 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(LorenzoUpdate message, Client client) {
+        GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
         //if CLI
         System.out.println(client.getClientModel());
+        if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
+            System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
+        }
+        System.out.println(Utilities.stringify(message.getLastUsedToken()));
     }
 
     @Override
@@ -149,7 +154,6 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(MarketUpdate message, Client client) {
         message.update(client.getClientModel());
-
 
     }
 
@@ -178,7 +182,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
-    public void visit(WarehouseUpdate message, Client client) {
+    public void visit(DepositsUpdate message, Client client) {
         message.update(client.getClientModel());
 
         //if cli
@@ -198,6 +202,7 @@ public class ClientVisitorHandler implements ClientVisitor{
                 System.out.print("["+ Utilities.stringify(p)+"]");
             }
         }
+        System.out.print("\n");
     }
 
     @Override
@@ -205,11 +210,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
 
         //if CLI
-        if(message.getIndex()==-1){
-            //base prod
-            System.out.println(Color.ANSI_PURPLE.escape()+"BASE PRODUCTION: "+Color.RESET+Utilities.stringify(client.getClientModel().getCurrentBoard().getBaseProduction()));
-
-        }
+        System.out.println(client.getClientModel().getCurrentBoard().stringifyProductions());
     }
 
     @Override
@@ -219,6 +220,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
         }
     }
 
@@ -229,8 +231,20 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
         }
     }
+
+    @Override
+    public void visit(PlayLeaderUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().stringifyLeaders());
+        }
+    }
+
 
 }
 

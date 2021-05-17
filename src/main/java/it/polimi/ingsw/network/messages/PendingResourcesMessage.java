@@ -32,7 +32,7 @@ public class PendingResourcesMessage implements ClientMessage{
             mex.append(res.label+"("+r.label+"),");
             //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
         }
-        mex.deleteCharAt(mex.toString().length()-1);
+        if(pending.size()>0) mex.deleteCharAt(mex.toString().length()-1);
         mex.append("]");
         return mex.toString();
     }

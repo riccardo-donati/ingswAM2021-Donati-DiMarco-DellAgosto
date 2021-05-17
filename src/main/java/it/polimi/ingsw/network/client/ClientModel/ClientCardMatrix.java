@@ -25,8 +25,8 @@ public class ClientCardMatrix {
         return cards;
     }
 
-    public void setDCard(Stack<DevelopmentCard>[][] dCard) {
-        this.cards = dCard;
+    public void setCards(Stack<DevelopmentCard>[][] cards) {
+        this.cards = cards;
     }
 
     /**
@@ -72,11 +72,19 @@ public class ClientCardMatrix {
         return sb.toString();
     }
 
-//    public static void main() {
+    public void discard(int column){
+        for (int r=0; r < 3; r++) {
+            if (cards[r][column].size() > 0) {
+                cards[r][column].pop();
+                return;
+            }
+        }
+    }
+
+//    public static void main(String[] args) {
 //        List<DevelopmentCard> list=Utilities.loadDevelopmentCardsFromJSON();
 //        ClientCardMatrix ccd = new ClientCardMatrix();
-//        ccd.pushCard(1,1,list.get(2));
-//
+//        ccd.pushCard(1, 1, list.get(2));
 //    }
 }
 

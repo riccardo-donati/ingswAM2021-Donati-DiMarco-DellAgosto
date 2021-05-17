@@ -11,6 +11,7 @@ import java.util.Map;
 public class ClientDeposits {
     List<Shelf> shelves = new ArrayList<>();
     Map<Resource, Integer> strongbox = new HashMap<>();
+    Map<Resource, Integer> handResources = new HashMap<>();
 
     /**
      * constructor - sets up empty strongbox and warehouse shelves
@@ -23,6 +24,33 @@ public class ClientDeposits {
         shelves.add(new Shelf(1,1));
         shelves.add(new Shelf(2,2));
         shelves.add(new Shelf(3,3));
+    }
+
+    public Map<Resource, Integer> getStrongbox() {
+        return strongbox;
+    }
+
+    public void setStrongbox(Map<Resource, Integer> strongbox) {
+        this.strongbox = strongbox;
+    }
+
+    public void putResourceInHand(Resource res){
+        if (handResources.get(res) == null)
+            handResources.put(res, 1);
+        else handResources.replace(res, handResources.get(res)+1);
+    }
+
+    public void clearResourcesInHand(){
+        handResources.clear();
+    }
+
+    public String stringifyHandResources(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(Color.ANSI_PURPLE.escape()+"RESOURCES IN HAND: "+Color.RESET+"[ ");
+        for (Map.Entry<Resource, Integer> entry : handResources.entrySet())
+            sb.append(entry.getValue()+entry.getKey().label).append(" ");
+        sb.append("]");
+        return sb.toString();
     }
 
     public Shelf getShelf(int id){
@@ -44,7 +72,7 @@ public class ClientDeposits {
     public void deposit(Resource resource, Integer id){
         Shelf shelf = getShelf(id);
         for (int i = 0; i < shelf.getSpaces().length; i++) {
-            if (shelf.getSpaces()[i] == null || shelf.getSpaces()[i].equals("  ")) {
+            if (s.getSpaces()[i].equals(Resource.EMPTY)) {
                 shelf.put(i, resource);
                 return;
             }
@@ -56,7 +84,7 @@ public class ClientDeposits {
      * @param resource - list of resources to be added
      * @param id - shelf id
      */
-    public void deposit(List<Resource> resource,Integer id){
+    public void deposit(List<Resource> resource, Integer id){
         Shelf s = getShelf(id);
         if (s != null && resource.size() <= s.getSpaces().length) {
             s.clear();
@@ -70,23 +98,24 @@ public class ClientDeposits {
      * removes a resource from the specified shelf
      * @param id - shelf id
      */
-    public void remove(Integer id){
+    public Resource remove(Integer id){
         Shelf s = getShelf(id);
-        for (int i = s.getSpaces().length - 1; i >= 0; i--) {
-            if (s.getSpaces()[i]!=null && !s.getSpaces()[i].equals("  ")) {
-                s.remove(i);
-                return;
-            }
-        }
+        for (int i = s.getSpaces().length - 1; i >= 0; i--)
+            if (!s.getSpaces()[i].equals(Resource.EMPTY))
+                return s.remove(i);
+        return Resource.EMPTY;
     }
 
     /**
      * removes a resource from the strongbox
      * @param resource - resource to be removed
      */
-    public void removeResourceFromStrongbox(Resource resource){
+    public Resource removeResourceFromStrongbox(Resource resource){
         if(strongbox.get(resource) > 0)
             strongbox.replace(resource, strongbox.get(resource) - 1);
+            return resource;
+        }
+        return Resource.EMPTY;
     }
 
     /**
@@ -137,12 +166,8 @@ public class ClientDeposits {
                 sb.append(" ");
             }
             for(int i=0;i< s.getSpaces().length;i++){
-                if(s.getSpaces()[i]==null) {
-                    sb.append("║    ║");
-                }
-                else{
-                    sb.append("║ "+s.getSpaces()[i]+" ║");
-                }
+                sb.append("║ "+s.getSpaces()[i].label+" ║");
+
             }
 
             //strongbox

@@ -1,12 +1,11 @@
 package it.polimi.ingsw.network.client.ClientModel;
 
-import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 
 import java.util.*;
 
@@ -20,7 +19,29 @@ public class ClientBoard {
     private List<LeaderCard> leadersInBoard=new ArrayList<>();
 
     private List<Production> activeProductions=new ArrayList<>();
-    Production baseProduction;
+    private Production baseProduction;
+    private List<Production> extraProductions=new ArrayList<>();
+    private List<ResourceDiscount> discounts=new ArrayList<>();
+
+    public void addExtraProd(ResourceType res){
+        Production p=new Production();
+        try {
+            p.addOutput(ResourceType.UNKNOWN,1);
+            p.addInput(res,1);
+            p.addOutput(ResourceType.RED,1);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
+        extraProductions.add(p);
+    }
+    public void addDiscount(ResourceType res){
+        ResourceDiscount rd=new ResourceDiscount(res);
+        discounts.add(rd);
+    }
+
+    public List<Production> getExtraProductions() {
+        return extraProductions;
+    }
 
     public ClientBoard(){
         deposits=new ClientDeposits();
@@ -84,6 +105,17 @@ public class ClientBoard {
             return slots.get(slot).pop();
         }
         return null;
+    }
+    public String stringifyProductions(){
+        StringBuilder sb=new StringBuilder();
+        sb.append(stringifyBaseProduction());
+        sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
+        sb.append(Color.ANSI_PURPLE.escape()).append("EXTRA PRODUCTION: "+Color.RESET);
+        for(Production p : extraProductions){
+            sb.append("[").append(Utilities.stringify(p)).append("]");
+        }
+        sb.append("\n");
+        return sb.toString();
     }
     public String stringifyBaseProduction(){
         StringBuilder sb=new StringBuilder();

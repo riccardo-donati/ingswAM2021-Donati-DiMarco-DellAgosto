@@ -7,21 +7,21 @@ public class ResourceDiscount {
     private Integer quantity;
     private boolean activated;
 
-    protected ResourceDiscount(ResourceType res){
+    public ResourceDiscount(ResourceType res){
         this.res=res;
         this.quantity=1;
         this.activated=false;
     }
-    protected void addQuantity(){
+    public void addQuantity(){
         quantity++;
     }
 
-    protected Integer getQuantity() { return quantity; }
+    public Integer getQuantity() { return quantity; }
 
-    protected ResourceType getRes() { return res; }
+    public ResourceType getRes() { return res; }
 
-    protected boolean isActivated() { return activated; }
-    protected void toggle(){
+    public boolean isActivated() { return activated; }
+    public void toggle(){
         activated=!activated;
     }
 }

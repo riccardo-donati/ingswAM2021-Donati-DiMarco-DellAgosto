@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
@@ -27,6 +28,7 @@ public class PickUpWarehouseUpdate implements Update {
 
     @Override
     public void update(ClientModel clientModel) {
-        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().remove(idDeposit);
+        Resource res=clientModel.getCurrentBoard().getDeposits().remove(idDeposit);
+        clientModel.getCurrentBoard().getDeposits().putResourceInHand(res);
     }
 }

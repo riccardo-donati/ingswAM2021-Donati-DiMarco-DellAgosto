@@ -7,16 +7,16 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.PublicInterface;
+import it.polimi.ingsw.model.interfaces.Token;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+
+import java.util.*;
 
 public class Controller {
     @Expose
@@ -240,6 +240,9 @@ public class Controller {
     public synchronized Result endGame(){
         return game.endGame();
     }
+    public synchronized Token getLastUsedToken(){
+        return game.getLastUsedToken();
+    }
     public synchronized List<List<LeaderCard>> divideLeaderCards(){
         try {
             return game.divideLeaderCards();
@@ -289,8 +292,12 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void playLeader(int index,String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, RequirementNotMetException, CardNotAvailableException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.playLeader(index);
+            //update
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new PlayLeaderUpdate(index));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException {
@@ -344,19 +351,27 @@ public class Controller {
     public synchronized void substituteUnknownInOutputBaseProduction(ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
         if(getCurrentNickname().equals(nickname)) {
             game.substituteUnknownInOutputBaseProduction(res);
+            //update
             VirtualClient vc = getVirtualClient(nickname);
             if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'o'));
         }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInInputExtraProduction(Integer index,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname))
-            game.substituteUnknownInInputExtraProduction(index,res);
+        if(getCurrentNickname().equals(nickname)) {
+            game.substituteUnknownInInputExtraProduction(index, res);
+            //update
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new UnknownProductionUpdate(index,res,'i'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
-            game.substituteUnknownInOutputExtraProduction(index,res);
+        if(getCurrentNickname().equals(nickname)) {
+            game.substituteUnknownInOutputExtraProduction(index, res);
+            VirtualClient vc = getVirtualClient(nickname);
+            vc.send(new UnknownProductionUpdate(index,res,'o'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void toggleBaseProd(String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
@@ -379,7 +394,7 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.toggleCardProd(slot);
             VirtualClient vc = getVirtualClient(nickname);
-            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+            if(vc!=null)vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
         }
         else throw new NotYourTurnException();
     }
@@ -387,7 +402,6 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.pickUpResourceFromWarehouse(id);
             notifyLobby(new PickUpWarehouseUpdate(id));
-            getVirtualClient(nickname).send(new PendingResourcesMessage(getCurrentPlayerPending()));
         }
         else throw new NotYourTurnException();
     }
@@ -395,13 +409,16 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.pickUpResourceFromStrongbox(res);
             notifyLobby(new PickUpStrongboxUpdate(Utilities.resourceTypeToResource(res)));
-            getVirtualClient(nickname).send(new PendingResourcesMessage(getCurrentPlayerPending()));
         }
         else throw new NotYourTurnException();
     }
     public synchronized void revertPickUp(String nickname) throws IllegalResourceException, FullSpaceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.revertPickUp();
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null)vc.send(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
+
+        }
         else throw new NotYourTurnException();
     }
     public synchronized List<ClientDeposit> getCurrentWarehouse(){
@@ -420,9 +437,20 @@ public class Controller {
     public synchronized List<Production> getCurrentActiveProductions(){
         return game.getCurrentActiveProductions();
     }
+    public Map<Resource,Integer> getCurrentStrongbox(){
+        Map<ResourceType,Integer> s=game.getCurrentStrongbox();
+        Map<Resource,Integer> strongbox=new HashMap<>();
+        for (Map.Entry<ResourceType, Integer> entry : s.entrySet()) {
+            strongbox.put(Utilities.resourceTypeToResource(entry.getKey()),entry.getValue());
+        }
+        return strongbox;
+    }
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.activateProductions();
+            notifyLobby(new FaithPathUpdate(getCurrentFaithPath()));
+            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException {
@@ -430,7 +458,7 @@ public class Controller {
             game.buyCard(row, col, slot);
             //update
             notifyLobby(new SlotUpdate(slot,row,col));
-            notifyLobby(new WarehouseUpdate(getCurrentWarehouse()));
+            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
         }
         else throw new NotYourTurnException();
     }
@@ -458,10 +486,10 @@ public class Controller {
             game.passTurn();
             gameState=game.getGamePhase();
             //update
+
             if(getnPlayers()==1){
-                notifyLobby(new LorenzoUpdate(getLorenzoPosition()));
-            }
-            else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
+                notifyLobby(new LorenzoUpdate(getLorenzoPosition(),getLastUsedToken(),getGamePhase()));
+            }else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
         }
         else throw new NotYourTurnException();
     }
