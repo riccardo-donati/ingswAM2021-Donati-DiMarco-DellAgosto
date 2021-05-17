@@ -72,7 +72,7 @@ public class ClientDeposits {
     public void deposit(Resource resource, Integer id){
         Shelf shelf = getShelf(id);
         for (int i = 0; i < shelf.getSpaces().length; i++) {
-            if (s.getSpaces()[i].equals(Resource.EMPTY)) {
+            if (shelf.getSpaces()[i].equals(Resource.EMPTY)) {
                 shelf.put(i, resource);
                 return;
             }
@@ -110,8 +110,8 @@ public class ClientDeposits {
      * removes a resource from the strongbox
      * @param resource - resource to be removed
      */
-    public Resource removeResourceFromStrongbox(Resource resource){
-        if(strongbox.get(resource) > 0)
+    public Resource removeResourceFromStrongbox(Resource resource) {
+        if(strongbox.get(resource) > 0) {
             strongbox.replace(resource, strongbox.get(resource) - 1);
             return resource;
         }

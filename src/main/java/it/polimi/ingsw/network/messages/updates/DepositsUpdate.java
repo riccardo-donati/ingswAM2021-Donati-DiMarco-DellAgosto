@@ -25,7 +25,7 @@ public class DepositsUpdate implements Update{
             clientModel.getCurrentBoard().getDeposits().deposit(cd.getResources(), cd.getId());
         }
         clientModel.getCurrentBoard().getDeposits().setStrongbox(strongbox);
-        clientModel.getCurrentBoard().getDeposits().clearResourceInHand();
+        clientModel.getCurrentBoard().getDeposits().clearResourcesInHand();
     }
 
     @Override

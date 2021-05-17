@@ -64,6 +64,6 @@ public class StartGameUpdate implements Update, ClientVisitable {
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
         }
         clientModel.getMarket().setMarbles(marbles);
-        clientModel.getCardMatrix().setDCard(cardMatrix);
+        clientModel.getCardMatrix().setCards(cardMatrix);
     }
 }
