@@ -150,7 +150,6 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(MarketUpdate message, Client client) {
         message.update(client.getClientModel());
 
-
     }
 
     @Override
@@ -198,6 +197,7 @@ public class ClientVisitorHandler implements ClientVisitor{
                 System.out.print("["+ Utilities.stringify(p)+"]");
             }
         }
+        System.out.print("\n");
     }
 
     @Override
@@ -205,11 +205,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
 
         //if CLI
-        if(message.getIndex()==-1){
-            //base prod
-            System.out.println(Color.ANSI_PURPLE.escape()+"BASE PRODUCTION: "+Color.RESET+Utilities.stringify(client.getClientModel().getCurrentBoard().getBaseProduction()));
-
-        }
+        System.out.println(client.getClientModel().getCurrentBoard().stringifyProductions());
     }
 
     @Override
@@ -229,6 +225,26 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+        }
+    }
+
+    @Override
+    public void visit(PlayLeaderUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().stringifyLeaders());
+        }
+    }
+
+    @Override
+    public void visit(HandResourcesUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
         }
     }
 

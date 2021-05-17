@@ -38,4 +38,8 @@ public interface ClientVisitor {
 
     void visit(PickUpWarehouseUpdate message, Client client);
     void visit(PickUpStrongboxUpdate message, Client client);
+
+    void visit(PlayLeaderUpdate message, Client client);
+
+    void visit(HandResourcesUpdate message, Client client);
 }

@@ -11,6 +11,7 @@ import java.util.Map;
 public class ClientDeposits {
     List<Shelf> shelves=new ArrayList<>();
     Map<Resource, Integer> strongbox=new HashMap<>();
+    Map<Resource,Integer> handResources=new HashMap<>();
 
     public ClientDeposits(){
         strongbox.put(Resource.COIN,0);
@@ -20,6 +21,24 @@ public class ClientDeposits {
         shelves.add(new Shelf(1,1));
         shelves.add(new Shelf(2,2));
         shelves.add(new Shelf(3,3));
+    }
+    public void putResourceInHand(Resource res){
+        if(handResources.get(res)==null) handResources.put(res,1);
+        else{
+            handResources.replace(res, handResources.get(res)+1);
+        }
+    }
+    public void clearResourceInHand(){
+        handResources.clear();
+    }
+    public String stringifyHandResources(){
+        StringBuilder sb=new StringBuilder();
+        sb.append(Color.ANSI_PURPLE.escape()+"RESOURCES IN HAND: "+Color.RESET+"[ ");
+        for (Map.Entry<Resource, Integer> entry : handResources.entrySet()) {
+            sb.append(entry.getValue()+entry.getKey().label).append(" ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 
     public Shelf getShelf(int id){

@@ -1,5 +1,8 @@
 package it.polimi.ingsw.network.messages.updates;
 
+import it.polimi.ingsw.model.LeaderCard;
+import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.SpecialAbility;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
@@ -28,12 +31,32 @@ public class UnknownProductionUpdate implements Update {
                     e.printStackTrace();
                 }
             }
+            else if(index>=0){
+                Production p=clientModel.getCurrentBoard().getExtraProductions().get(0);
+                if(p!=null) {
+                    try {
+                        p.replaceUnknownInput(res);
+                    } catch (UnknownNotFoundException | IllegalResourceException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
         }else if(io=='o'){
             if(index==-1) {
                 try {
                     clientModel.getCurrentBoard().getBaseProduction().replaceUnknownOutput(res);
                 } catch (UnknownNotFoundException | IllegalResourceException e) {
                     e.printStackTrace();
+                }
+            }
+            else if(index>=0){
+                Production p=clientModel.getCurrentBoard().getExtraProductions().get(index);
+                if(p!=null) {
+                    try {
+                        p.replaceUnknownOutput(res);
+                    } catch (UnknownNotFoundException | IllegalResourceException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

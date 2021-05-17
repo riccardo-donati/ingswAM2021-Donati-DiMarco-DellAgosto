@@ -289,8 +289,12 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void playLeader(int index,String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, RequirementNotMetException, CardNotAvailableException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.playLeader(index);
+            //update
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new PlayLeaderUpdate(index));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException {
@@ -344,19 +348,27 @@ public class Controller {
     public synchronized void substituteUnknownInOutputBaseProduction(ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
         if(getCurrentNickname().equals(nickname)) {
             game.substituteUnknownInOutputBaseProduction(res);
+            //update
             VirtualClient vc = getVirtualClient(nickname);
             if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'o'));
         }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInInputExtraProduction(Integer index,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname))
-            game.substituteUnknownInInputExtraProduction(index,res);
+        if(getCurrentNickname().equals(nickname)) {
+            game.substituteUnknownInInputExtraProduction(index, res);
+            //update
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new UnknownProductionUpdate(index,res,'i'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
-            game.substituteUnknownInOutputExtraProduction(index,res);
+        if(getCurrentNickname().equals(nickname)) {
+            game.substituteUnknownInOutputExtraProduction(index, res);
+            VirtualClient vc = getVirtualClient(nickname);
+            vc.send(new UnknownProductionUpdate(index,res,'o'));
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void toggleBaseProd(String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
@@ -379,7 +391,7 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.toggleCardProd(slot);
             VirtualClient vc = getVirtualClient(nickname);
-            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+            if(vc!=null)vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
         }
         else throw new NotYourTurnException();
     }
@@ -387,7 +399,10 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.pickUpResourceFromWarehouse(id);
             notifyLobby(new PickUpWarehouseUpdate(id));
-            getVirtualClient(nickname).send(new PendingResourcesMessage(getCurrentPlayerPending()));
+            /*VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null)vc.send(new HandResourcesUpdate(id));
+
+             */
         }
         else throw new NotYourTurnException();
     }

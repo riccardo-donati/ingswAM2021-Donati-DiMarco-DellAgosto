@@ -10,9 +10,7 @@ import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientModel.Shelf;
-import it.polimi.ingsw.network.messages.updates.SlotUpdate;
-import it.polimi.ingsw.network.messages.updates.ToggleProductionUpdate;
-import it.polimi.ingsw.network.messages.updates.WarehouseUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -29,6 +27,7 @@ public class UpdatesTest {
         cm.setCurrentNickname("rick");
         cm.setNickname("rick");
         cm.putBoard("rick",new ClientBoard());
+        cm.putBoard("dona",new ClientBoard());
         cm.setPlayersOrder(new ArrayList<>());
         cm.getCardMatrix().setDCard(Utilities.initializeCardMatrix(cm.getDevelopmentCards()));
         cm.getMarket().initializeMarbles();
@@ -42,7 +41,7 @@ public class UpdatesTest {
         su.update(cm);
         assertEquals(dc,cm.getCurrentBoard().getSlots().get(1).get(cm.getCurrentBoard().getSlots().get(1).size()-1));
         assertEquals(3,cm.getCardMatrix().getdCard()[2][3].size());
-        System.out.println(cm);
+        //System.out.println(cm);
     }
     @Test
     public void TestWarehouseUpdate(){
@@ -95,5 +94,43 @@ public class UpdatesTest {
         for(Production p : cm.getCurrentBoard().getActiveProductions()){
             System.out.print("["+Utilities.stringify(p)+"]");
         }
+    }
+    @Test
+    public void TestPlayLeader(){
+        cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("5L"));
+        System.out.println(cm);
+        PlayLeaderUpdate plu=new PlayLeaderUpdate(0);
+        assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInHand().get(0));
+        plu.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyLeaders());
+        assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInBoard().get(0));
+    }
+    @Test
+    public void TestUnknownProductions(){
+        cm.getCurrentBoard().addExtraProd(ResourceType.YELLOW);
+        cm.getCurrentBoard().addExtraProd(ResourceType.GREY);
+        //base prod input ? -> violet
+        UnknownProductionUpdate upu1=new UnknownProductionUpdate(-1,ResourceType.VIOLET,'i');
+        upu1.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyProductions());
+        UnknownProductionUpdate upu2=new UnknownProductionUpdate(1,ResourceType.BLUE,'o');
+        upu2.update(cm);
+        System.out.println(cm.getCurrentBoard().stringifyProductions());
+        assertEquals(1,cm.getCurrentBoard().getBaseProduction().getInput().get(ResourceType.VIOLET));
+        assertEquals(1,cm.getCurrentBoard().getExtraProductions().get(1).getOutput().get(ResourceType.BLUE));
+    }
+
+    @Test
+    public void TestPickUpResource(){
+        HandResourcesUpdate hru1=new HandResourcesUpdate(ResourceType.YELLOW);
+        hru1.update(cm);
+        System.out.println(cm.getCurrentBoard().getDeposits().stringifyHandResources());
+
+        HandResourcesUpdate hru2=new HandResourcesUpdate(ResourceType.YELLOW);
+        hru2.update(cm);
+        HandResourcesUpdate hru3=new HandResourcesUpdate(ResourceType.BLUE);
+        hru3.update(cm);
+        System.out.println(cm.getCurrentBoard().getDeposits().stringifyHandResources());
+
     }
 }
