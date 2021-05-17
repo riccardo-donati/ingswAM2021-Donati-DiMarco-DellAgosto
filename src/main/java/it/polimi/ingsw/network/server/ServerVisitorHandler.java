@@ -142,8 +142,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -155,8 +153,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -165,11 +161,9 @@ public class ServerVisitorHandler implements ServerVisitor {
         try {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException e) {
-            e.printStackTrace();
+            clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -214,8 +208,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -227,8 +219,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
             return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override

@@ -30,7 +30,7 @@ public interface ClientVisitor {
 
     void visit(SlotUpdate message, Client client);
 
-    void visit(WarehouseUpdate message, Client client);
+    void visit(DepositsUpdate message, Client client);
 
     void visit(ToggleProductionUpdate message, Client client);
 
@@ -41,5 +41,4 @@ public interface ClientVisitor {
 
     void visit(PlayLeaderUpdate message, Client client);
 
-    void visit(HandResourcesUpdate message, Client client);
 }

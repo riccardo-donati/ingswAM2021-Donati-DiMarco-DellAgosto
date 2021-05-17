@@ -17,6 +17,7 @@ public class Singleplayer extends Game {
     private Stack<Token> tokenStack;
     private List<Token> tokens;
     private FaithPath blackFaithPath;
+    private Token lastUsedToken;
 
     protected Singleplayer()  {
         super();
@@ -124,9 +125,10 @@ public class Singleplayer extends Game {
      */
     @Override
     protected void nextTurn(){
-        Token t=tokenStack.pop();
-        t.doAction(this);
+        lastUsedToken=tokenStack.pop();
+        lastUsedToken.doAction(this);
     }
+
 
     /**
      * discard the top card of the passed color from the matrix (starting with row 0->1->2)
@@ -191,6 +193,10 @@ public class Singleplayer extends Game {
             result.setWinner(result.checkWinner());
         }
         return result;
+    }
+    @Override
+    public Token getLastUsedToken(){
+        return lastUsedToken;
     }
     @Override
     public void passTurn() throws IllegalActionException {

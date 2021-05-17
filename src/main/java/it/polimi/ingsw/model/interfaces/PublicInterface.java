@@ -33,6 +33,8 @@ public interface PublicInterface {
      List<ResourceType> getCurrentPlayerPending();
      Stack<DevelopmentCard>[][] getCardMatrix();
      List<String> getCurrentLeadersInHand();
+     Map<ResourceType,Integer> getCurrentStrongbox();
+     Token getLastUsedToken();
      void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
      void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException;
 

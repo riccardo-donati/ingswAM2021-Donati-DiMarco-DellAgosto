@@ -22,12 +22,22 @@ public class ClientDeposits {
         shelves.add(new Shelf(2,2));
         shelves.add(new Shelf(3,3));
     }
+
+    public Map<Resource, Integer> getStrongbox() {
+        return strongbox;
+    }
+
     public void putResourceInHand(Resource res){
         if(handResources.get(res)==null) handResources.put(res,1);
         else{
             handResources.replace(res, handResources.get(res)+1);
         }
     }
+
+    public void setStrongbox(Map<Resource, Integer> strongbox) {
+        this.strongbox = strongbox;
+    }
+
     public void clearResourceInHand(){
         handResources.clear();
     }
@@ -51,7 +61,7 @@ public class ClientDeposits {
     public void deposit(Resource r, Integer idD){
         Shelf s=getShelf(idD);
         for(int i=0;i<s.getSpaces().length;i++){
-            if(s.getSpaces()[i]==null || s.getSpaces()[i].equals("  ")) {
+            if(s.getSpaces()[i].equals(Resource.EMPTY)) {
                 s.put(i, r);
                 return;
             }
@@ -68,19 +78,23 @@ public class ClientDeposits {
         }
     }
 
-    public void remove(Integer idD){
+    public Resource remove(Integer idD){
         Shelf s=getShelf(idD);
         for(int i = s.getSpaces().length - 1; i >= 0; i--){
-            if(s.getSpaces()[i]!=null && !s.getSpaces()[i].equals("  ")) {
-                s.remove(i);
-                return;
+            if(!s.getSpaces()[i].equals(Resource.EMPTY)) {
+                return s.remove(i);
             }
         }
+        return Resource.EMPTY;
     }
 
-    public void removeResourceFromStrongbox(Resource resource){
-        if(strongbox.get(resource) > 0)
+    public Resource removeResourceFromStrongbox(Resource resource){
+        if(strongbox.get(resource) > 0) {
             strongbox.replace(resource, strongbox.get(resource) - 1);
+            return resource;
+        }
+        return Resource.EMPTY;
+
     }
 
     public void putResourceInStrongbox(Resource resource){
@@ -127,12 +141,8 @@ public class ClientDeposits {
                 sb.append(" ");
             }
             for(int i=0;i< s.getSpaces().length;i++){
-                if(s.getSpaces()[i]==null) {
-                    sb.append("║    ║");
-                }
-                else{
-                    sb.append("║ "+s.getSpaces()[i]+" ║");
-                }
+                sb.append("║ "+s.getSpaces()[i].label+" ║");
+
             }
             //strongbox
             if(s.getId()==1) {

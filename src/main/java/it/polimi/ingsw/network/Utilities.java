@@ -7,6 +7,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.model.interfaces.Token;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
@@ -46,6 +47,8 @@ public class Utilities {
         builder.registerTypeAdapter(ServerMessage.class, new InterfaceAdapter<ServerMessage>());
         builder.registerTypeAdapter(ClientMessage.class, new InterfaceAdapter<ClientMessage>());
         builder.registerTypeAdapter(Message.class, new InterfaceAdapter<Message>());
+        //we send the token on lorenzo update
+        builder.registerTypeAdapter(Token.class, new InterfaceAdapter<Message>());
         return builder.create();
     }
 
@@ -53,6 +56,21 @@ public class Utilities {
         GsonBuilder builder = new GsonBuilder();
         builder.enableComplexMapKeySerialization();
         return builder.excludeFieldsWithoutExposeAnnotation().create();
+    }
+    public static String stringify(Token t){
+        if(t==null) return "";
+        StringBuilder sb=new StringBuilder();
+        sb.append(Color.ANSI_PURPLE.escape()).append("LORENZO TURN: "+Color.RESET);
+        if(t instanceof TokenDiscard){
+            sb.append("Discarded ").append(((TokenDiscard) t).getQuantity()).append(" ").append(((TokenDiscard) t).getColor()).append(" Development cards\n");
+        }
+        else if(t instanceof TokenPush){
+            sb.append("Black cross +").append(((TokenPush) t).getQuantity());
+        }
+        else if(t instanceof TokenPushShuffle){
+            sb.append("Black cross +").append(((TokenPushShuffle) t).getQuantity()).append(" and tokens shuffle");
+        }
+        return sb.toString();
     }
     public static List<LeaderCard> loadLeaderCardsFromJSON() {
         List<LeaderCard> list;

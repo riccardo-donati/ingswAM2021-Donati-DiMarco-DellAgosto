@@ -7,7 +7,15 @@ public class TokenDiscard implements Token {
     private Color color;
     private Integer quantity;
 
-    protected TokenDiscard(Color c,Integer qty){
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    protected TokenDiscard(Color c, Integer qty){
         this.color=c;
         this.quantity=qty;
     }

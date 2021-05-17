@@ -52,6 +52,16 @@ public class ClientCardMatrix {
         this.dCard = dCard;
     }
 
+    public void discard(int column){
+        for(int r=0;r<3;r++){
+            if(dCard[r][column].size()>0) {
+                dCard[r][column].pop();
+                return;
+            }
+        }
+
+    }
+
     public static void main(String[] args) {
         List<DevelopmentCard> list=Utilities.loadDevelopmentCardsFromJSON();
         ClientCardMatrix ccd=new ClientCardMatrix();

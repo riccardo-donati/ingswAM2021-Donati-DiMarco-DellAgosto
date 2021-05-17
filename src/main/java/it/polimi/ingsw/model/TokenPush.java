@@ -8,6 +8,10 @@ public class TokenPush implements Token {
         this.quantity=qty;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
     @Override
     public void doAction(Game g) {
         g.pushBlackCross(quantity);

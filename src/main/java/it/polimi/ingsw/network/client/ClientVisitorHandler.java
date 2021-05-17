@@ -127,9 +127,14 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(LorenzoUpdate message, Client client) {
+        GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
         //if CLI
         System.out.println(client.getClientModel());
+        if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
+            System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
+        }
+        System.out.println(Utilities.stringify(message.getLastUsedToken()));
     }
 
     @Override
@@ -177,7 +182,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
-    public void visit(WarehouseUpdate message, Client client) {
+    public void visit(DepositsUpdate message, Client client) {
         message.update(client.getClientModel());
 
         //if cli
@@ -215,6 +220,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
         }
     }
 
@@ -225,6 +231,7 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if cli
         if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
             System.out.println(client.getClientModel().getCurrentBoard().getDeposits());
+            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
         }
     }
 
@@ -238,15 +245,6 @@ public class ClientVisitorHandler implements ClientVisitor{
         }
     }
 
-    @Override
-    public void visit(HandResourcesUpdate message, Client client) {
-        message.update(client.getClientModel());
-
-        //if CLI
-        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
-            System.out.println(client.getClientModel().getCurrentBoard().getDeposits().stringifyHandResources());
-        }
-    }
 
 }
 

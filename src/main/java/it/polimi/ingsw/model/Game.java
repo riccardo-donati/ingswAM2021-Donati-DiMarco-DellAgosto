@@ -423,7 +423,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return result;
     }
-
+    public Map<ResourceType,Integer> getCurrentStrongbox(){
+        return currPlayer.getBoard().getStrongBox();
+    }
+    public Token getLastUsedToken(){
+        return null;
+    }
     /**
      * addition of a new player into the game
      * @param nickname of the new player

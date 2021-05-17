@@ -28,6 +28,7 @@ public class PickUpStrongboxUpdate implements Update {
 
     @Override
     public void update(ClientModel clientModel) {
-        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().removeResourceFromStrongbox(resource);
+        Resource res=clientModel.getCurrentBoard().getDeposits().removeResourceFromStrongbox(resource);
+        clientModel.getCurrentBoard().getDeposits().putResourceInHand(res);
     }
 }
