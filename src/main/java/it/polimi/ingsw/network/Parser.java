@@ -26,10 +26,9 @@ public class Parser {
         switch (string) {
             case "help":
                 // display available commands
-                System.out.println(client.getClientModel().getIdNameLeadersMap());
                 break;
             case "players":
-                System.out.println(client.getClientModel().getPlayersInOrder().toString().replace("[","").replace("]",""));
+                System.out.println(client.getClientModel().stringifyPlayers());
                 return null;
             case "pass":
                 return new PassCommand();
@@ -45,7 +44,7 @@ public class Parser {
             case "display faith path":
                 System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).getFaithPath().toString());
                 return null;
-            case "display development cards":
+            case "display slots":
                 System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).stringifySlots());
                 System.out.println(client.getClientModel().getBoards().get(client.getClientModel().getCurrentNickname()).recapSlots());
                 return null;
@@ -83,7 +82,7 @@ public class Parser {
                 if (!tokenizer.hasMoreElements() && number >= 1) {
                     return new PlayerNumberResponse(number);
                 }
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException | NumberFormatException e) {
                 throw new IllegalCommandException();
             }
         }
@@ -290,7 +289,7 @@ public class Parser {
                     System.out.println(client.getClientModel().getBoards().get(nickname).toString());
                     return null;
                 }
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException | NullPointerException e ) {
                 throw new IllegalCommandException();
             }
         }

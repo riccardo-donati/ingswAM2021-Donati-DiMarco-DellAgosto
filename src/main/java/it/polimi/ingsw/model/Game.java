@@ -6,6 +6,7 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.*;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 
 import java.io.*;
@@ -135,6 +136,24 @@ public abstract class Game implements BoardObserver, PublicInterface {
         for(LeaderCard ld :leaderCards){
             nameLeaderCardMap.put(ld.getName(),ld);
         }
+    }
+
+    /**
+     *
+     * @return a map with players and their popefavorstate
+     */
+    public Map<String,Map<Integer, ClientPopeFavorState>> getPopeFavors(){
+        Map<String,Map<Integer, ClientPopeFavorState>> popeFavorsMap=new HashMap<>();
+        for(Player p : players){
+            Map<Integer,ClientPopeFavorState>  pfMap=new HashMap<>();
+            int cont=1;
+            for(PopeFavor pf : p.getBoard().getFaithPath().getPopeFavorList()){
+                pfMap.put(cont,ClientPopeFavorState.valueOf(pf.getState().toString().toUpperCase()));
+                cont++;
+            }
+            popeFavorsMap.put(p.getNickname(),pfMap);
+        }
+        return popeFavorsMap;
     }
 
     /**

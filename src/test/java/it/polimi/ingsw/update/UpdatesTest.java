@@ -5,12 +5,15 @@ import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientModel.Shelf;
+import it.polimi.ingsw.network.messages.PendingResourcesMessage;
 import it.polimi.ingsw.network.messages.updates.*;
+import it.polimi.ingsw.network.server.Controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -33,7 +36,7 @@ public class UpdatesTest {
         cm.setPlayersOrder(new ArrayList<>());
         cm.getCardMatrix().setCards(Utilities.initializeCardMatrix(cm.getDevelopmentCards()));
         cm.getMarket().initializeMarbles();
-        System.out.println(cm);
+        //System.out.println(cm);
     }
     @Test
     public void TestSlotUpdate(){
@@ -187,6 +190,40 @@ public class UpdatesTest {
         System.out.println(cm.getCurrentBoard().stringifyLeaders());
         assertEquals(0,cm.getCurrentBoard().getLeadersInHand().size());
         assertEquals(1,cm.getCurrentBoard().getFaithPath().getPosition());
+
+    }
+    @Test
+    public void TestUpdateFaithPath(){
+        Map<String, Integer> faithPaths=new HashMap<>();
+        faithPaths.put("rick",8);
+        faithPaths.put("dona",10);
+        Map<String,Map<Integer, ClientPopeFavorState>> popefavors=new HashMap<>();
+        Map<Integer, ClientPopeFavorState> pfmap1=new HashMap<>();
+        Map<Integer, ClientPopeFavorState> pfmap2=new HashMap<>();
+
+        pfmap1.put(1,ClientPopeFavorState.ACTIVE);
+        pfmap1.put(2,ClientPopeFavorState.DISCARDED);
+        pfmap1.put(3,ClientPopeFavorState.UNACTIVE);
+
+        pfmap2.put(1,ClientPopeFavorState.DISCARDED);
+        pfmap2.put(2,ClientPopeFavorState.ACTIVE);
+        pfmap2.put(3,ClientPopeFavorState.DISCARDED);
+
+        popefavors.put("rick",pfmap1);
+        popefavors.put("dona",pfmap2);
+
+        FaithPathUpdate fpu=new FaithPathUpdate(faithPaths,popefavors,null);
+        fpu.update(cm);
+        System.out.println(cm.getBoards().get("rick").getFaithPath());
+        System.out.println(cm.getBoards().get("dona").getFaithPath());
+    }
+    @Test
+    public void TestPendingWithWhite(){
+        List<ResourceType> pending=new ArrayList<>();
+        pending.add(ResourceType.YELLOW);
+        pending.add(ResourceType.UNKNOWN);
+        PendingResourcesMessage prm =new PendingResourcesMessage(pending);
+        System.out.println(prm.getMessage());
 
     }
 }

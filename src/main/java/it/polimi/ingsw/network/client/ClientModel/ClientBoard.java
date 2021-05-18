@@ -23,6 +23,11 @@ public class ClientBoard {
     private List<Production> extraProductions=new ArrayList<>();
     private List<ResourceDiscount> discounts=new ArrayList<>();
 
+
+    public Integer getTotalCardsBought() {
+        return totalCardsBought;
+    }
+
     public void addExtraProd(ResourceType res){
         Production p=new Production();
         try {

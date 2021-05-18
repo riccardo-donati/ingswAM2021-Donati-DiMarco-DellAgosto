@@ -110,18 +110,23 @@ public class ClientModel {
         if(l!=null) return Utilities.stringify(l);
         return "";
     }
+    public String stringifyPlayers(){
+        StringBuilder sb = new StringBuilder();
+        sb.append(Color.ANSI_PURPLE.escape() + "PLAYERS: " + Color.RESET);
+        for (String nick : playersInOrder) {
+            sb.append("[ " +Color.ANSI_GREEN.escape()+ nick +Color.RESET+ " | " + boards.get(nick).getFaithPath().getPosition() + Color.ANSI_RED.escape() + "♰" + Color.RESET +" Cards:"+boards.get(nick).getTotalCardsBought() +" ],");
+        }
+        sb.deleteCharAt(sb.toString().length()-1);
+        sb.append("\n");
+        return sb.toString();
+    }
     public ClientBoard getCurrentBoard(){
         return boards.get(currentNickname);
     }
     public String toString(){
         if(myNickname!=null) {
             StringBuilder sb = new StringBuilder();
-            sb.append(Color.ANSI_PURPLE.escape() + "PLAYERS: " + Color.RESET);
-            for (String nick : playersInOrder) {
-                sb.append("[ " +Color.ANSI_GREEN.escape()+ nick +Color.RESET+ " | " + boards.get(nick).getFaithPath().getPosition() + Color.ANSI_RED.escape() + "♰" + Color.RESET + " ],");
-            }
-            sb.deleteCharAt(sb.toString().length()-1);
-            sb.append("\n");
+            sb.append(stringifyPlayers());
             sb.append("════"+myNickname+" Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
             sb.append(boards.get(myNickname));
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");

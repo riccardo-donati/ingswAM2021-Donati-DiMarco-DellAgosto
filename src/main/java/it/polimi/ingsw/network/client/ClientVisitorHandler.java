@@ -130,16 +130,20 @@ public class ClientVisitorHandler implements ClientVisitor{
         GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
         //if CLI
-        System.out.println(client.getClientModel());
         if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
             System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
         }
+        System.out.println(client.getClientModel().getCardMatrix());
         System.out.println(Utilities.stringify(message.getLastUsedToken()));
     }
 
     @Override
     public void visit(FaithPathUpdate message, Client client) {
         message.update(client.getClientModel());
+
+        //if CLI
+        if(client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
+            System.out.println(client.getClientModel());
     }
 
     @Override
@@ -263,13 +267,6 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DiscardLeaderUpdate message, Client client) {
         message.update(client.getClientModel());
-
-        //if CLI
-        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
-            System.out.println(client.getClientModel().getCurrentBoard().getFaithPath());
-            System.out.println(client.getClientModel().getCurrentBoard().stringifyLeaders());
-
-        }
     }
 
 

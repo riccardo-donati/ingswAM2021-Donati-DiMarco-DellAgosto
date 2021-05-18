@@ -69,7 +69,7 @@ public class Utilities {
         StringBuilder sb=new StringBuilder();
         sb.append(Color.ANSI_PURPLE.escape()).append("LORENZO TURN: "+Color.RESET);
         if(t instanceof TokenDiscard){
-            sb.append("Discarded ").append(((TokenDiscard) t).getQuantity()).append(" ").append(((TokenDiscard) t).getColor()).append(" Development cards\n");
+            sb.append("Discarded ").append(((TokenDiscard) t).getQuantity()).append(" ").append(Utilities.modelColorToClientColor(((TokenDiscard) t).getColor()).escape()+"■"+Color.RESET).append(" cards\n");
         }
         else if(t instanceof TokenPush){
             sb.append("Black cross +").append(((TokenPush) t).getQuantity());

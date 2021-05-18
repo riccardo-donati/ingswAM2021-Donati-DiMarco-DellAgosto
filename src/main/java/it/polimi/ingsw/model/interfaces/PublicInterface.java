@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public interface PublicInterface {
      List<String> getCurrentLeadersInHand();
      Map<ResourceType,Integer> getCurrentStrongbox();
      Token getLastUsedToken();
+     Map<String,Map<Integer, ClientPopeFavorState>> getPopeFavors();
      void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
      void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException;
 

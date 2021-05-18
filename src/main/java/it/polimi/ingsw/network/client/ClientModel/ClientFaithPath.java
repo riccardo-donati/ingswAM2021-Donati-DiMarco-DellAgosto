@@ -19,6 +19,10 @@ public class ClientFaithPath  {
      popeFavor.put(3,ClientPopeFavorState.UNACTIVE);
     }
 
+    public void setPopeFavor(Map<Integer, ClientPopeFavorState> popeFavor) {
+        this.popeFavor = popeFavor;
+    }
+
     public Integer getLorenzoPosition() {
         return lorenzoPosition;
     }
@@ -61,14 +65,14 @@ public class ClientFaithPath  {
         for(int i=0;i<25;i++){
             if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"┌─────");
             else if(i>5 && i<8)b.append("─────");
-            else if(i==8 || i==15 ||i==24)b.append("─────┐");
-            else if(i>12 && i<15)b.append("─────");
+            else if(i==8 || i==16 ||i==24)b.append("─────┐");
+            else if(i>12 && i<16)b.append("─────");
             else if(i>19 && i<24)b.append("─────");
             else b.append("     ");
         }
         b.append(Color.RESET+"\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==16 || i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17 || i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
             if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╔═══╗");
             b.append(Color.RESET);
@@ -76,7 +80,7 @@ public class ClientFaithPath  {
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append("\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==16||i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17||i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
             if(i%3==0 && i!=0) {
                 b.append(Color.ANSI_YELLOW.escape());
                 if (position == i) {
@@ -96,7 +100,7 @@ public class ClientFaithPath  {
         b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
         b.append("\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
             if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╚═══╝"+Color.RESET);
         }
@@ -104,7 +108,7 @@ public class ClientFaithPath  {
         b.append("\n");
         b.append(Color.ANSI_YELLOW.escape());
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
             if(i==3) b.append(Color.ANSI_YELLOW.escape()+"  1  ");
             else if(i==6)b.append(Color.ANSI_YELLOW.escape()+"  2  ");
             else if(i==9)b.append(Color.ANSI_YELLOW.escape()+"  4  ");
@@ -120,8 +124,8 @@ public class ClientFaithPath  {
         for(int i=0;i<25;i++){
             if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"└─────");
             else if(i>5 && i<8)b.append("─────");
-            else if(i==8 || i==15|| i==24)b.append("─────┘");
-            else if(i>12 && i<15)b.append("─────");
+            else if(i==8 || i==16|| i==24)b.append("─────┘");
+            else if(i>12 && i<16)b.append("─────");
             else if(i>19 && i<24)b.append("─────");
             else b.append("     ");
         }

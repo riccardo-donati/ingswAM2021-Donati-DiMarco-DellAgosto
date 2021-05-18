@@ -9,6 +9,7 @@ import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.PublicInterface;
 import it.polimi.ingsw.model.interfaces.Token;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
@@ -113,7 +114,7 @@ public class Controller {
     }
 
     public synchronized List<String> getOrderPlayerList() { return game.getListNickname(); }
-
+    public synchronized Map<String,Map<Integer, ClientPopeFavorState>> getPopeFavors(){return game.getPopeFavors();}
     /**
      * create the instance of Game
      * @param numberOfPlayers is the number of the lobby's players
@@ -301,21 +302,21 @@ public class Controller {
         else throw new NotYourTurnException();
     }
     public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
+        if (getCurrentNickname().equals(nickname)) {
             game.discardLeader(index);
-
-        }
-        else throw new NotYourTurnException();
+            notifyLobby(new DiscardLeaderUpdate(index));
+            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+        } else throw new NotYourTurnException();
     }
     public synchronized void buyAtMarketInterface(char rc,int index,String nickname) throws NotYourTurnException, IllegalActionException {
         if(getCurrentNickname().equals(nickname)) {
             game.buyAtMarketInterface(rc, index);
             //update
             List<ResourceType> list=getCurrentPlayerPending();
+            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+            notifyLobby(new MarketUpdate(getMarblesInList()));
             if(list.size()>0)
                 getVirtualClient(nickname).send(new PendingResourcesMessage(list));
-            notifyLobby(new FaithPathUpdate(getCurrentFaithPath()));
-            notifyLobby(new MarketUpdate(getMarblesInList()));
         }
         else throw new NotYourTurnException();
     }
@@ -336,6 +337,7 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.discardResource(res);
             notifyLobby(new DiscardResourceUpdate());
+            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
             List<ResourceType> list=getCurrentPlayerPending();
             if(list.size()>0) {
                 VirtualClient vc = getVirtualClient(nickname);
@@ -344,8 +346,14 @@ public class Controller {
         }else throw new NotYourTurnException();
     }
     public synchronized void transformWhiteIn(ResourceType res,String nickname) throws IllegalResourceException, IllegalActionException, NoWhiteResourceException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname))
+        if(getCurrentNickname().equals(nickname)) {
             game.transformWhiteIn(res);
+            List<ResourceType> list=getCurrentPlayerPending();
+            if(list.size()>0) {
+                VirtualClient vc = getVirtualClient(nickname);
+                if(vc!=null) vc.send(new PendingResourcesMessage(list));
+            }
+        }
         else throw new NotYourTurnException();
     }
     public synchronized void substituteUnknownInInputBaseProduction(ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
@@ -456,7 +464,7 @@ public class Controller {
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname)) {
             game.activateProductions();
-            notifyLobby(new FaithPathUpdate(getCurrentFaithPath()));
+            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
             notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
         }
         else throw new NotYourTurnException();
@@ -498,6 +506,7 @@ public class Controller {
             //update
 
             if(getnPlayers()==1){
+                notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
                 notifyLobby(new LorenzoUpdate(getLorenzoPosition(),getLastUsedToken(),getGamePhase()));
             }else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
         }

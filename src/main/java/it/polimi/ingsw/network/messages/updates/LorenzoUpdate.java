@@ -42,6 +42,7 @@ public class LorenzoUpdate implements Update{
                 clientModel.getCardMatrix().discard(color.ordinal());
             }
         }
+        clientModel.setGamePhase(gamePhase);
     }
 
     @Override

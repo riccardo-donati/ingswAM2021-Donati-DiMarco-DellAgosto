@@ -118,7 +118,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | UnknownFoundException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -129,7 +128,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | UnknownFoundException | IllegalActionException | NotYourTurnException | IllegalSlotException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -140,7 +138,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | IllegalActionException | NotYourTurnException | UnknownFoundException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -151,7 +148,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | ResourcesNotAvailableException | NotYourTurnException | IllegalActionException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -162,7 +158,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -193,7 +188,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalResourceException | DepositableResourceException | IllegalActionException | IllegalCommandException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -204,7 +198,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalResourceException | IllegalActionException | FullSpaceException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -215,7 +208,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | TooManyResourcesException | IllegalSlotException | IllegalCommandException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -227,8 +219,6 @@ public class ServerVisitorHandler implements ServerVisitor {
         } catch (NoWhiteResourceException | NotYourTurnException | IllegalResourceException | IllegalActionException | IllegalCommandException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -248,7 +238,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | UnknownNotFoundException | IllegalActionException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -259,10 +248,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | UnknownNotFoundException | IllegalResourceException | IllegalActionException | NotYourTurnException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -272,7 +258,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | RequirementNotMetException | IllegalActionException | CardNotAvailableException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
     }
 
@@ -283,10 +268,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 
     @Override
@@ -296,9 +278,6 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException  | NotYourTurnException | IllegalActionException | DiscountNotFoundException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            return;
         }
-        //update
-        clientHandler.send(new GenericMessage("Done"));
     }
 }
