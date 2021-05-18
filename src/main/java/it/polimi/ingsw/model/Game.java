@@ -314,10 +314,8 @@ public abstract class Game implements BoardObserver, PublicInterface {
      * @return the blackCrossFaith position
      */
     public Integer getLorenzoPosition(){
-        if(getBlackCrossFaithPath()!=null)
-            return getBlackCrossFaithPath().getPosition();
-        else
-            return 10;
+        if(getBlackCrossFaithPath()==null) return null;
+        else return getBlackCrossFaithPath().getPosition();
     }
     /**
      * set the active parameter of a players in caso of disconnection/reconnection
