@@ -1,7 +1,9 @@
-package it.polimi.ingsw.update;
+package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.Result;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
@@ -13,7 +15,6 @@ import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientModel.Shelf;
 import it.polimi.ingsw.network.messages.PendingResourcesMessage;
 import it.polimi.ingsw.network.messages.updates.*;
-import it.polimi.ingsw.network.server.Controller;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -212,7 +213,7 @@ public class UpdatesTest {
         popefavors.put("rick",pfmap1);
         popefavors.put("dona",pfmap2);
 
-        FaithPathUpdate fpu=new FaithPathUpdate(faithPaths,popefavors,null);
+        PopeFavorUpdate fpu=new PopeFavorUpdate(faithPaths,popefavors,null);
         fpu.update(cm);
         System.out.println(cm.getBoards().get("rick").getFaithPath());
         System.out.println(cm.getBoards().get("dona").getFaithPath());
@@ -224,6 +225,21 @@ public class UpdatesTest {
         pending.add(ResourceType.UNKNOWN);
         PendingResourcesMessage prm =new PendingResourcesMessage(pending);
         System.out.println(prm.getMessage());
+
+    }
+    @Test
+    public void TestResultEndGame(){
+        Result result=new Result();
+        result.addToResults("riki",24,3);
+        result.addToResults("dona",20,1);
+        List<String> winners=new ArrayList<>();
+        winners.add("riki");
+        result.setWinner(winners);
+
+        EndGameResultUpdate egru=new EndGameResultUpdate(result);
+        egru.update(cm);
+        assertEquals(cm.getGamePhase(), GamePhase.ENDGAME);
+        System.out.println(Utilities.stringify(egru.getResult()));
 
     }
 }

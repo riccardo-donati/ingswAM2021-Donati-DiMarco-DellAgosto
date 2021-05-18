@@ -8,6 +8,11 @@ import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 
 public class ClientCardMatrix {
     protected Stack<DevelopmentCard>[][] cards;
+    private Integer discardedCards;
+
+    public Integer getDiscardedCards() {
+        return discardedCards;
+    }
 
     /**
      * class constructor, creates empty matrix for development cards
@@ -19,6 +24,7 @@ public class ClientCardMatrix {
                 cards[r][c] = new Stack<>();
             }
         }
+        discardedCards=0;
     }
 
     public Stack<DevelopmentCard>[][] getCards() {
@@ -76,6 +82,7 @@ public class ClientCardMatrix {
         for (int r=0; r < 3; r++) {
             if (cards[r][column].size() > 0) {
                 cards[r][column].pop();
+                discardedCards++;
                 return;
             }
         }

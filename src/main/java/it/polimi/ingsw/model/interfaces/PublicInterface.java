@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
+import it.polimi.ingsw.network.server.GameObserver;
 
 import java.util.List;
 import java.util.Map;
@@ -68,4 +69,8 @@ public interface PublicInterface {
      void buyAtMarketInterface(char rc,int index) throws IllegalActionException;
 
      void passTurn() throws IllegalActionException;
+
+
+     //--
+     void addExternalObserver(GameObserver go);
 }

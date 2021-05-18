@@ -63,7 +63,19 @@ public class Utilities {
         builder.enableComplexMapKeySerialization();
         return builder.excludeFieldsWithoutExposeAnnotation().create();
     }
+    public static String stringify(Result result){
+        StringBuilder sb=new StringBuilder();
+        for (String s : result.getResults().keySet()) {
+            sb.append("Player: ").append(s).append("\nScore: ").append(result.getResults().get(s)[0]).append("\nResources: ").append(result.getResults().get(s)[1]).append("\n").append("\n");
+        }
+        for (String s : result.getWinner()){
+            if(!s.equals("Lorenzo"))
+                sb.append("Winner(s): ").append(s).append("\nScore: ").append(result.getResults().get(s)[0]).append("\nResources: ").append(result.getResults().get(s)[1]).append("\n").append("\n");
+            else  sb.append("Lorenzo wins you LOSE!").append("\n");
 
+        }
+        return sb.toString();
+    }
     public static String stringify(Token t){
         if(t==null) return "";
         StringBuilder sb=new StringBuilder();
