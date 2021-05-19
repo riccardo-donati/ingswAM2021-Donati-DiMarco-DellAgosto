@@ -216,7 +216,6 @@ public class Controller {
             System.out.println("Can't start the game because it's not full! Add more players");
         } catch (NullPointerException e){
             System.out.println("Game not initialized");
-            return;
         }
     }
     public synchronized Integer getCurrentFaithPath(){

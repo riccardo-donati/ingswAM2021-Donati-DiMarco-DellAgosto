@@ -1,0 +1,48 @@
+general
+	players
+	pass
+
+leader cards
+	choose leaders [slot number] [slot number] (set-up phase)
+	play leader [slot number]
+	discard leader [slot number]
+
+productions
+	toggle base production
+	toggle production [slot number]
+	toggle extra production [slot number]
+	activate productions
+
+resources
+	deposit bonus [resource] in [shelf number] (set-up phase)
+	pick up from warehouse [shelf number]
+	pick up from strongbox [resource]
+	deposit [resource] in warehouse [shelf number]
+	move from [shelf number] to [shelf number]
+	discard [resource]
+	revert pickup
+
+development cards
+	buy [color] card level [level] slot [slot number]
+	toggle discount
+
+market
+	transform white in [resource type] (multiple
+	activate market column [column (1-4)]
+	activate market row [row (1-3)]
+
+board
+	display board
+	display faith path
+	display development cards
+	display leader cards
+	display deposits
+	display player board [nickname]
+	display available development cards
+	display market
+
+before selecting a production a production with unknowns
+	base production input unknown to [resource]
+	base production output unknown to [resource]
+	production [slot number] input unknown to [resource]
+	production [slot number] output unknown to [resource]

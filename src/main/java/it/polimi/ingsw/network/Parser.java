@@ -7,6 +7,10 @@ import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,8 +29,12 @@ public class Parser {
 
         switch (string) {
             case "help":
-                // display available commands
-                break;
+                try {
+                    help();
+                } catch (IOException e) {
+                    System.out.println("CLICommands.txt not found");
+                }
+                return null;
             case "players":
                 System.out.println(client.getClientModel().stringifyPlayers());
                 return null;
@@ -351,5 +359,13 @@ public class Parser {
         }
 
         throw new IllegalCommandException();
+    }
+
+    private static void help() throws IOException {
+        BufferedReader br = new BufferedReader(new FileReader("src/main/resources/CLICommands.txt"));
+        String line;
+        while ((line = br.readLine()) != null) {
+            System.out.println(line);
+        }
     }
 }

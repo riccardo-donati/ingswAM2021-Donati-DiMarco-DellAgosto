@@ -268,7 +268,5 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(DiscardLeaderUpdate message, Client client) {
         message.update(client.getClientModel());
     }
-
-
 }
 
