@@ -39,7 +39,14 @@ public interface PublicInterface {
      Map<ResourceType,Integer> getCurrentStrongbox();
      Token getLastUsedToken();
      Map<String,Map<Integer, ClientPopeFavorState>> getPopeFavors();
-     void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
+     Map<String,Warehouse> getAllWarehouses();
+     Map<String,Map<ResourceType,Integer>> getAllStrongboxes();
+
+     Map<String,Map<Integer, Stack<String>>> getAllSlots();
+     Map<String,List<String>> getAllLeadersInBoard();
+     List<String> getLeadersInHand(String nickname);
+
+          void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
      void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException;
 
      void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException, IllegalResourceException;

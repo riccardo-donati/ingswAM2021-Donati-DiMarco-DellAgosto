@@ -18,10 +18,7 @@ import it.polimi.ingsw.network.messages.updates.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -241,5 +238,162 @@ public class UpdatesTest {
         assertEquals(cm.getGamePhase(), GamePhase.ENDGAME);
         System.out.println(Utilities.stringify(egru.getResult()));
 
+    }
+
+    @Test
+    public void TestReconnect(){
+        ClientModel cmnew=new ClientModel();
+        cmnew.setNickname("rick");
+
+        Map<String, Integer> faithPaths=new HashMap<>();
+        faithPaths.put("rick",8);
+        faithPaths.put("dona",10);
+        Map<String,Map<Integer, ClientPopeFavorState>> popefavors=new HashMap<>();
+        Map<Integer, ClientPopeFavorState> pfmap1=new HashMap<>();
+        Map<Integer, ClientPopeFavorState> pfmap2=new HashMap<>();
+
+        pfmap1.put(1,ClientPopeFavorState.ACTIVE);
+        pfmap1.put(2,ClientPopeFavorState.DISCARDED);
+        pfmap1.put(3,ClientPopeFavorState.UNACTIVE);
+
+        pfmap2.put(1,ClientPopeFavorState.DISCARDED);
+        pfmap2.put(2,ClientPopeFavorState.ACTIVE);
+        pfmap2.put(3,ClientPopeFavorState.DISCARDED);
+
+        popefavors.put("rick",pfmap1);
+        popefavors.put("dona",pfmap2);
+        //---
+        Map<String,Map<Resource,Integer>> strongboxes=new HashMap<>();
+        Map<Resource,Integer> s1=new HashMap<>();
+        s1.put(Resource.COIN,12);
+        s1.put(Resource.SHIELD,420);
+        s1.put(Resource.STONE,69);
+        s1.put(Resource.SERVANT,3);
+
+        Map<Resource,Integer> s2=new HashMap<>();
+        s2.put(Resource.COIN,1);
+        s2.put(Resource.SHIELD,2);
+        s2.put(Resource.STONE,3);
+        s2.put(Resource.SERVANT,4);
+
+        strongboxes.put("rick",s1);
+        strongboxes.put("dona",s2);
+        //---
+        Map<String, List<ClientDeposit>> warehouses=new HashMap<>();
+        List<Resource> list1=new ArrayList<>();
+        List<Resource> list2=new ArrayList<>();
+        List<Resource> list3=new ArrayList<>();
+        list1.add(Resource.COIN);
+        list2.add(Resource.STONE);
+        list3.add(Resource.SHIELD);
+        list3.add(Resource.SHIELD);
+        list3.add(Resource.SHIELD);
+
+        ClientDeposit cd1=new ClientDeposit(1,list1);
+        ClientDeposit cd2=new ClientDeposit(2,list2);
+        ClientDeposit cd3=new ClientDeposit(3,list3);
+
+        List<ClientDeposit> clientDeposits1=new ArrayList<>();
+        clientDeposits1.add(cd1);
+        clientDeposits1.add(cd2);
+        clientDeposits1.add(cd3);
+
+        List<Resource> list11=new ArrayList<>();
+        List<Resource> list22=new ArrayList<>();
+        List<Resource> list33=new ArrayList<>();
+        list1.add(Resource.SERVANT);
+        list2.add(Resource.STONE);
+        list2.add(Resource.STONE);
+        list3.add(Resource.COIN);
+        list3.add(Resource.COIN);
+
+        ClientDeposit cd11=new ClientDeposit(1,list11);
+        ClientDeposit cd22=new ClientDeposit(2,list22);
+        ClientDeposit cd33=new ClientDeposit(3,list33);
+
+        List<ClientDeposit> clientDeposits2=new ArrayList<>();
+        clientDeposits2.add(cd1);
+        clientDeposits2.add(cd2);
+        clientDeposits2.add(cd3);
+
+        warehouses.put("rick",clientDeposits1);
+        warehouses.put("dona",clientDeposits2);
+        //---
+        List<ResourceType> marbles=new ArrayList<>();
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.BLUE);
+        marbles.add(ResourceType.RED);
+        marbles.add(ResourceType.RED);
+        marbles.add(ResourceType.RED);
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.YELLOW);
+        marbles.add(ResourceType.GREY);
+        marbles.add(ResourceType.WHITE);
+        //---
+        Stack<String>[][] cardMatrix=new Stack[3][4];
+        for(int r=0;r<3;r++){
+            for(int c=0;c<4;c++){
+                cardMatrix[r][c]=new Stack<>();
+            }
+        }
+        //---
+        List<String> playerOrder=new ArrayList<>();
+        playerOrder.add("rick");
+        playerOrder.add("dona");
+        //---
+        String currentNickname="dona";
+        //---
+        Map<String,Map<Integer, Stack<String>>> slots=new HashMap<>();
+        Map<Integer, Stack<String>> map1=new HashMap<>();
+        Stack<String> st1=new Stack<>();
+        Stack<String> st2=new Stack<>();
+        Stack<String> st3=new Stack<>();
+        st1.push("3D");
+        st2.push("15D");
+        st2.push("20D");
+        map1.put(1,st1);
+        map1.put(2,st2);
+        map1.put(3,st3);
+
+        Map<Integer, Stack<String>> map2=new HashMap<>();
+        Stack<String> st11=new Stack<>();
+        Stack<String> st22=new Stack<>();
+        Stack<String> st33=new Stack<>();
+        st11.push("1D");
+        st22.push("10D");
+        st33.push("26D");
+        map2.put(1,st11);
+        map2.put(2,st22);
+        map2.put(3,st33);
+
+        slots.put("rick",map1);
+        slots.put("dona",map2);
+        //---
+        Map<String,List<String>> allLeadersInBoard=new HashMap<>();
+
+        List<String> listl1=new ArrayList<>();
+        listl1.add("3L");
+        List<String> listl2=new ArrayList<>();
+        listl2.add("13L");
+        listl2.add("5L");
+
+        allLeadersInBoard.put("rick",listl1);
+        allLeadersInBoard.put("dona",listl2);
+        //---
+        List<String> myLeadersInHand=new ArrayList<>();
+        myLeadersInHand.add("10L");
+        //--------------------------------------------
+        ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand);
+        ru.update(cmnew);
+
+        System.out.println(cmnew);
+        System.out.println(cmnew.getBoards().get("dona"));
+        cmnew.getBoards().get("rick").toggleDiscount(ResourceType.GREY);
+        System.out.println(cmnew.getBoards().get("rick").stringifyActiveDiscounts());
+        System.out.println(cmnew.getBoards().get("dona").stringifyProductions());
     }
 }

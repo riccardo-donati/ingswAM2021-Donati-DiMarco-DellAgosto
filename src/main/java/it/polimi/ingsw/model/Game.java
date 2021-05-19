@@ -9,7 +9,6 @@ import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.server.GameObserver;
-
 import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
@@ -268,6 +267,20 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return map;
     }
+    public Map<String,Warehouse> getAllWarehouses(){
+        Map<String,Warehouse> warehouseMap=new HashMap<>();
+        for(Player p : players){
+            warehouseMap.put(p.getNickname(),p.getBoard().getWarehouse());
+        }
+        return warehouseMap;
+    }
+    public Map<String,Map<ResourceType,Integer>> getAllStrongboxes(){
+        Map<String,Map<ResourceType,Integer>> strongboxMap=new HashMap<>();
+        for(Player p : players){
+            strongboxMap.put(p.getNickname(),p.getBoard().getStrongBox());
+        }
+        return strongboxMap;
+    }
     public Warehouse getCurrentWarehouse(){
        return currPlayer.getBoard().getWarehouse();
     }
@@ -371,7 +384,43 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return  map;
     }
-
+    public Map<String,Map<Integer, Stack<String>>> getAllSlots(){
+        Map<String,Map<Integer, Stack<String>>> allSlotsMap=new HashMap<>();
+        for(Player p : players){
+            Stack<String> devS=new Stack<>();
+            Map<Integer,Stack<String>> stackMap=new HashMap<>();
+            for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : p.getBoard().getSlots().entrySet()) {
+               for(int i=0;i<entry.getValue().size();i++){
+                   devS.add(entry.getValue().get(i).getName());
+               }
+               stackMap.put(entry.getKey(),devS);
+            }
+            allSlotsMap.put(p.getNickname(),stackMap);
+        }
+        return allSlotsMap;
+    }
+    public Map<String,List<String>> getAllLeadersInBoard(){
+        Map<String,List<String>> allLeadersInBoardMap=new HashMap<>();
+        for(Player p : players){
+            List<String> leadersInBoard=new ArrayList<>();
+            for(LeaderCard ld : p.getLeadersInGame()){
+                leadersInBoard.add(ld.getName());
+            }
+            allLeadersInBoardMap.put(p.getNickname(),leadersInBoard);
+        }
+        return allLeadersInBoardMap;
+    }
+    public List<String> getLeadersInHand(String nickname){
+        List<String> listNamesLeaders=new ArrayList<>();
+        for(Player p : players){
+            if(p.getNickname().equals(nickname)){
+                for(LeaderCard l : p.getLeadersInHand()){
+                    listNamesLeaders.add(l.getName());
+                }
+            }
+        }
+        return listNamesLeaders;
+    }
     /**
      *
      * @return the current player leadersInHand names

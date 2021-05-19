@@ -25,6 +25,9 @@ public class ClientModel {
     private ClientMarket market;
     private ClientCardMatrix cardMatrix;
 
+    private Map<String,DevelopmentCard> nameDevelopmentMap=new HashMap<>();
+    private Map<String,LeaderCard> nameLeaderMap=new HashMap<>();
+
     public List<LeaderCard> getLeaderCards() {
         return leaderCards;
     }
@@ -36,6 +39,12 @@ public class ClientModel {
     public ClientModel(){
         leaderCards= Utilities.loadLeaderCardsFromJSON();
         developmentCards=Utilities.loadDevelopmentCardsFromJSON();
+        for(DevelopmentCard d :developmentCards){
+            nameDevelopmentMap.put(d.getName(),d);
+        }
+        for(LeaderCard ld : leaderCards){
+            nameLeaderMap.put(ld.getName(),ld);
+        }
         market=new ClientMarket();
         cardMatrix=new ClientCardMatrix();
     }
@@ -87,18 +96,27 @@ public class ClientModel {
     }
 
     public LeaderCard getLeaderCard(String name){
-        for(LeaderCard l : leaderCards){
-            if(l.getName().equals(name)){
-                return l;
+        return nameLeaderMap.get(name);
+    }
+    public void loadCardMatrixFromNames(Stack<String>[][] stringCards){
+        Stack<DevelopmentCard>[][] cards=new Stack[3][4];
+        for(int r=0;r<3;r++){
+            for(int c=0;c<4;c++){
+                cards[r][c]=new Stack<>();
+                for(int i=0;i<stringCards[r][c].size();i++) {
+                    String name=stringCards[r][c].get(i);
+                    if(name!=null) {
+                        DevelopmentCard d=nameDevelopmentMap.get(name);
+                        if(d!=null) cards[r][c].push(d);
+                    }
+                }
             }
         }
-        return null;
+        cardMatrix.setCards(cards);
+
     }
     public DevelopmentCard getDevelopmentCard(String name){
-        for(DevelopmentCard d : developmentCards){
-            if(d.getName().equals(name)) return d;
-        }
-        return null;
+        return nameDevelopmentMap.get(name);
     }
     public String getDevelopmentCardStringified(String name){
         DevelopmentCard d=getDevelopmentCard(name);

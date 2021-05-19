@@ -284,5 +284,12 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if CLI
         System.out.println(Utilities.stringify(message.getResult()));
     }
+
+    @Override
+    public void visit(ReconnectUpdate message, Client client) {
+        message.update(client.getClientModel());
+
+        System.out.println(client.getClientModel());
+    }
 }
 

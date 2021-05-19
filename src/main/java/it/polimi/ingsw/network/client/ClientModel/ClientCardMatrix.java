@@ -31,6 +31,7 @@ public class ClientCardMatrix {
         return cards;
     }
 
+
     public void setCards(Stack<DevelopmentCard>[][] cards) {
         this.cards = cards;
     }

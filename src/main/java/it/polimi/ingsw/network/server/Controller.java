@@ -193,9 +193,36 @@ public class Controller implements GameObserver {
         if(vc!=null)
             players.add(vc);
     }
-
-    //interface try catch?
-    public synchronized Stack<DevelopmentCard>[][] getCardMatrix(){return game.getCardMatrix();}
+    public synchronized Map<String,Map<Integer, Stack<String>>> getAllSlots(){
+        return game.getAllSlots();
+    }
+    public synchronized Map<String,List<String>> getAllLeadersInBoard(){
+        return game.getAllLeadersInBoard();
+    }
+    public synchronized List<String> getLeadersInHand(String nickname){
+        return game.getLeadersInHand(nickname);
+    }
+    public synchronized void reconnectPlayer(String nickname){
+        VirtualClient vc = getVirtualClient(nickname);
+        if(vc!=null){
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname));
+            vc.send(reconnectUpdate);
+        }
+    }
+    public synchronized Stack<String>[][] getCardMatrix(){
+        Stack<DevelopmentCard>[][] cardMatrix= game.getCardMatrix();
+        Stack<String>[][] cardMatrixString=new Stack[3][4];
+        for(int r=0;r<3;r++){
+            for(int c=0;c<4;c++){
+                cardMatrixString[r][c]=new Stack<>();
+                for(int i=0;i<cardMatrix[r][c].size();i++){
+                    String nick=cardMatrix[r][c].get(i).getName();
+                    cardMatrixString[r][c].push(nick);
+                }
+            }
+        }
+        return cardMatrixString;
+    }
     public synchronized Map<String, LeaderCard> getNameLeaderCardMap(){ return game.getNameLeaderCardMap(); }
     public synchronized Map<String,DevelopmentCard> getNameDevelopmentCardMap(){return game.getNameDevelopmentCardMap();}
     public synchronized Map<String,Integer> getFaithPathsMap(){
@@ -441,21 +468,13 @@ public class Controller implements GameObserver {
         }
         else throw new NotYourTurnException();
     }
-    public synchronized List<ClientDeposit> getCurrentWarehouse(){
-        List<ClientDeposit> list=new ArrayList<>();
-        Warehouse wh=game.getCurrentWarehouse();
-        for(Deposit d : wh.getMaindepot()){
-            ClientDeposit cd=Utilities.depositToClientDeposit(d,'m');
-            if(cd!=null)list.add(cd);
+    public synchronized Map<String,List<ClientDeposit>> getAllWarehouses(){
+        Map<String,List<ClientDeposit>> allClientDeposits=new HashMap<>();
+        Map<String,Warehouse> allWarehouseMap=game.getAllWarehouses();
+        for (Map.Entry<String, Warehouse> entry : allWarehouseMap.entrySet()) {
+            allClientDeposits.put(entry.getKey(),Utilities.warehouseToListOfClientDeposits(entry.getValue()));
         }
-        for(Deposit d: wh.getExtradepots()){
-            ClientDeposit cd=Utilities.depositToClientDeposit(d,'e');
-            if(cd!=null)list.add(cd);
-        }
-        return list;
-    }
-    public synchronized List<Production> getCurrentActiveProductions(){
-        return game.getCurrentActiveProductions();
+        return allClientDeposits;
     }
     public Map<Resource,Integer> getCurrentStrongbox(){
         Map<ResourceType,Integer> s=game.getCurrentStrongbox();
@@ -465,6 +484,21 @@ public class Controller implements GameObserver {
         }
         return strongbox;
     }
+    public Map<String,Map<Resource,Integer>> getAllStrongboxes(){
+        Map<String,Map<ResourceType,Integer>> strongboxesMap=game.getAllStrongboxes();
+        Map<String,Map<Resource,Integer>> clientStrongboxesMap=new HashMap<>();
+        for (Map.Entry<String,Map<ResourceType,Integer>> entry : strongboxesMap.entrySet()) {
+            clientStrongboxesMap.put(entry.getKey(),Utilities.strongboxToClientStrongbox(entry.getValue()));
+        }
+        return clientStrongboxesMap;
+    }
+    public synchronized List<ClientDeposit> getCurrentWarehouse(){
+        return Utilities.warehouseToListOfClientDeposits(game.getCurrentWarehouse());
+    }
+    public synchronized List<Production> getCurrentActiveProductions(){
+        return game.getCurrentActiveProductions();
+    }
+
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname)) {
             game.activateProductions();

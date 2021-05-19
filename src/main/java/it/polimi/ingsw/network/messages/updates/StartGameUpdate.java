@@ -19,9 +19,9 @@ public class StartGameUpdate implements Update, ClientVisitable {
     private List<String> cards=new ArrayList<>();
     private Map<String,Integer> faithPaths=new HashMap<>();
     private List<ResourceType> marbles=new ArrayList<>();
-    private Stack<DevelopmentCard>[][] cardMatrix;
+    private Stack<String>[][] cardMatrix;
 
-    public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles,Stack<DevelopmentCard>[][] cardMatrix){
+    public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles,Stack<String>[][] cardMatrix){
         this.playerOrder=playerOrder;
         this.cards=cards;
         this.faithPaths=faithPaths;
@@ -64,6 +64,7 @@ public class StartGameUpdate implements Update, ClientVisitable {
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
         }
         clientModel.getMarket().setMarbles(marbles);
-        clientModel.getCardMatrix().setCards(cardMatrix);
+        //clientModel.getCardMatrix().setCards(cardMatrix);
+        clientModel.loadCardMatrixFromNames(cardMatrix);
     }
 }

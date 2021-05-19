@@ -262,7 +262,25 @@ public class Utilities {
         else if(me=='e')return new ClientDeposit(d.getId()+3,listRes);
         else return null;
     }
-
+    public static List<ClientDeposit> warehouseToListOfClientDeposits(Warehouse wh){
+        List<ClientDeposit> list=new ArrayList<>();
+        for(Deposit d : wh.getMaindepot()){
+            ClientDeposit cd=Utilities.depositToClientDeposit(d,'m');
+            if(cd!=null)list.add(cd);
+        }
+        for(Deposit d: wh.getExtradepots()){
+            ClientDeposit cd=Utilities.depositToClientDeposit(d,'e');
+            if(cd!=null)list.add(cd);
+        }
+        return list;
+    }
+    public static Map<Resource,Integer> strongboxToClientStrongbox(Map<ResourceType,Integer> s){
+        Map<Resource,Integer> strongbox=new HashMap<>();
+        for (Map.Entry<ResourceType, Integer> entry : s.entrySet()) {
+            strongbox.put(Utilities.resourceTypeToResource(entry.getKey()),entry.getValue());
+        }
+        return strongbox;
+    }
 
 
 

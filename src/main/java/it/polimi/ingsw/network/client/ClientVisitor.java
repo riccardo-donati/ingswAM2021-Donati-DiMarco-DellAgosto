@@ -52,4 +52,6 @@ public interface ClientVisitor {
     void visit(EndGameMessage message, Client client);
 
     void visit(EndGameResultUpdate message, Client client);
+
+    void visit(ReconnectUpdate message, Client client);
 }

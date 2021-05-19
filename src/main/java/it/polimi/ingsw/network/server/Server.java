@@ -240,6 +240,7 @@ public class Server {
             vc.getClientHandler().setLobby(lobby);
             lobby.setActive(vLook.getNickname(),true);
             lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
+            lobby.reconnectPlayer(vc.getNickname());
             throw new ReconnectionException();
         } else {
             //nickname is unique
