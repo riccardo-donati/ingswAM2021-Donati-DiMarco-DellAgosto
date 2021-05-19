@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import com.google.gson.annotations.Expose;
 
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
 
@@ -118,9 +120,9 @@ public class Server {
         return s;
     }
 
-    public void handleDisconnection(Integer chId){
-        if (clientHandlerNickMap.get(chId) != null){
-            String nick = clientHandlerNickMap.get(chId);
+    public synchronized void handleDisconnection(Integer chId){
+        String nick=clientHandlerNickMap.get(chId);
+        if (nick != null){
             Controller lobby = searchLobby(nickLobbyMap.get(nick));
             lobby.notifyLobby(new GenericMessage(nick +  " disconnected!"));
             if(lobby.getGamePhase()== GamePhase.NOTSTARTED){
@@ -128,6 +130,17 @@ public class Server {
                     searchVirtualClient(nick).getClientHandler().closeConnection();
                 } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
+                }
+            }else if(lobby.getGamePhase()==GamePhase.ONGOING ||lobby.getGamePhase()==GamePhase.SETUP){
+                lobby.setActive(nick,false);
+                if(lobby.getCurrentNickname().equals(nick)){
+                    try {
+                        if(lobby.getLorenzoPosition()==null) {
+                            if(lobby.getGamePhase()== GamePhase.SETUP)
+                                lobby.clearPlayer(nick);
+                            lobby.passTurn(nick);
+                        }
+                    } catch (IllegalActionException | NotYourTurnException ignored) { }
                 }
             }
         }
@@ -150,6 +163,20 @@ public class Server {
         return null;
     }
 
+    public synchronized void removeLobby(Controller c){
+        if(c!=null && lobbies.contains(c)) lobbies.remove(c);
+    }
+
+    public synchronized void unregisterClient(VirtualClient vc){
+        if(virtualClientList.contains(vc))
+            virtualClientList.remove(vc);
+        if(clientHandlerNickMap.get(vc.getClientHandler().getId())!=null)
+            clientHandlerNickMap.remove(vc.getClientHandler().getId());
+        if(nickLobbyMap.get(vc.getNickname())!=null)
+            nickLobbyMap.remove(vc.getNickname());
+        System.out.println("Unregister client "+vc.getNickname());
+    }
+
     public synchronized void removeVirtualClient(Integer chId){
         if(clientHandlerNickMap.get(chId)!=null) {
             VirtualClient vcToRemove = searchVirtualClient(clientHandlerNickMap.get(chId));
@@ -169,7 +196,7 @@ public class Server {
         }
     }
 
-    public VirtualClient searchVirtualClient(String nick){
+    public synchronized VirtualClient searchVirtualClient(String nick){
         for(VirtualClient vc : virtualClientList){
             if(vc.getNickname().equals(nick))
                 return vc;
@@ -177,7 +204,7 @@ public class Server {
         return null;
     }
 
-    public VirtualClient searchVirtualClient(Integer idCH){
+    public synchronized VirtualClient searchVirtualClient(Integer idCH){
         for(VirtualClient vc : virtualClientList){
             if(vc.getClientHandler().getId() == idCH)
                 return vc;
@@ -185,7 +212,7 @@ public class Server {
         return null;
     }
 
-    public void reconnect(VirtualClient vc,VirtualClient oldVc){
+    public synchronized void reconnect(VirtualClient vc,VirtualClient oldVc){
         clientHandlerNickMap.remove(oldVc.getClientHandler().getId());
         oldVc.setClientHandler(vc.getClientHandler());
         clientHandlerNickMap.put(oldVc.getClientHandler().getId(),oldVc.getNickname());
@@ -211,6 +238,7 @@ public class Server {
             reconnect(vc, vLook);
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
             vc.getClientHandler().setLobby(lobby);
+            lobby.setActive(vLook.getNickname(),true);
             lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             throw new ReconnectionException();
         } else {
@@ -253,7 +281,7 @@ public class Server {
     public synchronized void createNewLobby(int nPlayers, ClientHandler clientHandler){
         for(VirtualClient vc: waitingList) {
             if(vc.getClientHandler().equals(clientHandler)) {
-                Controller newLobby = new Controller(nPlayers, vc);
+                Controller newLobby = new Controller(nPlayers, vc,this);
                 lobbies.add(newLobby);
                 virtualClientList.add(vc);
                 clientHandler.setLobby(newLobby);
@@ -292,4 +320,9 @@ public class Server {
 
         new Server(port).startServer();
     }
+
+    public List<Controller> getLobbies() {
+        return lobbies;
+    }
+
 }

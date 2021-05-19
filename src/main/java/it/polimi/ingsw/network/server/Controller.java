@@ -34,7 +34,7 @@ public class Controller implements GameObserver {
     private PublicInterface game;
     private List<List<LeaderCard>> lists;
 
-
+    private Server server;
 
     //-----------------
     public synchronized int getnPlayers() {
@@ -67,13 +67,15 @@ public class Controller implements GameObserver {
         return nPlayers == players.size();
     }
 
-    public Controller(int nPlayers, VirtualClient firstPlayer){
-        globalID++;
+    public Controller(int nPlayers, VirtualClient firstPlayer,Server server){
         this.idLobby = globalID;
+        globalID++;
         this.nPlayers=nPlayers;
         this.players.add(firstPlayer);
         gson= Utilities.initializeGsonMessage();
         gameState=GamePhase.NOTSTARTED;
+
+        this.server=server;
     }
 
     public synchronized void setGson(Gson gson) {
@@ -259,6 +261,9 @@ public class Controller implements GameObserver {
         } catch (FullGameException e) {
             e.printStackTrace();
         }
+    }
+    public synchronized void clearPlayer(String nickname){
+        game.clearPlayer(nickname);
     }
     public synchronized List<ResourceType> getCurrentPlayerPending(){
         return game.getCurrentPlayerPending();
@@ -502,9 +507,9 @@ public class Controller implements GameObserver {
     public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname)) {
             game.passTurn();
+            if(!game.getCurrentActive()) game.passTurn();
             gameState=game.getGamePhase();
             //update
-
             if(getnPlayers()==1){
                 notifyLobby(new LorenzoUpdate(getLorenzoPosition(),getLastUsedToken(),getGamePhase()));
             }else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
@@ -526,6 +531,18 @@ public class Controller implements GameObserver {
     public synchronized void updateEndGameResult(Result result) { ;
         notifyLobby(new EndGameResultUpdate(result));
         //close the connections
+        for(VirtualClient vc : players){
+            if(vc.getClientHandler()!=null) {
+                try {
+                    vc.getClientHandler().endConnection();
+                } catch (InterruptedException | NullPointerException e) {
+                    e.printStackTrace();
+                }
+                server.unregisterClient(vc);
+            }
+        }
+        server.removeLobby(this);
+
     }
 
     public void setGame(Game g){

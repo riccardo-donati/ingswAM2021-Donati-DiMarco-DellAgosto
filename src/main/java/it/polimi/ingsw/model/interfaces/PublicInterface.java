@@ -24,7 +24,8 @@ public interface PublicInterface {
      void startGame() throws IllegalResourceException, GameNotFullException;
      GamePhase getGamePhase();
      Result endGame();
-
+     boolean getCurrentActive();
+     void clearPlayer(String nickname);
      void addPlayer(String nickname) throws FullGameException;
      void setActive(String player,boolean active);
      List<String> getListNickname();

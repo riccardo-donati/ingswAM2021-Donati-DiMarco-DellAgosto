@@ -43,6 +43,8 @@ public class LorenzoUpdate implements Update{
             }
         }
         clientModel.setGamePhase(gamePhase);
+        clientModel.getCurrentBoard().resetProduction();
+
     }
 
     @Override

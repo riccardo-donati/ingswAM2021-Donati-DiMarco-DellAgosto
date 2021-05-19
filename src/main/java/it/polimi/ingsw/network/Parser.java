@@ -60,6 +60,9 @@ public class Parser {
             case "display market":
                 System.out.println(client.getClientModel().getMarket().toString());
                 return null;
+            case "display productions":
+                System.out.println(client.getClientModel().getCurrentBoard().stringifyProductions());
+                return null;
         }
 
         if (string.startsWith("register")) {

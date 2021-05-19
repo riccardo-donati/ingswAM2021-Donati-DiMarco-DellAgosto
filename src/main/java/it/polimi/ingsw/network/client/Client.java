@@ -26,7 +26,6 @@ public class Client {
 
     private final ClientVisitorHandler clientVisitorHandler;
     private final ClientModel clientModel;
-
     private String currCommand = "";
 
     public Client(String serverIP, Integer serverPortNumber){

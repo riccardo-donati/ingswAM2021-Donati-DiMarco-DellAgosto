@@ -14,11 +14,6 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DisconnectionMessage message, Client client) {
         System.out.println(message.getMessage());
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
         client.getIn().close();
         client.getOut().close();
         try {
@@ -88,6 +83,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(NewTurnUpdate message, Client client) {
         GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
+
         //if CLI
         if(client.getClientModel().getGamePhase()==GamePhase.ONGOING  && client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
             System.out.println(client.getClientModel());

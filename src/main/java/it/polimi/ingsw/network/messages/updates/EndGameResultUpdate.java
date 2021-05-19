@@ -7,7 +7,7 @@ import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class EndGameResultUpdate implements Update{
-    Result result;
+    private Result result;
 
     public EndGameResultUpdate(Result result){
         this.result=result;

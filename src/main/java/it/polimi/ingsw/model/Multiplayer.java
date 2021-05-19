@@ -1,6 +1,8 @@
 package it.polimi.ingsw.model;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 
 import java.io.FileNotFoundException;
@@ -45,6 +47,15 @@ public class Multiplayer extends Game{
     @Override
     public void passTurn() throws IllegalActionException {
         if(!getCurrPlayer().isActive()){ //disconnected player case
+            if(getGamePhase()==GamePhase.SETUP && getCurrPlayer().getOrder()==getPlayers().size()){
+                setGamePhase(GamePhase.ONGOING);
+                setTurnPhase(TurnPhase.STARTTURN);
+            }
+            else if(getCurrPlayer().getOrder()==getPlayers().size() && isEndGameTrigger()){
+                setGamePhase(GamePhase.ENDGAME);
+                Result result=endGame();
+                notifyEndGameResult(result);
+            }
             nextTurn();
             return;
         }

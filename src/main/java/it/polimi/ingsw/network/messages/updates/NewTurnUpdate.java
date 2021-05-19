@@ -33,5 +33,6 @@ public class NewTurnUpdate implements Update {
     public void update(ClientModel clientModel) {
         clientModel.setCurrentNickname(currNickname);
         clientModel.setGamePhase(gamePhase);
+        clientModel.getCurrentBoard().resetProduction();
     }
 }

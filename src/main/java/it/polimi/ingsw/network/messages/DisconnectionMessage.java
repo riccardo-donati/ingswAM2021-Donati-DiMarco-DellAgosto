@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.client.ClientVisitor;
 public class DisconnectionMessage implements ClientMessage{
     @Override
     public String getMessage() {
-        return "You will be disconnected in 3 seconds";
+        return "You will be disconnected";
     }
 
     @Override

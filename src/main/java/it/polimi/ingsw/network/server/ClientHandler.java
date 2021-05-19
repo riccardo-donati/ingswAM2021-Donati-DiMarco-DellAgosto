@@ -89,7 +89,12 @@ public class ClientHandler implements Runnable {
             timer = null;
         }
     }
-
+    public void stopPinger(){
+        if(pinger!=null){
+            pinger.interrupt();
+            pinger=null;
+        }
+    }
     public void startTimer(int ms){
         timer = new Thread(() -> {
             try {
@@ -118,7 +123,7 @@ public class ClientHandler implements Runnable {
                     send(new PingRequest());
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    break;
+                    return;
                 }
             }
             System.out.println("Player disconnected");
@@ -160,11 +165,22 @@ public class ClientHandler implements Runnable {
     public ServerVisitorHandler getServerVisitorHandler() {
         return serverVisitorHandler;
     }
-
+    public void endConnection() throws InterruptedException {
+        stopPinger();
+        send(new DisconnectionMessage());
+        Thread.sleep(3000);
+        out.close();
+        in.close();
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        System.out.println("Disconnected user with id: " + id);
+    }
     public void closeConnection() throws InterruptedException {
         send(new DisconnectionMessage());
         server.removeVirtualClient(id);
-        Thread.sleep(3000);
         out.close();
         in.close();
         try {

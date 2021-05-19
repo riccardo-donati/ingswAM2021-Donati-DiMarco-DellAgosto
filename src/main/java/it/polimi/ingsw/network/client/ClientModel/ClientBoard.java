@@ -27,6 +27,12 @@ public class ClientBoard {
     public Integer getTotalCardsBought() {
         return totalCardsBought;
     }
+    public void resetProduction(){
+        baseProduction.resetProduction();
+        for(Production p : extraProductions){
+            p.resetProduction();
+        }
+    }
 
     public void addExtraProd(ResourceType res){
         Production p=new Production();

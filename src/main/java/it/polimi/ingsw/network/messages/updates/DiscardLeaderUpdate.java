@@ -15,8 +15,10 @@ public class DiscardLeaderUpdate implements Update {
     @Override
     public void update(ClientModel clientModel) {
         clientModel.getCurrentBoard().getFaithPath().addToFaithPath(1);
-        LeaderCard ld=clientModel.getCurrentBoard().getLeadersInHand().get(index);
-        if(ld!=null) clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+        if(clientModel.getNickname()==clientModel.getCurrentNickname()) {
+            LeaderCard ld = clientModel.getCurrentBoard().getLeadersInHand().get(index);
+            if (ld != null) clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+        }
     }
 
     @Override

@@ -211,8 +211,10 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     @Override
     public void updateEndGame() {
-        endGameTrigger=true;
-        notifyEndGameTriggered();
+        if(!isEndGameTrigger()) {
+            endGameTrigger = true;
+            notifyEndGameTriggered();
+        }
     }
 
     @Override
@@ -681,6 +683,16 @@ public abstract class Game implements BoardObserver, PublicInterface {
                 turnPhase=TurnPhase.STARTTURN;
                 nextTurn();
             }else throw new IllegalActionException();
+        }
+    }
+    public boolean getCurrentActive(){
+        return currPlayer.isActive();
+    }
+    public void clearPlayer(String nickname){
+        for(Player p : players){
+            if(nickname.equals(p.getNickname())){
+                p.getBoard().getWarehouse().getPendingResources().clear();
+            }
         }
     }
     //-----------------------------------------------------------------------------------------------------

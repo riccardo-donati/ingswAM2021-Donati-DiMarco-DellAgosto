@@ -40,6 +40,7 @@ public class ClientFaithPath  {
     }
     public void addToFaithPath(Integer n){
         position+=n;
+        if(position>24) position=24;
     }
     public void setPosition(Integer position){
         this.position=position;
