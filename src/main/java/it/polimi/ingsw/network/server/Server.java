@@ -308,11 +308,7 @@ public class Server {
             return;
         }
 
-        if (port == null) {
-            System.err.println("Port number value not found");
-            System.err.println("Closing . . .");
-            return;
-        } else if (port < 1000 || port > 10000) {
+        if (port < 1000 || port > 10000) {
             System.err.println("The port number value has to be between 1000 and 9999");
             System.err.println("Closing . . .");
             return;

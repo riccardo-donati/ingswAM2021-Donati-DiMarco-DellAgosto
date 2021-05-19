@@ -284,7 +284,5 @@ public class ClientVisitorHandler implements ClientVisitor{
         //if CLI
         System.out.println(Utilities.stringify(message.getResult()));
     }
-
-
 }
 

@@ -261,6 +261,4 @@ public class Singleplayer extends Game {
             notifyEndGameResult(result);
         }
     }
-    //-----------------------------------------------------------------------------------------------------
-
 }

@@ -5,9 +5,6 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 
-import java.io.FileNotFoundException;
-import java.util.List;
-
 public class Multiplayer extends Game{
     private Integer nPlayers;
 
@@ -61,6 +58,4 @@ public class Multiplayer extends Game{
         }
         super.passTurn();
     }
-    //-----------------------------------------------------------------------------------------------------
-
 }
