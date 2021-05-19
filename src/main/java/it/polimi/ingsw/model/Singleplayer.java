@@ -89,6 +89,7 @@ public class Singleplayer extends Game {
             }
 
         }
+        notifyPopeFavors();
     }
 
     /**
@@ -204,7 +205,8 @@ public class Singleplayer extends Game {
         if(getGamePhase()==GamePhase.ONGOING) {
             if (isEndGameTrigger()) {
                 setGamePhase(GamePhase.ENDGAME);
-                endGame();
+                Result result=endGame();
+                notifyEndGameResult(result);
             } else {
                 setTurnPhase(TurnPhase.STARTTURN);
             }
@@ -216,9 +218,9 @@ public class Singleplayer extends Game {
         //if the player buy the last card of 1 column -> insta lose
         //if the player buy the 7th card -> insta win
         if(getCardMatrix()[row][col].size()==0 && row==ROW-1 || isEndGameTrigger()){
-            updateEndGame();
             setGamePhase(GamePhase.ENDGAME);
-            endGame();
+            Result result=endGame();
+            notifyEndGameResult(result);
         }
 
     }
@@ -227,27 +229,36 @@ public class Singleplayer extends Game {
         super.activateProductions();
         //insta win if the player reach the last cell of the faithpath
         if(isEndGameTrigger()){
-            updateEndGame();
             setGamePhase(GamePhase.ENDGAME);
-            endGame();
+            Result result=endGame();
+            notifyEndGameResult(result);
         }
     }
     @Override
     public void buyAtMarketInterface(char rc,int index) throws IllegalActionException {
         super.buyAtMarketInterface(rc,index);
         if(isEndGameTrigger()){
-            updateEndGame();
             setGamePhase(GamePhase.ENDGAME);
-            endGame();
+            Result result=endGame();
+            notifyEndGameResult(result);
         }
     }
     @Override
     public void discardResource(ResourceType res) throws IllegalActionException, DepositableResourceException, IllegalResourceException {
         super.discardResource(res);
         if(isEndGameTrigger()){
-            updateEndGame();
             setGamePhase(GamePhase.ENDGAME);
-            endGame();
+            Result result=endGame();
+            notifyEndGameResult(result);
+        }
+    }
+    @Override
+    public void discardLeader(int index) throws IllegalActionException, CardNotAvailableException {
+        super.discardLeader(index);
+        if(isEndGameTrigger()){
+            setGamePhase(GamePhase.ENDGAME);
+            Result result=endGame();
+            notifyEndGameResult(result);
         }
     }
 }

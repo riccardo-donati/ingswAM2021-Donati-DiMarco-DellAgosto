@@ -12,7 +12,7 @@ public class Result {
     /**
      * constructor
      */
-    protected Result(){
+    public Result(){
         this.results = new HashMap<>();
         this.winner = new ArrayList<>();
     }
@@ -56,10 +56,11 @@ public class Result {
      * Set the winner of the game
      * @param winner is the nickname of the winner
      */
-    protected void setWinner(List<String> winner){
+    public void setWinner(List<String> winner){
         this.winner.addAll(winner);
 
         //used for debugging
+        /*
         for (String s : results.keySet()) {
             System.out.println("Player: " + s + "\nScore: " + results.get(s)[0] + "\nResources: " + results.get(s)[1] +  "\n");
         }
@@ -69,6 +70,8 @@ public class Result {
             else  System.out.println("Lorenzo wins you LOSE!");
 
         }
+
+         */
     }
 
     /**
@@ -76,7 +79,7 @@ public class Result {
      * @param nickname player's name
      * @param points player's point
      */
-    protected void addToResults(String nickname, Integer points, Integer resources){
+    public void addToResults(String nickname, Integer points, Integer resources){
         results.put(nickname, new Integer[]{points, resources});
     }
 }

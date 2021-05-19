@@ -133,17 +133,17 @@ public class ClientVisitorHandler implements ClientVisitor{
         if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
             System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
         }
-        System.out.println(client.getClientModel().getCardMatrix());
+        System.out.println(client.getClientModel());
         System.out.println(Utilities.stringify(message.getLastUsedToken()));
     }
 
     @Override
-    public void visit(FaithPathUpdate message, Client client) {
+    public void visit(PopeFavorUpdate message, Client client) {
         message.update(client.getClientModel());
 
         //if CLI
         if(client.getClientModel().getNickname().equals(client.getClientModel().getCurrentNickname()))
-            System.out.println(client.getClientModel());
+            System.out.println(client.getClientModel().getCurrentBoard().getFaithPath());
     }
 
     @Override
@@ -267,6 +267,26 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DiscardLeaderUpdate message, Client client) {
         message.update(client.getClientModel());
+    }
+
+    @Override
+    public void visit(FaithUpdate message, Client client) {
+        message.update(client.getClientModel());
+    }
+
+    @Override
+    public void visit(EndGameMessage message, Client client) {
+        //if CLI
+        if(client.getClientModel().getCurrentBoard().getFaithPath().getLorenzoPosition()==null)
+            System.out.println(Color.ANSI_GREEN.escape()+message.getMessage()+", THE GAME WILL END AT THE START OF THE FIRST PLAYER TURN"+Color.RESET);
+        else System.out.println(Color.ANSI_GREEN.escape()+message.getMessage()+", THE GAME IS ENDING . . ."+Color.RESET);
+
+    }
+
+    @Override
+    public void visit(EndGameResultUpdate message, Client client) {
+        //if CLI
+        System.out.println(Utilities.stringify(message.getResult()));
     }
 }
 

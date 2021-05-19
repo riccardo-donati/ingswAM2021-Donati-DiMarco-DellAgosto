@@ -117,6 +117,9 @@ public class ClientModel {
             sb.append("[ " +Color.ANSI_GREEN.escape()+ nick +Color.RESET+ " | " + boards.get(nick).getFaithPath().getPosition() + Color.ANSI_RED.escape() + "♰" + Color.RESET +" Cards:"+boards.get(nick).getTotalCardsBought() +" ],");
         }
         sb.deleteCharAt(sb.toString().length()-1);
+        if(getCurrentBoard().getFaithPath().getLorenzoPosition()!=null){
+            sb.append("[ "+Color.ANSI_GREEN.escape()+"LORENZO"+Color.RESET+" | "+getCurrentBoard().getFaithPath().getLorenzoPosition()+ Color.ANSI_RED.escape() + "♰" + Color.RESET+" Discarded Cards:"+getCardMatrix().getDiscardedCards()+" ]");
+        }
         sb.append("\n");
         return sb.toString();
     }

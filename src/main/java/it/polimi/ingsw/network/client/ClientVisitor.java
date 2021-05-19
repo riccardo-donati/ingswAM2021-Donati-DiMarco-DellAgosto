@@ -18,7 +18,7 @@ public interface ClientVisitor {
     void visit(DepositUpdate message, Client client);
     void visit(LorenzoUpdate message, Client client);
 
-    void visit(FaithPathUpdate message, Client client);
+    void visit(PopeFavorUpdate message, Client client);
 
     void visit(MoveResourceUpdate message, Client client);
 
@@ -46,4 +46,10 @@ public interface ClientVisitor {
     void visit(DiscardResourceUpdate message, Client client);
 
     void visit(DiscardLeaderUpdate message, Client client);
+
+    void visit(FaithUpdate message, Client client);
+
+    void visit(EndGameMessage message, Client client);
+
+    void visit(EndGameResultUpdate message, Client client);
 }

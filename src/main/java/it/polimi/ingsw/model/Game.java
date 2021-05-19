@@ -8,6 +8,7 @@ import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
+import it.polimi.ingsw.network.server.GameObserver;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -29,6 +30,23 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     private Map<String,LeaderCard> nameLeaderCardMap;
     private Map<String,DevelopmentCard> nameDevelopmentCardMap;
+    //-------------------------
+    GameObserver externalObserver;
+
+    public void addExternalObserver(GameObserver go){
+       externalObserver=go;
+    }
+    public void notifyEndGameTriggered(){
+        if(externalObserver!=null)externalObserver.updateEndGameTriggered();
+    }
+    public void notifyPopeFavors(){
+        if(externalObserver!=null)externalObserver.updatePopeFavors();
+    }
+    public void notifyEndGameResult(Result result){
+        if(externalObserver!=null) externalObserver.updateEndGameResult(result);
+    }
+    //-------------------------
+
 
     protected boolean isEndGameTrigger() { return endGameTrigger; }
     protected List<DevelopmentCard> getDevelopmentCards() {
@@ -194,6 +212,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     @Override
     public void updateEndGame() {
         endGameTrigger=true;
+        notifyEndGameTriggered();
     }
 
     @Override
@@ -216,6 +235,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
                 }
             }
         }
+        if(players.size()>1)notifyPopeFavors();
     }
 
     /**
@@ -314,10 +334,8 @@ public abstract class Game implements BoardObserver, PublicInterface {
      * @return the blackCrossFaith position
      */
     public Integer getLorenzoPosition(){
-        if(getBlackCrossFaithPath()!=null)
-            return getBlackCrossFaithPath().getPosition();
-        else
-            return 10;
+        if(getBlackCrossFaithPath()==null) return null;
+        else return getBlackCrossFaithPath().getPosition();
     }
     /**
      * set the active parameter of a players in caso of disconnection/reconnection
@@ -656,7 +674,8 @@ public abstract class Game implements BoardObserver, PublicInterface {
             if(turnPhase==TurnPhase.ENDTURN){
                 if(currPlayer.getOrder()==players.size() && endGameTrigger){
                     gamePhase=GamePhase.ENDGAME;
-                    endGame();
+                    Result result=endGame();
+                    notifyEndGameResult(result);
                 }
                 currPlayer.resetProductions();
                 turnPhase=TurnPhase.STARTTURN;

@@ -19,7 +19,7 @@ import it.polimi.ingsw.network.messages.updates.*;
 
 import java.util.*;
 
-public class Controller {
+public class Controller implements GameObserver {
     @Expose
     private int idLobby;
     @Expose
@@ -126,6 +126,7 @@ public class Controller {
         }
         try {
             game=Game.createGame(numberOfPlayers);
+            game.addExternalObserver(this);
         } catch (IllegalPlayersNumberException e) {
             System.out.println("Game not initialized because numberOfPlayers is an illegal value!");
         }
@@ -304,7 +305,7 @@ public class Controller {
         if (getCurrentNickname().equals(nickname)) {
             game.discardLeader(index);
             notifyLobby(new DiscardLeaderUpdate(index));
-            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
         } else throw new NotYourTurnException();
     }
     public synchronized void buyAtMarketInterface(char rc,int index,String nickname) throws NotYourTurnException, IllegalActionException {
@@ -312,7 +313,7 @@ public class Controller {
             game.buyAtMarketInterface(rc, index);
             //update
             List<ResourceType> list=getCurrentPlayerPending();
-            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
             notifyLobby(new MarketUpdate(getMarblesInList()));
             if(list.size()>0)
                 getVirtualClient(nickname).send(new PendingResourcesMessage(list));
@@ -336,7 +337,6 @@ public class Controller {
         if(getCurrentNickname().equals(nickname)) {
             game.discardResource(res);
             notifyLobby(new DiscardResourceUpdate());
-            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
             List<ResourceType> list=getCurrentPlayerPending();
             if(list.size()>0) {
                 VirtualClient vc = getVirtualClient(nickname);
@@ -463,7 +463,7 @@ public class Controller {
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
         if(getCurrentNickname().equals(nickname)) {
             game.activateProductions();
-            notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
             notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
         }
         else throw new NotYourTurnException();
@@ -505,10 +505,30 @@ public class Controller {
             //update
 
             if(getnPlayers()==1){
-                notifyLobby(new FaithPathUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
                 notifyLobby(new LorenzoUpdate(getLorenzoPosition(),getLastUsedToken(),getGamePhase()));
             }else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
         }
         else throw new NotYourTurnException();
     }
+    //---------------------------------------------------------
+    @Override
+    public synchronized void updateEndGameTriggered() {
+        notifyLobby(new EndGameMessage());
+    }
+
+    @Override
+    public synchronized void updatePopeFavors() {
+        notifyLobby(new PopeFavorUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition()));
+    }
+
+    @Override
+    public synchronized void updateEndGameResult(Result result) { ;
+        notifyLobby(new EndGameResultUpdate(result));
+        //close the connections
+    }
+
+    public void setGame(Game g){
+        this.game=g;
+    }
+
 }

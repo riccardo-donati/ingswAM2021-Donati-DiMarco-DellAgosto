@@ -8,12 +8,12 @@ import it.polimi.ingsw.network.messages.ClientMessage;
 
 import java.util.Map;
 
-public class FaithPathUpdate implements Update {
+public class PopeFavorUpdate implements Update {
     private Map<String,Integer> positions;
     private Map<String, Map<Integer, ClientPopeFavorState>> popeFavors;
     private Integer lorenzoPos;
 
-    public  FaithPathUpdate(Map<String,Integer> positions,Map<String, Map<Integer, ClientPopeFavorState>> popeFavors,Integer lorenzoPos){
+    public PopeFavorUpdate(Map<String,Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos){
         this.positions=positions;
         this.popeFavors=popeFavors;
         this.lorenzoPos=lorenzoPos;
