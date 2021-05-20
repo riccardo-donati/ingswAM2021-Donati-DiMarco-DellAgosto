@@ -1,13 +1,12 @@
 package it.polimi.ingsw.network.messages.updates;
 
-import it.polimi.ingsw.model.Game;
 import it.polimi.ingsw.model.TokenDiscard;
 import it.polimi.ingsw.model.TokenPush;
 import it.polimi.ingsw.model.TokenPushShuffle;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.interfaces.Token;
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
@@ -53,7 +52,7 @@ public class LorenzoUpdate implements Update{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, Client client) {
+    public void accept(ClientVisitor visitor, CLI client) {
         visitor.visit(this,client);
     }
 }

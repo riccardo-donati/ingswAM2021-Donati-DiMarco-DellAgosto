@@ -2,13 +2,12 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.*;
@@ -17,7 +16,7 @@ import java.util.stream.Stream;
 
 public class Parser {
 
-    public static Message parse(String string, Client client) throws IllegalCommandException {
+    public static Message parse(String string, CLI client) throws IllegalCommandException {
         List<String> resources = Arrays.asList("shield", "coin", "servant", "stone");
         List<String> colors = Stream.of(Color.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.toList());
 

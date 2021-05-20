@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
@@ -27,7 +27,7 @@ public class DiscardLeaderUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, Client client) {
+    public void accept(ClientVisitor visitor, CLI client) {
         visitor.visit(this,client);
     }
 }

@@ -41,19 +41,22 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(PlayerNumberRequest message, Client client) {
         System.out.println(message.getMessage());
-        client.setCurrCommand("numberofplayers ");
+        if (client instanceof CLI)
+            ((CLI) client).setCurrCommand("numberofplayers ");
     }
 
     @Override
     public void visit(RegisterRequest message, Client client) {
         System.out.println(message.getMessage());
-        client.setCurrCommand("register ");
+        if (client instanceof CLI)
+            ((CLI) client).setCurrCommand("register ");
     }
 
     @Override
     public void visit(StartGameUpdate message, Client client) {
         message.update(client.getClientModel());
-        client.setCurrCommand("");
+        if (client instanceof CLI)
+            ((CLI) client).setCurrCommand("");
         client.getClientModel().setGamePhase(GamePhase.SETUP);
 
         //if cli mode
@@ -107,7 +110,8 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(ReconnectMessage message, Client client) {
         System.out.println(message.getMessage());
         if(client.getClientModel().getNickname().equals(message.getReconnectedNickname())){
-            client.setCurrCommand("");
+        if (client instanceof CLI)
+            ((CLI) client).setCurrCommand("");
             //import the local Model
         }
     }
@@ -174,11 +178,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(SlotUpdate message, Client client) {
         message.update(client.getClientModel());
-
-        //if cli
-        if(client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname())){
-            System.out.println(client.getClientModel().getCurrentBoard().stringifySlots());
-        }
+        client.visualizeSlotUpdate();
     }
 
     @Override

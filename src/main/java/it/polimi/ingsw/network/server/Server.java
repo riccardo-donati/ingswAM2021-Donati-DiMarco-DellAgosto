@@ -47,6 +47,7 @@ public class Server {
             System.out.println("Closing . . .");
             return;
         }
+        System.out.println("Server started on port " + port);
         System.out.println("Welcome to the Masters of Renaissance server!");
         System.out.println("Waiting for players to connect . . .");
 

@@ -1,7 +1,7 @@
 package it.polimi.ingsw.network.messages;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
@@ -19,7 +19,7 @@ public class PendingResourcesMessage implements ClientMessage{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, Client client) {
+    public void accept(ClientVisitor visitor, CLI client) {
         visitor.visit(this, client);
     }
 

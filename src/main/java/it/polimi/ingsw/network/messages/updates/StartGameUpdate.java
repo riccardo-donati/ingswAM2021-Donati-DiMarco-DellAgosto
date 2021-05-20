@@ -1,17 +1,12 @@
 package it.polimi.ingsw.network.messages.updates;
 
-import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.Client;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitable;
 import it.polimi.ingsw.network.client.ClientVisitor;
-import it.polimi.ingsw.network.messages.ClientMessage;
-import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 
-import java.io.IOException;
 import java.util.*;
 
 public class StartGameUpdate implements Update, ClientVisitable {
@@ -39,7 +34,7 @@ public class StartGameUpdate implements Update, ClientVisitable {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, Client client) {
+    public void accept(ClientVisitor visitor, CLI client) {
         visitor.visit(this,client);
     }
 

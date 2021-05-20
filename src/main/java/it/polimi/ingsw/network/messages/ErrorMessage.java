@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class ErrorMessage implements ClientMessage{
@@ -14,7 +14,7 @@ public class ErrorMessage implements ClientMessage{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, Client client) {
+    public void accept(ClientVisitor visitor, CLI client) {
         visitor.visit(this,client);
     }
 }
