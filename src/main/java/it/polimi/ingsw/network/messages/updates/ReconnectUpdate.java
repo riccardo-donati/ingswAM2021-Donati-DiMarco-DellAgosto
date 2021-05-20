@@ -1,8 +1,9 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
@@ -15,20 +16,22 @@ import java.util.Map;
 import java.util.Stack;
 
 public class ReconnectUpdate implements Update{
-    private Map<String,Integer> positions;
-    private Map<String, Map<Integer, ClientPopeFavorState>> popeFavors;
-    private Integer lorenzoPos;
-    private Map<String,Map<Resource,Integer>> strongboxes;
-    private Map<String, List<ClientDeposit>> warehouses;
-    private List<ResourceType> marbles;
-    private Stack<String>[][] cardMatrix;
-    private List<String> playerOrder;
-    private String currentNickname;
-    private Map<String,Map<Integer, Stack<String>>> slots;
-    private Map<String,List<String>> allLeadersInBoard;
-    private List<String> myLeadersInHand;
+    private final Map<String,Integer> positions;
+    private final Map<String, Map<Integer, ClientPopeFavorState>> popeFavors;
+    private final Integer lorenzoPos;
+    private final Map<String,Map<Resource,Integer>> strongboxes;
+    private final Map<String, List<ClientDeposit>> warehouses;
+    private final List<ResourceType> marbles;
+    private final Stack<String>[][] cardMatrix;
+    private final List<String> playerOrder;
+    private final String currentNickname;
+    private final Map<String,Map<Integer, Stack<String>>> slots;
+    private final Map<String,List<String>> allLeadersInBoard;
+    private final List<String> myLeadersInHand;
+    private final GamePhase gamePhase;
+    private final List<String> fourLeaderCards;
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -41,6 +44,8 @@ public class ReconnectUpdate implements Update{
         this.slots = slots;
         this.allLeadersInBoard = allLeadersInBoard;
         this.myLeadersInHand = myLeadersInHand;
+        this.gamePhase=gamePhase;
+        this.fourLeaderCards=fourLeaderCards;
     }
 
     @Override
@@ -48,9 +53,9 @@ public class ReconnectUpdate implements Update{
         //update the players order and create the boards
         clientModel.setCurrentNickname(currentNickname);
         clientModel.setPlayersOrder(playerOrder);
-        for(String nickname : playerOrder){
-            if(clientModel.getBoards().get(nickname)==null){
-                clientModel.putBoard(nickname,new ClientBoard());
+        for (String nickname : playerOrder) {
+            if (clientModel.getBoards().get(nickname)==null) {
+                clientModel.putBoard(nickname, new ClientBoard());
             }
         }
         //update the faith paths/pope favors
@@ -60,7 +65,7 @@ public class ReconnectUpdate implements Update{
         for (Map.Entry<String, Map<Integer, ClientPopeFavorState>> entry : popeFavors.entrySet()) {
             clientModel.getBoards().get(entry.getKey()).getFaithPath().setPopeFavor(entry.getValue());
         }
-        if(lorenzoPos!=null) clientModel.getCurrentBoard().getFaithPath().setLorenzoPosition(lorenzoPos);
+        if (lorenzoPos!=null) clientModel.getCurrentBoard().getFaithPath().setLorenzoPosition(lorenzoPos);
 
         //update the strongboxes
         for (Map.Entry<String,Map<Resource,Integer>> entry : strongboxes.entrySet()) {
@@ -80,7 +85,7 @@ public class ReconnectUpdate implements Update{
         for (Map.Entry<String,Map<Integer,Stack<String>>> entry : slots.entrySet()) {
             ClientBoard cb=clientModel.getBoards().get(entry.getKey());
             for (Map.Entry<Integer,Stack<String>>entry2 : entry.getValue().entrySet()) {
-                for(int i=0;i<entry2.getValue().size();i++)
+                for(int i = 0; i < entry2.getValue().size(); i++)
                     cb.push(entry2.getKey(),clientModel.getDevelopmentCard(entry2.getValue().get(i)));
             }
         }
@@ -88,7 +93,7 @@ public class ReconnectUpdate implements Update{
         for (Map.Entry<String,List<String>> entry : allLeadersInBoard.entrySet()) {
             for(String leaderName : entry.getValue()) {
                 LeaderCard ld=clientModel.getLeaderCard(leaderName);
-                if(ld!=null) {
+                if(ld != null) {
                     for(SpecialAbility sa : ld.getSpecialAbilities()){
                         if(sa instanceof Discount) clientModel.getBoards().get(entry.getKey()).addDiscount(sa.getResourceType());
                         if(sa instanceof ExtraProduction) clientModel.getBoards().get(entry.getKey()).addExtraProd(sa.getResourceType());
@@ -98,16 +103,21 @@ public class ReconnectUpdate implements Update{
             }
         }
         //update leaders in hand
-        for(String leaderName : myLeadersInHand) {
+        for (String leaderName : myLeadersInHand) {
             LeaderCard ld=clientModel.getLeaderCard(leaderName);
-            if(ld!=null) clientModel.getBoards().get(clientModel.getNickname()).getLeadersInHand().add(ld);
+            if(ld != null) clientModel.getBoards().get(clientModel.getNickname()).getLeadersInHand().add(ld);
 
         }
-/*        private Map<String,List<String>> allLeadersInBoard;
-        private List<String> myLeadersInHand;
+        //update gamePhase
+        clientModel.setGamePhase(gamePhase);
+        //update 4 leaders
+        for (int i = 0; i < fourLeaderCards.size(); i++) {
+            clientModel.putIdNameLeadersMap(i + 1, fourLeaderCards.get(i));
+        }
+    }
 
-         */
-
+    public List<String> getFourLeaderCards() {
+        return fourLeaderCards;
     }
 
     @Override
@@ -116,7 +126,7 @@ public class ReconnectUpdate implements Update{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }

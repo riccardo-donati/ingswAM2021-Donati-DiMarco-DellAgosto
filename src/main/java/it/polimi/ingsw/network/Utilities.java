@@ -63,6 +63,7 @@ public class Utilities {
         builder.enableComplexMapKeySerialization();
         return builder.excludeFieldsWithoutExposeAnnotation().create();
     }
+
     public static String stringify(Result result){
         StringBuilder sb=new StringBuilder();
         for (String s : result.getResults().keySet()) {
@@ -76,6 +77,7 @@ public class Utilities {
         }
         return sb.toString();
     }
+
     public static String stringify(Token t){
         if(t==null) return "";
         StringBuilder sb=new StringBuilder();
@@ -164,6 +166,7 @@ public class Utilities {
 
         return sb.toString();
     }
+
     public static String stringify(Production p){
         StringBuilder sb=new StringBuilder();
         sb.append("(");
@@ -177,6 +180,7 @@ public class Utilities {
         sb.append(")");
         return sb.toString();
     }
+
     public static String stringify(LeaderCard ld){
         StringBuilder sb = new StringBuilder();
         sb.append("[ ");
@@ -227,6 +231,7 @@ public class Utilities {
         sb.append(" ]");
         return sb.toString();
     }
+
     public static Stack<DevelopmentCard>[][] initializeCardMatrix(List<DevelopmentCard> list){
         Stack<DevelopmentCard>[][] cardMatrix = new Stack[3][4];
         for (int r = 0; r < 3; r++){
@@ -262,6 +267,7 @@ public class Utilities {
         else if(me=='e')return new ClientDeposit(d.getId()+3,listRes);
         else return null;
     }
+
     public static List<ClientDeposit> warehouseToListOfClientDeposits(Warehouse wh){
         List<ClientDeposit> list=new ArrayList<>();
         for(Deposit d : wh.getMaindepot()){
@@ -274,6 +280,7 @@ public class Utilities {
         }
         return list;
     }
+
     public static Map<Resource,Integer> strongboxToClientStrongbox(Map<ResourceType,Integer> s){
         Map<Resource,Integer> strongbox=new HashMap<>();
         for (Map.Entry<ResourceType, Integer> entry : s.entrySet()) {

@@ -1,12 +1,12 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class DiscardLeaderUpdate implements Update {
-    private int index;
+    private final int index;
 
     public DiscardLeaderUpdate(int index){
         this.index=index;
@@ -15,7 +15,7 @@ public class DiscardLeaderUpdate implements Update {
     @Override
     public void update(ClientModel clientModel) {
         clientModel.getCurrentBoard().getFaithPath().addToFaithPath(1);
-        if(clientModel.getNickname()==clientModel.getCurrentNickname()) {
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())) {
             LeaderCard ld = clientModel.getCurrentBoard().getLeadersInHand().get(index);
             if (ld != null) clientModel.getCurrentBoard().getLeadersInHand().remove(index);
         }
@@ -27,7 +27,7 @@ public class DiscardLeaderUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
+    public void accept(ClientVisitor visitor, Client client) {
         visitor.visit(this,client);
     }
 }

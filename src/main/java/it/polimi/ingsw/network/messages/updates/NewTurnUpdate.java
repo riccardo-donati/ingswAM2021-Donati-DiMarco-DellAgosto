@@ -1,17 +1,18 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class NewTurnUpdate implements Update {
-    private String currNickname;
-    private GamePhase gamePhase;
+    private final String currNickname;
+    private final GamePhase gamePhase;
 
-    public NewTurnUpdate(String currNickname,GamePhase gamePhase){
-        this.currNickname=currNickname;
-        this.gamePhase=gamePhase;
+    public NewTurnUpdate(String currNickname,GamePhase gamePhase) {
+        this.currNickname = currNickname;
+        this.gamePhase = gamePhase;
     }
 
     public GamePhase getGamePhase() {
@@ -19,13 +20,13 @@ public class NewTurnUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 
     @Override
     public String getMessage() {
-        return "New turn -> "+currNickname;
+        return "New turn -> " + currNickname;
     }
 
     @Override
@@ -33,5 +34,9 @@ public class NewTurnUpdate implements Update {
         clientModel.setCurrentNickname(currNickname);
         clientModel.setGamePhase(gamePhase);
         clientModel.getCurrentBoard().resetProduction();
+
+        if(gamePhase == GamePhase.ONGOING) clientModel.setTurnPhase(TurnPhase.STARTTURN);
+        else if(gamePhase == GamePhase.SETUP) clientModel.setTurnPhase(TurnPhase.STARTSETUPTURN);
+
     }
 }

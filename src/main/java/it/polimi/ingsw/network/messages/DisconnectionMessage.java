@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class DisconnectionMessage implements ClientMessage{
@@ -10,7 +10,7 @@ public class DisconnectionMessage implements ClientMessage{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI cl) {
-        visitor.visit(this,cl);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }

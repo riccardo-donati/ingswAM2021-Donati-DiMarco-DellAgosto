@@ -1,6 +1,6 @@
 package it.polimi.ingsw.network.messages.updates;
 
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
@@ -15,7 +15,7 @@ public class DiscardResourceUpdate implements Update{
             if(!entry.getKey().equals(clientModel.getCurrentNickname())) {
                 board.getFaithPath().addToFaithPath(1);
             }
-            if(board.getFaithPath().getLorenzoPosition()!=null) board.getFaithPath().addLorenzoPosition(1);
+            if(board.getFaithPath().getLorenzoPosition() != null) board.getFaithPath().addLorenzoPosition(1);
         }
     }
 
@@ -25,7 +25,7 @@ public class DiscardResourceUpdate implements Update{
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }

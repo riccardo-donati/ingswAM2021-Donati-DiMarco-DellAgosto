@@ -134,11 +134,13 @@ public class Server {
                 }
             }else if(lobby.getGamePhase()==GamePhase.ONGOING ||lobby.getGamePhase()==GamePhase.SETUP){
                 lobby.setActive(nick,false);
+                if(lobby.getLorenzoPosition()==null) {
+                    if (lobby.getGamePhase() == GamePhase.SETUP)
+                        lobby.clearPlayer(nick);
+                }
                 if(lobby.getCurrentNickname().equals(nick)){
                     try {
                         if(lobby.getLorenzoPosition()==null) {
-                            if(lobby.getGamePhase()== GamePhase.SETUP)
-                                lobby.clearPlayer(nick);
                             lobby.passTurn(nick);
                         }
                     } catch (IllegalActionException | NotYourTurnException ignored) { }

@@ -3,6 +3,7 @@ package it.polimi.ingsw.model.interfaces;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.server.GameObserver;
@@ -41,6 +42,7 @@ public interface PublicInterface {
      Map<String,Map<Integer, ClientPopeFavorState>> getPopeFavors();
      Map<String,Warehouse> getAllWarehouses();
      Map<String,Map<ResourceType,Integer>> getAllStrongboxes();
+     TurnPhase getTurnPhase();
 
      Map<String,Map<Integer, Stack<String>>> getAllSlots();
      Map<String,List<String>> getAllLeadersInBoard();

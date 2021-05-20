@@ -1,17 +1,19 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 import java.util.List;
 
 public class MarketUpdate implements Update {
-    private List<ResourceType> marbles;
+    private final List<ResourceType> marbles;
+
     public MarketUpdate (List<ResourceType> marbles){
-        this.marbles=marbles;
+        this.marbles = marbles;
     }
+
     @Override
     public void update(ClientModel clientModel) {
         clientModel.getMarket().setMarbles(marbles);
@@ -23,7 +25,7 @@ public class MarketUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }

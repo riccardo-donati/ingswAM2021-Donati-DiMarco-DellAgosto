@@ -7,6 +7,7 @@ import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.server.GameObserver;
 import java.io.*;
@@ -60,7 +61,6 @@ public abstract class Game implements BoardObserver, PublicInterface {
     protected List<Token> getTokens(){return null;}
     protected FaithPath getBlackCrossFaithPath(){return null;}
     protected void setCurrPlayer(Player currPlayer) { this.currPlayer = currPlayer; }
-    protected TurnPhase getTurnPhase() { return turnPhase; }
     protected Stack<Token> getTokenStack() {return  null; }
     protected void setGamePhase(GamePhase gamePhase) { this.gamePhase = gamePhase; }
     protected Market getMarket() { return market; }
@@ -336,6 +336,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
     }
     public GamePhase getGamePhase() { return gamePhase; }
+    public TurnPhase getTurnPhase(){return turnPhase;}
     /**
      * for the updates
      * @return the current player faithpath position
@@ -632,7 +633,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public void toggleBaseProd() throws UnknownFoundException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getBoard().getBaseProduction().toggleSelected();
-            if(currPlayer.countSelectedProductions()==0){
+            if(currPlayer.countSelectedProductions()==0 && currPlayer.checkPickedEmpty()){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
@@ -641,7 +642,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public void toggleExtraProd(Integer index) throws UnknownFoundException, IllegalActionException, IndexOutOfBoundsException {
         if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN ||turnPhase==TurnPhase.PICKUPPHASE)) {
             currPlayer.getExtraProductions().get(index).toggleSelected();
-            if(currPlayer.countSelectedProductions()==0){
+            if(currPlayer.countSelectedProductions()==0 && currPlayer.checkPickedEmpty()){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
@@ -653,7 +654,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
             if(tmp.size()>0){
                 tmp.get(tmp.size()-1).getProd().toggleSelected();
             }else throw new IllegalSlotException();
-            if(currPlayer.countSelectedProductions()==0){
+            if(currPlayer.countSelectedProductions()==0 && currPlayer.checkPickedEmpty()){
                 turnPhase=TurnPhase.STARTTURN;
             }else turnPhase=TurnPhase.PICKUPPHASE;
         }else throw new IllegalActionException();
@@ -740,7 +741,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public void clearPlayer(String nickname){
         for(Player p : players){
             if(nickname.equals(p.getNickname())){
-                p.getBoard().getWarehouse().getPendingResources().clear();
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.GREY,0);
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.YELLOW,0);
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.UNKNOWN,0);
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.BLUE,0);
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.VIOLET,0);
+                p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.WHITE,0);
             }
         }
     }

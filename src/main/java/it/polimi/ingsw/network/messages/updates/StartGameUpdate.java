@@ -1,20 +1,20 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.model.enums.TurnPhase;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitable;
 import it.polimi.ingsw.network.client.ClientVisitor;
-
 import java.util.*;
 
 public class StartGameUpdate implements Update, ClientVisitable {
-    private List<String> playerOrder=new ArrayList<>();
-    private List<String> cards=new ArrayList<>();
-    private Map<String,Integer> faithPaths=new HashMap<>();
-    private List<ResourceType> marbles=new ArrayList<>();
-    private Stack<String>[][] cardMatrix;
+    private final List<String> playerOrder;
+    private final List<String> cards;
+    private final Map<String,Integer> faithPaths;
+    private final List<ResourceType> marbles;
+    private final Stack<String>[][] cardMatrix;
 
     public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles,Stack<String>[][] cardMatrix){
         this.playerOrder=playerOrder;
@@ -34,8 +34,8 @@ public class StartGameUpdate implements Update, ClientVisitable {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 
     @Override
@@ -45,21 +45,23 @@ public class StartGameUpdate implements Update, ClientVisitable {
 
     @Override
     public void update(ClientModel clientModel) {
-        for(int i=0;i<cards.size();i++) {
-            clientModel.putIdNameLeadersMap(i+1,cards.get(i));
-        }
+        for(int i = 0; i < cards.size(); i++)
+            clientModel.putIdNameLeadersMap(i + 1, cards.get(i));
 
         clientModel.setPlayersOrder(playerOrder);
         clientModel.setCurrentNickname(playerOrder.get(0));
-        for(String player : playerOrder){
+
+        for(String player : playerOrder)
             clientModel.putBoard(player,new ClientBoard());
-        }
-        if(playerOrder.size()==1)clientModel.setUpSinglePlayer();
-        for(String player :playerOrder){
+        if (playerOrder.size() == 1)
+            clientModel.setUpSinglePlayer();
+        for (String player : playerOrder)
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
-        }
+
         clientModel.getMarket().setMarbles(marbles);
         //clientModel.getCardMatrix().setCards(cardMatrix);
         clientModel.loadCardMatrixFromNames(cardMatrix);
+
+        clientModel.setTurnPhase(TurnPhase.STARTSETUPTURN);
     }
 }

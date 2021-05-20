@@ -1,12 +1,13 @@
 package it.polimi.ingsw.network.messages.updates;
 
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.model.enums.TurnPhase;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class PickUpWarehouseUpdate implements Update {
-    Integer idDeposit;
+    private final Integer idDeposit;
 
     public PickUpWarehouseUpdate(Integer idDeposit) {
         this.idDeposit = idDeposit;
@@ -17,8 +18,8 @@ public class PickUpWarehouseUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 
     @Override
@@ -30,5 +31,7 @@ public class PickUpWarehouseUpdate implements Update {
     public void update(ClientModel clientModel) {
         Resource res=clientModel.getCurrentBoard().getDeposits().remove(idDeposit);
         clientModel.getCurrentBoard().getDeposits().putResourceInHand(res);
+
+        clientModel.setTurnPhase(TurnPhase.PICKUPPHASE);
     }
 }

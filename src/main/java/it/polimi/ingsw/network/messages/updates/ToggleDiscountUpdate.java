@@ -1,20 +1,20 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class ToggleDiscountUpdate implements Update {
-    private ResourceType res;
+    private final ResourceType resourceType;
 
-    public ToggleDiscountUpdate(ResourceType res){
-        this.res=res;
+    public ToggleDiscountUpdate(ResourceType resourceType){
+        this.resourceType = resourceType;
     }
 
     @Override
     public void update(ClientModel clientModel) {
-        clientModel.getCurrentBoard().toggleDiscount(res);
+        clientModel.getCurrentBoard().toggleDiscount(resourceType);
     }
 
     @Override
@@ -23,7 +23,7 @@ public class ToggleDiscountUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }

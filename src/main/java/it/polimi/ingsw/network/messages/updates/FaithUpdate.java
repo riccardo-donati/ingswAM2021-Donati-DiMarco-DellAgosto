@@ -1,14 +1,14 @@
 package it.polimi.ingsw.network.messages.updates;
 
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class FaithUpdate implements Update {
-    private Integer newPosition;
+    private final Integer newPosition;
 
     public FaithUpdate(Integer newPosition){
-        this.newPosition=newPosition;
+        this.newPosition = newPosition;
     }
     @Override
     public void update(ClientModel clientModel) {
@@ -21,7 +21,7 @@ public class FaithUpdate implements Update {
     }
 
     @Override
-    public void accept(ClientVisitor visitor, CLI client) {
-        visitor.visit(this,client);
+    public void accept(ClientVisitor visitor, Client client) {
+        visitor.visit(this, client);
     }
 }
