@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
@@ -66,5 +67,7 @@ public class StartGameUpdate implements Update, ClientVisitable {
         clientModel.getMarket().setMarbles(marbles);
         //clientModel.getCardMatrix().setCards(cardMatrix);
         clientModel.loadCardMatrixFromNames(cardMatrix);
+
+        clientModel.setTurnPhase(TurnPhase.STARTSETUPTURN);
     }
 }

@@ -32,6 +32,10 @@ public class ClientModel {
         return leaderCards;
     }
 
+    public TurnPhase getTurnPhase() {
+        return turnPhase;
+    }
+
     public List<DevelopmentCard> getDevelopmentCards() {
         return developmentCards;
     }

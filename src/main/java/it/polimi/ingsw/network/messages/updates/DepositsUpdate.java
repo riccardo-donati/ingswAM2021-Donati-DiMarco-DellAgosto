@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.Deposit;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
@@ -13,10 +14,12 @@ import java.util.Map;
 public class DepositsUpdate implements Update{
     private List<ClientDeposit> deposits;
     private Map<Resource,Integer> strongbox;
+    private TurnPhase turnPhase;
 
-    public DepositsUpdate(List<ClientDeposit> deposits, Map<Resource,Integer> strongbox){
+    public DepositsUpdate(List<ClientDeposit> deposits, Map<Resource,Integer> strongbox,TurnPhase turnPhase){
         this.deposits=deposits;
         this.strongbox=strongbox;
+        this.turnPhase=turnPhase;
     }
 
     @Override
@@ -26,6 +29,8 @@ public class DepositsUpdate implements Update{
         }
         clientModel.getCurrentBoard().getDeposits().setStrongbox(strongbox);
         clientModel.getCurrentBoard().getDeposits().clearResourcesInHand();
+
+        clientModel.setTurnPhase(turnPhase);
     }
 
     @Override

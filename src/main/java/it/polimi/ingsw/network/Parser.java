@@ -2,6 +2,7 @@ package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
@@ -28,6 +29,9 @@ public class Parser {
             throw new IllegalCommandException();
 
         switch (string) {
+            case "commands":
+                commands(client.getClientModel().getTurnPhase());
+                return null;
             case "help":
                 try {
                     help();
@@ -367,8 +371,74 @@ public class Parser {
     private static void help() throws IOException {
         BufferedReader br = new BufferedReader(new FileReader("src/main/resources/CLICommands.txt"));
         String line;
+        System.out.println("------------------------------------------------------------------------------");
         while ((line = br.readLine()) != null) {
             System.out.println(line);
         }
+        System.out.println("------------------------------------------------------------------------------");
+    }
+    private static void commands(TurnPhase tp){
+        StringBuilder sb=new StringBuilder();
+        sb.append("---------------------------------------------------\n");
+        sb.append("Possibile commands:\n").append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.ANSI_BLUE.escape());
+        switch (tp){
+            case STARTSETUPTURN:
+                sb.append("choose leaders [slot number] [slot number]\n");
+            break;
+            case ENDSETUPTURN:
+                sb.append("deposit bonus [resource] in [shelf number]\n");
+                sb.append("pass\n");
+                break;
+            case STARTTURN:
+                sb.append("play leader [slot number]\n");
+                sb.append("discard leader [slot number]\n");
+                sb.append("\n");
+                sb.append("move from [shelf number] to [shelf number]\n");
+                sb.append("base production input unknown to [resource]\n" +
+                        "base production output unknown to [resource]\n" +
+                        "production [slot number] input unknown to [resource]\n" +
+                        "production [slot number] output unknown to [resource]\n");
+                sb.append("\n");
+                sb.append("activate market column [column (1-4)]\n");
+                sb.append("activate market row [row (1-3)]\n");
+                sb.append("toggle discount [resource]\n");
+                sb.append("\n");
+                sb.append("pick up from strongbox [resource]\n");
+                sb.append("pick up from warehouse [shelf number]\n");
+                sb.append("toggle base production\n" +
+                        "toggle production [slot number]\n" +
+                        "toggle extra production [slot number]\n");
+                break;
+            case PICKUPPHASE:
+                sb.append("toggle base production\n" +
+                        "toggle production [slot number]\n" +
+                        "toggle extra production [slot number]\n" +
+                        "activate productions\n");
+                sb.append("\n");
+                sb.append("pick up from warehouse [shelf number]\n" +
+                        "pick up from strongbox [resource]\n");
+                sb.append("buy [color] card level [level] slot [slot number]\n");
+                sb.append("toggle discount [resource]\n");
+                sb.append("revert pickup\n");
+                sb.append("base production input unknown to [resource]\n" +
+                        "base production output unknown to [resource]\n" +
+                        "production [slot number] input unknown to [resource]\n" +
+                        "production [slot number] output unknown to [resource]\n");
+                break;
+            case DEPOSITPHASE:
+                sb.append("transform white in [resource type]\n");
+                sb.append("deposit [resource] in [shelf number]\n");
+                sb.append("move from [shelf number] to [shelf number]\n");
+                sb.append("discard [resource]\n");
+                break;
+            case ENDTURN:
+                sb.append("play leader [slot number]\n");
+                sb.append("discard leader [slot number]\n");
+                sb.append("move from [shelf number] to [shelf number]\n");
+                sb.append("pass\n");
+                break;
+        }
+        sb.append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.RESET).append("---------------------------------------------------");
+        System.out.println(sb.toString());
     }
 }

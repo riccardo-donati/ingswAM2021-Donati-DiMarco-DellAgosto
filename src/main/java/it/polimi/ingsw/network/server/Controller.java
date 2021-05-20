@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.PublicInterface;
 import it.polimi.ingsw.model.interfaces.Token;
@@ -205,7 +206,7 @@ public class Controller implements GameObserver {
     public synchronized void reconnectPlayer(String nickname){
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname));
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname));
             vc.send(reconnectUpdate);
         }
     }
@@ -237,6 +238,7 @@ public class Controller implements GameObserver {
     public synchronized GamePhase getGamePhase(){
         return game.getGamePhase();
     }
+    public synchronized TurnPhase getTurnPhase(){ return game.getTurnPhase();}
     public synchronized void startGame(){
         try {
             game.startGame();
@@ -348,7 +350,7 @@ public class Controller implements GameObserver {
             notifyLobby(new FaithUpdate(getCurrentFaithPath()));
             notifyLobby(new MarketUpdate(getMarblesInList()));
             if(list.size()>0)
-                getVirtualClient(nickname).send(new PendingResourcesMessage(list));
+                getVirtualClient(nickname).send(new PendingResourcesUpdate(list));
         }
         else throw new NotYourTurnException();
     }
@@ -358,10 +360,9 @@ public class Controller implements GameObserver {
             //update
             notifyLobby(new DepositUpdate(id, Utilities.resourceTypeToResource(res)));
             List<ResourceType> list=getCurrentPlayerPending();
-            if(list.size()>0) {
-                VirtualClient vc = getVirtualClient(nickname);
-                if(vc!=null) vc.send(new PendingResourcesMessage(list));
-            }
+            VirtualClient vc = getVirtualClient(nickname);
+            if(vc!=null) vc.send(new PendingResourcesUpdate(list));
+
         }
         else throw new NotYourTurnException();
     }
@@ -372,7 +373,7 @@ public class Controller implements GameObserver {
             List<ResourceType> list=getCurrentPlayerPending();
             if(list.size()>0) {
                 VirtualClient vc = getVirtualClient(nickname);
-                if(vc!=null) vc.send(new PendingResourcesMessage(list));
+                if(vc!=null) vc.send(new PendingResourcesUpdate(list));
             }
         }else throw new NotYourTurnException();
     }
@@ -382,7 +383,7 @@ public class Controller implements GameObserver {
             List<ResourceType> list=getCurrentPlayerPending();
             if(list.size()>0) {
                 VirtualClient vc = getVirtualClient(nickname);
-                if(vc!=null) vc.send(new PendingResourcesMessage(list));
+                if(vc!=null) vc.send(new PendingResourcesUpdate(list));
             }
         }
         else throw new NotYourTurnException();
@@ -463,7 +464,7 @@ public class Controller implements GameObserver {
         if(getCurrentNickname().equals(nickname)) {
             game.revertPickUp();
             VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null)vc.send(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
+            if(vc!=null)vc.send(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
 
         }
         else throw new NotYourTurnException();
@@ -503,7 +504,7 @@ public class Controller implements GameObserver {
         if(getCurrentNickname().equals(nickname)) {
             game.activateProductions();
             notifyLobby(new FaithUpdate(getCurrentFaithPath()));
-            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
+            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
         }
         else throw new NotYourTurnException();
     }
@@ -512,7 +513,7 @@ public class Controller implements GameObserver {
             game.buyCard(row, col, slot);
             //update
             notifyLobby(new SlotUpdate(slot,row,col));
-            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox()));
+            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
         }
         else throw new NotYourTurnException();
     }

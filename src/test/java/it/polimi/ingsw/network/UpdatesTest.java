@@ -5,15 +5,15 @@ import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
-import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientModel.Shelf;
-import it.polimi.ingsw.network.messages.PendingResourcesMessage;
+import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
 import it.polimi.ingsw.network.messages.updates.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -73,7 +73,7 @@ public class UpdatesTest {
 
         Map<Resource,Integer> strongbox=new HashMap<>();
 
-        DepositsUpdate whu=new DepositsUpdate(clientDeposits,strongbox);
+        DepositsUpdate whu=new DepositsUpdate(clientDeposits,strongbox, TurnPhase.ENDTURN);
         whu.update(cm);
         System.out.println(cm);
     }
@@ -135,7 +135,7 @@ public class UpdatesTest {
         strongbox.put(Resource.FAITH,1);
         strongbox.put(Resource.SERVANT,0);
         strongbox.put(Resource.STONE,0);
-        DepositsUpdate sbu=new DepositsUpdate(new ArrayList<>(),strongbox);
+        DepositsUpdate sbu=new DepositsUpdate(new ArrayList<>(),strongbox,TurnPhase.ENDTURN);
         System.out.println(cm.getCurrentBoard().getDeposits());
         assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
         assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
@@ -220,7 +220,7 @@ public class UpdatesTest {
         List<ResourceType> pending=new ArrayList<>();
         pending.add(ResourceType.YELLOW);
         pending.add(ResourceType.UNKNOWN);
-        PendingResourcesMessage prm =new PendingResourcesMessage(pending);
+        PendingResourcesUpdate prm =new PendingResourcesUpdate(pending);
         System.out.println(prm.getMessage());
 
     }
@@ -387,7 +387,7 @@ public class UpdatesTest {
         List<String> myLeadersInHand=new ArrayList<>();
         myLeadersInHand.add("10L");
         //--------------------------------------------
-        ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand);
+        ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand,GamePhase.ONGOING,new ArrayList<>());
         ru.update(cmnew);
 
         System.out.println(cmnew);

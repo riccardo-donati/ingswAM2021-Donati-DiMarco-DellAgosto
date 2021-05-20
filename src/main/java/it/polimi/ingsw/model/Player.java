@@ -27,6 +27,14 @@ public class Player {
         this.order=order;
     }
 
+    protected boolean checkPickedEmpty(){
+        for (Map.Entry<Integer,Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
+            for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {
+                if(entry2.getValue()>0) return false;
+            }
+        }
+        return true;
+    }
     /**
      *pick up a resource from a deposit of warehouse
      * @param id is the id of the deposit

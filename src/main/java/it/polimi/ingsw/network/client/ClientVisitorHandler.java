@@ -99,7 +99,9 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
-    public void visit(PendingResourcesMessage message, Client client) {
+    public void visit(PendingResourcesUpdate message, Client client) {
+        message.update(client.getClientModel());
+        //if cli
         System.out.println(message.getMessage());
     }
 
@@ -126,10 +128,12 @@ public class ClientVisitorHandler implements ClientVisitor{
         GamePhase phasePrePass=client.getClientModel().getGamePhase();
         message.update(client.getClientModel());
         //if CLI
+
+
+        System.out.println(client.getClientModel());
         if(phasePrePass==GamePhase.SETUP && client.getClientModel().getGamePhase()==GamePhase.ONGOING){
             System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
         }
-        System.out.println(client.getClientModel());
         System.out.println(Utilities.stringify(message.getLastUsedToken()));
     }
 
@@ -290,6 +294,22 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
 
         System.out.println(client.getClientModel());
+        System.out.println("-----------------------------");
+        System.out.println("You just reconnected!");
+        System.out.println("Phase: "+client.getClientModel().getGamePhase());
+        System.out.println("Turn: "+client.getClientModel().getCurrentNickname());
+        if(client.getClientModel().getGamePhase()==GamePhase.SETUP && client.getClientModel().getPlayersInOrder().size()==1 && client.getClientModel().getCurrentBoard().getLeadersInHand().size()==0){
+            //if you haven't chosen leadercards in singleplayer
+            StringBuilder sb=new StringBuilder();
+            sb.append("Choose 2 leader cards: \n");
+            List<String> leaderCards=message.getFourLeaderCards();
+            for(int i=0;i<leaderCards.size();i++){
+                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().getLeaderCardStringified(leaderCards.get(i))).append("\n");
+            }
+            System.out.println(sb.toString());
+        }
+        System.out.println("-----------------------------");
+
     }
 }
 

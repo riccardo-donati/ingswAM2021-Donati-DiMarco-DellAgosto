@@ -13,7 +13,7 @@ public interface ClientVisitor {
     void visit(StartGameUpdate message, Client client);
     void visit(NewTurnUpdate message, Client client);
     void visit(BonusResourceMessage message, Client client);
-    void visit(PendingResourcesMessage message, Client client);
+    void visit(PendingResourcesUpdate message, Client client);
     void visit(ReconnectMessage message, Client client);
     void visit(DepositUpdate message, Client client);
     void visit(LorenzoUpdate message, Client client);

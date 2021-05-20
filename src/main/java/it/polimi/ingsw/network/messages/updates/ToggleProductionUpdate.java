@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
@@ -21,6 +22,9 @@ public class ToggleProductionUpdate implements Update{
     @Override
     public void update(ClientModel clientModel) {
         clientModel.getCurrentBoard().setActiveProductions(activeProd);
+        if(clientModel.getCurrentBoard().getActiveProductions().size()>0){
+            clientModel.setTurnPhase(TurnPhase.PICKUPPHASE);
+        }else clientModel.setTurnPhase(TurnPhase.STARTTURN);
     }
 
     @Override

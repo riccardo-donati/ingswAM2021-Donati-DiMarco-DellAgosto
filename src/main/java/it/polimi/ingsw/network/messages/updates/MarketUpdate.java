@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;

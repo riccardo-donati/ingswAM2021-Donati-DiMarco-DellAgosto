@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.LeaderCard;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
@@ -22,6 +23,7 @@ public class LeadersInHandUpdate implements Update {
             if(ld!=null) list.add(ld);
         }
         clientModel.getBoards().get(clientModel.getCurrentNickname()).setLeadersInHand(list);
+        clientModel.setTurnPhase(TurnPhase.ENDSETUPTURN);
     }
 
     @Override

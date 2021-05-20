@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.TokenPush;
 import it.polimi.ingsw.model.TokenPushShuffle;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.interfaces.Token;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
@@ -45,6 +46,7 @@ public class LorenzoUpdate implements Update{
         clientModel.setGamePhase(gamePhase);
         clientModel.getCurrentBoard().resetProduction();
 
+        if(gamePhase==GamePhase.ONGOING) clientModel.setTurnPhase(TurnPhase.STARTTURN);
     }
 
     @Override
