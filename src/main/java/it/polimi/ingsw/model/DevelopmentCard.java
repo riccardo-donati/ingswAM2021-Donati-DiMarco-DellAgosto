@@ -1,15 +1,22 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.Color;
 
 import java.util.List;
 
 public class DevelopmentCard {
+    @Expose
     private List<ResourceRequirement> cost;
+    @Expose
     private Integer level;
+    @Expose
     private Color color;
+    @Expose
     private Production production;
+    @Expose
     private Integer points;
+    @Expose
     private String name;
 
     public DevelopmentCard(List<ResourceRequirement> cost, Integer level, Color color, Production production, Integer points) {

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
@@ -13,10 +14,15 @@ import java.util.List;
 import java.util.Map;
 
 public class Production {
+    @Expose
     private Map<ResourceType,Integer> input;
+    @Expose
     private Map<ResourceType,Integer> output;
+    @Expose
     private List<ResourceType> inputHistory;
+    @Expose
     private List<ResourceType> outputHistory;
+    @Expose
     private boolean selected;
 
     /**

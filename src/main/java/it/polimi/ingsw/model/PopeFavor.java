@@ -1,10 +1,15 @@
 package it.polimi.ingsw.model;
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 
 public class PopeFavor {
+    @Expose
     private PopeFavorState state;
+    @Expose
     private Integer points;
+    @Expose
     private Integer initialPos;
+    @Expose
     private Integer finalPos;
 
     protected PopeFavor(PopeFavorState state, Integer points, Integer initialPos, Integer finalPos) {

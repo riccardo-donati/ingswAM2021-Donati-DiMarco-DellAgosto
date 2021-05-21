@@ -98,10 +98,12 @@ public class ClientMarket {
         marbles.add(ResourceType.EMPTY);
         marbles.add(ResourceType.EMPTY);
     }
-
+/*
     public static void main(String[] args) {
         ClientMarket cm = new ClientMarket();
         cm.initializeMarbles();
         System.out.println(cm.toString());
     }
+
+ */
 }

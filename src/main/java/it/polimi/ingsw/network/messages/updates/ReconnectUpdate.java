@@ -30,8 +30,9 @@ public class ReconnectUpdate implements Update{
     private final List<String> myLeadersInHand;
     private final GamePhase gamePhase;
     private final List<String> fourLeaderCards;
+    private final List<ResourceType> pendingResources;
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -46,6 +47,7 @@ public class ReconnectUpdate implements Update{
         this.myLeadersInHand = myLeadersInHand;
         this.gamePhase=gamePhase;
         this.fourLeaderCards=fourLeaderCards;
+        this.pendingResources=pendingResources;
     }
 
     @Override
@@ -114,6 +116,10 @@ public class ReconnectUpdate implements Update{
         for (int i = 0; i < fourLeaderCards.size(); i++) {
             clientModel.putIdNameLeadersMap(i + 1, fourLeaderCards.get(i));
         }
+    }
+
+    public List<ResourceType> getPendingResources() {
+        return pendingResources;
     }
 
     public List<String> getFourLeaderCards() {

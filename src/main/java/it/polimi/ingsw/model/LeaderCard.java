@@ -1,14 +1,18 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.interfaces.Requirement;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LeaderCard {
-
+    @Expose
     private List<Requirement> requirements = new ArrayList<>();
+    @Expose
     private List<SpecialAbility> specialAbilities = new ArrayList<>();
+    @Expose
     private Integer points;
+    @Expose
     private String name;
 
     public String getName() {

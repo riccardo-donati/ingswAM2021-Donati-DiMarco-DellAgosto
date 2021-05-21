@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Requirement;
@@ -7,20 +8,29 @@ import it.polimi.ingsw.model.interfaces.Requirement;
 import java.util.*;
 
 public class Player {
-
+    @Expose
     private String nickname;
+    @Expose
     private Integer order;
+    @Expose
     private Board board;
 
+    @Expose
     private List<LeaderCard> leadersInHand = new ArrayList<>();
+    @Expose
     private List<LeaderCard> leadersInGame = new ArrayList<>();
 
+    @Expose
     private List<ResourceDiscount> discounts = new ArrayList<>();
+    @Expose
     private Map<ResourceType, Integer> whiteTo = new HashMap<>();
+    @Expose
     private List<Production> extraProductions = new ArrayList<>();
 
+    @Expose
     private Map<Integer,Map<ResourceType, Integer>> pickedResource = new HashMap<>();
 
+    @Expose
     private boolean inactive;
 
     protected void setOrder(int order){
@@ -284,6 +294,34 @@ public class Player {
         extraProductions.add(production);
     }
 
+    protected void deSelectAllProductions(){
+        for (Production production : extraProductions) {
+            if (production.checkSelected()) {
+                try {
+                    production.toggleSelected();
+                } catch (UnknownFoundException ignored) {
+                }
+            }
+        }
+        for (Stack<DevelopmentCard> stack : board.getSlots().values()) {
+            for (DevelopmentCard developmentCard : stack) {
+                Production production = developmentCard.getProd();
+                if (production.checkSelected()) {
+                    try {
+                        production.toggleSelected();
+                    } catch (UnknownFoundException ignored) {
+                    }
+                }
+            }
+        }
+        Production production = board.getBaseProduction();
+        if (production.checkSelected()) {
+            try {
+                production.toggleSelected();
+            } catch (UnknownFoundException ignored) {
+            }
+        }
+    }
     /**
      * checks every available production, creating a collective map of all inputs and outputs of selected productions,
      * then if the resources in the map input are available, passes the map output to the strongbox to be added,

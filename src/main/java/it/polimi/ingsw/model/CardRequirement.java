@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
@@ -7,8 +8,9 @@ import java.util.Map;
 import java.util.Stack;
 
 public class CardRequirement implements Requirement {
-
+    @Expose
     private final Color color;
+    @Expose
     private final Integer quantity;
 
     /**

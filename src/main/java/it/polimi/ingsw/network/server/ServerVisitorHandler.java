@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.messages.commands.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class ServerVisitorHandler implements ServerVisitor {
     private String nickname;
@@ -49,10 +50,13 @@ public class ServerVisitorHandler implements ServerVisitor {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     clientHandler.send(new PlayerNumberRequest());
                     clientHandler.startTimer(50000);
-                    String jsonString = clientHandler.getIn().nextLine();
-                    ServerMessage message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
-                    message.accept(clientHandler.getServerVisitorHandler(),clientHandler);
-                    System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
+                    try {
+                        String jsonString = clientHandler.getIn().nextLine();
+                        ServerMessage message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
+                        message.accept(clientHandler.getServerVisitorHandler(),clientHandler);
+                        System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
+
+                    }catch (NoSuchElementException ignored){ }
                 } else {
                    clientHandler.getPinger().start();
                 }

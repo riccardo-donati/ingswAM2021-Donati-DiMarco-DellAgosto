@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.interfaces.Marble;
@@ -7,6 +8,7 @@ import it.polimi.ingsw.model.interfaces.Marble;
 import java.util.Objects;
 
 public class ResourceMarble implements Marble {
+    @Expose
     private ResourceType type;
 
     protected ResourceMarble(ResourceType t){

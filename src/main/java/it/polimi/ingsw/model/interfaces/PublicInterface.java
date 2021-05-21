@@ -43,10 +43,13 @@ public interface PublicInterface {
      Map<String,Warehouse> getAllWarehouses();
      Map<String,Map<ResourceType,Integer>> getAllStrongboxes();
      TurnPhase getTurnPhase();
-
+     void saveGameStateOnJson(String name);
      Map<String,Map<Integer, Stack<String>>> getAllSlots();
      Map<String,List<String>> getAllLeadersInBoard();
      List<String> getLeadersInHand(String nickname);
+     List<String> getActivePlayers();
+     List<ResourceType> getPlayerPending(String nickname);
+     void setGameObservers();
 
           void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;
      void chooseResourceToDeposit(Integer id,ResourceType res) throws IllegalActionException, FullSpaceException, UnknownNotFoundException, IllegalResourceException;

@@ -195,6 +195,7 @@ public class ClientModel {
     public ClientBoard getMyBoard(){
         return boards.get(myNickname);
     }
+    /*
     public static void main(String[] args) {
         ClientModel cm=new ClientModel();
 
@@ -246,7 +247,7 @@ public class ClientModel {
         System.out.println(Utilities.stringify(cm.leaderCards.get(4)));
         System.out.println(Utilities.stringify(cm.leaderCards.get(8)));
 
- */
     }
+    */
 
 }

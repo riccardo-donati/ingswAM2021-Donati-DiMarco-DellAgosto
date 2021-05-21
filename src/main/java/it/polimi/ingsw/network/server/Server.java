@@ -72,7 +72,7 @@ public class Server {
         }
     }
 
-    public void saveServerStatus(){
+    public synchronized void saveServerStatus(){
         Gson gsonSave = Utilities.initializeGsonLoadAndSave();
 
         String serverToJson = gsonSave.toJson(this, Server.class);
@@ -85,42 +85,20 @@ public class Server {
             e.printStackTrace();
             System.out.println("The server state could not be saved");
         }
+
     }
 
-    public static Server loadServerStatus(){
-        Gson gsonLoad=Utilities.initializeGsonLoadAndSave();
-        FileReader fr = null;
-        try {
-            fr = new FileReader("src/json/serverStatus.json");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader b;
-        b=new BufferedReader(fr);
-        String json="";
-        try {
-            json=b.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Server s=gsonLoad.fromJson(json,Server.class);
-
-        for(Controller l : s.lobbies){
-            l.getPlayersInLobby().clear();
-            l.setGson(Utilities.initializeGsonMessage());
-        }
-        for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
-            if(entry.getValue()> Controller.getGlobalID()) Controller.setGlobalID(entry.getValue());
-            VirtualClient vc=s.searchVirtualClient(entry.getKey());
-            Controller l= s.searchLobby(entry.getValue());
-            l.addPlayerInLobby(vc);
-        }
-        s.clientHandlerNickMap=new HashMap<>();
-        s.waitingList=new ArrayList<>();
-        s.gson=Utilities.initializeGsonMessage();
-        return s;
+    public synchronized void setClientHandlerNickMap(Map<Integer, String> clientHandlerNickMap) {
+        this.clientHandlerNickMap = clientHandlerNickMap;
     }
 
+    public synchronized void setWaitingList(List<VirtualClient> waitingList) {
+        this.waitingList = waitingList;
+    }
+
+    public synchronized void setGson(Gson gson){
+        this.gson=gson;
+    }
     public synchronized void handleDisconnection(Integer chId){
         String nick=clientHandlerNickMap.get(chId);
         if (nick != null){
@@ -135,13 +113,14 @@ public class Server {
             }else if(lobby.getGamePhase()==GamePhase.ONGOING ||lobby.getGamePhase()==GamePhase.SETUP){
                 lobby.setActive(nick,false);
                 if(lobby.getLorenzoPosition()==null) {
-                    if (lobby.getGamePhase() == GamePhase.SETUP)
+                    if (lobby.getActivePlayers().size()>0)
                         lobby.clearPlayer(nick);
                 }
                 if(lobby.getCurrentNickname().equals(nick)){
                     try {
                         if(lobby.getLorenzoPosition()==null) {
-                            lobby.passTurn(nick);
+                            if(lobby.getActivePlayers().size()>0)
+                                lobby.passTurn(nick);
                         }
                     } catch (IllegalActionException | NotYourTurnException ignored) { }
                 }
@@ -229,6 +208,7 @@ public class Server {
             clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
             lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected after server disconnection!"));
+            lobby.reconnectPlayer(vc.getNickname());
             throw new ReconnectionException();
         }
         if (vLook != null && vLook.getClientHandler().isConnected()) {
@@ -302,23 +282,28 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Integer port;
-        try {
-            port = Utilities.loadServerPortNumber();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("serverSettings.json file not found");
-            System.err.println("Closing . . .");
-            return;
+        if(!true) {
+            Server s = Utilities.loadServerStatus();
+            s.startServer();
+        }else {
+            Integer port;
+            try {
+                port = Utilities.loadServerPortNumber();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                System.err.println("serverSettings.json file not found");
+                System.err.println("Closing . . .");
+                return;
+            }
+
+            if (port < 1000 || port > 10000) {
+                System.err.println("The port number value has to be between 1000 and 9999");
+                System.err.println("Closing . . .");
+                return;
+            } //else System.err.println("port number value loaded successfully\n");
+
+            new Server(port).startServer();
         }
-
-        if (port < 1000 || port > 10000) {
-            System.err.println("The port number value has to be between 1000 and 9999");
-            System.err.println("Closing . . .");
-            return;
-        } //else System.err.println("port number value loaded successfully\n");
-
-        new Server(port).startServer();
     }
 
     public List<Controller> getLobbies() {

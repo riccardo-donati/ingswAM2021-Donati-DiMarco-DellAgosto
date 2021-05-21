@@ -6,18 +6,16 @@ import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.model.interfaces.Requirement;
-import it.polimi.ingsw.model.interfaces.Token;
+import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.server.Controller;
 import it.polimi.ingsw.network.server.Server;
+import it.polimi.ingsw.network.server.VirtualClient;
 
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -60,8 +58,16 @@ public class Utilities {
 
     public static Gson initializeGsonLoadAndSave(){
         GsonBuilder builder = new GsonBuilder();
+        builder.registerTypeAdapter(PublicInterface.class, new InterfaceAdapter<PublicInterface>());
+        builder.registerTypeAdapter(Requirement.class, new InterfaceAdapter<Requirement>());
+        builder.registerTypeAdapter(SpecialAbility.class, new InterfaceAdapter<SpecialAbility>());
+        builder.registerTypeAdapter(Token.class, new InterfaceAdapter<Token>());
+        builder.registerTypeAdapter(Marble.class, new InterfaceAdapter<Marble>());
+        builder.registerTypeAdapter(BoardObserver.class, new InterfaceAdapter<BoardObserver>());
+        builder.registerTypeAdapter(Game.class, new InterfaceAdapter<Game>());
         builder.enableComplexMapKeySerialization();
         return builder.excludeFieldsWithoutExposeAnnotation().create();
+        //return builder.create();
     }
 
     public static String stringify(Result result){
@@ -296,5 +302,45 @@ public class Utilities {
                 " ╩ ╩╩ ╩╚═╝ ╩ ╚═╝╩╚═╚═╝ ╚═╝╩   ╩╚═╚═╝╝╚╝╩ ╩╩╚═╝╚═╝╩ ╩╝╚╝╚═╝╚═╝ \n" +
                 "--------------------------------------------------------------\n";
         return sb;
+    }
+    public static Server loadServerStatus(){
+        Gson gsonLoad=Utilities.initializeGsonLoadAndSave();
+        FileReader fr = null;
+        try {
+            fr = new FileReader("src/main/resources/json/serverStatus.json");
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        BufferedReader b;
+        b=new BufferedReader(fr);
+        String json="";
+        try {
+            json=b.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Server s=gsonLoad.fromJson(json,Server.class);
+
+        for(Controller l : s.getLobbies()){
+            l.getPlayersInLobby().clear();
+            l.setGson(Utilities.initializeGsonMessage());
+        }
+        for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
+            if(entry.getValue()> Controller.getGlobalID()) Controller.setGlobalID(entry.getValue());
+            VirtualClient vc=s.searchVirtualClient(entry.getKey());
+            Controller l= s.searchLobby(entry.getValue());
+            l.addPlayerInLobby(vc);
+        }
+        s.setClientHandlerNickMap(new HashMap<>());
+        s.setWaitingList(new ArrayList<>());
+        s.setGson(Utilities.initializeGsonMessage());
+
+        //add the observers
+        for(Controller c : s.getLobbies()){
+            c.setServer(s);
+            c.setGameObservers();
+        }
+
+        return s;
     }
 }

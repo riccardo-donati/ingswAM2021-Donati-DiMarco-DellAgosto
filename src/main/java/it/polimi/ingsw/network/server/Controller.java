@@ -18,6 +18,8 @@ import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements GameObserver {
@@ -32,12 +34,24 @@ public class Controller implements GameObserver {
     private Gson gson;
     @Expose
     GamePhase gameState;
+    @Expose
     private PublicInterface game;
+    @Expose
     private List<List<LeaderCard>> lists;
 
     private Server server;
 
     //-----------------
+
+    public synchronized void setServer(Server server) {
+        this.server = server;
+    }
+
+    public synchronized void saveGame(){
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        game.saveGameStateOnJson(idLobby+":"+ sdf3.format(timestamp));
+    }
     public synchronized int getnPlayers() {
         return nPlayers;
     }
@@ -68,6 +82,9 @@ public class Controller implements GameObserver {
         return nPlayers == players.size();
     }
 
+    public synchronized void setGameObservers(){
+        game.setGameObservers();
+    }
     public Controller(int nPlayers, VirtualClient firstPlayer,Server server){
         this.idLobby = globalID;
         globalID++;
@@ -78,7 +95,9 @@ public class Controller implements GameObserver {
 
         this.server=server;
     }
-
+    public synchronized List<String> getActivePlayers(){
+        return game.getActivePlayers();
+    }
     public synchronized void setGson(Gson gson) {
         this.gson = gson;
     }
@@ -194,6 +213,9 @@ public class Controller implements GameObserver {
         if(vc!=null)
             players.add(vc);
     }
+    public synchronized List<ResourceType> getPlayerPending(String nickname){
+        return game.getPlayerPending(nickname);
+    }
     public synchronized Map<String,Map<Integer, Stack<String>>> getAllSlots(){
         return game.getAllSlots();
     }
@@ -206,7 +228,7 @@ public class Controller implements GameObserver {
     public synchronized void reconnectPlayer(String nickname){
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname));
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname));
             vc.send(reconnectUpdate);
         }
     }
@@ -307,6 +329,10 @@ public class Controller implements GameObserver {
                 if(lc==null)throw new IllegalCommandException();
             }
             game.chooseLeader(list);
+
+            //debuggg
+            //server.saveServerStatus();
+
             //update
             getVirtualClient(nickname).send(new LeadersInHandUpdate(getCurrentLeadersInHand()));
             int nBonus=getNickOrderMap().get(nickname);
