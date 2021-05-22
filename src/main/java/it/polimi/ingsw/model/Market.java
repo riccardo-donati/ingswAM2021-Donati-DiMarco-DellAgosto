@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Marble;
 
@@ -15,11 +16,13 @@ public class Market {
     /**
      * Initializing the marble matrix and the pendingMarble in a defined order
      */
+    @Expose
     private Marble[][] marbles={
             {new WhiteMarble(),new WhiteMarble(),new WhiteMarble(),new WhiteMarble()},
             {new ResourceMarble(ResourceType.GREY),new ResourceMarble(ResourceType.GREY),new ResourceMarble(ResourceType.BLUE),new ResourceMarble(ResourceType.BLUE)},
             {new ResourceMarble(ResourceType.VIOLET),new ResourceMarble(ResourceType.VIOLET),new ResourceMarble(ResourceType.YELLOW),new ResourceMarble(ResourceType.YELLOW)},
     };
+    @Expose
     private Marble pendingMarble=new RedMarble();
 
     /**

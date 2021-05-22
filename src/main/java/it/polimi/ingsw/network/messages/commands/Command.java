@@ -6,6 +6,6 @@ import it.polimi.ingsw.network.messages.ServerMessage;
 import it.polimi.ingsw.network.server.Controller;
 
 public interface Command extends ServerMessage {
-    void doAction(Controller c, String nickname) throws ResourcesNotAvailableException, TooManyResourcesException, IllegalActionException, NotYourTurnException, UnknownFoundException, IllegalResourceException, IllegalSlotException, IllegalCommandException, UnknownNotFoundException, FullSpaceException, NonEmptyException, IllegalLeaderCardsException, CardNotAvailableException, DepositableResourceException, RequirementNotMetException, DiscountNotFoundException, NoWhiteResourceException, DepositNotExistingException;
+    void doAction(Controller c, String nickname) throws ResourcesNotAvailableException, TooManyResourcesException, IllegalActionException, NotYourTurnException, UnknownFoundException, IllegalResourceException, IllegalSlotException, IllegalCommandException, UnknownNotFoundException, FullSpaceException, NonEmptyException, IllegalLeaderCardsException, CardNotAvailableException, DepositableResourceException, RequirementNotMetException, DiscountNotFoundException, NoWhiteResourceException, DepositNotExistingException, WaitingReconnectionsException;
     boolean check();
 }

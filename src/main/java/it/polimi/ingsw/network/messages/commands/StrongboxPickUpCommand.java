@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.messages.commands;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.ResourcesNotAvailableException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -17,7 +18,7 @@ public class StrongboxPickUpCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, ResourcesNotAvailableException, NotYourTurnException, IllegalActionException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, ResourcesNotAvailableException, NotYourTurnException, IllegalActionException, WaitingReconnectionsException {
         if(check()) c.pickUpResourceFromStrongbox(resourceType,nickname);
         else throw new IllegalCommandException();
     }

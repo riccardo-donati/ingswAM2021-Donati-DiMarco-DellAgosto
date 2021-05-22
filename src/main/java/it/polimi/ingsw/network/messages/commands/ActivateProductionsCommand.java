@@ -9,7 +9,7 @@ import it.polimi.ingsw.network.server.ServerVisitor;
 public class ActivateProductionsCommand implements Command {
 
     @Override
-    public void doAction(Controller c, String nickname) throws ResourcesNotAvailableException, TooManyResourcesException, IllegalActionException, NotYourTurnException, UnknownFoundException, IllegalResourceException {
+    public void doAction(Controller c, String nickname) throws ResourcesNotAvailableException, TooManyResourcesException, IllegalActionException, NotYourTurnException, UnknownFoundException, IllegalResourceException, WaitingReconnectionsException {
         c.activateProductions(nickname);
     }
 

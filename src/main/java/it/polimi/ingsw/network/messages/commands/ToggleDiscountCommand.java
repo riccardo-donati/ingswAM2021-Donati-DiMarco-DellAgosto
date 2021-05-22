@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.messages.commands;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.DiscountNotFoundException;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -17,7 +18,7 @@ public class ToggleDiscountCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, DiscountNotFoundException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, DiscountNotFoundException, WaitingReconnectionsException {
         if(check()) c.toggleDiscount(resourceType,nickname);
         else throw new IllegalCommandException();
     }

@@ -15,7 +15,7 @@ public class PlayLeaderCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalResourceException, RequirementNotMetException, IllegalActionException, CardNotAvailableException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalResourceException, RequirementNotMetException, IllegalActionException, CardNotAvailableException, WaitingReconnectionsException {
         if(check()) c.playLeader(index,nickname);
         else throw new IllegalCommandException();
     }

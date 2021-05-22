@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.messages.commands;
 
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.UnknownFoundException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -16,7 +17,7 @@ public class ToggleExtraProductionCommand implements Command {
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, UnknownFoundException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, UnknownFoundException, WaitingReconnectionsException {
         if(check())c.toggleExtraProd(index-1,nickname);
         else throw new IllegalCommandException();
     }

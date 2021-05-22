@@ -26,6 +26,7 @@ public interface PublicInterface {
      GamePhase getGamePhase();
      Result endGame();
      boolean getCurrentActive();
+     void disconnectAllPlayers();
      void clearPlayer(String nickname);
      void addPlayer(String nickname) throws FullGameException;
      void setActive(String player,boolean active);

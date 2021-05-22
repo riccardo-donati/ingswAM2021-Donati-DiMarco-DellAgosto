@@ -54,6 +54,10 @@ public class Multiplayer extends Game{
                 setGamePhase(GamePhase.SETUP);
                 setTurnPhase(TurnPhase.STARTSETUPTURN);
             }
+            else if((getGamePhase()==GamePhase.ONGOING && !isEndGameTrigger())||(getGamePhase()==GamePhase.ONGOING && getCurrPlayer().getOrder()!=getPlayers().size() && isEndGameTrigger())){
+                setGamePhase(GamePhase.ONGOING);
+                setTurnPhase(TurnPhase.STARTTURN);
+            }
             else if(getCurrPlayer().getOrder()==getPlayers().size() && isEndGameTrigger()){
                 setGamePhase(GamePhase.ENDGAME);
                 Result result=endGame();

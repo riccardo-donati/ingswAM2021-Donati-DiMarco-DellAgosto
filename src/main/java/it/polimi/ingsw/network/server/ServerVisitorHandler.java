@@ -90,7 +90,7 @@ public class ServerVisitorHandler implements ServerVisitor {
     public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
         try {
             command.doAction(clientHandler.getLobby(),nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | NonEmptyException | IllegalLeaderCardsException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | NonEmptyException | IllegalLeaderCardsException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -100,7 +100,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | FullSpaceException | UnknownNotFoundException | IllegalResourceException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | FullSpaceException | UnknownNotFoundException | IllegalResourceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -110,7 +110,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | IllegalActionException | NotYourTurnException e) {
+        } catch (IllegalCommandException | IllegalActionException | NotYourTurnException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -120,7 +120,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | UnknownFoundException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | UnknownFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -130,7 +130,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | UnknownFoundException | IllegalActionException | NotYourTurnException | IllegalSlotException e) {
+        } catch (IllegalCommandException | UnknownFoundException | IllegalActionException | NotYourTurnException | IllegalSlotException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -140,7 +140,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | IllegalActionException | NotYourTurnException | UnknownFoundException e) {
+        } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | IllegalActionException | NotYourTurnException | UnknownFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -150,7 +150,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | ResourcesNotAvailableException | NotYourTurnException | IllegalActionException e) {
+        } catch (IllegalCommandException | ResourcesNotAvailableException | NotYourTurnException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -160,7 +160,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -170,7 +170,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (NotYourTurnException | IllegalCommandException | IllegalResourceException | IllegalActionException | FullSpaceException e) {
+        } catch (NotYourTurnException | IllegalCommandException | IllegalResourceException | IllegalActionException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -180,7 +180,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | IllegalResourceException | NotYourTurnException | IllegalActionException | NonEmptyException | FullSpaceException e) {
+        } catch (IllegalCommandException | IllegalResourceException | NotYourTurnException | IllegalActionException | NonEmptyException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -190,7 +190,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (NotYourTurnException | IllegalResourceException | DepositableResourceException | IllegalActionException | IllegalCommandException e) {
+        } catch (NotYourTurnException | IllegalResourceException | DepositableResourceException | IllegalActionException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -200,7 +200,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (NotYourTurnException | IllegalResourceException | IllegalActionException | FullSpaceException e) {
+        } catch (NotYourTurnException | IllegalResourceException | IllegalActionException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -210,7 +210,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | TooManyResourcesException | IllegalSlotException | IllegalCommandException e) {
+        } catch (NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | TooManyResourcesException | IllegalSlotException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -220,7 +220,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (NoWhiteResourceException | NotYourTurnException | IllegalResourceException | IllegalActionException | IllegalCommandException e) {
+        } catch (NoWhiteResourceException | NotYourTurnException | IllegalResourceException | IllegalActionException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -230,7 +230,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalActionException | NotYourTurnException | IllegalCommandException e) {
+        } catch (IllegalActionException | NotYourTurnException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -240,7 +240,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | UnknownNotFoundException | IllegalActionException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | UnknownNotFoundException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -250,7 +250,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | UnknownNotFoundException | IllegalResourceException | IllegalActionException | NotYourTurnException e) {
+        } catch (IllegalCommandException | UnknownNotFoundException | IllegalResourceException | IllegalActionException | NotYourTurnException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -260,7 +260,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | RequirementNotMetException | IllegalActionException | CardNotAvailableException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | RequirementNotMetException | IllegalActionException | CardNotAvailableException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -270,7 +270,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException e) {
+        } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }
@@ -280,7 +280,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (IllegalCommandException  | NotYourTurnException | IllegalActionException | DiscountNotFoundException e) {
+        } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | DiscountNotFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }

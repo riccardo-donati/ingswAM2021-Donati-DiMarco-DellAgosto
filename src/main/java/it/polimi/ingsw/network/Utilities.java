@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
@@ -324,6 +325,7 @@ public class Utilities {
         for(Controller l : s.getLobbies()){
             l.getPlayersInLobby().clear();
             l.setGson(Utilities.initializeGsonMessage());
+            l.setDisconnected(true);
         }
         for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
             if(entry.getValue()> Controller.getGlobalID()) Controller.setGlobalID(entry.getValue());
@@ -339,6 +341,7 @@ public class Utilities {
         for(Controller c : s.getLobbies()){
             c.setServer(s);
             c.setGameObservers();
+            c.disconnectAllPlayers();
         }
 
         return s;

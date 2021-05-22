@@ -16,7 +16,7 @@ public class DiscardResourceCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalResourceException, DepositableResourceException, IllegalActionException, IllegalCommandException {
+    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalResourceException, DepositableResourceException, IllegalActionException, IllegalCommandException, WaitingReconnectionsException {
         if(check()) c.discardResource(resourceType,nickname);
         else throw new IllegalCommandException();
     }

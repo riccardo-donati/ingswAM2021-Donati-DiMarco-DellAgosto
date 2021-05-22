@@ -19,7 +19,7 @@ public class BuyCardCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, IllegalCommandException {
+    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, IllegalCommandException, WaitingReconnectionsException {
         if(check())c.buyCard(row,column,slot,nickname);
         else throw new IllegalCommandException();
     }

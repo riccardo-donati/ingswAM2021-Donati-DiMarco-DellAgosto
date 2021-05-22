@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
@@ -58,7 +59,6 @@ public class Server {
                 new Thread(new ClientHandler(socket, this)).start();
             } catch (IOException e) { // goes here if the server socket gets closed
                 System.out.println("Closing . . .");
-                saveServerStatus();
                 break;
             }
         }
@@ -122,7 +122,7 @@ public class Server {
                             if(lobby.getActivePlayers().size()>0)
                                 lobby.passTurn(nick);
                         }
-                    } catch (IllegalActionException | NotYourTurnException ignored) { }
+                    } catch (IllegalActionException | NotYourTurnException | WaitingReconnectionsException ignored) { }
                 }
             }
         }
@@ -207,11 +207,16 @@ public class Server {
             vLook.setClientHandler(vc.getClientHandler());
             clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
-            lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected after server disconnection!"));
+            vc.getClientHandler().setLobby(lobby);
+            lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             lobby.reconnectPlayer(vc.getNickname());
+            if(lobby.getActivePlayers().size()==lobby.getnPlayers()){
+                lobby.notifyLobby(new GenericMessage("All the players reconnected! The game is resuming from the last start turn . . ."));
+                lobby.setDisconnected(false);
+            }
             throw new ReconnectionException();
         }
-        if (vLook != null && vLook.getClientHandler().isConnected()) {
+        else if (vLook != null && vLook.getClientHandler().isConnected()) {
             //nickname is not unique
             vc.getClientHandler().send(new GenericMessage("Nickname already taken"));
             vc.getClientHandler().send(new RegisterRequest());
@@ -221,9 +226,16 @@ public class Server {
             reconnect(vc, vLook);
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
             vc.getClientHandler().setLobby(lobby);
-            lobby.setActive(vLook.getNickname(),true);
             lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             lobby.reconnectPlayer(vc.getNickname());
+            if(!vc.getNickname().equals(lobby.getCurrentNickname()) && !lobby.getActivePlayers().contains(lobby.getCurrentNickname())){
+                //if you reconnect after the disconnection of all players and its a turn of a disconnected player clear the player and passturn
+                lobby.clearPlayer(lobby.getCurrentNickname());
+                try {
+                    lobby.passTurn(lobby.getCurrentNickname());
+                } catch (IllegalActionException | NotYourTurnException | WaitingReconnectionsException ignored) {
+                }
+            }
             throw new ReconnectionException();
         } else {
             //nickname is unique
@@ -282,8 +294,9 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        if(!true) {
+        if(args.length>0 && args[0].equals("crash")) {
             Server s = Utilities.loadServerStatus();
+            System.out.println("Reboot after server crash . . .");
             s.startServer();
         }else {
             Integer port;

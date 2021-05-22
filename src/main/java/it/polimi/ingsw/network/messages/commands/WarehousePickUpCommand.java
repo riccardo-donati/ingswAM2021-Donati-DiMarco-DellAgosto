@@ -15,7 +15,7 @@ public class WarehousePickUpCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException, WaitingReconnectionsException {
        if(check())c.pickUpResourceFromWarehouse(index,nickname);
        else throw new IllegalCommandException();
     }

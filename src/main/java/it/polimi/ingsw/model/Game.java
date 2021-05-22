@@ -531,6 +531,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return result;
     }
+    public void disconnectAllPlayers(){
+        for(Player p : players){
+            p.setActive(false);
+        }
+    }
     public List<String> getActivePlayers(){
         List<String> actives=new ArrayList<>();
         for(Player p : players){

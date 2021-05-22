@@ -35,6 +35,8 @@ public class Controller implements GameObserver {
     @Expose
     GamePhase gameState;
     @Expose
+    boolean disconnected;
+    @Expose
     private PublicInterface game;
     @Expose
     private List<List<LeaderCard>> lists;
@@ -47,11 +49,6 @@ public class Controller implements GameObserver {
         this.server = server;
     }
 
-    public synchronized void saveGame(){
-        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        game.saveGameStateOnJson(idLobby+":"+ sdf3.format(timestamp));
-    }
     public synchronized int getnPlayers() {
         return nPlayers;
     }
@@ -85,13 +82,19 @@ public class Controller implements GameObserver {
     public synchronized void setGameObservers(){
         game.setGameObservers();
     }
-    public Controller(int nPlayers, VirtualClient firstPlayer,Server server){
+
+    public void setDisconnected(boolean disconnected) {
+        this.disconnected = disconnected;
+    }
+
+    public Controller(int nPlayers, VirtualClient firstPlayer, Server server){
         this.idLobby = globalID;
         globalID++;
         this.nPlayers=nPlayers;
         this.players.add(firstPlayer);
         gson= Utilities.initializeGsonMessage();
         gameState=GamePhase.NOTSTARTED;
+        disconnected=false;
 
         this.server=server;
     }
@@ -228,6 +231,7 @@ public class Controller implements GameObserver {
     public synchronized void reconnectPlayer(String nickname){
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
+            setActive(nickname,true);
             ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname));
             vc.send(reconnectUpdate);
         }
@@ -312,188 +316,17 @@ public class Controller implements GameObserver {
             e.printStackTrace();
         }
     }
+    public synchronized void disconnectAllPlayers(){
+        game.disconnectAllPlayers();
+    }
     public synchronized void clearPlayer(String nickname){
         game.clearPlayer(nickname);
-    }
-    public synchronized List<ResourceType> getCurrentPlayerPending(){
-        return game.getCurrentPlayerPending();
-    }
-    //COMMANDS
-    public synchronized void chooseLeader(List<String> l,String nickname) throws IllegalLeaderCardsException, IllegalActionException, NonEmptyException, NotYourTurnException, IllegalCommandException {
-        if(getCurrentNickname().equals(nickname)) {
-            Map<String, LeaderCard> map = getNameLeaderCardMap();
-            List<LeaderCard> list = new ArrayList<>();
-            list.add(map.get(l.get(0)));
-            list.add(map.get(l.get(1)));
-            for(LeaderCard lc : list){
-                if(lc==null)throw new IllegalCommandException();
-            }
-            game.chooseLeader(list);
-
-            //debuggg
-            //server.saveServerStatus();
-
-            //update
-            getVirtualClient(nickname).send(new LeadersInHandUpdate(getCurrentLeadersInHand()));
-            int nBonus=getNickOrderMap().get(nickname);
-            getVirtualClient(nickname).send(new BonusResourceMessage(nBonus));
-
-        }
-        else throw new NotYourTurnException();
     }
     public synchronized List<String> getCurrentLeadersInHand(){
         return game.getCurrentLeadersInHand();
     }
-    public synchronized void chooseResourceToDeposit(Integer id,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalActionException, IllegalResourceException, FullSpaceException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.chooseResourceToDeposit(id, res);
-            //update
-            notifyLobby(new DepositUpdate(id,Utilities.resourceTypeToResource(res)));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void playLeader(int index,String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, RequirementNotMetException, CardNotAvailableException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.playLeader(index);
-            //update
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null) vc.send(new PlayLeaderUpdate(index));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException {
-        if (getCurrentNickname().equals(nickname)) {
-            game.discardLeader(index);
-            notifyLobby(new DiscardLeaderUpdate(index));
-            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
-        } else throw new NotYourTurnException();
-    }
-    public synchronized void buyAtMarketInterface(char rc,int index,String nickname) throws NotYourTurnException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.buyAtMarketInterface(rc, index);
-            //update
-            List<ResourceType> list=getCurrentPlayerPending();
-            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
-            notifyLobby(new MarketUpdate(getMarblesInList()));
-            if(list.size()>0)
-                getVirtualClient(nickname).send(new PendingResourcesUpdate(list));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void depositResource(Integer id,ResourceType res,String nickname) throws NotYourTurnException, IllegalResourceException, FullSpaceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.depositResource(id, res);
-            //update
-            notifyLobby(new DepositUpdate(id, Utilities.resourceTypeToResource(res)));
-            List<ResourceType> list=getCurrentPlayerPending();
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null) vc.send(new PendingResourcesUpdate(list));
-
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void discardResource(ResourceType res,String nickname) throws NotYourTurnException, IllegalResourceException, DepositableResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.discardResource(res);
-            notifyLobby(new DiscardResourceUpdate());
-            List<ResourceType> list=getCurrentPlayerPending();
-            if(list.size()>0) {
-                VirtualClient vc = getVirtualClient(nickname);
-                if(vc!=null) vc.send(new PendingResourcesUpdate(list));
-            }
-        }else throw new NotYourTurnException();
-    }
-    public synchronized void transformWhiteIn(ResourceType res,String nickname) throws IllegalResourceException, IllegalActionException, NoWhiteResourceException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.transformWhiteIn(res);
-            List<ResourceType> list=getCurrentPlayerPending();
-            if(list.size()>0) {
-                VirtualClient vc = getVirtualClient(nickname);
-                if(vc!=null) vc.send(new PendingResourcesUpdate(list));
-            }
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void substituteUnknownInInputBaseProduction(ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.substituteUnknownInInputBaseProduction(res);
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'i'));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void substituteUnknownInOutputBaseProduction(ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.substituteUnknownInOutputBaseProduction(res);
-            //update
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null) vc.send(new UnknownProductionUpdate(-1,res,'o'));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void substituteUnknownInInputExtraProduction(Integer index,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.substituteUnknownInInputExtraProduction(index, res);
-            //update
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null) vc.send(new UnknownProductionUpdate(index,res,'i'));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.substituteUnknownInOutputExtraProduction(index, res);
-            VirtualClient vc = getVirtualClient(nickname);
-            vc.send(new UnknownProductionUpdate(index,res,'o'));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void toggleBaseProd(String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.toggleBaseProd();
-            VirtualClient vc = getVirtualClient(nickname);
-            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void toggleExtraProd(Integer index,String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.toggleExtraProd(index);
-            VirtualClient vc = getVirtualClient(nickname);
-            vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void toggleCardProd(Integer slot,String nickname) throws IllegalActionException, IllegalSlotException, UnknownFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.toggleCardProd(slot);
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null)vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void pickUpResourceFromWarehouse(Integer id,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.pickUpResourceFromWarehouse(id);
-            notifyLobby(new PickUpWarehouseUpdate(id));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void pickUpResourceFromStrongbox(ResourceType res,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.pickUpResourceFromStrongbox(res);
-            notifyLobby(new PickUpStrongboxUpdate(Utilities.resourceTypeToResource(res)));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void revertPickUp(String nickname) throws IllegalResourceException, FullSpaceException, IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.revertPickUp();
-            VirtualClient vc = getVirtualClient(nickname);
-            if(vc!=null)vc.send(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
-
-        }
-        else throw new NotYourTurnException();
+    public synchronized List<ResourceType> getCurrentPlayerPending(){
+        return game.getCurrentPlayerPending();
     }
     public synchronized Map<String,List<ClientDeposit>> getAllWarehouses(){
         Map<String,List<ClientDeposit>> allClientDeposits=new HashMap<>();
@@ -526,55 +359,257 @@ public class Controller implements GameObserver {
         return game.getCurrentActiveProductions();
     }
 
-    public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.activateProductions();
-            notifyLobby(new FaithUpdate(getCurrentFaithPath()));
-            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.buyCard(row, col, slot);
-            //update
-            notifyLobby(new SlotUpdate(slot,row,col));
-            notifyLobby(new DepositsUpdate(getCurrentWarehouse(),getCurrentStrongbox(),getTurnPhase()));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void moveResource(Integer dep1,Integer dep2,String nickname) throws IllegalActionException, NonEmptyException, FullSpaceException, IllegalResourceException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.moveResource(dep1, dep2);
-            //update
-            ResourceType[] d1=new ResourceType[0];
-            ResourceType[] d2=new ResourceType[0];
-            try{
-                d1=getDepositResources(dep1);
-                d2=getDepositResources(dep2);
-            }catch (IndexOutOfBoundsException | NullPointerException ignored){}
-            notifyLobby(new MoveResourceUpdate(d1,d2,dep1,dep2));
-        }
-        else throw new NotYourTurnException();
-    }
-    public synchronized void toggleDiscount(ResourceType res,String nickname) throws IllegalActionException, DiscountNotFoundException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.toggleDiscount(res);
+    //COMMANDS
+    public synchronized void chooseLeader(List<String> l,String nickname) throws IllegalLeaderCardsException, IllegalActionException, NonEmptyException, NotYourTurnException, IllegalCommandException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                Map<String, LeaderCard> map = getNameLeaderCardMap();
+                List<LeaderCard> list = new ArrayList<>();
+                list.add(map.get(l.get(0)));
+                list.add(map.get(l.get(1)));
+                for (LeaderCard lc : list) {
+                    if (lc == null) throw new IllegalCommandException();
+                }
+                game.chooseLeader(list);
 
-        }
-        else throw new NotYourTurnException();
+                //update
+                getVirtualClient(nickname).send(new LeadersInHandUpdate(getCurrentLeadersInHand()));
+                int nBonus = getNickOrderMap().get(nickname);
+                getVirtualClient(nickname).send(new BonusResourceMessage(nBonus));
+
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
     }
-    public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException {
-        if(getCurrentNickname().equals(nickname)) {
-            game.passTurn();
-            if(!game.getCurrentActive()) game.passTurn();
-            gameState=game.getGamePhase();
-            //update
-            if(getnPlayers()==1){
-                notifyLobby(new LorenzoUpdate(getLorenzoPosition(),getLastUsedToken(),getGamePhase()));
-            }else notifyLobby(new NewTurnUpdate(getCurrentNickname(),getGamePhase()));
-        }
-        else throw new NotYourTurnException();
+
+    public synchronized void chooseResourceToDeposit(Integer id,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalActionException, IllegalResourceException, FullSpaceException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.chooseResourceToDeposit(id, res);
+                //update
+                notifyLobby(new DepositUpdate(id, Utilities.resourceTypeToResource(res)));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void playLeader(int index,String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, RequirementNotMetException, CardNotAvailableException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.playLeader(index);
+                //update
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new PlayLeaderUpdate(index));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void discardLeader(int index,String nickname) throws IllegalActionException, CardNotAvailableException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.discardLeader(index);
+                notifyLobby(new DiscardLeaderUpdate(index));
+                notifyLobby(new FaithUpdate(getCurrentFaithPath()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void buyAtMarketInterface(char rc,int index,String nickname) throws NotYourTurnException, IllegalActionException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.buyAtMarketInterface(rc, index);
+                //update
+                List<ResourceType> list = getCurrentPlayerPending();
+                notifyLobby(new FaithUpdate(getCurrentFaithPath()));
+                notifyLobby(new MarketUpdate(getMarblesInList()));
+                if (list.size() > 0)
+                    getVirtualClient(nickname).send(new PendingResourcesUpdate(list));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void depositResource(Integer id,ResourceType res,String nickname) throws NotYourTurnException, IllegalResourceException, FullSpaceException, IllegalActionException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.depositResource(id, res);
+                //update
+                notifyLobby(new DepositUpdate(id, Utilities.resourceTypeToResource(res)));
+                List<ResourceType> list = getCurrentPlayerPending();
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new PendingResourcesUpdate(list));
+
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void discardResource(ResourceType res,String nickname) throws NotYourTurnException, IllegalResourceException, DepositableResourceException, IllegalActionException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.discardResource(res);
+                notifyLobby(new DiscardResourceUpdate());
+                List<ResourceType> list = getCurrentPlayerPending();
+                if (list.size() > 0) {
+                    VirtualClient vc = getVirtualClient(nickname);
+                    if (vc != null) vc.send(new PendingResourcesUpdate(list));
+                }
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void transformWhiteIn(ResourceType res,String nickname) throws IllegalResourceException, IllegalActionException, NoWhiteResourceException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.transformWhiteIn(res);
+                List<ResourceType> list = getCurrentPlayerPending();
+                if (list.size() > 0) {
+                    VirtualClient vc = getVirtualClient(nickname);
+                    if (vc != null) vc.send(new PendingResourcesUpdate(list));
+                }
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void substituteUnknownInInputBaseProduction(ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.substituteUnknownInInputBaseProduction(res);
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new UnknownProductionUpdate(-1, res, 'i'));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void substituteUnknownInOutputBaseProduction(ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.substituteUnknownInOutputBaseProduction(res);
+                //update
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new UnknownProductionUpdate(-1, res, 'o'));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void substituteUnknownInInputExtraProduction(Integer index,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalResourceException, IllegalActionException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.substituteUnknownInInputExtraProduction(index, res);
+                //update
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new UnknownProductionUpdate(index, res, 'i'));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void substituteUnknownInOutputExtraProduction(Integer index,ResourceType res,String nickname) throws UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.substituteUnknownInOutputExtraProduction(index, res);
+                VirtualClient vc = getVirtualClient(nickname);
+                vc.send(new UnknownProductionUpdate(index, res, 'o'));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void toggleBaseProd(String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.toggleBaseProd();
+                VirtualClient vc = getVirtualClient(nickname);
+                vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void toggleExtraProd(Integer index,String nickname) throws UnknownFoundException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.toggleExtraProd(index);
+                VirtualClient vc = getVirtualClient(nickname);
+                vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void toggleCardProd(Integer slot,String nickname) throws IllegalActionException, IllegalSlotException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.toggleCardProd(slot);
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) vc.send(new ToggleProductionUpdate(getCurrentActiveProductions()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void pickUpResourceFromWarehouse(Integer id,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NonEmptyException, DepositNotExistingException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.pickUpResourceFromWarehouse(id);
+                notifyLobby(new PickUpWarehouseUpdate(id));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void pickUpResourceFromStrongbox(ResourceType res,String nickname) throws IllegalActionException, ResourcesNotAvailableException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.pickUpResourceFromStrongbox(res);
+                notifyLobby(new PickUpStrongboxUpdate(Utilities.resourceTypeToResource(res)));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void revertPickUp(String nickname) throws IllegalResourceException, FullSpaceException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.revertPickUp();
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null)
+                    vc.send(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
+
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+
+    public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.activateProductions();
+                notifyLobby(new FaithUpdate(getCurrentFaithPath()));
+                notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.buyCard(row, col, slot);
+                //update
+                notifyLobby(new SlotUpdate(slot, row, col));
+                notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void moveResource(Integer dep1,Integer dep2,String nickname) throws IllegalActionException, NonEmptyException, FullSpaceException, IllegalResourceException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.moveResource(dep1, dep2);
+                //update
+                ResourceType[] d1 = new ResourceType[0];
+                ResourceType[] d2 = new ResourceType[0];
+                try {
+                    d1 = getDepositResources(dep1);
+                    d2 = getDepositResources(dep2);
+                } catch (IndexOutOfBoundsException | NullPointerException ignored) {
+                }
+                notifyLobby(new MoveResourceUpdate(d1, d2, dep1, dep2));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void toggleDiscount(ResourceType res,String nickname) throws IllegalActionException, DiscountNotFoundException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.toggleDiscount(res);
+
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
+    }
+    public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
+        if(!disconnected) {
+            if (getCurrentNickname().equals(nickname)) {
+                game.passTurn();
+                if (!game.getCurrentActive()) game.passTurn();
+                gameState = game.getGamePhase();
+                //locally saving server
+                server.saveServerStatus();
+                //update
+                if (getnPlayers() == 1) {
+                    notifyLobby(new LorenzoUpdate(getLorenzoPosition(), getLastUsedToken(), getGamePhase()));
+                } else notifyLobby(new NewTurnUpdate(getCurrentNickname(), getGamePhase()));
+            } else throw new NotYourTurnException();
+        }else throw new WaitingReconnectionsException();
     }
     //---------------------------------------------------------
     @Override

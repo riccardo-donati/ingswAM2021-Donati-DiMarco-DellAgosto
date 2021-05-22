@@ -26,7 +26,7 @@ public class DepositResourceCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, FullSpaceException, IllegalCommandException {
+    public void doAction(Controller c, String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, FullSpaceException, IllegalCommandException, WaitingReconnectionsException {
         if(check()) c.depositResource(id,resourceType,nickname);
         else throw new IllegalCommandException();
     }
