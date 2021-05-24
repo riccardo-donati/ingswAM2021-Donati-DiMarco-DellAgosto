@@ -21,8 +21,8 @@ public class ChooseLeadersCommand implements Command {
     }
 
 
-    public ChooseLeadersCommand(List<String> cl){
-        this.chosenLeaders=cl;
+    public ChooseLeadersCommand(List<String> chosenLeaders){
+        this.chosenLeaders = chosenLeaders;
     }
 
     @Override
@@ -32,7 +32,8 @@ public class ChooseLeadersCommand implements Command {
 
 
     public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, NonEmptyException, IllegalLeaderCardsException {
-        if(check())c.chooseLeader(chosenLeaders,nickname);
+        if(check())
+            c.chooseLeader(chosenLeaders,nickname);
         else throw new IllegalCommandException();
     }
 
@@ -44,6 +45,4 @@ public class ChooseLeadersCommand implements Command {
         }
         return true;
     }
-
-
 }

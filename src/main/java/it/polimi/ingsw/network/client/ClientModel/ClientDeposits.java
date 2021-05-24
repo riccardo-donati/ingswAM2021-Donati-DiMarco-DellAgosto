@@ -9,9 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ClientDeposits {
-    List<Shelf> shelves = new ArrayList<>();
-    Map<Resource, Integer> strongbox = new HashMap<>();
-    Map<Resource, Integer> handResources = new HashMap<>();
+    private final List<Shelf> shelves = new ArrayList<>();
+    private Map<Resource, Integer> strongbox = new HashMap<>();
+    private final Map<Resource, Integer> handResources = new HashMap<>();
 
     /**
      * constructor - sets up empty strongbox and warehouse shelves
@@ -51,6 +51,10 @@ public class ClientDeposits {
             sb.append(entry.getValue()+entry.getKey().label).append(" ");
         sb.append("]");
         return sb.toString();
+    }
+
+    public List<Shelf> getShelves() {
+        return shelves;
     }
 
     public Shelf getShelf(int id){

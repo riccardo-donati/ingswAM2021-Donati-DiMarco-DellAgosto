@@ -2,12 +2,16 @@ package it.polimi.ingsw.network.client;
 
 import com.google.gson.Gson;
 
+import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.Result;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.updates.*;
 
 import java.io.*;
 import java.net.Socket;
@@ -42,8 +46,6 @@ public class CLI implements Client{
     public PrintWriter getOut() {
         return out;
     }
-
-
 
     public Scanner getIn() {
         return in;
@@ -127,10 +129,173 @@ public class CLI implements Client{
         new CLI(serverIP, serverPortNumber).run();
     }
 
+    // Client interface implementation
+
+    @Override
+    public void visualizeDisconnectionMessage(DisconnectionMessage message) {
+        System.out.println(message.getMessage());
+    }
+
+    @Override
+    public void visualizeGeneralMessage(ClientMessage message) {
+        System.out.println(message.getMessage());
+    }
+
+    @Override
+    public void visualizeLobbyInfoMessage(LobbyInfoMessage message) {
+        System.out.println(message.getMessage());
+    }
+
     @Override
     public void visualizeSlotUpdate() {
         if(getClientModel().getCurrentNickname().equals(getClientModel().getNickname())){
             System.out.println(getClientModel().getCurrentBoard().stringifySlots());
         }
+    }
+
+    @Override
+    public void visualizeStartGameUpdate() {
+        System.out.println(clientModel);
+        System.out.println(Color.ANSI_GREEN.escape() + "SETUP PHASE BEGIN"+Color.RESET);
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("------------------------------------------------------------------------------------\n");
+        sb.append("Player Order:\n");
+        List<String> playerOrder = clientModel.getPlayersInOrder();
+        for (String player : playerOrder){
+            sb.append(Color.ANSI_GREEN.escape()).append(player).append(Color.RESET);
+            sb.append(" -> ");
+        }
+        sb.append(Color.ANSI_GREEN.escape()).append(playerOrder.get(playerOrder.size() - 1)).append(Color.RESET+"\n");
+
+        List<String> leaderCards = clientModel.getSetupPhaseLeaderCards();
+        sb.append("Choose 2 leader cards: \n");
+        for (int i = 0; i < leaderCards.size(); i++) {
+            sb.append(Color.ANSI_RED.escape()).append(i + 1).append(Color.RESET).append(": ").append(clientModel.stringifyLeaderCardFromName(leaderCards.get(i))).append("\n");
+        }
+        sb.append("------------------------------------------------------------------------------------");
+        System.out.println(sb.toString());
+    }
+
+    @Override
+    public void visualizeNewTurnUpdate(GamePhase previousGamePhase) {
+        if (clientModel.getGamePhase() == GamePhase.ONGOING  && clientModel.getNickname().equals(clientModel.getCurrentNickname()))
+            System.out.println(clientModel);
+        System.out.println("New turn -> " + clientModel.getCurrentNickname());
+        if (previousGamePhase == GamePhase.SETUP && clientModel.getGamePhase() == GamePhase.ONGOING) {
+            System.out.println(Color.ANSI_GREEN.escape()+"NORMAL GAME PHASE BEGIN"+ Color.RESET);
+        }
+    }
+
+    @Override
+    public void visualizeBonusResourceMessage(BonusResourceMessage message) {
+        System.out.println(message.getMessage());
+    }
+
+    @Override
+    public void visualizePendingResourceUpdate(PendingResourcesUpdate message) {
+        System.out.println(message.getMessage());
+    }
+
+    @Override
+    public void visualizeDepositUpdate(DepositUpdate message) {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
+            clientModel.visualizeDeposits(clientModel.getNickname());
+        else System.out.println(clientModel.getCurrentNickname() + " " + message.getMessage());
+    }
+
+    @Override
+    public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
+        System.out.println(clientModel);
+        if (previousGamePhase == GamePhase.SETUP && clientModel.getGamePhase() == GamePhase.ONGOING)
+            System.out.println(Color.ANSI_GREEN.escape() + "NORMAL GAME PHASE BEGIN" + Color.RESET);
+        System.out.println(Utilities.stringify(message.getLastUsedToken()));
+    }
+
+    @Override
+    public void visualizePopeFavorUpdate() {
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname()))
+            System.out.println(clientModel.getCurrentBoard().getFaithPath());
+    }
+
+    @Override
+    public void visualizeMoveResourceUpdate() {
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname()))
+            System.out.println(clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits());
+    }
+
+    @Override
+    public void visualizeErrorMessage(ErrorMessage message) {
+        System.out.println(Color.ANSI_RED.escape() + message.getMessage() + Color.RESET);
+    }
+
+    @Override
+    public void visualizeLeadersInHandUpdate() {
+        System.out.println(clientModel.getBoards().get(clientModel.getCurrentNickname()).stringifyLeaders());
+    }
+
+    @Override
+    public void visualizeDepositsUpdate() {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            System.out.println(clientModel.getCurrentBoard().getDeposits());
+        }
+    }
+
+    @Override
+    public void visualizeToggleProductionUpdate() {
+        System.out.print("Active productions: ");
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            for(Production production : clientModel.getCurrentBoard().getActiveProductions()){
+                System.out.print("[" + Utilities.stringify(production) + "]");
+            }
+        }
+        System.out.print("\n");
+    }
+
+    @Override
+    public void visualizeUnknownProductionUpdate() {
+        System.out.println(clientModel.getCurrentBoard().stringifyProductions());
+    }
+
+    @Override
+    public void visualizePickUpWarehouseUpdate() {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            System.out.println(clientModel.getCurrentBoard().getDeposits());
+            System.out.println(clientModel.getCurrentBoard().getDeposits().stringifyHandResources());
+        }
+    }
+
+    @Override
+    public void visualizePickUpStrongboxUpdate() {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            System.out.println(clientModel.getCurrentBoard().getDeposits());
+            System.out.println(clientModel.getCurrentBoard().getDeposits().stringifyHandResources());
+        }
+    }
+
+    @Override
+    public void visualizePlayLeaderUpdate() {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            System.out.println(clientModel.getCurrentBoard().stringifyLeaders());
+        }
+    }
+
+    @Override
+    public void visualizeToggleDiscountUpdate() {
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            System.out.println(clientModel.getCurrentBoard().stringifyActiveDiscounts());
+        }
+    }
+
+    @Override
+    public void visualizeEndGameMessage() {
+        if(clientModel.getCurrentBoard().getFaithPath().getLorenzoPosition() == null)
+            System.out.println(Color.ANSI_GREEN.escape() + "END GAME TRIGGERED, THE GAME WILL END AT THE START OF THE FIRST PLAYER TURN" + Color.RESET);
+        else System.out.println(Color.ANSI_GREEN.escape() + "THE GAME IS ENDING . . ." + Color.RESET);
+    }
+
+    @Override
+    public void visualizeEndGameResultUpdate(Result gameResult) {
+        System.out.println(Utilities.stringify(gameResult));
     }
 }

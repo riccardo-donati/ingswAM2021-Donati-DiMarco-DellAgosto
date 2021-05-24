@@ -26,7 +26,7 @@ public class NewTurnUpdate implements Update {
 
     @Override
     public String getMessage() {
-        return "New turn -> " + currNickname;
+        return null;
     }
 
     @Override
@@ -37,6 +37,5 @@ public class NewTurnUpdate implements Update {
 
         if(gamePhase == GamePhase.ONGOING) clientModel.setTurnPhase(TurnPhase.STARTTURN);
         else if(gamePhase == GamePhase.SETUP) clientModel.setTurnPhase(TurnPhase.STARTSETUPTURN);
-
     }
 }

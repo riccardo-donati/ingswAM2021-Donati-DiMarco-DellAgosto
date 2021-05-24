@@ -6,7 +6,7 @@ import it.polimi.ingsw.network.client.ClientVisitor;
 public class EndGameMessage implements ClientMessage {
     @Override
     public String getMessage() {
-        return "END GAME TRIGGERED ";
+        return null;
     }
 
     @Override

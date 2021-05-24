@@ -10,71 +10,28 @@ import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import java.util.*;
 
 public class ClientBoard {
-    private ClientFaithPath faithPath;
-    private ClientDeposits deposits;
-    private Map<Integer, Stack<DevelopmentCard>> slots=new HashMap<>();
+    private final ClientFaithPath faithPath;
+    private final ClientDeposits deposits;
+    private final Map<Integer, Stack<DevelopmentCard>> slots = new HashMap<>();
     private Integer totalSlotPoints;
     private Integer totalCardsBought;
-    private List<LeaderCard> leadersInHand=new ArrayList<>();
-    private List<LeaderCard> leadersInBoard=new ArrayList<>();
+    private List<LeaderCard> leadersInHand = new ArrayList<>();
+    private final List<LeaderCard> leadersInBoard = new ArrayList<>();
 
-    private List<Production> activeProductions=new ArrayList<>();
-    private Production baseProduction;
-    private List<Production> extraProductions=new ArrayList<>();
-    private List<ResourceDiscount> discounts=new ArrayList<>();
-
-
-    public Integer getTotalCardsBought() {
-        return totalCardsBought;
-    }
-    public void resetProduction(){
-        baseProduction.resetProduction();
-        for(Production p : extraProductions){
-            p.resetProduction();
-        }
-    }
-
-    public void addExtraProd(ResourceType res){
-        Production p=new Production();
-        try {
-            p.addOutput(ResourceType.UNKNOWN,1);
-            p.addInput(res,1);
-            p.addOutput(ResourceType.RED,1);
-        } catch (IllegalResourceException e) {
-            e.printStackTrace();
-        }
-        extraProductions.add(p);
-    }
-    public void toggleDiscount(ResourceType res){
-        for(ResourceDiscount rd :discounts){
-            if(rd.getRes()==res) rd.toggle();
-        }
-    }
-
-    public void addDiscount(ResourceType res){
-        ResourceDiscount rd=new ResourceDiscount(res);
-        discounts.add(rd);
-    }
-    public List<ResourceDiscount> getActiveDiscounts(){
-        List<ResourceDiscount> list=new ArrayList<>();
-        for(ResourceDiscount rd : discounts) {
-            if (rd.isActivated()) list.add(rd);
-        }
-        return list;
-    }
-    public List<Production> getExtraProductions() {
-        return extraProductions;
-    }
+    private List<Production> activeProductions = new ArrayList<>();
+    private final Production baseProduction;
+    private List<Production> extraProductions = new ArrayList<>();
+    private List<ResourceDiscount> discounts = new ArrayList<>();
 
     public ClientBoard(){
-        deposits=new ClientDeposits();
-        faithPath=new ClientFaithPath();
-        slots.put(1,new Stack<>());
-        slots.put(2,new Stack<>());
-        slots.put(3,new Stack<>());
-        totalSlotPoints=0;
-        totalCardsBought=0;
-        baseProduction=new Production();
+        deposits = new ClientDeposits();
+        faithPath = new ClientFaithPath();
+        slots.put(1, new Stack<>());
+        slots.put(2, new Stack<>());
+        slots.put(3, new Stack<>());
+        totalSlotPoints = 0;
+        totalCardsBought = 0;
+        baseProduction = new Production();
         try {
             baseProduction.addInput(ResourceType.UNKNOWN,2);
             baseProduction.addOutput(ResourceType.UNKNOWN,1);
@@ -84,16 +41,16 @@ public class ClientBoard {
 
     }
 
+    public ClientDeposits getDeposits() {
+        return deposits;
+    }
+
+    public ClientFaithPath getFaithPath() {
+        return faithPath;
+    }
+
     public Production getBaseProduction() {
         return baseProduction;
-    }
-
-    public void setActiveProductions(List<Production> activeProductions) {
-        this.activeProductions = activeProductions;
-    }
-
-    public void setLeadersInHand(List<LeaderCard> leadersInHand) {
-        this.leadersInHand = leadersInHand;
     }
 
     public List<Production> getActiveProductions() {
@@ -108,36 +65,97 @@ public class ClientBoard {
         return leadersInHand;
     }
 
-    public String toString(){
-        String stringBoard= faithPath.toString();
-        stringBoard+=deposits.toString();
-        stringBoard+=stringifySlots();
-        stringBoard+=stringifyLeaders();
-        stringBoard+=stringifyBaseProduction();
+    public List<Production> getExtraProductions() {
+        return extraProductions;
+    }
+
+    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
+        return slots;
+    }
+
+    public Integer getTotalCardsBought() {
+        return totalCardsBought;
+    }
+
+    public List<ResourceDiscount> getActiveDiscounts() {
+        List<ResourceDiscount> list = new ArrayList<>();
+        for (ResourceDiscount rd : discounts) {
+            if (rd.isActivated()) list.add(rd);
+        }
+        return list;
+    }
+
+    public void setActiveProductions(List<Production> activeProductions) {
+        this.activeProductions = activeProductions;
+    }
+
+    public void setLeadersInHand(List<LeaderCard> leadersInHand) {
+        this.leadersInHand = leadersInHand;
+    }
+
+    public void resetProduction(){
+        baseProduction.resetProduction();
+        for(Production production : extraProductions) {
+            production.resetProduction();
+        }
+    }
+
+    public void addExtraProd (ResourceType resourceType) {
+        Production production = new Production();
+        try {
+            production.addOutput(ResourceType.UNKNOWN,1);
+            production.addInput(resourceType,1);
+            production.addOutput(ResourceType.RED,1);
+        } catch (IllegalResourceException e) {
+            e.printStackTrace();
+        }
+        extraProductions.add(production);
+    }
+
+    public void toggleDiscount(ResourceType res) {
+        for(ResourceDiscount discount : discounts){
+            if(discount.getRes() == res) discount.toggle();
+        }
+    }
+
+    public void addDiscount(ResourceType resourceType) {
+        ResourceDiscount resourceDiscount = new ResourceDiscount(resourceType);
+        discounts.add(resourceDiscount);
+    }
+
+    public String toString() {
+        String stringBoard = faithPath.toString();
+        stringBoard += deposits.toString();
+        stringBoard += stringifySlots();
+        stringBoard += stringifyLeaders();
+        stringBoard += stringifyBaseProduction();
         return stringBoard;
     }
-    public void push(Integer slot,DevelopmentCard d){
-        if(slot!=null && d!=null && slots.get(slot)!=null){
-            slots.get(slot).push(d);
-            totalSlotPoints+=d.getPoints();
+
+    public void push(Integer slot, DevelopmentCard card) {
+        if (slot != null && card != null && slots.get(slot) != null) {
+            slots.get(slot).push(card);
+            totalSlotPoints += card.getPoints();
             totalCardsBought++;
         }
     }
-    public DevelopmentCard pop(Integer slot){
-        if(slot!=null && slots.get(slot)!=null && slots.get(slot).size()>0){
+
+    public DevelopmentCard pop(Integer slot) {
+        if (slot != null && slots.get(slot) != null && slots.get(slot).size() > 0)
             return slots.get(slot).pop();
-        }
         return null;
     }
-    public String stringifyActiveDiscounts(){
+
+    public String stringifyActiveDiscounts() {
         StringBuilder sb=new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape()+"Active discounts: "+Color.RESET);
+        sb.append(Color.ANSI_PURPLE.escape() + "Active discounts: " + Color.RESET);
         for(ResourceDiscount rd: discounts){
             if(rd.isActivated()) sb.append("-").append(rd.getQuantity()).append(Utilities.resourceTypeToResource(rd.getRes()).label).append(" ");
         }
         return sb.toString();
     }
-    public String stringifyProductions(){
+
+    public String stringifyProductions() {
         StringBuilder sb=new StringBuilder();
         sb.append(stringifyBaseProduction());
         sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -148,14 +166,16 @@ public class ClientBoard {
         sb.append("\n");
         return sb.toString();
     }
-    public String stringifyBaseProduction(){
+
+    public String stringifyBaseProduction() {
         StringBuilder sb=new StringBuilder();
         sb.append("\n═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
         sb.append(Color.ANSI_PURPLE.escape()).append("BASE PRODUCTION: ").append(Color.RESET).append(Utilities.stringify(baseProduction));
         sb.append("\n");
         return sb.toString();
     }
-    public String stringifyLeaders(){
+
+    public String stringifyLeaders() {
         StringBuilder sb=new StringBuilder();
         sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
         sb.append(Color.ANSI_PURPLE.escape()+"LEADERS IN HAND: "+Color.RESET);
@@ -173,17 +193,13 @@ public class ClientBoard {
         return sb.toString();
     }
 
-    public Map<Integer, Stack<DevelopmentCard>> getSlots() {
-        return slots;
-    }
-
-    public String recapSlots(){
-        StringBuilder sb=new StringBuilder();
+    public String recapSlots() {
+        StringBuilder sb = new StringBuilder();
         for(int i=1;i<4;i++){
             sb.append(Color.ANSI_GREEN.escape()+"LEVEL "+i+": "+Color.RESET);
             for(int j=1;j<4;j++){
                 for(DevelopmentCard d : slots.get(j)){
-                    if(d.getLevel()==i)
+                    if(d.getLevel() == i)
                         sb.append(Utilities.modelColorToClientColor(d.getColor()).escape()+"■"+Color.RESET);
                 }
             }
@@ -192,8 +208,9 @@ public class ClientBoard {
         sb.append("\n");
         return sb.toString();
     }
+
     public String stringifySlots(){
-        StringBuilder sb=new StringBuilder();
+        StringBuilder sb = new StringBuilder();
         for(int i=1;i<4;i++){
             sb.append(Color.ANSI_PURPLE.escape()+"SLOT "+i+": "+Color.RESET);
             if(slots.get(i)!=null && slots.get(i).size()>0){
@@ -205,12 +222,5 @@ public class ClientBoard {
                 Color.ANSI_PURPLE.escape()+"TOTAL CARDS BOUGHT: "+Color.RESET+totalCardsBought+"\n");
         sb.append(Color.ANSI_PURPLE.escape()+"RECAP: "+Color.RESET+recapSlots());
         return sb.toString();
-    }
-    public ClientDeposits getDeposits() {
-        return deposits;
-    }
-
-    public ClientFaithPath getFaithPath() {
-        return faithPath;
     }
 }

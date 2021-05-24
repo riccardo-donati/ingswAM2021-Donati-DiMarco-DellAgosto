@@ -111,9 +111,8 @@ public class ReconnectUpdate implements Update{
         //update gamePhase
         clientModel.setGamePhase(gamePhase);
         //update 4 leaders
-        for (int i = 0; i < fourLeaderCards.size(); i++) {
-            clientModel.putIdNameLeadersMap(i + 1, fourLeaderCards.get(i));
-        }
+        for (String leaderCard : fourLeaderCards)
+            clientModel.addSetupPhaseLeaderCard(leaderCard);
     }
 
     public List<String> getFourLeaderCards() {

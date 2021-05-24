@@ -21,7 +21,7 @@ import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
-public class Utilities {
+public abstract class Utilities {
 
     public static Integer loadServerPortNumber() throws FileNotFoundException, NullPointerException {
         JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
@@ -290,11 +290,10 @@ public class Utilities {
     }
 
     public static String MORTitle() {
-        String sb = "--------------------------------------------------------------\n" +
+        return "--------------------------------------------------------------\n" +
                 " ╔╦╗╔═╗╔═╗╔╦╗╔═╗╦═╗╔═╗ ╔═╗╔═╗ ╦═╗╔═╗╔╗╔╔═╗╦╔═╗╔═╗╔═╗╔╗╔╔═╗╔═╗\n" +
                 " ║║║╠═╣╚═╗ ║ ║╣ ╠╦╝╚═╗ ║ ║║╣  ╠╦╝║╣ ║║║╠═╣║╚═╗╚═╗╠═╣║║║║  ║╣ \n" +
                 " ╩ ╩╩ ╩╚═╝ ╩ ╚═╝╩╚═╚═╝ ╚═╝╩   ╩╚═╚═╝╝╚╝╩ ╩╩╚═╝╚═╝╩ ╩╝╚╝╚═╝╚═╝ \n" +
                 "--------------------------------------------------------------\n";
-        return sb;
     }
 }

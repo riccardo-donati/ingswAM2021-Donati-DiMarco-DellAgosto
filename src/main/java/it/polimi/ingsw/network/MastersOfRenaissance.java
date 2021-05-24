@@ -22,7 +22,7 @@ public class MastersOfRenaissance {
 
         do {
             try {
-                System.out.print(">");
+                System.out.print("> ");
                 userChoice = Integer.parseInt(in.readLine());
                 switch (userChoice) {
                     case 1 -> Server.main(null);
@@ -40,7 +40,7 @@ public class MastersOfRenaissance {
                 counter++;
                 if (counter < maxAttempts)
                     System.err.println("Please Insert a valid option");
-                else System.err.println("You have exceeded the maximum number of attempts, closing . . .");
+                else System.err.println("Exceeded maximum number of attempts, closing . . .");
             }
         } while (counter < maxAttempts);
     }
