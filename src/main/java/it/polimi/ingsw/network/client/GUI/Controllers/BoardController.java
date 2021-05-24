@@ -1,5 +1,8 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -12,18 +15,16 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.io.FileNotFoundException;
 import java.util.Map;
 
 public class BoardController extends ControllerGUI {
+    Map<Resource, Integer> strongbox = gui.getClientModel().getCurrentBoard().getDeposits().getStrongbox();
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
-    //Strongbox s = new Strongbox();
-    Integer coins = 0;
-    Integer servants = 0;
-    Integer shields = 0;
-    Integer stones = 0;
+    Image draggedRes;
+    ResourceType movedRes;
+    ImageView target;
 
     public BoardController(){
     }
@@ -54,9 +55,10 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView pendingShield;
     @FXML private ImageView pendingStone;
 
-    //hides and shows the strongbox
+    /**
+     * hides and shows the strongbox Panel
+     */
     public void openStrongbox() {
-        //updateDeposits();
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.7), hiddenPanel);
         if(!clickedBox){
             tt.setFromX(0);
@@ -71,81 +73,9 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
-//    needs to be fused with client strongbox
-//
-//    private void updateDeposits() {
-//        for(Map.Entry<String, Integer> entry : s.getStrongbox().entrySet()){
-//            if( entry.getKey().equals("Coin")) strongboxCoins.setText(entry.getValue().toString());
-//            else if( entry.getKey().equals("Shield")) strongboxShields.setText(entry.getValue().toString());
-//            else if( entry.getKey().equals("Stone")) strongboxStones.setText(entry.getValue().toString());
-//            else strongboxServants.setText(entry.getValue().toString());
-//        }
-//    }
-//
-//    next function needs to be updated to a better version, using client-server updates
-//
-       public void clickedRes(MouseEvent mouseEvent) {
-//        String res;
-//        if(mouseEvent.getSource().toString().equals("ImageView[id=pickStone, styleClass=image-view]")) {
-//            res = "Stone";
-//            stones++;
-//            pickedStones.setText(stones.toString());
-//        }
-//        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickServant, styleClass=image-view]")) {
-//            res = "Servant";
-//            servants++;
-//            pickedServants.setText(servants.toString());
-//        }
-//        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickShield, styleClass=image-view]")) {
-//            res = "Shield";
-//            shields++;
-//            pickedShields.setText(shields.toString());
-//        }
-//        else {
-//            res = "Coin";
-//            coins++;
-//            pickedCoins.setText(coins.toString());
-//        }
-//        s.getStrongbox().replace(res, s.getStrongbox().get(res)-1); //decrement strongbox value, works only in the strongbox is made with strings, values
-//        updateDeposits();
-        }
-
-    //obviously this is only a graphic solution that sets picked res to 0
-    public void produce(ActionEvent event) {
-        pickedCoins.setText("");
-        coins=0;
-        pickedServants.setText("");
-        servants=0;
-        pickedShields.setText("");
-        shields=0;
-        pickedStones.setText("");
-        stones=0;
-    }
-
-    //next 4 functions are only graphics solution, basically don't communicate with the clientModel
-    public void playLeader1(ActionEvent event) {
-        if(leaderCard1.getOpacity() == 0) return;
-        leader1.setFill(Color.GREEN);
-        leader1.setStroke(Color.GREEN);
-    }
-
-    public void discardLeader1(ActionEvent event) {
-        if(leader1.getFill().equals(Color.GREEN)) return;
-        leaderCard1.setOpacity(0);
-    }
-
-    public void playerLeader2(ActionEvent event) {
-        if(leaderCard2.getOpacity() == 0) return;
-        leader2.setFill(Color.GREEN);
-        leader2.setStroke(Color.GREEN);
-    }
-
-    public void discardLeader2(ActionEvent event) {
-        if(leader2.getFill().equals(Color.GREEN)) return;
-        leaderCard2.setOpacity(0);
-    }
-
-    //hides and shows the card market
+    /**
+     * hides and shows the Card Market Panel
+     */
     public void showCardMarket() {
         TranslateTransition tt2 = new TranslateTransition(Duration.seconds(0.5), hiddenCardMatrix);
         if(!clickedMatrix){
@@ -162,7 +92,9 @@ public class BoardController extends ControllerGUI {
         tt2.play();
     }
 
-    //hides and shows the res market
+    /**
+     * hides and shows the Resource Market Panel
+     */
     public void showResourceMarket() {
         TranslateTransition tt3 = new TranslateTransition(Duration.seconds(0.5), hiddenResMarket);
         if(!clickedMarket){
@@ -179,43 +111,156 @@ public class BoardController extends ControllerGUI {
         tt3.play();
     }
 
+    /**
+     * useful to manage the open/closed panels
+     * @param mouseEvent on left mouse click calls the function that opens/closes the Resource Market
+     */
     public void manageResMarket(MouseEvent mouseEvent){
         showResourceMarket();
     }
 
+    /**
+     * useful to manage the open/closed panels
+     * @param mouseEvent on left mouse click calls the function that opens/closes the Card Market
+     */
     public void manageCardMarket(MouseEvent mouseEvent){
         showCardMarket();
     }
+    /**
+     * function that updates every resource in the strongbox with it's value
+     */
+    private void updateDeposits() {
+        strongboxCoins.setText(strongbox.get(Resource.COIN).toString());
+        strongboxServants.setText(strongbox.get(Resource.SERVANT).toString());
+        strongboxShields.setText(strongbox.get(Resource.SHIELD).toString());
+        strongboxStones.setText(strongbox.get(Resource.STONE).toString());
+    }
 
-    //is the method the allows the drop event
+    /**
+     * function that updates the value of the resource currently picked
+     */
+    private void updatePickedRes(){
+        pickedCoins.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
+        pickedServants.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
+        pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
+        pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
+    }
+
+    /**
+     *
+     */
+    private void updateLCard(){
+    }
+
+    /**
+     * function that will update the result of the drag & drop event in the warehouse
+     */
+    private void updateWarehouse(){
+        //target is a global variable so should be setted based on which slot of the warehouse i'm doing the deposit
+        // like resSlot1 resSlot21 resSlot22 resSlot31....
+        target.setImage(draggedRes);
+    }
+
+
+//---------------------------------out messages----------------------------------
+    /**
+     * the click event on a Resource image sends a message of a picked resource
+     * @param mouseEvent left mouse click on a specific resource
+     */
+    public void clickedRes(MouseEvent mouseEvent) {
+        if(mouseEvent.getSource().toString().equals("ImageView[id=pickStone, styleClass=image-view]")) {
+            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.GREY)));
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickServant, styleClass=image-view]")) {
+            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.VIOLET)));
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickShield, styleClass=image-view]")) {
+            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.BLUE)));
+        }
+        else {
+            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.YELLOW)));
+        }
+    }
+
+    /**
+     * the button's action event sends a message to start all the toggled productions
+     * @param event left mouse click on the button
+     */
+    public void produce(ActionEvent event) {
+        gui.getOut().println(gui.getGson().toJson(new ActivateProductionsCommand()));
+    }
+
+    /**
+     * the play button sends a message to play the relative sent card
+     * @param event on click calls the play leader button
+     */
+    public void playLeader(ActionEvent event) {
+        Integer lCard;
+        if(event.getSource().toString().equals("playL1")) lCard = 0;
+        else lCard = 1;
+        gui.getOut().println(gui.getGson().toJson(new PlayLeaderCommand(lCard)));
+    }
+
+    /**
+     * the discard button sends a message to discard the relative sent card
+     * @param event on click calls the discard leader button
+     */
+    public void discardLeader(ActionEvent event) {
+        Integer lCard;
+        if(event.getSource().toString().equals("discardL1")) lCard = 0;
+        else lCard = 1;
+        gui.getOut().println(gui.getGson().toJson(new DiscardLeaderCommand(lCard)));
+    }
+
+    /**
+     * this method allows the warehouse to accept an image dropped in
+     * @param dragEvent detect the drop event
+     */
     public void acceptRes(DragEvent dragEvent) {
         if(dragEvent.getDragboard().hasImage()){
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
     }
 
-    //identifies the resource dropped and changes the imageView to the one dragged, it needs to communicate with the client Model for logic
-    //needs also to know if something could be dropped
+    /**
+     * based on the drag event target, which is an empty Imageview that will be updated in future, i'll assign a value to a
+     * integer slot. This slot identifies the warehouse position of the dropped pending resource.
+     * @param dragEvent this event identifies the end of a drag & drop event
+     */
     public void placeSlot(DragEvent dragEvent){
-        ImageView target;
-        Image img = dragEvent.getDragboard().getImage();
-        if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) target = resSlot1;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")) target = resSlot21;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]")) target = resSlot22;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")) target = resSlot31;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")) target = resSlot32;
-        else target = resSlot33;
-        target.setImage(img);
+        draggedRes = dragEvent.getDragboard().getImage();
+        Integer slot;
+        if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
+                || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]" )) slot = 2;
+        else slot = 3;
+        gui.getOut().println(gui.getGson().toJson(new DepositResourceCommand(movedRes, slot)));
     }
 
-    //identifies what kind of resource is being dragged, its ok this way? i don't think that needs to communicate with models
+    /**
+     * the function, based on where the drag event starts saves on the clipboard the relative image (to be later placed in the warehouse)
+     * and assigns to a global variable, useful to the deposit message, the kind of resource i'm try to deposit
+     * @param mouseEvent detects the drag event
+     */
     public void movePendingRes(MouseEvent mouseEvent){
         ClipboardContent cb = new ClipboardContent();
         ImageView source;
-        if(mouseEvent.getSource().toString().equals("ImageView[id=pendingCoin, styleClass=image-view]")) source = pendingCoin;
-        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingServant, styleClass=image-view]")) source = pendingServant;
-        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingShield, styleClass=image-view]")) source = pendingShield;
-        else source = pendingStone;
+        if(mouseEvent.getSource().toString().equals("ImageView[id=pendingCoin, styleClass=image-view]")) {
+            movedRes = ResourceType.YELLOW;
+            source = pendingCoin;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingServant, styleClass=image-view]")) {
+            movedRes = ResourceType.VIOLET;
+            source = pendingServant;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingShield, styleClass=image-view]")) {
+            movedRes = ResourceType.BLUE;
+            source = pendingShield;
+        }
+        else {
+            movedRes = ResourceType.GREY;
+            source = pendingStone;
+        }
         Dragboard db = source.startDragAndDrop(TransferMode.COPY);
         cb.putImage(source.getImage());
         db.setContent(cb);

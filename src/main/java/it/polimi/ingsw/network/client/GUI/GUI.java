@@ -1,10 +1,16 @@
 package it.polimi.ingsw.network.client.GUI;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.model.Result;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitorHandler;
 import it.polimi.ingsw.network.client.GUI.Controllers.ControllerGUI;
+import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.updates.DepositUpdate;
+import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
+import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -90,7 +96,7 @@ public class GUI extends Application implements Client{
 
     @Override
     public ClientModel getClientModel() {
-        return null;
+        return clientModel;
     }
 
     @Override
@@ -109,7 +115,117 @@ public class GUI extends Application implements Client{
     }
 
     @Override
+    public void visualizeDisconnectionMessage(DisconnectionMessage message) {
+
+    }
+
+    @Override
+    public void visualizeGeneralMessage(ClientMessage message) {
+
+    }
+
+    @Override
+    public void visualizeLobbyInfoMessage(LobbyInfoMessage message) {
+
+    }
+
+    @Override
     public void visualizeSlotUpdate() {
+
+    }
+
+    @Override
+    public void visualizeStartGameUpdate() {
+
+    }
+
+    @Override
+    public void visualizeNewTurnUpdate(GamePhase previousGamePhase) {
+
+    }
+
+    @Override
+    public void visualizeBonusResourceMessage(BonusResourceMessage message) {
+
+    }
+
+    @Override
+    public void visualizePendingResourceUpdate(PendingResourcesUpdate message) {
+
+    }
+
+    @Override
+    public void visualizeDepositUpdate(DepositUpdate message) {
+
+    }
+
+    @Override
+    public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
+
+    }
+
+    @Override
+    public void visualizePopeFavorUpdate() {
+
+    }
+
+    @Override
+    public void visualizeMoveResourceUpdate() {
+
+    }
+
+    @Override
+    public void visualizeErrorMessage(ErrorMessage message) {
+
+    }
+
+    @Override
+    public void visualizeLeadersInHandUpdate() {
+
+    }
+
+    @Override
+    public void visualizeDepositsUpdate() {
+
+    }
+
+    @Override
+    public void visualizeToggleProductionUpdate() {
+
+    }
+
+    @Override
+    public void visualizeUnknownProductionUpdate() {
+
+    }
+
+    @Override
+    public void visualizePickUpWarehouseUpdate() {
+
+    }
+
+    @Override
+    public void visualizePickUpStrongboxUpdate() {
+
+    }
+
+    @Override
+    public void visualizePlayLeaderUpdate() {
+
+    }
+
+    @Override
+    public void visualizeToggleDiscountUpdate() {
+
+    }
+
+    @Override
+    public void visualizeEndGameMessage() {
+
+    }
+
+    @Override
+    public void visualizeEndGameResultUpdate(Result gameResult) {
 
     }
 }

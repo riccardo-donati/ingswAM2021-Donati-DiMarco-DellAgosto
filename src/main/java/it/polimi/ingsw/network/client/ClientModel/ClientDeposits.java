@@ -44,6 +44,10 @@ public class ClientDeposits {
         handResources.clear();
     }
 
+    public Map<Resource, Integer> getHandResources() {
+        return handResources;
+    }
+
     public String stringifyHandResources(){
         StringBuilder sb = new StringBuilder();
         sb.append(Color.ANSI_PURPLE.escape()+"RESOURCES IN HAND: "+Color.RESET+"[ ");

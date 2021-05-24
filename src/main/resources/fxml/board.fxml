@@ -139,7 +139,7 @@
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
-            <ImageView fx:id="strongbox" fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" onMouseClicked="#openStrongbox" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" onMouseClicked="#openStrongbox" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="pickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
                <font>
@@ -177,22 +177,22 @@
                   <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
-            <Button fx:id="playL1" layoutY="251.0" mnemonicParsing="false" onAction="#playLeader1" prefHeight="40.0" prefWidth="73.0" text="Play">
+            <Button fx:id="playL1" layoutY="251.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="40.0" prefWidth="73.0" text="Play">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="discardL1" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#discardLeader1" prefHeight="40.0" prefWidth="73.0" text="Discard">
+            <Button fx:id="discardL1" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="40.0" prefWidth="73.0" text="Discard">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="playL2" layoutX="2.0" layoutY="566.0" mnemonicParsing="false" onAction="#playerLeader2" prefHeight="40.0" prefWidth="73.0" text="Play">
+            <Button fx:id="playL2" layoutX="2.0" layoutY="566.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="40.0" prefWidth="73.0" text="Play">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="discardL2" layoutX="105.0" layoutY="563.0" mnemonicParsing="false" onAction="#discardLeader2" prefHeight="40.0" prefWidth="73.0" text="Discard">
+            <Button fx:id="discardL2" layoutX="105.0" layoutY="563.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="40.0" prefWidth="73.0" text="Discard">
                <font>
                   <Font size="14.0" />
                </font>
