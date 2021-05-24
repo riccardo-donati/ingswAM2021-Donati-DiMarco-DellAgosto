@@ -107,10 +107,10 @@ public class Parser {
                 int first = Integer.parseInt(tokenizer.nextToken());
                 int second = Integer.parseInt(tokenizer.nextToken());
                 if (first > 0 && second > 0 && !tokenizer.hasMoreTokens()) {
-                    Map<Integer, String> map = client.getClientModel().getIdNameLeadersMap();
+                    List<String> leaderCards = client.getClientModel().getSetupPhaseLeaderCards();
                     List<String> listNames = new ArrayList<>();
-                    listNames.add(map.get(first));
-                    listNames.add(map.get(second));
+                    listNames.add(leaderCards.get(first - 1));
+                    listNames.add(leaderCards.get(second - 1));
                     return new ChooseLeadersCommand(listNames);
                 }
             } catch (NumberFormatException | NoSuchElementException e) {
@@ -376,19 +376,18 @@ public class Parser {
         }
         System.out.println("------------------------------------------------------------------------------");
     }
-    private static void commands(TurnPhase tp){
-        StringBuilder sb=new StringBuilder();
+
+    private static void commands(TurnPhase tp) {
+        StringBuilder sb = new StringBuilder();
         sb.append("---------------------------------------------------\n");
-        sb.append("Possibile commands:\n").append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.ANSI_BLUE.escape());
-        switch (tp){
-            case STARTSETUPTURN:
-                sb.append("choose leaders [slot number] [slot number]\n");
-            break;
-            case ENDSETUPTURN:
+        sb.append("Possible commands:\n").append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.ANSI_BLUE.escape());
+        switch (tp) {
+            case STARTSETUPTURN -> sb.append("choose leaders [slot number] [slot number]\n");
+            case ENDSETUPTURN -> {
                 sb.append("deposit bonus [resource] in [shelf number]\n");
                 sb.append("pass\n");
-                break;
-            case STARTTURN:
+            }
+            case STARTTURN -> {
                 sb.append("play leader [slot number]\n");
                 sb.append("discard leader [slot number]\n");
                 sb.append("\n");
@@ -407,8 +406,8 @@ public class Parser {
                 sb.append("toggle base production\n" +
                         "toggle production [slot number]\n" +
                         "toggle extra production [slot number]\n");
-                break;
-            case PICKUPPHASE:
+            }
+            case PICKUPPHASE -> {
                 sb.append("toggle base production\n" +
                         "toggle production [slot number]\n" +
                         "toggle extra production [slot number]\n" +
@@ -423,19 +422,19 @@ public class Parser {
                         "base production output unknown to [resource]\n" +
                         "production [slot number] input unknown to [resource]\n" +
                         "production [slot number] output unknown to [resource]\n");
-                break;
-            case DEPOSITPHASE:
+            }
+            case DEPOSITPHASE -> {
                 sb.append("transform white in [resource type]\n");
                 sb.append("deposit [resource] in [shelf number]\n");
                 sb.append("move from [shelf number] to [shelf number]\n");
                 sb.append("discard [resource]\n");
-                break;
-            case ENDTURN:
+            }
+            case ENDTURN -> {
                 sb.append("play leader [slot number]\n");
                 sb.append("discard leader [slot number]\n");
                 sb.append("move from [shelf number] to [shelf number]\n");
                 sb.append("pass\n");
-                break;
+            }
         }
         sb.append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.RESET).append("---------------------------------------------------");
         System.out.println(sb.toString());

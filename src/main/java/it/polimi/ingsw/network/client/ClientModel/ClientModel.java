@@ -9,48 +9,49 @@ import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import java.util.*;
 
 public class ClientModel {
-    private Map<String, ClientBoard> boards=new HashMap<>();
-    private Map<Integer,String> idNameLeadersMap=new HashMap<>();
 
+    // maps
+    // nickname -> board
+    private final Map<String, ClientBoard> boards = new HashMap<>();
+    // name -> development card
+    public final Map<String, DevelopmentCard> nameDevelopmentMap = new HashMap<>();
+    // name -> leader card
+    public final Map<String, LeaderCard> nameLeaderMap = new HashMap<>();
+
+    // cards
+    private final List<DevelopmentCard> developmentCards;
+    private final List<LeaderCard> leaderCards;
+    private final List<String> setupPhaseLeaderCards = new ArrayList<>();
+
+    // players
     private List<String> playersInOrder;
     private String myNickname;
     private String currentNickname;
 
+    // phases
     private TurnPhase turnPhase;
     private GamePhase gamePhase;
 
-    private List<DevelopmentCard> developmentCards;
-    private List<LeaderCard> leaderCards;
+    private final ClientMarket market;
+    private final ClientCardMatrix cardMatrix;
 
-    private ClientMarket market;
-    private ClientCardMatrix cardMatrix;
 
-    private Map<String,DevelopmentCard> nameDevelopmentMap=new HashMap<>();
-    private Map<String,LeaderCard> nameLeaderMap=new HashMap<>();
+    public ClientModel() {
+        leaderCards = Utilities.loadLeaderCardsFromJSON();
+        developmentCards = Utilities.loadDevelopmentCardsFromJSON();
 
-    public List<LeaderCard> getLeaderCards() {
-        return leaderCards;
+        for (DevelopmentCard card : developmentCards)
+            nameDevelopmentMap.put(card.getName(), card);
+
+        for (LeaderCard card : leaderCards)
+            nameLeaderMap.put(card.getName(), card);
+
+        market = new ClientMarket();
+        cardMatrix = new ClientCardMatrix();
     }
 
     public TurnPhase getTurnPhase() {
         return turnPhase;
-    }
-
-    public List<DevelopmentCard> getDevelopmentCards() {
-        return developmentCards;
-    }
-
-    public ClientModel(){
-        leaderCards= Utilities.loadLeaderCardsFromJSON();
-        developmentCards=Utilities.loadDevelopmentCardsFromJSON();
-        for(DevelopmentCard d :developmentCards){
-            nameDevelopmentMap.put(d.getName(),d);
-        }
-        for(LeaderCard ld : leaderCards){
-            nameLeaderMap.put(ld.getName(),ld);
-        }
-        market=new ClientMarket();
-        cardMatrix=new ClientCardMatrix();
     }
 
     public ClientCardMatrix getCardMatrix() {
@@ -61,12 +62,28 @@ public class ClientModel {
         return playersInOrder;
     }
 
-    public Map<Integer, String> getIdNameLeadersMap() {
-        return idNameLeadersMap;
+    public List<String> getSetupPhaseLeaderCards() {
+        return setupPhaseLeaderCards;
     }
 
-    public void putBoard(String nickname, ClientBoard cb){
-        boards.put(nickname,cb);
+    public String getNickname() {
+        return myNickname;
+    }
+
+    public ClientMarket getMarket() {
+        return market;
+    }
+
+    public LeaderCard getLeaderCard(String name){
+        return nameLeaderMap.get(name);
+    }
+
+    public List<DevelopmentCard> getDevelopmentCards() {
+        return developmentCards;
+    }
+
+    public List<LeaderCard> getLeaderCards() {
+        return leaderCards;
     }
 
     public void setGamePhase(GamePhase gamePhase) {
@@ -78,7 +95,6 @@ public class ClientModel {
     }
 
     public void setPlayersOrder(List<String> playersOrder) {
-
         this.playersInOrder = playersOrder;
     }
 
@@ -86,24 +102,24 @@ public class ClientModel {
         this.currentNickname = currentNickname;
     }
 
-    public void putIdNameLeadersMap(Integer id, String name){ idNameLeadersMap.put(id,name); }
     public void setNickname(String nickname) {
         this.myNickname = nickname;
     }
-
-    public String getNickname() { return myNickname; }
-
-    public ClientMarket getMarket() { return market; }
 
     public void setUpSinglePlayer(){
         boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
     }
 
-    public LeaderCard getLeaderCard(String name){
-        return nameLeaderMap.get(name);
+    public void putBoard(String nickname, ClientBoard cb) {
+        boards.put(nickname, cb);
     }
-    public void loadCardMatrixFromNames(Stack<String>[][] stringCards){
-        Stack<DevelopmentCard>[][] cards=new Stack[3][4];
+
+    public void addSetupPhaseLeaderCard(String name) {
+        setupPhaseLeaderCards.add(name);
+    }
+
+    public void loadCardMatrixFromNames(Stack<String>[][] stringCards) {
+        Stack<DevelopmentCard>[][] cards = new Stack[3][4];
         for(int r=0;r<3;r++){
             for(int c=0;c<4;c++){
                 cards[r][c]=new Stack<>();
@@ -117,39 +133,38 @@ public class ClientModel {
             }
         }
         cardMatrix.setCards(cards);
-
     }
-    public DevelopmentCard getDevelopmentCard(String name){
+
+    public DevelopmentCard getDevelopmentCard(String name) {
         return nameDevelopmentMap.get(name);
     }
-    public String getDevelopmentCardStringified(String name){
-        DevelopmentCard d=getDevelopmentCard(name);
-        if(d!=null) return Utilities.stringify(d);
-        return "";
+
+    public String stringifyLeaderCardFromName(String card) {
+        if(card != null)
+            return Utilities.stringify(nameLeaderMap.get(card));
+        else return "";
     }
-    public String getLeaderCardStringified(String name){
-        LeaderCard l=getLeaderCard(name);
-        if(l!=null) return Utilities.stringify(l);
-        return "";
-    }
-    public String stringifyPlayers(){
+
+    public String stringifyPlayers() {
         StringBuilder sb = new StringBuilder();
         sb.append(Color.ANSI_PURPLE.escape() + "PLAYERS: " + Color.RESET);
         for (String nick : playersInOrder) {
             sb.append("[ " +Color.ANSI_GREEN.escape()+ nick +Color.RESET+ " | " + boards.get(nick).getFaithPath().getPosition() + Color.ANSI_RED.escape() + "♰" + Color.RESET +" Cards:"+boards.get(nick).getTotalCardsBought() +" ],");
         }
         sb.deleteCharAt(sb.toString().length()-1);
-        if(getCurrentBoard().getFaithPath().getLorenzoPosition()!=null){
+        if(getCurrentBoard().getFaithPath().getLorenzoPosition() != null){
             sb.append("[ "+Color.ANSI_GREEN.escape()+"LORENZO"+Color.RESET+" | "+getCurrentBoard().getFaithPath().getLorenzoPosition()+ Color.ANSI_RED.escape() + "♰" + Color.RESET+" Discarded Cards:"+getCardMatrix().getDiscardedCards()+" ]");
         }
         sb.append("\n");
         return sb.toString();
     }
-    public ClientBoard getCurrentBoard(){
+
+    public ClientBoard getCurrentBoard() {
         return boards.get(currentNickname);
     }
-    public String toString(){
-        if(myNickname!=null) {
+
+    public String toString() {
+        if (myNickname != null) {
             StringBuilder sb = new StringBuilder();
             sb.append(stringifyPlayers());
             sb.append("════"+myNickname+" Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -163,7 +178,8 @@ public class ClientModel {
         }
         return "";
     }
-    public void visualizeBoard(String nick){
+
+    public void visualizeBoard(String nick) {
         if(boards.get(nick)!=null) {
             StringBuilder sb = new StringBuilder();
             sb.append("════" + nick + " Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -171,7 +187,8 @@ public class ClientModel {
             System.out.println(sb.toString());
         }
     }
-    public void visualizeDeposits(String nick){
+
+    public void visualizeDeposits(String nick) {
         if(boards.get(nick)!=null){
             StringBuilder sb = new StringBuilder();
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -192,9 +209,10 @@ public class ClientModel {
         return currentNickname;
     }
 
-    public ClientBoard getMyBoard(){
+    public ClientBoard getMyBoard() {
         return boards.get(myNickname);
     }
+
     /*
     public static void main(String[] args) {
         ClientModel cm=new ClientModel();

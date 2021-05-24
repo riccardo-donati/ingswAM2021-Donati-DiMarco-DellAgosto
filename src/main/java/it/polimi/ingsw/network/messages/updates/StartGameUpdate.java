@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.messages.updates;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.client.Client;
@@ -17,13 +18,12 @@ public class StartGameUpdate implements Update, ClientVisitable {
     private final Stack<String>[][] cardMatrix;
 
     public StartGameUpdate(List<String> playerOrder, List<String> cards, Map<String,Integer> faithPaths, List<ResourceType> marbles,Stack<String>[][] cardMatrix){
-        this.playerOrder=playerOrder;
-        this.cards=cards;
-        this.faithPaths=faithPaths;
-        this.marbles=marbles;
-        this.cardMatrix=cardMatrix;
+        this.playerOrder = playerOrder;
+        this.cards = cards;
+        this.faithPaths = faithPaths;
+        this.marbles = marbles;
+        this.cardMatrix = cardMatrix;
     }
-
 
     public List<String> getCards() {
         return cards;
@@ -45,23 +45,23 @@ public class StartGameUpdate implements Update, ClientVisitable {
 
     @Override
     public void update(ClientModel clientModel) {
-        for(int i = 0; i < cards.size(); i++)
-            clientModel.putIdNameLeadersMap(i + 1, cards.get(i));
+        for (String card : cards)
+            clientModel.addSetupPhaseLeaderCard(card);
 
         clientModel.setPlayersOrder(playerOrder);
         clientModel.setCurrentNickname(playerOrder.get(0));
 
-        for(String player : playerOrder)
-            clientModel.putBoard(player,new ClientBoard());
+        for (String player : playerOrder)
+            clientModel.putBoard(player, new ClientBoard());
         if (playerOrder.size() == 1)
             clientModel.setUpSinglePlayer();
         for (String player : playerOrder)
             clientModel.getBoards().get(player).getFaithPath().setPosition(faithPaths.get(player));
 
         clientModel.getMarket().setMarbles(marbles);
-        //clientModel.getCardMatrix().setCards(cardMatrix);
         clientModel.loadCardMatrixFromNames(cardMatrix);
 
+        clientModel.setGamePhase(GamePhase.SETUP);
         clientModel.setTurnPhase(TurnPhase.STARTSETUPTURN);
     }
 }
