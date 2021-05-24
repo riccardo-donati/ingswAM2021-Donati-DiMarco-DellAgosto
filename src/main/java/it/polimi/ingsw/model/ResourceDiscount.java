@@ -1,10 +1,14 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 
 public class ResourceDiscount {
+    @Expose
     private ResourceType res;
+    @Expose
     private Integer quantity;
+    @Expose
     private boolean activated;
 
     public ResourceDiscount(ResourceType res){

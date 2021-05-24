@@ -2,6 +2,7 @@ package it.polimi.ingsw.model;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
@@ -14,9 +15,13 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class Singleplayer extends Game {
+    @Expose
     private Stack<Token> tokenStack;
+    @Expose
     private List<Token> tokens;
+    @Expose
     private FaithPath blackFaithPath;
+    @Expose
     private Token lastUsedToken;
 
     protected Singleplayer()  {

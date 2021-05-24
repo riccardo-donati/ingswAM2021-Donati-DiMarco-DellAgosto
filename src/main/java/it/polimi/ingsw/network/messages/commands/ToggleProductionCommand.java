@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.messages.commands;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalSlotException;
 import it.polimi.ingsw.model.exceptions.UnknownFoundException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -17,7 +18,7 @@ public class ToggleProductionCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, UnknownFoundException, IllegalActionException, NotYourTurnException, IllegalSlotException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, UnknownFoundException, IllegalActionException, NotYourTurnException, IllegalSlotException, WaitingReconnectionsException {
         if(check()){
             if(slot==0)c.toggleBaseProd(nickname);
             else c.toggleCardProd(slot,nickname);

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
@@ -9,7 +10,9 @@ import java.util.Map;
 
 public class ResourceRequirement implements Requirement {
 
+    @Expose
     private final Integer quantity;
+    @Expose
     private final ResourceType resource;
 
     /**

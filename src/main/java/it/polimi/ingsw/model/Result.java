@@ -1,12 +1,16 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Result {
+    @Expose
     private Map<String, Integer[]> results;
+    @Expose
     private List<String> winner;
 
     /**

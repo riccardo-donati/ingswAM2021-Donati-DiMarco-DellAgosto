@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.messages.commands;
 
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -17,7 +18,7 @@ public class BuyFromMarketCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalActionException, NotYourTurnException, IllegalCommandException {
+    public void doAction(Controller c, String nickname) throws IllegalActionException, NotYourTurnException, IllegalCommandException, WaitingReconnectionsException {
         if(check()) c.buyAtMarketInterface(line,position-1,nickname);
         else throw new IllegalCommandException();
     }

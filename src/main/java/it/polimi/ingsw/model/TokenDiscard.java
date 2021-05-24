@@ -1,10 +1,13 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.interfaces.Token;
 
 public class TokenDiscard implements Token {
+    @Expose
     private Color color;
+    @Expose
     private Integer quantity;
 
     public Integer getQuantity() {

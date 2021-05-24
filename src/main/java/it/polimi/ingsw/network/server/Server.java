@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
@@ -58,7 +59,6 @@ public class Server {
                 new Thread(new ClientHandler(socket, this)).start();
             } catch (IOException e) { // goes here if the server socket gets closed
                 System.out.println("Closing . . .");
-                saveServerStatus();
                 break;
             }
         }
@@ -72,7 +72,7 @@ public class Server {
         }
     }
 
-    public void saveServerStatus(){
+    public synchronized void saveServerStatus(){
         Gson gsonSave = Utilities.initializeGsonLoadAndSave();
 
         String serverToJson = gsonSave.toJson(this, Server.class);
@@ -85,42 +85,20 @@ public class Server {
             e.printStackTrace();
             System.out.println("The server state could not be saved");
         }
+
     }
 
-    public static Server loadServerStatus(){
-        Gson gsonLoad=Utilities.initializeGsonLoadAndSave();
-        FileReader fr = null;
-        try {
-            fr = new FileReader("src/json/serverStatus.json");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-        BufferedReader b;
-        b=new BufferedReader(fr);
-        String json="";
-        try {
-            json=b.readLine();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        Server s=gsonLoad.fromJson(json,Server.class);
-
-        for(Controller l : s.lobbies){
-            l.getPlayersInLobby().clear();
-            l.setGson(Utilities.initializeGsonMessage());
-        }
-        for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
-            if(entry.getValue()> Controller.getGlobalID()) Controller.setGlobalID(entry.getValue());
-            VirtualClient vc=s.searchVirtualClient(entry.getKey());
-            Controller l= s.searchLobby(entry.getValue());
-            l.addPlayerInLobby(vc);
-        }
-        s.clientHandlerNickMap=new HashMap<>();
-        s.waitingList=new ArrayList<>();
-        s.gson=Utilities.initializeGsonMessage();
-        return s;
+    public synchronized void setClientHandlerNickMap(Map<Integer, String> clientHandlerNickMap) {
+        this.clientHandlerNickMap = clientHandlerNickMap;
     }
 
+    public synchronized void setWaitingList(List<VirtualClient> waitingList) {
+        this.waitingList = waitingList;
+    }
+
+    public synchronized void setGson(Gson gson){
+        this.gson=gson;
+    }
     public synchronized void handleDisconnection(Integer chId){
         String nick=clientHandlerNickMap.get(chId);
         if (nick != null){
@@ -135,15 +113,16 @@ public class Server {
             }else if(lobby.getGamePhase()==GamePhase.ONGOING ||lobby.getGamePhase()==GamePhase.SETUP){
                 lobby.setActive(nick,false);
                 if(lobby.getLorenzoPosition()==null) {
-                    if (lobby.getGamePhase() == GamePhase.SETUP)
+                    if (lobby.getActivePlayers().size()>0)
                         lobby.clearPlayer(nick);
                 }
                 if(lobby.getCurrentNickname().equals(nick)){
                     try {
                         if(lobby.getLorenzoPosition()==null) {
-                            lobby.passTurn(nick);
+                            if(lobby.getActivePlayers().size()>0)
+                                lobby.passTurn(nick);
                         }
-                    } catch (IllegalActionException | NotYourTurnException ignored) { }
+                    } catch (IllegalActionException | NotYourTurnException | WaitingReconnectionsException ignored) { }
                 }
             }
         }
@@ -228,10 +207,16 @@ public class Server {
             vLook.setClientHandler(vc.getClientHandler());
             clientHandlerNickMap.put(vc.getClientHandler().getId(), vc.getNickname());
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
-            lobby.notifyLobby(new GenericMessage(vLook.getNickname() + " reconnected after server disconnection!"));
+            vc.getClientHandler().setLobby(lobby);
+            lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
+            lobby.reconnectPlayer(vc.getNickname());
+            if(lobby.getActivePlayers().size()==lobby.getnPlayers()){
+                lobby.notifyLobby(new GenericMessage("All the players reconnected! The game is resuming from the last start turn . . ."));
+                lobby.setDisconnected(false);
+            }
             throw new ReconnectionException();
         }
-        if (vLook != null && vLook.getClientHandler().isConnected()) {
+        else if (vLook != null && vLook.getClientHandler().isConnected()) {
             //nickname is not unique
             vc.getClientHandler().send(new GenericMessage("Nickname already taken"));
             vc.getClientHandler().send(new RegisterRequest());
@@ -241,9 +226,16 @@ public class Server {
             reconnect(vc, vLook);
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
             vc.getClientHandler().setLobby(lobby);
-            lobby.setActive(vLook.getNickname(),true);
             lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             lobby.reconnectPlayer(vc.getNickname());
+            if(!vc.getNickname().equals(lobby.getCurrentNickname()) && !lobby.getActivePlayers().contains(lobby.getCurrentNickname())){
+                //if you reconnect after the disconnection of all players and its a turn of a disconnected player clear the player and passturn
+                lobby.clearPlayer(lobby.getCurrentNickname());
+                try {
+                    lobby.passTurn(lobby.getCurrentNickname());
+                } catch (IllegalActionException | NotYourTurnException | WaitingReconnectionsException ignored) {
+                }
+            }
             throw new ReconnectionException();
         } else {
             //nickname is unique
@@ -302,23 +294,29 @@ public class Server {
     }
 
     public static void main(String[] args) {
-        Integer port;
-        try {
-            port = Utilities.loadServerPortNumber();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("serverSettings.json file not found");
-            System.err.println("Closing . . .");
-            return;
+        if(args.length>0 && args[0].equals("crash")) {
+            Server s = Utilities.loadServerStatus();
+            System.out.println("Reboot after server crash . . .");
+            s.startServer();
+        }else {
+            Integer port;
+            try {
+                port = Utilities.loadServerPortNumber();
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                System.err.println("serverSettings.json file not found");
+                System.err.println("Closing . . .");
+                return;
+            }
+
+            if (port < 1000 || port > 10000) {
+                System.err.println("The port number value has to be between 1000 and 9999");
+                System.err.println("Closing . . .");
+                return;
+            } //else System.err.println("port number value loaded successfully\n");
+
+            new Server(port).startServer();
         }
-
-        if (port < 1000 || port > 10000) {
-            System.err.println("The port number value has to be between 1000 and 9999");
-            System.err.println("Closing . . .");
-            return;
-        } //else System.err.println("port number value loaded successfully\n");
-
-        new Server(port).startServer();
     }
 
     public List<Controller> getLobbies() {

@@ -1,10 +1,11 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 
 public abstract class SpecialAbility {
-
+    @Expose
     protected ResourceType resourceType;
 
 

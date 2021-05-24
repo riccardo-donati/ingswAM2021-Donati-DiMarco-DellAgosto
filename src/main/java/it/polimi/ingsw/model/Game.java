@@ -1,6 +1,7 @@
 package it.polimi.ingsw.model;
 
 import com.google.gson.*;
+import com.google.gson.annotations.Expose;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
@@ -17,18 +18,28 @@ import java.util.*;
 public abstract class Game implements BoardObserver, PublicInterface {
     protected static final Integer ROW=3;
     protected static final Integer COL=4;
-
+    @Expose
     private Market market;
+    @Expose
     private Stack<DevelopmentCard>[][] cardMatrix;
+    @Expose
     private List<DevelopmentCard> developmentCards;
+    @Expose
     private List<LeaderCard> leaderCards;
+    @Expose
     private List<Player> players;
+    @Expose
     private Player currPlayer;
+    @Expose
     private GamePhase gamePhase;
+    @Expose
     private TurnPhase turnPhase;
+    @Expose
     private boolean endGameTrigger;
 
+    @Expose
     private Map<String,LeaderCard> nameLeaderCardMap;
+    @Expose
     private Map<String,DevelopmentCard> nameDevelopmentCardMap;
     //-------------------------
     GameObserver externalObserver;
@@ -444,6 +455,14 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return list;
     }
+    public List<ResourceType> getPlayerPending(String nickname){
+        for(Player p : players){
+            if(p.getNickname().equals(nickname)){
+                return p.getBoard().getWarehouse().getPendingList();
+            }
+        }
+        return new ArrayList<>();
+    }
     public List<Player> getPlayers() { return players; }
     /**
      * Give the players a random order and the related bonus resources
@@ -511,6 +530,18 @@ public abstract class Game implements BoardObserver, PublicInterface {
             }
         }
         return result;
+    }
+    public void disconnectAllPlayers(){
+        for(Player p : players){
+            p.setActive(false);
+        }
+    }
+    public List<String> getActivePlayers(){
+        List<String> actives=new ArrayList<>();
+        for(Player p : players){
+            if(p.isActive()) actives.add(p.getNickname());
+        }
+        return actives;
     }
     public Map<ResourceType,Integer> getCurrentStrongbox(){
         return currPlayer.getBoard().getStrongBox();
@@ -747,11 +778,31 @@ public abstract class Game implements BoardObserver, PublicInterface {
                 p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.BLUE,0);
                 p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.VIOLET,0);
                 p.getBoard().getWarehouse().getPendingResources().replace(ResourceType.WHITE,0);
+
+                if(!p.checkPickedEmpty()) {
+                    try {
+                        p.revertPickUp();
+                    } catch (FullSpaceException | IllegalResourceException ignored) {
+                    }
+                }
+                if(p.countSelectedProductions()>0){
+                    p.deSelectAllProductions();
+                }
             }
         }
+
     }
     //-----------------------------------------------------------------------------------------------------
-    protected void saveGameStateOnJson(String name) {
+    public void setGameObservers(){
+        for(Player p : players){
+            p.getBoard().addObserver(this);
+            p.getBoard().getFaithPath().addObserver(this);
+            p.getBoard().getWarehouse().addObserver(this);
+            if(p.getOrder().equals(currPlayer.getOrder()) && p.getNickname().equals(currPlayer.getNickname()))
+                setCurrPlayer(p);
+        }
+    }
+   public void saveGameStateOnJson(String name) {
         for(Player p : players){
             p.getBoard().getWarehouse().getObservers().clear();
             p.getBoard().getObservers().clear();

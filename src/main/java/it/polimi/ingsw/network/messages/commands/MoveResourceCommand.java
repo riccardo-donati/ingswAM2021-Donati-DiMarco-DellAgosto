@@ -25,7 +25,7 @@ public class MoveResourceCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, IllegalResourceException, NotYourTurnException, IllegalActionException, NonEmptyException, FullSpaceException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, IllegalResourceException, NotYourTurnException, IllegalActionException, NonEmptyException, FullSpaceException, WaitingReconnectionsException {
         if(check()) c.moveResource(source,destination,nickname);
         else throw new IllegalCommandException();
     }

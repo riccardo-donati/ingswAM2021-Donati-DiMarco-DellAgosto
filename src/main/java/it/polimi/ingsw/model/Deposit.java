@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.FullSpaceException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
@@ -8,9 +9,13 @@ import it.polimi.ingsw.model.exceptions.NonEmptyException;
 import java.util.Arrays;
 
 public class Deposit {
+    @Expose
     private Integer id;
+    @Expose
     private Integer dim;
+    @Expose
     private ResourceType type;
+    @Expose
     private ResourceType[] space;
 
     /**

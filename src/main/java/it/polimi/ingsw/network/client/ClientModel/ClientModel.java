@@ -110,7 +110,7 @@ public class ClientModel {
         boards.get(currentNickname).getFaithPath().setLorenzoPosition(0);
     }
 
-    public void putBoard(String nickname, ClientBoard cb){
+    public void putBoard(String nickname, ClientBoard cb) {
         boards.put(nickname, cb);
     }
 
@@ -118,7 +118,7 @@ public class ClientModel {
         setupPhaseLeaderCards.add(name);
     }
 
-    public void loadCardMatrixFromNames(Stack<String>[][] stringCards){
+    public void loadCardMatrixFromNames(Stack<String>[][] stringCards) {
         Stack<DevelopmentCard>[][] cards = new Stack[3][4];
         for(int r=0;r<3;r++){
             for(int c=0;c<4;c++){
@@ -135,7 +135,7 @@ public class ClientModel {
         cardMatrix.setCards(cards);
     }
 
-    public DevelopmentCard getDevelopmentCard(String name){
+    public DevelopmentCard getDevelopmentCard(String name) {
         return nameDevelopmentMap.get(name);
     }
 
@@ -145,7 +145,7 @@ public class ClientModel {
         else return "";
     }
 
-    public String stringifyPlayers(){
+    public String stringifyPlayers() {
         StringBuilder sb = new StringBuilder();
         sb.append(Color.ANSI_PURPLE.escape() + "PLAYERS: " + Color.RESET);
         for (String nick : playersInOrder) {
@@ -159,11 +159,11 @@ public class ClientModel {
         return sb.toString();
     }
 
-    public ClientBoard getCurrentBoard(){
+    public ClientBoard getCurrentBoard() {
         return boards.get(currentNickname);
     }
 
-    public String toString(){
+    public String toString() {
         if (myNickname != null) {
             StringBuilder sb = new StringBuilder();
             sb.append(stringifyPlayers());
@@ -179,7 +179,7 @@ public class ClientModel {
         return "";
     }
 
-    public void visualizeBoard(String nick){
+    public void visualizeBoard(String nick) {
         if(boards.get(nick)!=null) {
             StringBuilder sb = new StringBuilder();
             sb.append("════" + nick + " Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -188,7 +188,7 @@ public class ClientModel {
         }
     }
 
-    public void visualizeDeposits(String nick){
+    public void visualizeDeposits(String nick) {
         if(boards.get(nick)!=null){
             StringBuilder sb = new StringBuilder();
             sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
@@ -209,61 +209,63 @@ public class ClientModel {
         return currentNickname;
     }
 
-    public ClientBoard getMyBoard(){
+    public ClientBoard getMyBoard() {
         return boards.get(myNickname);
     }
 
-//    public static void main(String[] args) {
-//        ClientModel cm=new ClientModel();
-//
-//        List<String> listInOrder=new ArrayList<>();
-//        listInOrder.add("Da");
-//        listInOrder.add("giec");
-//        listInOrder.add("Riki");
-//        cm.setPlayersOrder(listInOrder);
-//
-//        cm.putBoard("Riki",new ClientBoard());
-//        cm.putBoard("Da",new ClientBoard());
-//        cm.putBoard("giec",new ClientBoard());
-//        cm.setNickname("Riki");
-//        cm.boards.get("Da").getFaithPath().addToFaithPath(10);
-//        cm.boards.get("Riki").getFaithPath().addToFaithPath(2);
-//        //System.out.println(cm);
-//        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(1));
-//        cm.getBoards().get(cm.getNickname()).push(2,cm.developmentCards.get(10));
-//        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(12));
-//        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(2));
-//        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(40));
-//
-//        cm.getMarket().initializeMarbles();
-//        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(12));
-//        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(0));
-//        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(8));
-//        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(15));
-//
-//        System.out.println(cm);
-//
-//        ClientCardMatrix ccm = new ClientCardMatrix();
-//        ccm.pushCard(0, 3, cm.developmentCards.get(1));
-//        ccm.pushCard(1, 1, cm.developmentCards.get(10));
-//        ccm.pushCard(1, 2, cm.developmentCards.get(12));
-//        ccm.pushCard(0, 1, cm.developmentCards.get(2));
-//        ccm.pushCard(2, 3, cm.developmentCards.get(40));
-//        ccm.pushCard(2, 1, cm.developmentCards.get(41));
-//        ccm.pushCard(2, 1, cm.developmentCards.get(32));
-//        ccm.pushCard(1, 1, cm.developmentCards.get(24));
-//        ccm.pushCard(2, 3, cm.developmentCards.get(27));
-//        ccm.pushCard(2, 1, cm.developmentCards.get(28));
-//        ccm.pushCard(2, 0, cm.developmentCards.get(30));
-//        ccm.pushCard(0, 2, cm.developmentCards.get(33));
-//        ccm.pushCard(1, 1, cm.developmentCards.get(15));
-//        System.out.println(ccm.toString());
-///*
-//        System.out.println(Utilities.stringify(cm.leaderCards.get(12)));
-//        System.out.println(Utilities.stringify(cm.leaderCards.get(1)));
-//        System.out.println(Utilities.stringify(cm.leaderCards.get(4)));
-//        System.out.println(Utilities.stringify(cm.leaderCards.get(8)));
-//
-// */
-//    }
+    /*
+    public static void main(String[] args) {
+        ClientModel cm=new ClientModel();
+
+        List<String> listInOrder=new ArrayList<>();
+        listInOrder.add("Da");
+        listInOrder.add("giec");
+        listInOrder.add("Riki");
+        cm.setPlayersOrder(listInOrder);
+
+        cm.putBoard("Riki",new ClientBoard());
+        cm.putBoard("Da",new ClientBoard());
+        cm.putBoard("giec",new ClientBoard());
+        cm.setNickname("Riki");
+        cm.boards.get("Da").getFaithPath().addToFaithPath(10);
+        cm.boards.get("Riki").getFaithPath().addToFaithPath(2);
+        //System.out.println(cm);
+        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(1));
+        cm.getBoards().get(cm.getNickname()).push(2,cm.developmentCards.get(10));
+        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(12));
+        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(2));
+        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(40));
+
+        cm.getMarket().initializeMarbles();
+        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(12));
+        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(0));
+        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(8));
+        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(15));
+
+        System.out.println(cm);
+
+        ClientCardMatrix ccm = new ClientCardMatrix();
+        ccm.pushCard(0, 3, cm.developmentCards.get(1));
+        ccm.pushCard(1, 1, cm.developmentCards.get(10));
+        ccm.pushCard(1, 2, cm.developmentCards.get(12));
+        ccm.pushCard(0, 1, cm.developmentCards.get(2));
+        ccm.pushCard(2, 3, cm.developmentCards.get(40));
+        ccm.pushCard(2, 1, cm.developmentCards.get(41));
+        ccm.pushCard(2, 1, cm.developmentCards.get(32));
+        ccm.pushCard(1, 1, cm.developmentCards.get(24));
+        ccm.pushCard(2, 3, cm.developmentCards.get(27));
+        ccm.pushCard(2, 1, cm.developmentCards.get(28));
+        ccm.pushCard(2, 0, cm.developmentCards.get(30));
+        ccm.pushCard(0, 2, cm.developmentCards.get(33));
+        ccm.pushCard(1, 1, cm.developmentCards.get(15));
+        System.out.println(ccm.toString());
+/*
+        System.out.println(Utilities.stringify(cm.leaderCards.get(12)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(1)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(4)));
+        System.out.println(Utilities.stringify(cm.leaderCards.get(8)));
+
+    }
+    */
+
 }

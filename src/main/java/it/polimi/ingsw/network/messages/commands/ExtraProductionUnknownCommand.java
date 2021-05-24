@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -22,7 +23,7 @@ public class ExtraProductionUnknownCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, UnknownNotFoundException, IllegalResourceException, IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
         if(check()){
             if(target.equals("input"))c.substituteUnknownInInputExtraProduction(index,resourceType,nickname);
             else c.substituteUnknownInOutputExtraProduction(index,resourceType,nickname);

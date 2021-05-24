@@ -1,6 +1,10 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
+import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
@@ -219,24 +223,36 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(ReconnectUpdate message, Client client) {
-//        message.update(client.getClientModel());
-//
-//        System.out.println(client.getClientModel());
-//        System.out.println("-----------------------------");
-//        System.out.println("You just reconnected!");
-//        System.out.println("Phase: "+client.getClientModel().getGamePhase());
-//        System.out.println("Turn: "+client.getClientModel().getCurrentNickname());
-//        if(client.getClientModel().getGamePhase()==GamePhase.SETUP && client.getClientModel().getPlayersInOrder().size()==1 && client.getClientModel().getCurrentBoard().getLeadersInHand().size()==0){
-//            //if you haven't chosen leadercards in singleplayer
-//            StringBuilder sb=new StringBuilder();
-//            sb.append("Choose 2 leader cards: \n");
-//            List<String> leaderCards=message.getFourLeaderCards();
-//            for(int i=0;i<leaderCards.size();i++){
-//                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().stringifyLeaderCard(leaderCards.get(i))).append("\n");
-//            }
-//            System.out.println(sb.toString());
-//        }
-//        System.out.println("-----------------------------");
+        message.update(client.getClientModel());
+
+        System.out.println(client.getClientModel());
+        System.out.println("-----------------------------");
+        System.out.println("You just reconnected!");
+        System.out.println("Phase: "+client.getClientModel().getGamePhase());
+        System.out.println("Turn: "+client.getClientModel().getCurrentNickname());
+        StringBuilder sb=new StringBuilder();
+        if(client.getClientModel().getGamePhase()==GamePhase.SETUP && client.getClientModel().getCurrentNickname().equals(client.getClientModel().getNickname()) && client.getClientModel().getCurrentBoard().getLeadersInHand().size()==0){
+            //if you haven't chosen leadercards in singleplayer
+            sb.append("Choose 2 leader cards: \n");
+            List<String> leaderCards=message.getFourLeaderCards();
+            for(int i=0;i<leaderCards.size();i++){
+                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().getLeaderCardStringified(leaderCards.get(i))).append("\n");
+            }
+        }
+        if(message.getPendingResources().size()>0){
+            if(message.getPendingResources().size() > 0) {
+                sb.append("Deposit this pending resources:\n[");
+                for (ResourceType resourceType : message.getPendingResources()) {
+                    Resource resource = Resource.valueOf(resourceType.label.toUpperCase());
+                    sb.append(resourceType.label).append("(").append(resource.label).append("),");
+                    //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
+                }
+                if (message.getPendingResources().size() > 0) sb.deleteCharAt(sb.toString().length() - 1);
+                sb.append("]");
+            }
+        }
+        System.out.println("-----------------------------");
+        System.out.println(sb.toString());
 
     }
 }

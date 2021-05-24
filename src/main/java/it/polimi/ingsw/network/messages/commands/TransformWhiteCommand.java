@@ -4,6 +4,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.NoWhiteResourceException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -18,7 +19,7 @@ public class TransformWhiteCommand implements Command{
     }
 
     @Override
-    public void doAction(Controller c, String nickname) throws NoWhiteResourceException, NotYourTurnException, IllegalResourceException, IllegalActionException, IllegalCommandException {
+    public void doAction(Controller c, String nickname) throws NoWhiteResourceException, NotYourTurnException, IllegalResourceException, IllegalActionException, IllegalCommandException, WaitingReconnectionsException {
         if(check())c.transformWhiteIn(resourceType,nickname);
         else throw new IllegalCommandException();
     }

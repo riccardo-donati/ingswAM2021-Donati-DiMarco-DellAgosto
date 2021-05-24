@@ -1,12 +1,16 @@
 package it.polimi.ingsw.model;
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.PopeFavorState;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
 
 import java.util.*;
 
 public class FaithPath {
+    @Expose
     private Integer position;
+    @Expose
     private Map<Integer, Integer> pointsPosition;
+    @Expose
     private List<PopeFavor> popeFavorList;
     private List<BoardObserver> observer = new ArrayList<>();
 

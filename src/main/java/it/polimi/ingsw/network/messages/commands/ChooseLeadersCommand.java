@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.messages.commands;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
 import it.polimi.ingsw.model.exceptions.IllegalLeaderCardsException;
 import it.polimi.ingsw.model.exceptions.NonEmptyException;
+import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.server.ClientHandler;
@@ -31,7 +32,7 @@ public class ChooseLeadersCommand implements Command {
     }
 
 
-    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, NonEmptyException, IllegalLeaderCardsException {
+    public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, NonEmptyException, IllegalLeaderCardsException, WaitingReconnectionsException {
         if(check())
             c.chooseLeader(chosenLeaders,nickname);
         else throw new IllegalCommandException();

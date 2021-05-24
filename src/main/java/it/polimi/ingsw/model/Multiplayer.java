@@ -1,11 +1,13 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 
 public class Multiplayer extends Game{
+    @Expose
     private Integer nPlayers;
 
     protected Multiplayer(Integer n) throws IllegalPlayersNumberException {
@@ -45,6 +47,14 @@ public class Multiplayer extends Game{
     public void passTurn() throws IllegalActionException {
         if(!getCurrPlayer().isActive()){ //disconnected player case
             if(getGamePhase()==GamePhase.SETUP && getCurrPlayer().getOrder()==getPlayers().size()){
+                setGamePhase(GamePhase.ONGOING);
+                setTurnPhase(TurnPhase.STARTTURN);
+            }
+            else if(getGamePhase()==GamePhase.SETUP && getCurrPlayer().getOrder()!=getPlayers().size()){
+                setGamePhase(GamePhase.SETUP);
+                setTurnPhase(TurnPhase.STARTSETUPTURN);
+            }
+            else if((getGamePhase()==GamePhase.ONGOING && !isEndGameTrigger())||(getGamePhase()==GamePhase.ONGOING && getCurrPlayer().getOrder()!=getPlayers().size() && isEndGameTrigger())){
                 setGamePhase(GamePhase.ONGOING);
                 setTurnPhase(TurnPhase.STARTTURN);
             }

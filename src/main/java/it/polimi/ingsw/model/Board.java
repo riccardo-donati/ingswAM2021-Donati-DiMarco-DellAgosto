@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.model.exceptions.IllegalSlotException;
@@ -9,10 +10,15 @@ import it.polimi.ingsw.model.interfaces.BoardObserver;
 import java.util.*;
 
 public class Board {
+    @Expose
     private Map<ResourceType, Integer> strongbox;
+    @Expose
     private Warehouse warehouse;
+    @Expose
     private FaithPath faithpath;
+    @Expose
     private Production baseProduction;
+    @Expose
     private Map<Integer, Stack<DevelopmentCard>> slots;
     private List<BoardObserver> observers = new ArrayList<>();
 

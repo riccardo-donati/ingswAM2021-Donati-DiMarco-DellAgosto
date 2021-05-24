@@ -1,5 +1,6 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.BoardObserver;
@@ -10,11 +11,14 @@ import java.util.List;
 import java.util.Map;
 
 public class Warehouse {
+    @Expose
     private List<Deposit> maindepot;
+    @Expose
     private List<Deposit> extradepots;
+    @Expose
     private Map<ResourceType,Integer> pendingResources;
     private List<BoardObserver> observers=new ArrayList<>();
-
+    @Expose
     private int nDeposit=0;
 
     public List<BoardObserver> getObservers() {

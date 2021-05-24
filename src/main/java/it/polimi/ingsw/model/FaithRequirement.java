@@ -1,9 +1,10 @@
 package it.polimi.ingsw.model;
 
+import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.interfaces.Requirement;
 
 public class FaithRequirement implements Requirement {
-
+    @Expose
     private final Integer position;
 
     protected FaithRequirement(Integer position) {
