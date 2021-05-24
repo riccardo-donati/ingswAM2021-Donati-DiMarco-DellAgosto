@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.effect.ColorAdjust?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="651.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+   <children>
+      <ImageView fitHeight="570.0" fitWidth="651.0" pickOnBounds="true">
+         <image>
+            <Image url="@../images/background.jpg" />
+         </image>
+      </ImageView>
+      <ProgressBar layoutX="128.0" layoutY="478.0" prefHeight="18.0" prefWidth="395.0">
+         <effect>
+            <ColorAdjust brightness="-0.14" contrast="0.1" hue="1.0" saturation="-0.29" />
+         </effect>
+      </ProgressBar>
+      <Label layoutX="112.0" layoutY="84.0" text="WAITING FOR YOUR TURN" textFill="WHITE">
+         <font>
+            <Font size="36.0" />
+         </font>
+         <effect>
+            <DropShadow radius="13.7075" spread="0.33" width="35.83" />
+         </effect>
+      </Label>
+   </children>
+</Pane>

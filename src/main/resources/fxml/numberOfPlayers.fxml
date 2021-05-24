@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="484.0" prefWidth="655.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.PlayersController">
+   <children>
+      <ImageView fitHeight="484.0" fitWidth="655.0" pickOnBounds="true">
+         <image>
+            <Image url="@../images/codex.jpg" />
+         </image>
+      </ImageView>
+      <Button fx:id="onePlayer" layoutX="147.0" layoutY="292.0" mnemonicParsing="false" onAction="#singlePlayer" prefHeight="58.0" prefWidth="102.0" text="1">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="twoPlayers" layoutX="395.0" layoutY="292.0" mnemonicParsing="false" onAction="#multiPlayer" prefHeight="58.0" prefWidth="102.0" text="2">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="threePlayers" layoutX="147.0" layoutY="392.0" mnemonicParsing="false" onAction="#multiPlayer" prefHeight="58.0" prefWidth="102.0" text="3">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Button fx:id="fourPlayers" layoutX="395.0" layoutY="392.0" mnemonicParsing="false" onAction="#multiPlayer" prefHeight="58.0" prefWidth="102.0" text="4">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Button>
+      <Label layoutX="222.0" layoutY="224.0" style="-fx-background-color: white;" text="How Many player's?">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+   </children>
+</AnchorPane>

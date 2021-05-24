@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network;
 
 import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.GUI.GUI;
 import it.polimi.ingsw.network.server.Server;
 
 import java.io.BufferedReader;
@@ -25,9 +26,9 @@ public class MastersOfRenaissance {
                 System.out.print(">");
                 userChoice = Integer.parseInt(in.readLine());
                 switch (userChoice) {
-                    case 1 -> Server.main(null);
+                    case 1 -> Server.main(args);
                     case 2 -> CLI.main(null);
-                    case 3 -> System.out.println("WIP");
+                    case 3 -> GUI.main(null);
                     default -> throw new IllegalArgumentException();
                 }
             } catch (IOException e) {
