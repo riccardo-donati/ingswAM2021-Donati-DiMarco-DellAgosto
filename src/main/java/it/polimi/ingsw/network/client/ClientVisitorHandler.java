@@ -9,6 +9,8 @@ import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
 import java.io.IOException;
+import java.util.List;
+
 public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DisconnectionMessage message, Client client) {
@@ -236,7 +238,7 @@ public class ClientVisitorHandler implements ClientVisitor{
             sb.append("Choose 2 leader cards: \n");
             List<String> leaderCards=message.getFourLeaderCards();
             for(int i=0;i<leaderCards.size();i++){
-                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().getLeaderCardStringified(leaderCards.get(i))).append("\n");
+                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(client.getClientModel().stringifyLeaderCardFromName(leaderCards.get(i))).append("\n");
             }
         }
         if(message.getPendingResources().size()>0){
