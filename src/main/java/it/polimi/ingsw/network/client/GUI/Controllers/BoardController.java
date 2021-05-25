@@ -2,6 +2,10 @@ package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposits;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
+import it.polimi.ingsw.network.client.ClientModel.Shelf;
 import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -18,12 +22,14 @@ import javafx.util.Duration;
 import java.util.Map;
 
 public class BoardController extends ControllerGUI {
-    Map<Resource, Integer> strongbox = gui.getClientModel().getCurrentBoard().getDeposits().getStrongbox();
+    Map<Resource, Integer> strongbox; //= gui.getClientModel().getCurrentBoard().getDeposits().getStrongbox();
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
     Image draggedRes;
     ResourceType movedRes;
+    Integer row;
+    Integer column;
     ImageView target;
 
     public BoardController(){
@@ -54,6 +60,18 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView pendingServant;
     @FXML private ImageView pendingShield;
     @FXML private ImageView pendingStone;
+    @FXML private ImageView green1;
+    @FXML private ImageView green2;
+    @FXML private ImageView green3;
+    @FXML private ImageView blue1;
+    @FXML private ImageView blue2;
+    @FXML private ImageView blue3;
+    @FXML private ImageView yellow1;
+    @FXML private ImageView yellow2;
+    @FXML private ImageView yellow3;
+    @FXML private ImageView purple1;
+    @FXML private ImageView purple2;
+    @FXML private ImageView purple3;
 
     /**
      * hides and shows the strongbox Panel
@@ -129,7 +147,7 @@ public class BoardController extends ControllerGUI {
     /**
      * function that updates every resource in the strongbox with it's value
      */
-    private void updateDeposits() {
+    public void updateDeposits() {
         strongboxCoins.setText(strongbox.get(Resource.COIN).toString());
         strongboxServants.setText(strongbox.get(Resource.SERVANT).toString());
         strongboxShields.setText(strongbox.get(Resource.SHIELD).toString());
@@ -139,28 +157,27 @@ public class BoardController extends ControllerGUI {
     /**
      * function that updates the value of the resource currently picked
      */
-    private void updatePickedRes(){
-        pickedCoins.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
-        pickedServants.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
-        pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
-        pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().toString());
+    public void updatePickedRes(){
+        pickedCoins.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.COIN).toString());
+        pickedServants.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SERVANT).toString());
+        pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SHIELD).toString());
+        pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.STONE).toString());
     }
 
     /**
      *
      */
-    private void updateLCard(){
+    public void updateLCard(){
     }
 
     /**
      * function that will update the result of the drag & drop event in the warehouse
      */
-    private void updateWarehouse(){
-        //target is a global variable so should be setted based on which slot of the warehouse i'm doing the deposit
-        // like resSlot1 resSlot21 resSlot22 resSlot31....
+    public void updateWarehouse(ClientDeposits clientDeposits){
+        //for on the shelves to check which and how many resources are there
+//        for(Shelf shelf : clientDeposits.getShelves()){
         target.setImage(draggedRes);
     }
-
 
 //---------------------------------out messages----------------------------------
     /**
@@ -216,7 +233,7 @@ public class BoardController extends ControllerGUI {
      * this method allows the warehouse to accept an image dropped in
      * @param dragEvent detect the drop event
      */
-    public void acceptRes(DragEvent dragEvent) {
+    public void acceptDrag(DragEvent dragEvent) {
         if(dragEvent.getDragboard().hasImage()){
             dragEvent.acceptTransferModes(TransferMode.ANY);
         }
@@ -227,8 +244,8 @@ public class BoardController extends ControllerGUI {
      * integer slot. This slot identifies the warehouse position of the dropped pending resource.
      * @param dragEvent this event identifies the end of a drag & drop event
      */
-    public void placeSlot(DragEvent dragEvent){
-        draggedRes = dragEvent.getDragboard().getImage();
+    public void placeWarehouse(DragEvent dragEvent){
+//        draggedRes = dragEvent.getDragboard().getImage();
         Integer slot;
         if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
         else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
@@ -242,6 +259,7 @@ public class BoardController extends ControllerGUI {
      * and assigns to a global variable, useful to the deposit message, the kind of resource i'm try to deposit
      * @param mouseEvent detects the drag event
      */
+    //based on how we would like to structure the updateWarehouse i don't have to save the Resource(?)
     public void movePendingRes(MouseEvent mouseEvent){
         ClipboardContent cb = new ClipboardContent();
         ImageView source;
@@ -265,5 +283,92 @@ public class BoardController extends ControllerGUI {
         cb.putImage(source.getImage());
         db.setContent(cb);
         mouseEvent.consume();
+    }
+
+    /**
+     * communicates to the server that the user wants to pass the turn
+     * @param event left click of the pass button
+     */
+    public void pass(ActionEvent event) {
+        gui.getOut().println(gui.getGson().toJson(new PassCommand()));
+    }
+
+    /**
+     * function that based on the source of the dragging event assigns from which row and column the card is taken from
+     * @param mouseEvent drag the card from the card matrix
+     */
+    //don't think the drag e drop works
+    public void moveDCard(MouseEvent mouseEvent) {
+        ClipboardContent cb = new ClipboardContent();
+        ImageView source;
+        if (mouseEvent.getSource().toString().equals("ImageView[id=green1, styleClass=image-view]")) {
+            source = green1;
+            row = 1;
+            column = 1;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=green2, styleClass=image-view]")) {
+            source = green2;
+            row = 2;
+            column = 1;
+        } else if(mouseEvent.getSource().toString().equals("ImageView[id=green3, styleClass=image-view]")) {
+            source = green3;
+            row = 3;
+            column = 1;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=blue1, styleClass=image-view]")) {
+            source = blue1;
+            row = 1;
+            column = 2;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=blue2, styleClass=image-view]")) {
+            source = blue2;
+            row = 2;
+            column = 2;
+        } else if(mouseEvent.getSource().toString().equals("ImageView[id=blue3, styleClass=image-view]")) {
+            source = blue3;
+            row = 3;
+            column = 2;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=yellow1, styleClass=image-view]")) {
+            source = yellow1;
+            row = 1;
+            column = 3;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=yellow2, styleClass=image-view]")) {
+            source = yellow2;
+            row = 2;
+            column = 3;
+        } else if(mouseEvent.getSource().toString().equals("ImageView[id=yellow3, styleClass=image-view]")) {
+            source = yellow3;
+            row = 3;
+            column = 3;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=purple1, styleClass=image-view]")) {
+            source = purple1;
+            row = 1;
+            column = 4;
+        } else if (mouseEvent.getSource().toString().equals("ImageView[id=purple2, styleClass=image-view]")) {
+            source = purple2;
+            row = 2;
+            column = 4;
+        } else {
+            source = purple3;
+            row = 3;
+            column = 4;
+        }
+        Dragboard db = source.startDragAndDrop(TransferMode.COPY);
+        cb.putImage(source.getImage());
+        db.setContent(cb);
+        mouseEvent.consume();
+        showCardMarket();
+    }
+
+    /**
+     *
+     * @param dragEvent
+     */
+    public void placeSlot(DragEvent dragEvent) {
+        Integer dCardSlot;
+        if(dragEvent.getTarget().toString().equals("ImageView[id=slot11, styleClass=image-view]") ||
+                dragEvent.getTarget().toString().equals("ImageView[id=slot12, styleClass=image-view]") ||
+                dragEvent.getTarget().toString().equals("ImageView[id=slot13, styleClass=image-view]")) dCardSlot = 1;
+//        else if(dragEvent.getTarget().toString().equals("ImageView[id=slot12, styleClass=image-view]")) dCardSlot = 2;
+//        else dCardSlot = 3;
+        else dCardSlot =0;
+        gui.getOut().println(gui.getGson().toJson(new BuyCardCommand(row, column, dCardSlot)));
     }
 }

@@ -7,13 +7,12 @@ public class Shelf {
     private int n;
     private int id;
 
-    public Resource[] getSpaces() {
-        return spaces;
-    }
+    public Resource[] getSpaces() { return spaces; }
 
     public int getId() {
         return id;
     }
+
     public void clear(){
         for(int i=0;i<spaces.length;i++){
             spaces[i]=Resource.EMPTY;

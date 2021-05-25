@@ -86,6 +86,11 @@
       </AnchorPane>
       <AnchorPane fx:id="main_board" layoutX="216.0" layoutY="176.0" prefHeight="632.0" prefWidth="970.0">
          <children>
+            <Button fx:id="production1" layoutX="844.0" layoutY="560.0" mnemonicParsing="false" onAction="#pass" prefHeight="36.0" prefWidth="97.0" text="PASS">
+               <font>
+                  <Font name="Gabriola" size="18.0" />
+               </font>
+            </Button>
             <ImageView fitHeight="557.0" fitWidth="862.0" layoutX="58.0" layoutY="-28.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/board.png" />
@@ -134,23 +139,42 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="production" layoutX="799.0" layoutY="559.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" text="PRODUCE">
+            <Button fx:id="production" layoutX="603.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" text="PRODUCE">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
             <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" onMouseClicked="#openStrongbox" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="pickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot22" fitHeight="30.0" fitWidth="27.0" layoutX="172.0" layoutY="265.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDropped="#placeSlot" onDragOver="#acceptRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot22" fitHeight="30.0" fitWidth="27.0" layoutX="172.0" layoutY="265.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
+               <children>
+                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="21.0" layoutY="98.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="CLOSED_HAND" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="21.0" layoutY="68.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="CLOSED_HAND" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="21.0" layoutY="37.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="CLOSED_HAND" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </AnchorPane>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="leaderCardSlot" layoutX="49.0" layoutY="181.0" prefHeight="623.0" prefWidth="196.0">
@@ -273,76 +297,112 @@
                </image>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="green1" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="green2" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="green3" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="blue1" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="blue2" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="blue3" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="yellow1" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="yellow2" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="yellow3" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="408.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="purple1" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="213.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="purple2" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
-            <ImageView fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="purple3" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="CLOSED_HAND" />
+               </cursor>
             </ImageView>
          </children></AnchorPane>
       <AnchorPane fx:id="hiddenResMarket" layoutX="702.0" layoutY="-479.0" prefHeight="479.0" prefWidth="499.0">
