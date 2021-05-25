@@ -22,7 +22,7 @@ import javafx.util.Duration;
 import java.util.Map;
 
 public class BoardController extends ControllerGUI {
-    Map<Resource, Integer> strongbox; //= gui.getClientModel().getCurrentBoard().getDeposits().getStrongbox();
+    Map<Resource, Integer> strongbox;
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
@@ -31,6 +31,7 @@ public class BoardController extends ControllerGUI {
     Integer row;
     Integer column;
     ImageView target;
+
 
     public BoardController(){
     }
