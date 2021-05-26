@@ -2,7 +2,6 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.*;
@@ -42,16 +41,12 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(PlayerNumberRequest message, Client client) {
-        System.out.println(message.getMessage());
-        if (client instanceof CLI)
-            ((CLI) client).setCurrCommand("numberofplayers ");
+        client.visualizeNumberOfPlayer(message);
     }
 
     @Override
     public void visit(RegisterRequest message, Client client) {
-        System.out.println(message.getMessage());
-        if (client instanceof CLI)
-            ((CLI) client).setCurrCommand("register ");
+        client.visualizeRegisterRequest();
     }
 
     @Override
@@ -82,6 +77,11 @@ public class ClientVisitorHandler implements ClientVisitor{
         message.update(client.getClientModel());
 
         client.visualizePendingResourceUpdate(message);
+    }
+
+    @Override
+    public void visit(WaitMessage message, Client client) {
+        client.visualizeWait();
     }
 
     @Override

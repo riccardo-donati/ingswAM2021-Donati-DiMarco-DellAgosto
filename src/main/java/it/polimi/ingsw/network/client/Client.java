@@ -14,11 +14,11 @@ import java.net.Socket;
 import java.util.Scanner;
 
 public interface Client {
-    public Socket getSocket();
-    public ClientModel getClientModel();
-    public Gson getGson();
-    public Scanner getIn();
-    public PrintWriter getOut();
+     Socket getSocket();
+     ClientModel getClientModel();
+     Gson getGson();
+     Scanner getIn();
+     PrintWriter getOut();
 
     // Updates:
     void visualizeDisconnectionMessage(DisconnectionMessage message);
@@ -44,4 +44,8 @@ public interface Client {
     void visualizeToggleDiscountUpdate();
     void visualizeEndGameMessage();
     void visualizeEndGameResultUpdate(Result gameResult);
+    void visualizeNumberOfPlayer(PlayerNumberRequest message);
+    void visualizeWait();
+    void visualizeRegisterRequest();
+
 }

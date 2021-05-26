@@ -125,6 +125,10 @@ public class Controller implements GameObserver {
         return nicknames;
     }
 
+    public synchronized GamePhase getGameState() {
+        return gameState;
+    }
+
     public synchronized void setGameState(GamePhase gamePhase) {
         this.gameState = gamePhase;
     }

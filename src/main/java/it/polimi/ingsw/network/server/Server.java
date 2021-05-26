@@ -104,13 +104,13 @@ public class Server {
         if (nick != null){
             Controller lobby = searchLobby(nickLobbyMap.get(nick));
             lobby.notifyLobby(new GenericMessage(nick +  " disconnected!"));
-            if(lobby.getGamePhase()== GamePhase.NOTSTARTED){
+            if(lobby.getGameState()== GamePhase.NOTSTARTED){
                 try {
                     searchVirtualClient(nick).getClientHandler().closeConnection();
                 } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
                 }
-            }else if(lobby.getGamePhase()==GamePhase.ONGOING ||lobby.getGamePhase()==GamePhase.SETUP){
+            }else if(lobby.getGameState()==GamePhase.ONGOING ||lobby.getGameState()==GamePhase.SETUP){
                 lobby.setActive(nick,false);
                 if(lobby.getLorenzoPosition()==null) {
                     if (lobby.getActivePlayers().size()>0)
@@ -172,7 +172,7 @@ public class Server {
                 if(l.getPlayersInLobby().size()==0){
                     lobbies.remove(l);
                 }else {
-                    l.notifyLobby(new LobbyInfoMessage(l.getNames()));
+                    l.notifyLobby(new LobbyInfoMessage(l.getNames(),l.getnPlayers()));
                 }
             }
         }
@@ -248,7 +248,7 @@ public class Server {
                         lobby.addPlayerInLobby(vc);
                         vc.getClientHandler().setLobby(lobby);
                         vc.getClientHandler().send(new GenericMessage("You joined a lobby!"));
-                        vc.getClientHandler().send(new LobbyInfoMessage(lobby.getNames()));
+                        lobby.notifyLobby(new LobbyInfoMessage(lobby.getNames(),lobby.getnPlayers()));
                         waitingList.remove(vc);
                         virtualClientList.add(vc);
                         nickLobbyMap.put(vc.getNickname(), lobby.getIdLobby());
@@ -283,7 +283,9 @@ public class Server {
                 clientHandler.setLobby(newLobby);
                 waitingList.remove(vc);
                 nickLobbyMap.put(vc.getNickname(), newLobby.getIdLobby());
-                vc.getClientHandler().send(new GenericMessage("Lobby created"));
+                List<String> users=new ArrayList<>();
+                users.add(vc.getNickname());
+                vc.getClientHandler().send(new LobbyInfoMessage(users,newLobby.getnPlayers()));
                 if(newLobby.isFull()){
                     newLobby.start();
                     //saveServerStatus();

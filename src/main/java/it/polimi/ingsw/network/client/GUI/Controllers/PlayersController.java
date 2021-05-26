@@ -1,18 +1,17 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.network.messages.PlayerNumberResponse;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 
 import java.io.IOException;
 
 public class PlayersController extends ControllerGUI {
     private static final String BOARD = "board.fxml";
-
-    @FXML private Button onePlayer;
-    @FXML private Button twoPlayers;
-    @FXML private Button threePlayers;
-    @FXML private Button fourPlayers;
 
     //just a basic first implementation, basically empty
     public void singlePlayer(ActionEvent event) throws IOException {
@@ -23,11 +22,8 @@ public class PlayersController extends ControllerGUI {
         gui.changeScene(BOARD);
     }
 
-    public void multiPlayer(ActionEvent event) throws IOException {
-        createLobby();
-    }
-
-    private void createLobby() throws IOException {
-        gui.changeScene("/fxml/lobby.fxml");
+    public void chooseNumber(MouseEvent mouseEvent) throws IOException {
+        Node node=(Node)mouseEvent.getSource();
+        gui.send(new PlayerNumberResponse(Integer.parseInt(node.getId())));
     }
 }

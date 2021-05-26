@@ -36,4 +36,6 @@ public interface ClientVisitor {
     void visit(EndGameResultUpdate message, Client client);
     void visit(ReconnectUpdate message, Client client);
     void visit(PendingResourcesUpdate message, Client client);
+
+    void visit(WaitMessage message, Client client);
 }
