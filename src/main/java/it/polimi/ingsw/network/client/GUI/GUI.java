@@ -7,6 +7,7 @@ import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitorHandler;
+import it.polimi.ingsw.network.client.GUI.Controllers.BoardController;
 import it.polimi.ingsw.network.client.GUI.Controllers.ControllerGUI;
 import it.polimi.ingsw.network.client.GUI.Controllers.Lobby;
 import it.polimi.ingsw.network.client.GUI.Controllers.LogIn;
@@ -118,7 +119,7 @@ public class GUI extends Application implements Client {
         }catch (IOException e){
             e.printStackTrace();
         }
-        currentScene = buildedScenes.get(LOGIN);
+        currentScene = buildedScenes.get(BOARD);
     }
 
     public void changeScene(String newScene) {
@@ -201,7 +202,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
