@@ -123,6 +123,7 @@ public class GUI extends Application implements Client {
 
     public void changeScene(String newScene) {
         currentScene = buildedScenes.get(newScene);
+        stage.setScene(currentScene);
         stage.setResizable(false);
         stage.sizeToScene();
         stage.centerOnScreen();

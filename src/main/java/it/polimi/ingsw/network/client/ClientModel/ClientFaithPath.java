@@ -161,9 +161,9 @@ public class ClientFaithPath  {
         return b.toString();
     }
 
-    /*public static void main(String[] args) {
+    public static void main(String[] args) {
         ClientFaithPath cfp=new ClientFaithPath();
-        cfp.addToPos(8);
+        cfp.addToFaithPath(8);
         cfp.setPopeFavor(3,false);
 
         cfp.setLorenzoPosition(1);
@@ -192,7 +192,7 @@ public class ClientFaithPath  {
         wh.removeResourceFromStrongbox(Resource.COIN);
 
         System.out.println(wh.toString());
-    }*/
+    }
 
 
 

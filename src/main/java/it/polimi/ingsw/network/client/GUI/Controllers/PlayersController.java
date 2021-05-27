@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.client.GUI.Controllers;
 import it.polimi.ingsw.network.messages.PlayerNumberResponse;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.shape.Rectangle;
 
 import java.io.IOException;
 

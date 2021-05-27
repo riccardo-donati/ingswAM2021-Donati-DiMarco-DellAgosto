@@ -130,12 +130,13 @@ public abstract class Game implements BoardObserver, PublicInterface {
         Gson gson=new Gson();
         Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
         JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader("src/main/resources/json/developmentCard.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/developmentCard.json");
+        if(is==null) {
             System.out.println("DevelopmentCard.json not found");
+            return;
         }
+        reader = new JsonReader(new InputStreamReader(is));
         developmentCards=gson.fromJson(reader,foundListType);
         for(DevelopmentCard dc :developmentCards){
             nameDevelopmentCardMap.put(dc.getName(),dc);
@@ -153,13 +154,14 @@ public abstract class Game implements BoardObserver, PublicInterface {
         Gson gson = builder.create();
 
         Type foundListType=new TypeToken<ArrayList<LeaderCard>>(){}.getType();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/leaderCard.json");
         JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader("src/main/resources/json/leaderCard.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if(is==null) {
             System.out.println("leaderCard.json not found");
+            return;
         }
+        reader = new JsonReader(new InputStreamReader(is));
         leaderCards=gson.fromJson(reader,foundListType);
         for(LeaderCard ld :leaderCards){
             nameLeaderCardMap.put(ld.getName(),ld);

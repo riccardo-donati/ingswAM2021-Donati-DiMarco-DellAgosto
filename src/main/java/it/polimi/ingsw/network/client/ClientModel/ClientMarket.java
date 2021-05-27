@@ -33,8 +33,8 @@ public class ClientMarket {
         sb.append(Color.ANSI_PURPLE.escape() + "MARKET:\n" + Color.RESET);
         int n=0;
 
-        sb.append("     1    2    3    4\n");
-        sb.append("   ╔═ ══╦═ ══╦═ ══╦═ ══╗\n");
+        sb.append("     1   2   3   4\n");
+        sb.append("   ╔═══╦═══╦═══╦═══╗\n");
         for (int i = 1; i <= 17; i++) {
             if (i == 5 || i == 9 || i == 13) sb.append("│");
             else if (i == 1 || i == 17) {
@@ -48,7 +48,7 @@ public class ClientMarket {
                 n++;
             }
         }
-        sb.append("\n   ╠─ ──╬─ ──╬─ ──╬─ ──╣\n");
+        sb.append("\n   ╠───╬───╬───╬───╣\n");
         for (int i = 1; i <= 17; i++) {
             if (i == 5 || i == 9 || i == 13) sb.append("│");
             else if (i == 1 || i == 17) {
@@ -62,7 +62,7 @@ public class ClientMarket {
                 n++;
             }
         }
-        sb.append("\n   ╠─ ──╬─ ──╬─ ──╬─ ──╣\n");
+        sb.append("\n   ╠───╬───╬───╬───╣\n");
         for (int i = 1; i <= 17; i++) {
             if (i == 5 || i == 9 || i == 13) sb.append("│");
             else if (i == 1 || i == 17) {
@@ -76,8 +76,8 @@ public class ClientMarket {
                 n++;
             }
         }
-        sb.append("\n   ╚═ ══╩═ ══╩═ ══╩═ ══╝\n");
-        sb.append("     ↑    ↑    ↑    ↑   "/* + getMarbleType(marbles, n)*/); //
+        sb.append("\n   ╚═══╩═══╩═══╩═══╝\n");
+        sb.append("     ↑   ↑   ↑   ↑   "/* + getMarbleType(marbles, n)*/); //
         sb.append("\n   Pending Marble: " + getMarbleType(n));
         sb.append("\n");
         return sb.toString();

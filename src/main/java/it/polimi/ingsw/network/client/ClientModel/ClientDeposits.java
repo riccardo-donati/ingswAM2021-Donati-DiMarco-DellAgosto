@@ -144,70 +144,75 @@ public class ClientDeposits {
         sb.append(Color.ANSI_PURPLE.escape()+"WAREHOUSE:                      STRONGBOX:"+Color.RESET+"\n");
         int spacesbonus=0;
         for(Shelf s : shelves){
-            if(s.getId()==4) sb.append("------------------------------ ║\n");
-            if(s.getId()==1)spacesbonus=6;
-            if(s.getId()==2)spacesbonus=3;
+            if(s.getId()==4) sb.append("-----------------------------║\n");
+            if(s.getId()==1)spacesbonus=5;
+            if(s.getId()==2)spacesbonus=2;
             if(s.getId()==3)spacesbonus=0;
             sb.append("           ");
-            for(int j=0;j<spacesbonus;j++)sb.append(" ");
+            for(int j=0;j<spacesbonus;j++)sb.append(" ");
             for(int i=0;i<s.getSpaces().length;i++){
-                sb.append("╔═ ══╗");
+                if(s.getId()==2)
+                    sb.append("╔═══╗ ");
+                else sb.append("╔═══╗");
             }
             //strongbox
             if(s.getId()==1) {
-                sb.append("            ║");
+                sb.append("        ║");
                 sb.append("   "+Resource.SHIELD.label+" : "+strongbox.get(Resource.SHIELD));
             }
             else if(s.getId()==2) {
-                sb.append("        ║");
+                sb.append("    ║");
                 sb.append("   "+Resource.STONE.label+" : "+strongbox.get(Resource.STONE));
             }
             else if(s.getId()==3) {
-                sb.append("    ║");
+                sb.append("   ║");
             }else if(s.getId()>3){
-                sb.append("           ║");
+                sb.append("        ║");
             }
 
             sb.append("\n");
             sb.append("Deposit "+s.getId()+": ");
             for(int j=0;j<spacesbonus;j++) {
-                sb.append(" ");
+                sb.append(" ");
             }
             for(int i=0;i< s.getSpaces().length;i++){
-                sb.append("║ "+s.getSpaces()[i].label+" ║");
+                if(s.getId()==2)sb.append("║ "+s.getSpaces()[i].label+" ║ ");
+                else sb.append("║ "+s.getSpaces()[i].label+" ║");
 
             }
 
             //strongbox
             if(s.getId()==1) {
-                sb.append("            ║");
+                sb.append("        ║");
                 sb.append("   "+Resource.COIN.label+" : "+strongbox.get(Resource.COIN));
             }
             else if(s.getId()==2){
-                sb.append("        ║");
+                sb.append("    ║");
             }
-            else if(s.getId()==3)sb.append("    ║");
+            else if(s.getId()==3)sb.append("   ║");
             else if(s.getId()>3){
-                 sb.append("           ║");
+                 sb.append("        ║");
             }
             sb.append("\n");
             sb.append("           ");
-            for(int j=0;j<spacesbonus;j++)sb.append(" ");
+            for(int j=0;j<spacesbonus;j++)sb.append(" ");
             for(int i=0;i<s.getSpaces().length;i++){
-                sb.append("╚══ ═╝");
+                if(s.getId()==2)
+                    sb.append("╚═══╝ ");
+                else sb.append("╚═══╝");
             }
 
             //strongbox
             if(s.getId()==1) {
-                sb.append("            ║");
+                sb.append("        ║");
                 sb.append("   "+Resource.SERVANT.label+" : "+strongbox.get(Resource.SERVANT));
             }
             else if(s.getId()==2){
-                sb.append("        ║");
+                sb.append("    ║");
             }
-            else if(s.getId()==3)sb.append("    ║");
+            else if(s.getId()==3)sb.append("   ║");
             else if(s.getId()>3){
-                 sb.append("           ║");
+                 sb.append("        ║");
              }
             sb.append("\n");
         }
