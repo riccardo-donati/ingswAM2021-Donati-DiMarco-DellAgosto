@@ -1,11 +1,8 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
-import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
-import it.polimi.ingsw.network.client.ClientModel.ClientDeposits;
-import it.polimi.ingsw.network.client.ClientModel.ClientModel;
-import it.polimi.ingsw.network.client.ClientModel.Shelf;
 import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -19,6 +16,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import java.util.Arrays;
 import java.util.Map;
 
 public class BoardController extends ControllerGUI {
@@ -73,6 +71,9 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView purple1;
     @FXML private ImageView purple2;
     @FXML private ImageView purple3;
+    @FXML private Label player1Name;
+    @FXML private Label player2Name;
+    @FXML private Label player3Name;
 
     /**
      * hides and shows the strongbox Panel
@@ -166,19 +167,53 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     *
+     *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
     public void updateLCard(){
+        leaderCard1.setImage(new Image("/images/leader1.png")); //need to substitute the source with the relative Leader image
+        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0) != null) leader1.setFill(Color.GREEN);
+        //this else if is wrong because the list of leader card decreases when an element is taken
+        //so we need to find a way to understand which dcard in the list (0 or 1) is discarded;
+        else if (gui.getClientModel().getMyBoard().getLeadersInBoard().get(0) == null &&
+                    gui.getClientModel().getMyBoard().getLeadersInHand().get(0) == null){
+            leaderCard1.setImage(new Image("/images/back LCard.png"));
+        }
+        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(1) != null) leader2.setFill(Color.GREEN);
+        //same as above in the discarded case
     }
 
     /**
      * function that will update the result of the drag & drop event in the warehouse
      */
     public void updateWarehouse(ClientDeposits clientDeposits){
-        //for on the shelves to check which and how many resources are there
-//        for(Shelf shelf : clientDeposits.getShelves()){
-        target.setImage(draggedRes);
+        String resType;
+        for(Shelf shelf : clientDeposits.getShelves()){
+            resType = checkResType(shelf);
+            if(shelf.getId()==1)    resSlot1.setImage(new Image(resType));
+            else if(shelf.getId()==2)  {
+                //how do i know how many elements does the shelf have?
+                resSlot21.setImage(new Image(resType));
+            }
+//            else if(shelf.getId()==3)    resSlot31.setImage(new Image(resType));
+//            else if(shelf.getId()==4)    resSlot21.setImage(new Image(resType));
+//            else resSlot21.setImage(new Image(resType));
+        }
+//        target.setImage(draggedRes);
     }
+
+    public String checkResType(Shelf shelf){
+        if(shelf.getSpaces().equals(Resource.COIN)) return "/images/coin.png";
+        if(shelf.getSpaces().equals(Resource.SHIELD)) return "/images/shield.png";
+        if(shelf.getSpaces().equals(Resource.SERVANT)) return "/images/servant.png";
+        if(shelf.getSpaces().equals(Resource.STONE))return "/images/stone.png";
+        else return null;   //null if empty?
+    }
+
+    /**
+     * visualize the board passed like parameter
+     * @param clientBoard the user board passed
+     */
+    public void updateBoard(ClientBoard clientBoard){}
 
 //---------------------------------out messages----------------------------------
     /**
@@ -367,9 +402,20 @@ public class BoardController extends ControllerGUI {
         if(dragEvent.getTarget().toString().equals("ImageView[id=slot11, styleClass=image-view]") ||
                 dragEvent.getTarget().toString().equals("ImageView[id=slot12, styleClass=image-view]") ||
                 dragEvent.getTarget().toString().equals("ImageView[id=slot13, styleClass=image-view]")) dCardSlot = 1;
-//        else if(dragEvent.getTarget().toString().equals("ImageView[id=slot12, styleClass=image-view]")) dCardSlot = 2;
-//        else dCardSlot = 3;
-        else dCardSlot =0;
+        else if(dragEvent.getTarget().toString().equals("ImageView[id=slot21, styleClass=image-view]") ||
+                dragEvent.getTarget().toString().equals("ImageView[id=slot22, styleClass=image-view]") ||
+                dragEvent.getTarget().toString().equals("ImageView[id=slot23, styleClass=image-view]")) dCardSlot = 2;
+        else dCardSlot = 3;
         gui.getOut().println(gui.getGson().toJson(new BuyCardCommand(row, column, dCardSlot)));
+    }
+
+    /**
+     * based on which of the 1 to 3 player's images clicked will be called a function to show the respective player's board
+     * @param mouseEvent the left mouse click on a player's image in the top left corner
+     */
+    public void playerBoard(MouseEvent mouseEvent) {
+        if (mouseEvent.getSource().toString().equals("ImageView[id=p1Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player1Name.getText()));
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=p2Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player2Name.getText()));
+        else updateBoard(gui.getClientModel().getBoards().get(player3Name.getText()));
     }
 }
