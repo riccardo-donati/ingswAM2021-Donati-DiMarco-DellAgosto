@@ -1,28 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.Cursor?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.effect.DropShadow?>
-<?import javafx.scene.effect.GaussianBlur?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.shape.Rectangle?>
-<?import javafx.scene.text.Font?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.text.*?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.BoardController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true">
          <image>
-            <Image url="@../images/cartoon table.jpg" />
+            <Image url="@../images/backgroundWood.jpg" />
          </image>
          <effect>
-            <GaussianBlur />
+            <GaussianBlur radius="0.0" />
          </effect>
       </ImageView>
       <AnchorPane fx:id="playerStatus" prefHeight="116.0" prefWidth="807.0">
@@ -76,11 +69,17 @@
                <image>
                   <Image url="@../images/Dcard1.png" />
                </image>
+               <effect>
+                  <DropShadow height="25.77" radius="13.575" spread="0.25" width="30.53" />
+               </effect>
             </ImageView>
             <ImageView fx:id="resourceMarket" fitHeight="111.0" fitWidth="100.0" layoutX="111.0" layoutY="28.0" onMouseClicked="#manageResMarket" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/red marble.png" />
                </image>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
          </children>
       </AnchorPane>

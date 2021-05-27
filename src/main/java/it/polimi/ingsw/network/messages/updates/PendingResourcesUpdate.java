@@ -6,7 +6,6 @@ import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
-import it.polimi.ingsw.network.messages.updates.Update;
 
 import java.util.List;
 

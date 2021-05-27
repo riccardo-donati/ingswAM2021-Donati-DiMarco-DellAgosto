@@ -17,7 +17,7 @@ import java.io.*;
 import java.net.Socket;
 import java.util.*;
 
-public class CLI implements Client{
+public class CLI implements Client {
     private final String serverIP;
     private final Integer serverPortNumber;
     private Socket socket;
@@ -298,4 +298,23 @@ public class CLI implements Client{
     public void visualizeEndGameResultUpdate(Result gameResult) {
         System.out.println(Utilities.stringify(gameResult));
     }
+
+    @Override
+    public void visualizeNumberOfPlayer(PlayerNumberRequest message) {
+        System.out.println(message.getMessage());
+        currCommand="numberofplayers";
+
+    }
+
+    @Override
+    public void visualizeWait() {
+        System.out.println("Hold a second . . .");
+    }
+
+    @Override
+    public void visualizeRegisterRequest() {
+        System.out.println("Please insert your nickname: ");
+        currCommand="register ";
+    }
+
 }

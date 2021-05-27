@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.server;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.GUI.Controllers.WaitingLobby;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
@@ -12,6 +13,7 @@ import it.polimi.ingsw.network.messages.updates.*;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.concurrent.locks.Lock;
 
 public class ServerVisitorHandler implements ServerVisitor {
     private String nickname;
@@ -38,6 +40,7 @@ public class ServerVisitorHandler implements ServerVisitor {
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
             System.out.println("Created virtual client for " + nickname);
             this.nickname=nickname;
+            clientHandler.send(new WaitMessage());
             try {
                 clientHandler.getServer().addVirtualClient(virtualClient);
             } catch (IllegalArgumentException e){
@@ -46,6 +49,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                 clientHandler.getPinger().start();
                 return;
             }
+
             synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     clientHandler.send(new PlayerNumberRequest());
