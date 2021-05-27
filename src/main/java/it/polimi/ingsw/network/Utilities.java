@@ -23,15 +23,27 @@ import java.util.*;
 public abstract class Utilities {
 
     public static Integer loadServerPortNumber() throws FileNotFoundException, NullPointerException {
-        JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
-        Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {}.getType());
-        return Integer.parseInt(map.get("portNumber"));
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/serverSettings.json");
+        if(is!=null) {
+            JsonReader reader = new JsonReader(new InputStreamReader(is));
+            Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {
+            }.getType());
+            return Integer.parseInt(map.get("portNumber"));
+        }
+        return null;
     }
 
     public static String loadServerIP() throws FileNotFoundException, NullPointerException {
-        JsonReader reader = new JsonReader(new FileReader("src/main/resources/json/serverSettings.json"));
-        Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {}.getType());
-        return map.get("ip");
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/serverSettings.json");
+        if(is!=null) {
+            JsonReader reader = new JsonReader(new InputStreamReader(is));
+            Map<String, String> map = new Gson().fromJson(reader, new TypeToken<Map<String, String>>() {
+            }.getType());
+            return map.get("ip");
+        }
+        return null;
     }
 
     public static void saveServerStatus(Server server, Gson gson){
@@ -110,27 +122,28 @@ public abstract class Utilities {
 
         Type foundListType=new TypeToken<ArrayList<LeaderCard>>(){}.getType();
         JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader("src/main/resources/json/leaderCard.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("leaderCard.json not found");
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/leaderCard.json");
+        if (is != null) {
+            reader = new JsonReader(new InputStreamReader(is));
+            list=gson.fromJson(reader,foundListType);
+            return list;
         }
-        list=gson.fromJson(reader,foundListType);
-        return list;
+        return null;
     }
 
     public static List<DevelopmentCard> loadDevelopmentCardsFromJSON() {
         Gson gson=new Gson();
         Type foundListType=new TypeToken<ArrayList<DevelopmentCard>>(){}.getType();
         JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader("src/main/resources/json/developmentCard.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("DevelopmentCard.json not found");
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/developmentCard.json");
+        if (is != null) {
+            reader = new JsonReader(new InputStreamReader(is));
+            return gson.fromJson(reader,foundListType);
         }
-        return gson.fromJson(reader,foundListType);
+        return null;
+
     }
 
     public static Resource resourceTypeToResource(ResourceType res){
@@ -305,12 +318,10 @@ public abstract class Utilities {
     }
     public static Server loadServerStatus(){
         Gson gsonLoad=Utilities.initializeGsonLoadAndSave();
-        FileReader fr = null;
-        try {
-            fr = new FileReader("src/main/resources/json/serverStatus.json");
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/serverStatus.json");
+        if(is==null) return null;
+        InputStreamReader fr = new InputStreamReader(is);
         BufferedReader b;
         b=new BufferedReader(fr);
         String json="";

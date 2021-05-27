@@ -39,6 +39,7 @@ public class GUI extends Application implements Client {
     private static final String NPLAYERS = "numbers.fxml";
     private static final String BOARD = "board.fxml";
     private static final String LOBBY="lobby.fxml";
+    private static final String SETUP="setupPhase.fxml";
 
 
     private String serverIP;
@@ -119,7 +120,7 @@ public class GUI extends Application implements Client {
         }catch (IOException e){
             e.printStackTrace();
         }
-        currentScene = buildedScenes.get(BOARD);
+        currentScene = buildedScenes.get(LOGIN);
     }
 
     public void changeScene(String newScene) {
@@ -182,7 +183,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeStartGameUpdate() {
-        Platform.runLater(new Thread(()->changeScene(BOARD)));
+        Platform.runLater(new Thread(()->changeScene(SETUP)));
+
     }
 
     @Override

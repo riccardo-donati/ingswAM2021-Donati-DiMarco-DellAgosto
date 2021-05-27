@@ -11,6 +11,8 @@ import it.polimi.ingsw.model.interfaces.Token;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -43,12 +45,13 @@ public class Singleplayer extends Game {
         Type foundListType = new TypeToken<ArrayList<Token>>(){}.getType();
 
         JsonReader reader = null;
-        try {
-            reader = new JsonReader(new FileReader("src/main/resources/json/token.json"));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("json/token.json");
+        if(is==null) {
             System.out.println("token.json not found");
+            return;
         }
+        reader = new JsonReader(new InputStreamReader(is));
         tokens=gson.fromJson(reader,foundListType);
     }
 
