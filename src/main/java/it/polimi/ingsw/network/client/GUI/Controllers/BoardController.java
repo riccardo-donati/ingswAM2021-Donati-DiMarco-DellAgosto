@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
@@ -17,7 +18,9 @@ import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 public class BoardController extends ControllerGUI {
     Map<Resource, Integer> strongbox;
@@ -29,6 +32,8 @@ public class BoardController extends ControllerGUI {
     Integer row;
     Integer column;
     ImageView target;
+    Character line;
+    Integer pos;
 
 
     public BoardController(){
@@ -120,11 +125,11 @@ public class BoardController extends ControllerGUI {
         if(!clickedMarket){
             if(clickedMatrix) showCardMarket();
             tt3.setFromY(0);
-            tt3.setToY(679);
+            tt3.setToY(670);
             clickedMarket = true;
         }
         else{
-            tt3.setFromY(679);
+            tt3.setFromY(670);
             tt3.setToY(0);
             clickedMarket = false;
         }
@@ -170,6 +175,7 @@ public class BoardController extends ControllerGUI {
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
     public void updateLCard(){
+        //write down the id of both cards and check if it's in the LadersInGame list
         leaderCard1.setImage(new Image("/images/leader1.png")); //need to substitute the source with the relative Leader image
         if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0) != null) leader1.setFill(Color.GREEN);
         //this else if is wrong because the list of leader card decreases when an element is taken
@@ -215,7 +221,20 @@ public class BoardController extends ControllerGUI {
      */
     public void updateBoard(ClientBoard clientBoard){}
 
-//---------------------------------out messages----------------------------------
+    /**
+     * shows which resources you got from the resource market
+     */
+    public void updatePending(List<Resource> pending){
+
+    }
+
+    public void updateCardMatrix(){
+//        ClientCardMatrix cards = gui.getClientModel().getCardMatrix();
+//        green1.setImage(new Image("/images/development_cards/"+));
+    }
+
+//---------------------------------out messages--------------------------------------------------------------
+
     /**
      * the click event on a Resource image sends a message of a picked resource
      * @param mouseEvent left mouse click on a specific resource
@@ -417,5 +436,37 @@ public class BoardController extends ControllerGUI {
         if (mouseEvent.getSource().toString().equals("ImageView[id=p1Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player1Name.getText()));
         else if (mouseEvent.getSource().toString().equals("ImageView[id=p2Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player2Name.getText()));
         else updateBoard(gui.getClientModel().getBoards().get(player3Name.getText()));
+    }
+
+    public void getResources(MouseEvent mouseEvent) {
+        if(mouseEvent.getSource().toString().equals("ImageView[id=colonna1, styleClass=image-view]")){
+            line = 'c';
+            pos = 1;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=colonna2, styleClass=image-view]")){
+            line = 'c';
+            pos = 2;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=colonna3, styleClass=image-view]")){
+            line = 'c';
+            pos = 3;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=colonna4, styleClass=image-view]")){
+            line = 'c';
+            pos = 4;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=riga1, styleClass=image-view]")){
+            line = 'r';
+            pos = 1;
+        }
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=riga2, styleClass=image-view]")){
+            line = 'r';
+            pos = 2;
+        }
+        else{
+            line = 'r';
+            pos = 3;
+        }
+        gui.getOut().println(gui.getGson().toJson(new BuyFromMarketCommand(line, pos)));
     }
 }

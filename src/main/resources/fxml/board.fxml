@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.shape.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.BoardController">
    <children>
@@ -20,41 +27,41 @@
       </ImageView>
       <AnchorPane fx:id="playerStatus" prefHeight="116.0" prefWidth="807.0">
          <children>
-            <ImageView fx:id="p1Board" fitHeight="86.0" fitWidth="98.0" layoutX="55.0" layoutY="20.0" onMouseClicked="#playerBoard" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="p1Board" fitHeight="86.0" fitWidth="98.0" layoutX="55.0" layoutY="20.0" onMouseClicked="#playerBoard" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/avatar.png" />
+                  <Image url="@../images/lorenzo.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player1Name" alignment="CENTER" contentDisplay="CENTER" layoutX="68.0" layoutY="111.0" prefHeight="17.0" prefWidth="60.0" text="Player 1" textAlignment="CENTER" textFill="WHITE">
+            <Label fx:id="player1Name" alignment="CENTER" contentDisplay="CENTER" layoutX="68.0" layoutY="111.0" prefHeight="17.0" prefWidth="60.0" textAlignment="CENTER">
                <font>
-                  <Font size="14.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font></Label>
-            <ImageView fx:id="p2Board" fitHeight="86.0" fitWidth="86.0" layoutX="186.0" layoutY="20.0" onMouseClicked="#playerBoard" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="p2Board" fitHeight="86.0" fitWidth="86.0" layoutX="186.0" layoutY="20.0" onMouseClicked="#playerBoard" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/avatar.png" />
+                  <Image url="@../images/lorenzo.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player2Name" alignment="CENTER" contentDisplay="CENTER" layoutX="199.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0" text="Player 2" textFill="#fffefe">
+            <Label fx:id="player2Name" alignment="CENTER" contentDisplay="CENTER" layoutX="199.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0">
                <font>
-                  <Font size="14.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font></Label>
-            <ImageView fx:id="p3Board" cache="true" fitHeight="86.0" fitWidth="86.0" layoutX="315.0" layoutY="20.0" onMouseClicked="#playerBoard" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="p3Board" cache="true" fitHeight="86.0" fitWidth="86.0" layoutX="315.0" layoutY="20.0" onMouseClicked="#playerBoard" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/avatar.png" />
+                  <Image url="@../images/lorenzo.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player3Name" alignment="CENTER" layoutX="328.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0" text="Player 3" textFill="WHITE">
+            <Label fx:id="player3Name" alignment="CENTER" layoutX="328.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0">
                <font>
-                  <Font size="14.0" />
+                  <Font size="24.0" />
                </font></Label>
             <ImageView fitHeight="120.0" fitWidth="255.0" layoutX="501.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                <image>
@@ -214,122 +221,127 @@
             </AnchorPane>
             <AnchorPane layoutX="83.0" layoutY="-1.0" prefHeight="135.0" prefWidth="821.0">
                <children>
-                  <ImageView fx:id="faithPath1" fitHeight="43.0" fitWidth="28.0" layoutX="57.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath110" fitHeight="34.0" fitWidth="41.0" layoutX="50.0" layoutY="82.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="faithPath1" fitHeight="43.0" fitWidth="28.0" layoutX="57.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath2" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath2" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="81.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath3" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath3" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="43.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath4" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath4" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath5" fitHeight="43.0" fitWidth="28.0" layoutX="139.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath5" fitHeight="43.0" fitWidth="28.0" layoutX="139.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath6" fitHeight="43.0" fitWidth="28.0" layoutX="183.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath6" fitHeight="43.0" fitWidth="28.0" layoutX="183.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath7" fitHeight="43.0" fitWidth="28.0" layoutX="224.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath7" fitHeight="43.0" fitWidth="28.0" layoutX="224.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath8" fitHeight="43.0" fitWidth="28.0" layoutX="266.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath8" fitHeight="43.0" fitWidth="28.0" layoutX="266.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath9" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath9" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath10" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath10" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="43.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath11" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath11" fitHeight="43.0" fitWidth="28.0" layoutX="309.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath12" fitHeight="43.0" fitWidth="28.0" layoutX="351.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath12" fitHeight="43.0" fitWidth="28.0" layoutX="351.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath13" fitHeight="43.0" fitWidth="28.0" layoutX="393.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath13" fitHeight="43.0" fitWidth="28.0" layoutX="393.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath14" fitHeight="43.0" fitWidth="28.0" layoutX="436.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath14" fitHeight="43.0" fitWidth="28.0" layoutX="436.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath15" fitHeight="43.0" fitWidth="28.0" layoutX="478.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath15" fitHeight="43.0" fitWidth="28.0" layoutX="478.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath16" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="82.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath16" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="82.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath17" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath17" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="43.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath18" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath18" fitHeight="43.0" fitWidth="28.0" layoutX="520.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath19" fitHeight="43.0" fitWidth="28.0" layoutX="562.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath19" fitHeight="43.0" fitWidth="28.0" layoutX="562.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath20" fitHeight="43.0" fitWidth="28.0" layoutX="604.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath20" fitHeight="43.0" fitWidth="28.0" layoutX="604.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath21" fitHeight="43.0" fitWidth="28.0" layoutX="647.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath21" fitHeight="43.0" fitWidth="28.0" layoutX="647.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath22" fitHeight="43.0" fitWidth="28.0" layoutX="689.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath22" fitHeight="43.0" fitWidth="28.0" layoutX="689.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath23" fitHeight="43.0" fitWidth="28.0" layoutX="731.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath23" fitHeight="43.0" fitWidth="28.0" layoutX="731.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath24" fitHeight="43.0" fitWidth="28.0" layoutX="773.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="faithPath24" fitHeight="43.0" fitWidth="28.0" layoutX="773.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
@@ -451,120 +463,80 @@
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="green1" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="green2" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="green3" fitHeight="176.0" fitWidth="130.0" layoutX="23.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="blue1" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="blue2" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="177.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="blue3" fitHeight="176.0" fitWidth="130.0" layoutX="186.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="yellow1" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="yellow2" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="337.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="yellow3" fitHeight="176.0" fitWidth="130.0" layoutX="346.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="purple1" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="408.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="206.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="purple2" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="213.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="500.0" layoutY="10.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
             <ImageView fx:id="purple3" fitHeight="176.0" fitWidth="130.0" layoutX="509.0" layoutY="17.0" onDragDetected="#moveDCard" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/Dcard1.png" />
-               </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
          </children></AnchorPane>
-      <AnchorPane fx:id="hiddenResMarket" layoutX="702.0" layoutY="-479.0" prefHeight="479.0" prefWidth="499.0">
+      <AnchorPane fx:id="hiddenResMarket" layoutX="701.0" layoutY="-480.0" prefHeight="479.0" prefWidth="499.0">
          <children>
-            <ImageView fitHeight="479.0" fitWidth="499.0" pickOnBounds="true">
-               <image>
-                  <Image url="@../images/casuale.jpg" />
-               </image>
-            </ImageView>
+            <ImageView fitHeight="479.0" fitWidth="499.0" pickOnBounds="true" />
             <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/coin.png" />
@@ -677,14 +649,62 @@
                   </ImageView>
                </children>
             </GridPane>
-            <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="350.0" layoutY="247.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="358.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/red marble.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="col0" fitHeight="65.0" fitWidth="65.0" layoutX="42.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="-90.0">
+            <ImageView fx:id="col0" fitHeight="54.0" fitWidth="66.0" layoutX="36.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
                <image>
-                  <Image url="@../images/freccia.jpg" />
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="colonna2" fitHeight="54.0" fitWidth="66.0" layoutX="111.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="colonna3" fitHeight="54.0" fitWidth="66.0" layoutX="186.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="colonna4" fitHeight="54.0" fitWidth="66.0" layoutX="261.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="riga3" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="192.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+               <image>
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="riga2" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="116.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+               <image>
+                  <Image url="@../images/freccia.png" />
+               </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </ImageView>
+            <ImageView fx:id="riga1" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="40.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+               <image>
+                  <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

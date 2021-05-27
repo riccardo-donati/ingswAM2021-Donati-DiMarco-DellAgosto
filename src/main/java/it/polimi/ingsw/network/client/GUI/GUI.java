@@ -7,10 +7,7 @@ import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitorHandler;
-import it.polimi.ingsw.network.client.GUI.Controllers.BoardController;
-import it.polimi.ingsw.network.client.GUI.Controllers.ControllerGUI;
-import it.polimi.ingsw.network.client.GUI.Controllers.Lobby;
-import it.polimi.ingsw.network.client.GUI.Controllers.LogIn;
+import it.polimi.ingsw.network.client.GUI.Controllers.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
@@ -38,7 +35,8 @@ public class GUI extends Application implements Client {
     private static final String LOADING = "loading screen.fxml";
     private static final String NPLAYERS = "numbers.fxml";
     private static final String BOARD = "board.fxml";
-    private static final String LOBBY="lobby.fxml";
+    private static final String LOBBY ="lobby.fxml";
+    private static final String SETUP ="setup phase.fxml";
 
 
     private String serverIP;
@@ -69,7 +67,8 @@ public class GUI extends Application implements Client {
 
     private void run() {
         stage.setScene(currentScene);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/coin.png")));
+        stage.setResizable(false);
+        stage.getIcons().add(new Image(getClass().getResourceAsStream("/images/calamaio.png")));
         stage.centerOnScreen();
         stage.sizeToScene();
         stage.show();
@@ -106,7 +105,7 @@ public class GUI extends Application implements Client {
     }
 
     private void setup() {
-        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,LOADING));
+        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,LOADING,SETUP));
         try{
             for(String path : listFxml){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path));
@@ -119,12 +118,12 @@ public class GUI extends Application implements Client {
         }catch (IOException e){
             e.printStackTrace();
         }
-        currentScene = buildedScenes.get(BOARD);
+        currentScene = buildedScenes.get(LOGIN);
     }
 
     public void changeScene(String newScene) {
         currentScene = buildedScenes.get(newScene);
-        stage.setScene(currentScene);
+        stage.setResizable(false);
         stage.sizeToScene();
         stage.centerOnScreen();
         stage.show();
@@ -182,7 +181,9 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeStartGameUpdate() {
-        Platform.runLater(new Thread(()->changeScene(BOARD)));
+        SetupController sc = (SetupController) buildedControllers.get(SETUP);
+        sc.updateLeader();
+        Platform.runLater(new Thread(()->changeScene(SETUP)));
     }
 
     @Override
