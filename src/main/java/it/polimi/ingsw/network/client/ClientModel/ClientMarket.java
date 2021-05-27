@@ -27,6 +27,10 @@ public class ClientMarket {
         else return "●";
     }
 
+    public List<ResourceType> getMarbles() {
+        return marbles;
+    }
+
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();

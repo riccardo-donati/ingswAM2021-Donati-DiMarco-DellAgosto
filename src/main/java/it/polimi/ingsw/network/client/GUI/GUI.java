@@ -184,7 +184,10 @@ public class GUI extends Application implements Client {
     public void visualizeStartGameUpdate() {
         SetupController sc = (SetupController) buildedControllers.get(SETUP);
         sc.updateLeader();
-        Platform.runLater(new Thread(()->changeScene(SETUP)));
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateCardMatrix();
+        bc.updateResMarket();
+        Platform.runLater(new Thread(()->changeScene(BOARD)));
     }
 
     @Override

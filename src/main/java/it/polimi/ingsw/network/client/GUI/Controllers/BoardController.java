@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
@@ -34,7 +35,6 @@ public class BoardController extends ControllerGUI {
     ImageView target;
     Character line;
     Integer pos;
-
 
     public BoardController(){
     }
@@ -79,6 +79,19 @@ public class BoardController extends ControllerGUI {
     @FXML private Label player1Name;
     @FXML private Label player2Name;
     @FXML private Label player3Name;
+    @FXML private ImageView marble00;
+    @FXML private ImageView marble01;
+    @FXML private ImageView marble02;
+    @FXML private ImageView marble03;
+    @FXML private ImageView marble10;
+    @FXML private ImageView marble11;
+    @FXML private ImageView marble12;
+    @FXML private ImageView marble13;
+    @FXML private ImageView marble20;
+    @FXML private ImageView marble21;
+    @FXML private ImageView marble22;
+    @FXML private ImageView marble23;
+    @FXML private ImageView pendingMarble;
 
     /**
      * hides and shows the strongbox Panel
@@ -174,18 +187,13 @@ public class BoardController extends ControllerGUI {
     /**
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
-    public void updateLCard(){
-        //write down the id of both cards and check if it's in the LadersInGame list
-        leaderCard1.setImage(new Image("/images/leader1.png")); //need to substitute the source with the relative Leader image
-        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0) != null) leader1.setFill(Color.GREEN);
-        //this else if is wrong because the list of leader card decreases when an element is taken
-        //so we need to find a way to understand which dcard in the list (0 or 1) is discarded;
-        else if (gui.getClientModel().getMyBoard().getLeadersInBoard().get(0) == null &&
-                    gui.getClientModel().getMyBoard().getLeadersInHand().get(0) == null){
-            leaderCard1.setImage(new Image("/images/back LCard.png"));
-        }
-        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(1) != null) leader2.setFill(Color.GREEN);
-        //same as above in the discarded case
+    public void setUpLCards(){
+        leaderCard1.setImage(new Image("/images/leader_cards"+gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName()+".png"));
+        leaderCard2.setImage(new Image("/images/leader_cards"+gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName()+".png"));
+    }
+
+    public void updateLCards(){
+
     }
 
     /**
@@ -229,8 +237,47 @@ public class BoardController extends ControllerGUI {
     }
 
     public void updateCardMatrix(){
-//        ClientCardMatrix cards = gui.getClientModel().getCardMatrix();
-//        green1.setImage(new Image("/images/development_cards/"+));
+        Stack<DevelopmentCard>[][] cards = gui.getClientModel().getCardMatrix().getCards();
+        green1.setImage(new Image("/images/development_cards/"+cards[0][0].peek().getName()+".png"));
+        green2.setImage(new Image("/images/development_cards/"+cards[1][0].peek().getName()+".png"));
+        green3.setImage(new Image("/images/development_cards/"+cards[2][0].peek().getName()+".png"));
+        blue1.setImage(new Image("/images/development_cards/"+cards[0][1].peek().getName()+".png"));
+        blue2.setImage(new Image("/images/development_cards/"+cards[1][1].peek().getName()+".png"));
+        blue3.setImage(new Image("/images/development_cards/"+cards[2][1].peek().getName()+".png"));
+        yellow1.setImage(new Image("/images/development_cards/"+cards[0][2].peek().getName()+".png"));
+        yellow2.setImage(new Image("/images/development_cards/"+cards[1][2].peek().getName()+".png"));
+        yellow3.setImage(new Image("/images/development_cards/"+cards[2][2].peek().getName()+".png"));
+        purple1.setImage(new Image("/images/development_cards/"+cards[0][3].peek().getName()+".png"));
+        purple2.setImage(new Image("/images/development_cards/"+cards[1][3].peek().getName()+".png"));
+        purple3.setImage(new Image("/images/development_cards/"+cards[2][3].peek().getName()+".png"));
+    }
+
+    public void updateResMarket(){
+        List<ResourceType> marbles = gui.getClientModel().getMarket().getMarbles();
+        marble00.setImage(new Image("/images/marbles/"+setColor(marbles.get(0))+".png"));
+        marble01.setImage(new Image("/images/marbles/"+setColor(marbles.get(1))+".png"));
+        marble02.setImage(new Image("/images/marbles/"+setColor(marbles.get(2))+".png"));
+        marble03.setImage(new Image("/images/marbles/"+setColor(marbles.get(3))+".png"));
+        marble10.setImage(new Image("/images/marbles/"+setColor(marbles.get(4))+".png"));
+        marble11.setImage(new Image("/images/marbles/"+setColor(marbles.get(5))+".png"));
+        marble12.setImage(new Image("/images/marbles/"+setColor(marbles.get(6))+".png"));
+        marble13.setImage(new Image("/images/marbles/"+setColor(marbles.get(7))+".png"));
+        marble20.setImage(new Image("/images/marbles/"+setColor(marbles.get(8))+".png"));
+        marble21.setImage(new Image("/images/marbles/"+setColor(marbles.get(9))+".png"));
+        marble22.setImage(new Image("/images/marbles/"+setColor(marbles.get(10))+".png"));
+        marble23.setImage(new Image("/images/marbles/"+setColor(marbles.get(11))+".png"));
+        pendingMarble.setImage(new Image("/images/marbles/"+setColor(marbles.get(12))+".png"));
+    }
+
+    public String setColor(ResourceType resourceType){
+        String color;
+        if(resourceType.equals(ResourceType.RED)) color = "red";
+        else if(resourceType.equals(ResourceType.BLUE)) color = "blue";
+        else if(resourceType.equals(ResourceType.YELLOW)) color = "yellow";
+        else if(resourceType.equals(ResourceType.VIOLET)) color = "purple";
+        else if(resourceType.equals(ResourceType.GREY)) color = "grey";
+        else color = "white";
+        return color;
     }
 
 //---------------------------------out messages--------------------------------------------------------------
