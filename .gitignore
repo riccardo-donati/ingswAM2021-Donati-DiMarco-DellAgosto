@@ -7,3 +7,8 @@
 
 target
 /src/main/it/polimi/ingsw/model/json/gameState
+
+serverStatus.json
+
+shade
+shade/*

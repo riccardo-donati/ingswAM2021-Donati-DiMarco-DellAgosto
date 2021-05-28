@@ -187,7 +187,7 @@ public class GUI extends Application implements Client {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateCardMatrix();
         bc.updateResMarket();
-        Platform.runLater(new Thread(()->changeScene(BOARD)));
+        Platform.runLater(new Thread(()->changeScene(SETUP)));
     }
 
     @Override

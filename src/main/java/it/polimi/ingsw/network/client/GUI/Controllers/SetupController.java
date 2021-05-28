@@ -99,7 +99,7 @@ public class SetupController extends ControllerGUI{
         gui.getOut().println(gui.getGson().toJson(new PassCommand()));
     }
 
-    public List leaderList(){
+    public List<String> leaderList(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(Rectangle r : selected){
             if(r.equals(l1Cover)) chosenL.add(leaderCards.get(0));
