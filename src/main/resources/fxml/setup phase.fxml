@@ -43,14 +43,19 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
-            <ImageView fx:id="leaderCard1" fitHeight="224.0" fitWidth="158.0" layoutX="64.0" layoutY="23.0" onMouseClicked="#chooseLeader" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="leaderCard2" fitHeight="224.0" fitWidth="158.0" layoutX="284.0" layoutY="23.0" onMouseClicked="#chooseLeader" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="leaderCard3" fitHeight="224.0" fitWidth="158.0" layoutX="64.0" layoutY="303.0" onMouseClicked="#chooseLeader" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="leaderCard4" fitHeight="224.0" fitWidth="158.0" layoutX="284.0" layoutY="303.0" onMouseClicked="#chooseLeader" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="leaderCard1" fitHeight="224.0" fitWidth="158.0" layoutX="64.0" layoutY="23.0" onMouseClicked="#colorLeader" pickOnBounds="true" />
+            <ImageView fx:id="leaderCard2" fitHeight="224.0" fitWidth="158.0" layoutX="284.0" layoutY="23.0" onMouseClicked="#colorLeader" pickOnBounds="true" />
+            <ImageView fx:id="leaderCard3" fitHeight="224.0" fitWidth="158.0" layoutX="64.0" layoutY="303.0" onMouseClicked="#colorLeader" pickOnBounds="true" />
+            <ImageView fx:id="leaderCard4" fitHeight="224.0" fitWidth="158.0" layoutX="284.0" layoutY="303.0" onMouseClicked="#colorLeader" pickOnBounds="true" />
          </children>
       </AnchorPane>
       <AnchorPane layoutX="499.0" onMouseClicked="#passTurn" prefHeight="572.0" prefWidth="363.0">
          <children>
+            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="99.0" text="PASS">
+               <font>
+                  <Font name="Gabriola" size="18.0" />
+               </font>
+            </Button>
             <ImageView fx:id="coinBonus" fitHeight="65.0" fitWidth="65.0" layoutX="82.0" layoutY="44.0" onMouseClicked="#selectedRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/coin.png" />
@@ -83,11 +88,6 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="99.0" text="PASS">
-               <font>
-                  <Font name="Gabriola" size="18.0" />
-               </font>
-            </Button>
             <Button fx:id="warehouse1" layoutX="98.0" layoutY="300.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="34.0" prefWidth="175.0" text="Warehouse    1">
                <font>
                   <Font name="Gabriola" size="18.0" />
@@ -135,6 +135,11 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <Button layoutX="21.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#chooseLeaders" prefHeight="44.0" prefWidth="133.0" text="CHOOSE LEADER">
+               <font>
+                  <Font name="Gabriola" size="18.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

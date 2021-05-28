@@ -13,6 +13,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -51,7 +52,7 @@ public class SetupController extends ControllerGUI{
         leaderCard4.setImage(new Image("/images/leader_cards/"+leaderCards.get(3)+".png"));
     }
 
-    public void chooseLeader(MouseEvent mouseEvent) {
+    public void colorLeader(MouseEvent mouseEvent) {
         if (selected.size()==2) replace = true;
         else replace = false;
         if(mouseEvent.getSource().toString().equals("ImageView[id=leaderCard1, styleClass=image-view]")){
@@ -89,8 +90,12 @@ public class SetupController extends ControllerGUI{
         else l4Cover.setFill(Color.valueOf("#b0b3b5"));
     }
 
-    public void passTurn(MouseEvent mouseEvent) {
+
+    public void chooseLeaders(MouseEvent mouseEvent) throws IOException {
         gui.getOut().println(gui.getGson().toJson(new ChooseLeadersCommand(leaderList())));
+    }
+
+    public void passTurn(MouseEvent mouseEvent) {
         gui.getOut().println(gui.getGson().toJson(new PassCommand()));
     }
 
@@ -105,7 +110,7 @@ public class SetupController extends ControllerGUI{
         return chosenL;
     }
 
-    public void placeResource(MouseEvent mouseEvent) {
+    public void placeResource(MouseEvent mouseEvent) throws IOException {
         if(mouseEvent.getSource().toString().equals("Button[id=warehouse1, styleClass=button]")) id = 1;
         else if(mouseEvent.getSource().toString().equals("Button[id=warehouse2, styleClass=button]")) id = 2;
         else id = 3;
@@ -157,5 +162,6 @@ public class SetupController extends ControllerGUI{
                 selectedStone.setOpacity(100);
             }
         }
+        mouseEvent.consume();
     }
 }

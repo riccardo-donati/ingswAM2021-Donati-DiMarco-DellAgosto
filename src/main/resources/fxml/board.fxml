@@ -80,9 +80,9 @@
                   <DropShadow height="25.77" radius="13.575" spread="0.25" width="30.53" />
                </effect>
             </ImageView>
-            <ImageView fx:id="resourceMarket" fitHeight="111.0" fitWidth="100.0" layoutX="111.0" layoutY="28.0" onMouseClicked="#manageResMarket" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="resourceMarket" fitHeight="105.0" fitWidth="122.0" layoutX="111.0" layoutY="28.0" onMouseClicked="#manageResMarket" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/red marble.png" />
+                  <Image url="@../images/icon.png" />
                </image>
                <effect>
                   <DropShadow />
@@ -388,16 +388,16 @@
             </Button>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="816.0" prefWidth="262.0">
+      <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="807.0" prefWidth="265.0">
          <children>
-            <ImageView fitHeight="807.0" fitWidth="261.0" pickOnBounds="true">
+            <ImageView fitHeight="939.0" fitWidth="822.0" layoutX="-557.0" layoutY="-6.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/casuale.jpg" />
+                  <Image url="@../images/wall.jpg" />
                </image>
             </ImageView>
             <Label alignment="CENTER" layoutX="3.0" layoutY="106.0" prefHeight="54.0" prefWidth="262.0" text="Strongbox Resources:">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="20.0" />
                </font>
             </Label>
             <ImageView fx:id="pickCoin" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="230.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
@@ -458,7 +458,7 @@
          <children>
             <ImageView fitHeight="600.0" fitWidth="653.0" pickOnBounds="true">
                <image>
-                  <Image url="@../images/casuale.jpg" />
+                  <Image url="@../images/backgroundWood.jpg" />
                </image>
             </ImageView>
             <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#9ea1a4" height="190.0" layoutX="14.0" layoutY="401.0" stroke="BLACK" strokeType="INSIDE" width="135.0" />
@@ -536,7 +536,13 @@
          </children></AnchorPane>
       <AnchorPane fx:id="hiddenResMarket" layoutX="701.0" layoutY="-480.0" prefHeight="479.0" prefWidth="499.0">
          <children>
-            <ImageView fitHeight="479.0" fitWidth="499.0" pickOnBounds="true" />
+            <ImageView fitHeight="538.0" fitWidth="643.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/backgroundWood.jpg" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect></ImageView>
             <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/coin.png" />
@@ -587,74 +593,22 @@
                 <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="90.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="85.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
-                     <image>
-                        <Image url="@../images/red marble.png" />
-                     </image>
-                  </ImageView>
+                  <ImageView fx:id="marble00" fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
+                  <ImageView fx:id="marble01" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="marble02" fitHeight="65.0" fitWidth="65.0" layoutX="90.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="marble03" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="marble10" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="marble11" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
+                  <ImageView fx:id="marble12" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <ImageView fx:id="marble13" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+                  <ImageView fx:id="marble20" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <ImageView fx:id="marble21" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <ImageView fx:id="marble22" fitHeight="65.0" fitWidth="65.0" layoutX="85.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <ImageView fx:id="marble23" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
                </children>
             </GridPane>
-            <ImageView fitHeight="65.0" fitWidth="65.0" layoutX="358.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/red marble.png" />
-               </image>
-            </ImageView>
-            <ImageView fx:id="col0" fitHeight="54.0" fitWidth="66.0" layoutX="36.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+            <ImageView fx:id="pendingMarble" fitHeight="65.0" fitWidth="65.0" layoutX="358.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="colonna1" fitHeight="54.0" fitWidth="66.0" layoutX="36.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
