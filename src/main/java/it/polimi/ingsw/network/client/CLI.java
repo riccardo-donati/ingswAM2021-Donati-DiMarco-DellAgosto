@@ -162,8 +162,8 @@ public class CLI implements Client {
         sb.append("------------------------------------------------------------------------------------\n");
         sb.append("Player Order:\n");
         List<String> playerOrder = clientModel.getPlayersInOrder();
-        for (String player : playerOrder){
-            sb.append(Color.ANSI_GREEN.escape()).append(player).append(Color.RESET);
+        for (int i=0;i<playerOrder.size()-1;i++){
+            sb.append(Color.ANSI_GREEN.escape()).append(playerOrder.get(i)).append(Color.RESET);
             sb.append(" -> ");
         }
         sb.append(Color.ANSI_GREEN.escape()).append(playerOrder.get(playerOrder.size() - 1)).append(Color.RESET+"\n");
