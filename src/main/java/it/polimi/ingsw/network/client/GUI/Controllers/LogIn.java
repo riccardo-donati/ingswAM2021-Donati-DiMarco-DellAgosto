@@ -30,9 +30,12 @@ public class LogIn extends ControllerGUI{
             gui.connect(ipAddress.getText(),Integer.parseInt(portNumber.getText()));
         }
     }
+
     public void register(){
         gui.send(new RegisterResponse(username.getText()));
+        gui.getClientModel().setNickname(username.getText());
     }
+
     public void quit(ActionEvent event){
         System.exit(0);
     }

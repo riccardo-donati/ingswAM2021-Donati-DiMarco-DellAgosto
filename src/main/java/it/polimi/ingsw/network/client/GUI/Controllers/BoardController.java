@@ -18,25 +18,25 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-import java.util.Stack;
+import java.util.*;
 
 public class BoardController extends ControllerGUI {
     Map<Resource, Integer> strongbox;
+    List<String> leaderID = new ArrayList<>();
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
-    Image draggedRes;
     ResourceType movedRes;
     Integer row;
     Integer column;
-    ImageView target;
     Character line;
     Integer pos;
+    Boolean setup = true;
+    Integer lCard;
+    Image img;
 
     public BoardController(){
+
     }
 
     @FXML private AnchorPane hiddenPanel;
@@ -187,12 +187,26 @@ public class BoardController extends ControllerGUI {
     /**
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
-    public void setUpLCards(){
-        leaderCard1.setImage(new Image("/images/leader_cards"+gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName()+".png"));
-        leaderCard2.setImage(new Image("/images/leader_cards"+gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName()+".png"));
-    }
-
-    public void updateLCards(){
+    public void updateLCards() {
+        if (setup) {
+            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName());
+            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
+            leaderCard1.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
+            leaderCard2.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
+            setup = false;
+        }
+        if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && setup){
+            if(!gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(0))) leaderCard2.setImage(new Image("/images/back LCard.png"));
+            if(!gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(1))) leaderCard1.setImage(new Image("/images/back LCard.png"));
+        }
+        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size()==1){
+            if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(leaderID.get(0))) leader1.setFill(Color.GREEN);
+            else leader2.setFill(Color.GREEN);
+        }
+        else {
+            leader1.setFill(Color.GREEN);
+            leader1.setFill(Color.GREEN);
+        }
 
     }
 
@@ -201,26 +215,41 @@ public class BoardController extends ControllerGUI {
      */
     public void updateWarehouse(ClientDeposits clientDeposits){
         String resType;
-        for(Shelf shelf : clientDeposits.getShelves()){
-            resType = checkResType(shelf);
-            if(shelf.getId()==1)    resSlot1.setImage(new Image(resType));
-            else if(shelf.getId()==2)  {
-                //how do i know how many elements does the shelf have?
-                resSlot21.setImage(new Image(resType));
-            }
-//            else if(shelf.getId()==3)    resSlot31.setImage(new Image(resType));
-//            else if(shelf.getId()==4)    resSlot21.setImage(new Image(resType));
-//            else resSlot21.setImage(new Image(resType));
+        if(clientDeposits.getShelf(1).getEmpty() != 0)
+            resSlot1.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(1))+".png"));
+        if(clientDeposits.getShelf(2).getEmpty() != 0){
+            resType = checkResType(clientDeposits.getShelf(2));
+            resSlot21.setImage(new Image("/images/resources/"+resType+".png"));
+            if(clientDeposits.getShelf(2).getEmpty() == 0)
+                resSlot22.setImage(new Image("/images/resources/"+resType+".png"));
         }
-//        target.setImage(draggedRes);
+        if(clientDeposits.getShelf(2).getEmpty() != 0){
+            resType = checkResType(clientDeposits.getShelf(3));
+            resSlot31.setImage(new Image("/images/resources/"+resType+".png"));
+            if(clientDeposits.getShelf(3).getEmpty() != 0)
+                resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
+            else {
+                resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
+                resSlot33.setImage(new Image("/images/resources/"+resType+".png"));
+            }
+        }
+        //extraDepots if they don't exist the result of this condition is null?
+//        if(!clientDeposits.getShelf(3).getSpaces().equals(ResourceType.EMPTY)){
+//            resSlot41.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(3))+".png"));
+//            if(getEmpty(clientDeposits.getShelf(3)) == 0) resSlot42.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(3))+".png"));
+//        }
+//        if(!clientDeposits.getShelf(4).getSpaces().equals(ResourceType.EMPTY)){
+//            resSlot51.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(4))+".png"));
+//            if(getEmpty(clientDeposits.getShelf(4)) == 0) resSlot52.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(4))+".png"));
+//        }
     }
 
     public String checkResType(Shelf shelf){
-        if(shelf.getSpaces().equals(Resource.COIN)) return "/images/coin.png";
-        if(shelf.getSpaces().equals(Resource.SHIELD)) return "/images/shield.png";
-        if(shelf.getSpaces().equals(Resource.SERVANT)) return "/images/servant.png";
-        if(shelf.getSpaces().equals(Resource.STONE))return "/images/stone.png";
-        else return null;   //null if empty?
+        if(shelf.getSpaces().equals(Resource.COIN)) return "coin";
+        if(shelf.getSpaces().equals(Resource.SHIELD)) return "shield";
+        if(shelf.getSpaces().equals(Resource.SERVANT)) return "servant";
+        if(shelf.getSpaces().equals(Resource.STONE))return "stone";
+        else return null;
     }
 
     /**
@@ -270,14 +299,12 @@ public class BoardController extends ControllerGUI {
     }
 
     public String setColor(ResourceType resourceType){
-        String color;
-        if(resourceType.equals(ResourceType.RED)) color = "red";
-        else if(resourceType.equals(ResourceType.BLUE)) color = "blue";
-        else if(resourceType.equals(ResourceType.YELLOW)) color = "yellow";
-        else if(resourceType.equals(ResourceType.VIOLET)) color = "purple";
-        else if(resourceType.equals(ResourceType.GREY)) color = "grey";
-        else color = "white";
-        return color;
+        if(resourceType.equals(ResourceType.RED)) return "red";
+        else if(resourceType.equals(ResourceType.BLUE)) return "blue";
+        else if(resourceType.equals(ResourceType.YELLOW)) return "yellow";
+        else if(resourceType.equals(ResourceType.VIOLET)) return "purple";
+        else if(resourceType.equals(ResourceType.GREY)) return  "grey";
+        else return "white";
     }
 
 //---------------------------------out messages--------------------------------------------------------------
@@ -314,7 +341,6 @@ public class BoardController extends ControllerGUI {
      * @param event on click calls the play leader button
      */
     public void playLeader(ActionEvent event) {
-        Integer lCard;
         if(event.getSource().toString().equals("playL1")) lCard = 0;
         else lCard = 1;
         gui.getOut().println(gui.getGson().toJson(new PlayLeaderCommand(lCard)));
@@ -325,7 +351,6 @@ public class BoardController extends ControllerGUI {
      * @param event on click calls the discard leader button
      */
     public void discardLeader(ActionEvent event) {
-        Integer lCard;
         if(event.getSource().toString().equals("discardL1")) lCard = 0;
         else lCard = 1;
         gui.getOut().println(gui.getGson().toJson(new DiscardLeaderCommand(lCard)));
@@ -515,5 +540,10 @@ public class BoardController extends ControllerGUI {
             pos = 3;
         }
         gui.getOut().println(gui.getGson().toJson(new BuyFromMarketCommand(line, pos)));
+    }
+
+    //because the deposit of resources is a drag e drop, it will be also with the discard
+    public void discardResources(MouseEvent mouseEvent) {
+//        gui.getOut().println(gui.getGson().toJson(new DiscardResourceCommand()));
     }
 }

@@ -56,22 +56,22 @@
       </ImageView>
       <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="142.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/stone.png" />
+            <Image url="@../images/resources/stone.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="92.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/coin.png" />
+            <Image url="@../images/resources/coin.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="565.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/servant.png" />
+            <Image url="@../images/resources/servant.png" />
          </image>
       </ImageView>
       <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="624.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
          <image>
-            <Image url="@../images/shield.png" />
+            <Image url="@../images/resources/shield.png" />
          </image>
       </ImageView>
       <Label fx:id="emptyInfo" alignment="CENTER" layoutX="298.0" layoutY="451.0" prefHeight="30.0" prefWidth="218.0" textFill="#ea0c0c">

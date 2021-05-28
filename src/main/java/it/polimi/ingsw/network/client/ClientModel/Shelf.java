@@ -13,6 +13,15 @@ public class Shelf {
         return id;
     }
 
+    public Integer getEmpty(){
+        int count=0;
+        for(Resource r: spaces){
+            if(r.equals(Resource.EMPTY))
+                count++;
+        }
+        return count;
+    }
+
     public void clear(){
         for(int i=0;i<spaces.length;i++){
             spaces[i]=Resource.EMPTY;

@@ -15,6 +15,10 @@ public class BonusResourceMessage implements ClientMessage{
             this.bonusRes = 2;
     }
 
+    public int getBonusRes() {
+        return bonusRes;
+    }
+
     public String getMessage(){
         return "Bonus resources: " + bonusRes;
     }

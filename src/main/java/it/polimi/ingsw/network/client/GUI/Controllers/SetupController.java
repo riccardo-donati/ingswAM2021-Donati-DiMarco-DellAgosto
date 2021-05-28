@@ -92,14 +92,16 @@ public class SetupController extends ControllerGUI{
 
 
     public void chooseLeaders(MouseEvent mouseEvent) throws IOException {
-        gui.getOut().println(gui.getGson().toJson(new ChooseLeadersCommand(leaderList())));
+        if(selected.size()<2)
+            ComunicationController.showError(gui.getCurrentScene(), "You have to choose 2 leader cards!");
+        else gui.send(new ChooseLeadersCommand(leaderList()));
     }
 
     public void passTurn(MouseEvent mouseEvent) {
-        gui.getOut().println(gui.getGson().toJson(new PassCommand()));
+        gui.send(new PassCommand());
     }
 
-    public List leaderList(){
+    public List<String> leaderList(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(Rectangle r : selected){
             if(r.equals(l1Cover)) chosenL.add(leaderCards.get(0));
@@ -118,7 +120,7 @@ public class SetupController extends ControllerGUI{
         selectedShield.setOpacity(0);
         selectedServant.setOpacity(0);
         selectedStone.setOpacity(0);
-        gui.getOut().println(gui.getGson().toJson(new ChooseBonusResourceCommand(res, id)));
+        gui.send(new ChooseBonusResourceCommand(res, id));
     }
 
     public void selectedRes(MouseEvent mouseEvent) {

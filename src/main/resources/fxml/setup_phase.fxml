@@ -49,16 +49,16 @@
             <ImageView fx:id="leaderCard4" fitHeight="224.0" fitWidth="158.0" layoutX="284.0" layoutY="303.0" onMouseClicked="#colorLeader" pickOnBounds="true" />
          </children>
       </AnchorPane>
-      <AnchorPane layoutX="499.0" onMouseClicked="#passTurn" prefHeight="572.0" prefWidth="363.0">
+      <AnchorPane layoutX="499.0" prefHeight="572.0" prefWidth="363.0">
          <children>
-            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" prefHeight="44.0" prefWidth="99.0" text="PASS">
+            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="44.0" prefWidth="99.0" text="PASS">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
             <ImageView fx:id="coinBonus" fitHeight="65.0" fitWidth="65.0" layoutX="82.0" layoutY="44.0" onMouseClicked="#selectedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/coin.png" />
+                  <Image url="@../images/resources/coin.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -66,7 +66,7 @@
             </ImageView>
             <ImageView fx:id="servantBonus" fitHeight="65.0" fitWidth="65.0" layoutX="208.0" layoutY="42.0" onMouseClicked="#selectedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/servant.png" />
+                  <Image url="@../images/resources/servant.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -74,7 +74,7 @@
             </ImageView>
             <ImageView fx:id="shieldBonus" fitHeight="65.0" fitWidth="65.0" layoutX="82.0" layoutY="154.0" onMouseClicked="#selectedRes" pickOnBounds="true">
                <image>
-                  <Image url="@../images/shield.png" />
+                  <Image url="@../images/resources/shield.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -82,7 +82,7 @@
             </ImageView>
             <ImageView fx:id="stoneBonus" fitHeight="65.0" fitWidth="65.0" layoutX="208.0" layoutY="156.0" onMouseClicked="#selectedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/stone.png" />
+                  <Image url="@../images/resources/stone.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />

@@ -112,22 +112,22 @@
             </Label>
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="220.0" layoutY="547.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/coin.png" />
+                  <Image url="@../images/resources/coin.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="310.0" layoutY="545.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/servant.png" />
+                  <Image url="@../images/resources/servant.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="400.0" layoutY="544.0" pickOnBounds="true">
                <image>
-                  <Image url="@../images/shield.png" />
+                  <Image url="@../images/resources/shield.png" />
                </image>
             </ImageView>
             <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="490.0" layoutY="544.0" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/stone.png" />
+                  <Image url="@../images/resources/stone.png" />
                </image>
             </ImageView>
             <Label fx:id="pickedCoins" alignment="CENTER" layoutX="214.0" layoutY="578.0" prefHeight="54.0" prefWidth="65.0">
@@ -402,7 +402,7 @@
             </Label>
             <ImageView fx:id="pickCoin" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="230.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/coin.png" />
+                  <Image url="@../images/resources/coin.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -415,7 +415,7 @@
             </Label>
             <ImageView fx:id="pickServant" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="330.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/servant.png" />
+                  <Image url="@../images/resources/servant.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -428,7 +428,7 @@
             </Label>
             <ImageView fx:id="pickShield" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="430.0" onMouseClicked="#clickedRes" pickOnBounds="true">
                <image>
-                  <Image url="@../images/shield.png" />
+                  <Image url="@../images/resources/shield.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -441,7 +441,7 @@
             </Label>
             <ImageView fx:id="pickStone" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="530.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/stone.png" />
+                  <Image url="@../images/resources/stone.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
@@ -534,18 +534,15 @@
                </cursor>
             </ImageView>
          </children></AnchorPane>
-      <AnchorPane fx:id="hiddenResMarket" layoutX="701.0" layoutY="-480.0" prefHeight="479.0" prefWidth="499.0">
+      <AnchorPane fx:id="hiddenResMarket" layoutX="558.0" layoutY="-483.0" prefHeight="479.0" prefWidth="499.0">
          <children>
             <ImageView fitHeight="538.0" fitWidth="643.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/backgroundWood.jpg" />
-               </image>
-               <effect>
-                  <DropShadow />
-               </effect></ImageView>
+               </image></ImageView>
             <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/coin.png" />
+                  <Image url="@../images/resources/coin.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
@@ -553,7 +550,7 @@
             </ImageView>
             <ImageView fx:id="pendingServant" fitHeight="50.0" fitWidth="50.0" layoutX="250.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/servant.png" />
+                  <Image url="@../images/resources/servant.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
@@ -561,7 +558,7 @@
             </ImageView>
             <ImageView fx:id="pendingShield" fitHeight="50.0" fitWidth="50.0" layoutX="320.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true">
                <image>
-                  <Image url="@../images/shield.png" />
+                  <Image url="@../images/resources/shield.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
@@ -569,7 +566,7 @@
             </ImageView>
             <ImageView fx:id="pendingStone" fitHeight="50.0" fitWidth="50.0" layoutX="390.0" layoutY="410.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
                <image>
-                  <Image url="@../images/stone.png" />
+                  <Image url="@../images/resources/stone.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="CLOSED_HAND" />
@@ -664,6 +661,11 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
+            <Button layoutX="512.0" layoutY="421.0" mnemonicParsing="false" onMouseClicked="#discardResources" prefHeight="43.0" prefWidth="113.0" text="DISCARD">
+               <font>
+                  <Font name="Gabriola" size="18.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
    </children>

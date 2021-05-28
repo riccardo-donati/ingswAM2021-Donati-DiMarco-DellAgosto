@@ -1,15 +1,11 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
-import it.polimi.ingsw.network.client.GUI.GUI;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Lobby extends ControllerGUI{
@@ -31,7 +27,7 @@ public class Lobby extends ControllerGUI{
     private void buttonPressed()throws IOException{}
 
     private void doneSetup()throws IOException{
-        gui.changeScene("/fxml/loading screen.fxml");
+        gui.changeScene("/fxml/waiting_screen.fxml");
     }
 
     public void setPlayers(List<String> nickList,int num){
