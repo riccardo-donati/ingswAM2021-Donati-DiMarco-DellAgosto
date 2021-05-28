@@ -13,6 +13,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
@@ -189,8 +190,8 @@ public class BoardController extends ControllerGUI {
         if (setup) {
             leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName());
             leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
-            leaderCard1.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
-            leaderCard2.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
+            leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
+            leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
             setup = false;
         }
         if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && setup){
@@ -349,6 +350,7 @@ public class BoardController extends ControllerGUI {
      * @param event on click calls the discard leader button
      */
     public void discardLeader(ActionEvent event) {
+        Integer lCard;
         if(event.getSource().toString().equals("discardL1")) lCard = 0;
         else lCard = 1;
         gui.getOut().println(gui.getGson().toJson(new DiscardLeaderCommand(lCard)));
