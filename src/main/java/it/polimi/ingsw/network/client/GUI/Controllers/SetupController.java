@@ -92,14 +92,16 @@ public class SetupController extends ControllerGUI{
 
 
     public void chooseLeaders(MouseEvent mouseEvent) throws IOException {
-        gui.send(new ChooseLeadersCommand(leaderList()));
+        if(selected.size()<2)
+            ComunicationController.showError(gui.getCurrentScene(), "You have to choose 2 leader cards!");
+        else gui.send(new ChooseLeadersCommand(leaderList()));
     }
 
     public void passTurn(MouseEvent mouseEvent) {
-        gui.getOut().println(gui.getGson().toJson(new PassCommand()));
+        gui.send(new PassCommand());
     }
 
-    public List<String> leaderList(){
+    public List leaderList(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(Rectangle r : selected){
             if(r.equals(l1Cover)) chosenL.add(leaderCards.get(0));

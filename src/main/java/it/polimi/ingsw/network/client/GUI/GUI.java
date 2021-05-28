@@ -32,11 +32,11 @@ public class GUI extends Application implements Client {
     private final Map<String, Scene> buildedScenes = new HashMap<>();
     private final Map<String, ControllerGUI> buildedControllers = new HashMap<>();
     private static final String LOGIN = "login.fxml";
-    private static final String LOADING = "loading screen.fxml";
+    private static final String WAITING = "waiting_screen.fxml";
     private static final String NPLAYERS = "numbers.fxml";
     private static final String BOARD = "board.fxml";
     private static final String LOBBY ="lobby.fxml";
-    private static final String SETUP ="setup phase.fxml";
+    private static final String SETUP ="setup_phase.fxml";
 
 
     private String serverIP;
@@ -105,7 +105,7 @@ public class GUI extends Application implements Client {
     }
 
     private void setup() {
-        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,LOADING,SETUP));
+        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP));
         try{
             for(String path : listFxml){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path));
@@ -128,6 +128,10 @@ public class GUI extends Application implements Client {
         stage.sizeToScene();
         stage.centerOnScreen();
         stage.show();
+    }
+
+    public Scene getCurrentScene() {
+        return currentScene;
     }
 
     public static void main(String[] args) { launch(args); }
@@ -187,19 +191,25 @@ public class GUI extends Application implements Client {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateCardMatrix();
         bc.updateResMarket();
-        Platform.runLater(new Thread(()->changeScene(SETUP)));
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
+            Platform.runLater(new Thread(()->changeScene(SETUP)));
+        else Platform.runLater(new Thread(()->changeScene(WAITING)));
+
     }
 
     @Override
     public void visualizeNewTurnUpdate(GamePhase previousGamePhase) {
-
+        if(clientModel.getGamePhase().equals(GamePhase.SETUP)){
+            if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
+                Platform.runLater(new Thread(()->changeScene(SETUP)));
+            else Platform.runLater(new Thread(()->changeScene(WAITING)));
+        }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
+            Platform.runLater(new Thread(()->changeScene(BOARD)));
     }
 
     @Override
     public void visualizeBonusResourceMessage(BonusResourceMessage message) {
-        int n=message.getBonusRes();
-        SetupController su = (SetupController) buildedControllers.get(SETUP);
-
+        ComunicationController.showInfo(currentScene, message.getMessage());
     }
 
     @Override
@@ -210,7 +220,7 @@ public class GUI extends Application implements Client {
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
+        //bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
@@ -230,12 +240,13 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeErrorMessage(ErrorMessage message) {
-
+        ComunicationController.showError(currentScene, message.getMessage());
     }
 
     @Override
     public void visualizeLeadersInHandUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateLCards();
     }
 
     @Override
@@ -290,7 +301,7 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeWait() {
-        Platform.runLater(new Thread(()->changeScene(LOADING)));
+        Platform.runLater(new Thread(()->changeScene(WAITING)));
     }
 
     @Override
