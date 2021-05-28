@@ -197,6 +197,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeBonusResourceMessage(BonusResourceMessage message) {
+        int n=message.getBonusRes();
+        SetupController su = (SetupController) buildedControllers.get(SETUP);
 
     }
 

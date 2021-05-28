@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client;
+package it.polimi.ingsw.network.client.CLI;
 
 import com.google.gson.Gson;
 
@@ -7,8 +7,10 @@ import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
+import it.polimi.ingsw.network.client.ClientVisitorHandler;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;

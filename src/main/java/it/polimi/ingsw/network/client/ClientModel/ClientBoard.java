@@ -4,8 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
 
 import java.util.*;
 

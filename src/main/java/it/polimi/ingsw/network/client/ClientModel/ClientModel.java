@@ -4,7 +4,7 @@ import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
 
 import java.util.*;
 

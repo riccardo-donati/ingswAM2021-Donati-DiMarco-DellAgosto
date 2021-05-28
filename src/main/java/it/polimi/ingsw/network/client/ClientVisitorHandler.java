@@ -2,8 +2,9 @@ package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI.CLI;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 

@@ -5,7 +5,7 @@ import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
-import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
+import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.server.GameObserver;
 
 import java.util.List;

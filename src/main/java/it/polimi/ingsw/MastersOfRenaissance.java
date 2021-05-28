@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.CLI.CLI;
 import it.polimi.ingsw.network.client.GUI.GUI;
 import it.polimi.ingsw.network.server.Server;
 

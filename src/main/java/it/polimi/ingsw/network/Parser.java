@@ -380,7 +380,7 @@ public class Parser {
     private static void commands(TurnPhase tp) {
         StringBuilder sb = new StringBuilder();
         sb.append("---------------------------------------------------\n");
-        sb.append("Possible commands:\n").append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.ANSI_BLUE.escape());
+        sb.append("Possible commands:\n").append(it.polimi.ingsw.network.client.CLI.enums.Color.ANSI_BLUE.escape());
         switch (tp) {
             case STARTSETUPTURN -> sb.append("choose leaders [slot number] [slot number]\n");
             case ENDSETUPTURN -> {
@@ -436,7 +436,7 @@ public class Parser {
                 sb.append("pass\n");
             }
         }
-        sb.append(it.polimi.ingsw.network.client.ClientModel.CLI.Color.RESET).append("---------------------------------------------------");
+        sb.append(it.polimi.ingsw.network.client.CLI.enums.Color.RESET).append("---------------------------------------------------");
         System.out.println(sb.toString());
     }
 }

@@ -92,7 +92,7 @@ public class SetupController extends ControllerGUI{
 
 
     public void chooseLeaders(MouseEvent mouseEvent) throws IOException {
-        gui.getOut().println(gui.getGson().toJson(new ChooseLeadersCommand(leaderList())));
+        gui.send(new ChooseLeadersCommand(leaderList()));
     }
 
     public void passTurn(MouseEvent mouseEvent) {
@@ -118,7 +118,7 @@ public class SetupController extends ControllerGUI{
         selectedShield.setOpacity(0);
         selectedServant.setOpacity(0);
         selectedStone.setOpacity(0);
-        gui.getOut().println(gui.getGson().toJson(new ChooseBonusResourceCommand(res, id)));
+        gui.send(new ChooseBonusResourceCommand(res, id));
     }
 
     public void selectedRes(MouseEvent mouseEvent) {

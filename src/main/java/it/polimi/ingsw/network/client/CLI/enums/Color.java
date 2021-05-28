@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client.ClientModel.CLI;
+package it.polimi.ingsw.network.client.CLI.enums;
 
 public enum Color {
     ANSI_RED("\u001B[31m"),
