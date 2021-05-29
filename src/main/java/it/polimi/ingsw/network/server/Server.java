@@ -78,7 +78,7 @@ public class Server {
         String serverToJson = gsonSave.toJson(this, Server.class);
         FileWriter w;
         try {
-            w = new FileWriter("src/main/resources/json/serverStatus.json");
+            w = new FileWriter("serverStatus.json");
             w.write(serverToJson);
             w.close();
         } catch (IOException e) {

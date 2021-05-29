@@ -1,7 +1,7 @@
 package it.polimi.ingsw;
 
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.CLI;
+import it.polimi.ingsw.network.client.CLI.CLI;
 import it.polimi.ingsw.network.client.GUI.GUI;
 import it.polimi.ingsw.network.server.Server;
 
@@ -18,6 +18,7 @@ public class MastersOfRenaissance {
         System.out.println(Utilities.MORTitle());
         System.out.println("Welcome to Masters of Renaissance!\n");
         System.out.println("What application would you like to launch?");
+        System.out.println("0: Server (after crash)");
         System.out.println("1: Server");
         System.out.println("2: CLI Client");
         System.out.println("3: GUI Client");
@@ -27,7 +28,11 @@ public class MastersOfRenaissance {
                 System.out.print("> ");
                 userChoice = Integer.parseInt(in.readLine());
                 switch (userChoice) {
-                    case 1 -> Server.main(args);
+                    case 0 -> {
+                        String[] argsCrash={"crash"};
+                        Server.main(argsCrash);
+                    }
+                    case 1 -> Server.main(new String[0]);
                     case 2 -> CLI.main(null);
                     case 3 -> GUI.main(null);
                     default -> throw new IllegalArgumentException();

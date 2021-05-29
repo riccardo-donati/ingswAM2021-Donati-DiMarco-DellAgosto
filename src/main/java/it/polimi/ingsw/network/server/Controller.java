@@ -10,16 +10,14 @@ import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.PublicInterface;
 import it.polimi.ingsw.model.interfaces.Token;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Controller implements GameObserver {

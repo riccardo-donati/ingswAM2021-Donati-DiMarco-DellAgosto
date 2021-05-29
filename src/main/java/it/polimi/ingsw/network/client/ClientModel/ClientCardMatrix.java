@@ -4,7 +4,7 @@ import java.util.*;
 
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
 
 public class ClientCardMatrix {
     protected Stack<DevelopmentCard>[][] cards;

@@ -5,11 +5,10 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.*;
-import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.*;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Color;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI.enums.Color;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.server.Controller;
@@ -51,7 +50,7 @@ public abstract class Utilities {
         FileWriter fileWriter;
 
         try {
-            fileWriter = new FileWriter("src/main/resources/json/serverStatus.json");
+            fileWriter = new FileWriter("serverStatus.json");
             fileWriter.write(serverToJson);
             fileWriter.close();
         } catch (IOException e) {
@@ -319,18 +318,14 @@ public abstract class Utilities {
     public static Server loadServerStatus(){
         Gson gsonLoad=Utilities.initializeGsonLoadAndSave();
         ClassLoader classloader = Thread.currentThread().getContextClassLoader();
-        InputStream is = classloader.getResourceAsStream("json/serverStatus.json");
-        if(is==null) return null;
-        InputStreamReader fr = new InputStreamReader(is);
-        BufferedReader b;
-        b=new BufferedReader(fr);
-        String json="";
+        JsonReader reader = null;
         try {
-            json=b.readLine();
-        } catch (IOException e) {
+            reader = new JsonReader(new FileReader("serverStatus.json"));
+        } catch (FileNotFoundException e) {
             e.printStackTrace();
+            System.out.println("leaderCard.json not found");
         }
-        Server s=gsonLoad.fromJson(json,Server.class);
+        Server s=gsonLoad.fromJson(reader,Server.class);
 
         for(Controller l : s.getLobbies()){
             l.getPlayersInLobby().clear();

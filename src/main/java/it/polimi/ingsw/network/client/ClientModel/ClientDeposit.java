@@ -2,7 +2,7 @@ package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.Utilities;
-import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 
 import java.util.List;
 

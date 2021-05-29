@@ -10,7 +10,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.SetupController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="572.0" prefWidth="858.0" xmlns="http://javafx.com/javafx/" xmlns:fx="http://javafx.com/fxml/" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.SetupController">
    <children>
       <ImageView fitHeight="572.0" fitWidth="858.0" pickOnBounds="true">
          <image>
@@ -51,6 +51,11 @@
       </AnchorPane>
       <AnchorPane layoutX="499.0" prefHeight="572.0" prefWidth="363.0">
          <children>
+            <ImageView fitHeight="200.0" fitWidth="229.0" layoutX="94.0" layoutY="278.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/warehouse.png" />
+               </image>
+            </ImageView>
             <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="44.0" prefWidth="99.0" text="PASS">
                <font>
                   <Font name="Gabriola" size="18.0" />
@@ -88,17 +93,17 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Button fx:id="warehouse1" layoutX="98.0" layoutY="300.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="34.0" prefWidth="175.0" text="Warehouse    1">
+            <Button fx:id="warehouse1" layoutX="141.0" layoutY="300.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="36.0" prefWidth="79.0" style="-fx-background-color: transparent; -fx-cursor: hand;">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="warehouse2" layoutX="98.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="34.0" prefWidth="175.0" text="Warehouse    2">
+            <Button fx:id="warehouse2" layoutX="115.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="36.0" prefWidth="134.0" style="-fx-background-color: transparent; -fx-cursor: hand;">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
-            <Button fx:id="warehouse3" layoutX="98.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="34.0" prefWidth="175.0" text="Warehouse    3">
+            <Button fx:id="warehouse3" layoutX="98.0" layoutY="420.0" mnemonicParsing="false" onMouseClicked="#placeResource" prefHeight="36.0" prefWidth="158.0" style="-fx-background-color: transparent; -fx-cursor: hand;">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>

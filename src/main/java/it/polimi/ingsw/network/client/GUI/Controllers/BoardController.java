@@ -252,6 +252,7 @@ public class BoardController extends ControllerGUI {
             leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
             leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
             leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
+            setup = false;
         }
         //board vuota, 1 o 2 scartate
         if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && gui.getClientModel().getMyBoard().getLeadersInHand().size() < 2){
@@ -582,6 +583,7 @@ public class BoardController extends ControllerGUI {
      * @param event on click calls the discard leader button
      */
     public void discardLeader(ActionEvent event) {
+        Integer lCard;
         if(event.getSource().toString().equals("discardL1")) lCard = 0;
         else lCard = 1;
         gui.send(new DiscardLeaderCommand(lCard));

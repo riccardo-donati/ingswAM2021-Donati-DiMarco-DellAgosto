@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.client.ClientModel.CLI;
+package it.polimi.ingsw.network.client.CLI.enums;
 
 public enum ClientPopeFavorState {
     UNACTIVE(Color.ANSI_BLUE.escape()+"▄"+Color.RESET),

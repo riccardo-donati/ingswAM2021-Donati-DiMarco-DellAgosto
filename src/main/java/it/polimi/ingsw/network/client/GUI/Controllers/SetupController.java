@@ -101,7 +101,7 @@ public class SetupController extends ControllerGUI{
         gui.send(new PassCommand());
     }
 
-    public List<String> leaderList(){
+    public List leaderList(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(Rectangle r : selected){
             if(r.equals(l1Cover)) chosenL.add(leaderCards.get(0));
