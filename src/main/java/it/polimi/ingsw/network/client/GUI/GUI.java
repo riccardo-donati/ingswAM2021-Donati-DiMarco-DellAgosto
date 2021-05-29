@@ -35,8 +35,9 @@ public class GUI extends Application implements Client {
     private static final String WAITING = "waiting_screen.fxml";
     private static final String NPLAYERS = "numbers.fxml";
     private static final String BOARD = "board.fxml";
-    private static final String LOBBY ="lobby.fxml";
-    private static final String SETUP ="setup_phase.fxml";
+    private static final String LOBBY = "lobby.fxml";
+    private static final String SETUP = "setup_phase.fxml";
+    private static final String OTHERBOARD = "otherPlayersBoard.fxml";
 
 
     private String serverIP;
@@ -105,7 +106,7 @@ public class GUI extends Application implements Client {
     }
 
     private void setup() {
-        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP));
+        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP,OTHERBOARD));
         try{
             for(String path : listFxml){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path));
@@ -194,7 +195,6 @@ public class GUI extends Application implements Client {
         if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
             Platform.runLater(new Thread(()->changeScene(SETUP)));
         else Platform.runLater(new Thread(()->changeScene(WAITING)));
-
     }
 
     @Override
@@ -203,8 +203,11 @@ public class GUI extends Application implements Client {
             if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
                 Platform.runLater(new Thread(()->changeScene(SETUP)));
             else Platform.runLater(new Thread(()->changeScene(WAITING)));
-        }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
-            Platform.runLater(new Thread(()->changeScene(BOARD)));
+        }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
+            BoardController bc = (BoardController) buildedControllers.get(BOARD);
+            bc.setIcons();
+            Platform.runLater(new Thread(() -> changeScene(BOARD)));
+        }
     }
 
     @Override
@@ -220,17 +223,19 @@ public class GUI extends Application implements Client {
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        //bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
+        bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
     public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
-
+//        if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
+            ComunicationController.showLorenzo(currentScene, message.getMessage());
     }
 
     @Override
     public void visualizePopeFavorUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updatePopeFavor();
     }
 
     @Override

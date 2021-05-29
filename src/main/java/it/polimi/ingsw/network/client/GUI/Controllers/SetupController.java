@@ -112,9 +112,9 @@ public class SetupController extends ControllerGUI{
         return chosenL;
     }
 
-    public void placeResource(MouseEvent mouseEvent) throws IOException {
-        if(mouseEvent.getSource().toString().equals("Button[id=warehouse1, styleClass=button]")) id = 1;
-        else if(mouseEvent.getSource().toString().equals("Button[id=warehouse2, styleClass=button]")) id = 2;
+    public void placeResource(MouseEvent mouseEvent) {
+        if(mouseEvent.getSource().toString().equals("Button[id=warehouse1, styleClass=button]'Warehouse    1'")) id = 1;
+        else if(mouseEvent.getSource().toString().equals("Button[id=warehouse2, styleClass=button]'Warehouse    2'")) id = 2;
         else id = 3;
         selectedCoin.setOpacity(0);
         selectedShield.setOpacity(0);

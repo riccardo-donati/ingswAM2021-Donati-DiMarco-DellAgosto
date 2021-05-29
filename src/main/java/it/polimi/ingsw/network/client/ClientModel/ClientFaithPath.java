@@ -31,6 +31,10 @@ public class ClientFaithPath  {
         return position;
     }
 
+    public Map<Integer, ClientPopeFavorState> getPopeFavor() {
+        return popeFavor;
+    }
+
     public void setPopeFavor(int id, boolean activated){
         if(activated){
             popeFavor.replace(id,ClientPopeFavorState.ACTIVE);

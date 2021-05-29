@@ -2,8 +2,10 @@ package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.LeaderCard;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.ClientModel.*;
+import it.polimi.ingsw.network.client.ClientModel.CLI.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.ClientModel.CLI.Resource;
 import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
@@ -92,6 +94,63 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView marble22;
     @FXML private ImageView marble23;
     @FXML private ImageView pendingMarble;
+    @FXML private ImageView p1Board;
+    @FXML private ImageView p2Board;
+    @FXML private ImageView p3Board;
+    @FXML private ImageView faithPath1;
+    @FXML private ImageView faithPath2;
+    @FXML private ImageView faithPath3;
+    @FXML private ImageView faithPath4;
+    @FXML private ImageView faithPath5;
+    @FXML private ImageView faithPath6;
+    @FXML private ImageView faithPath7;
+    @FXML private ImageView faithPath8;
+    @FXML private ImageView faithPath9;
+    @FXML private ImageView faithPath10;
+    @FXML private ImageView faithPath11;
+    @FXML private ImageView faithPath12;
+    @FXML private ImageView faithPath13;
+    @FXML private ImageView faithPath14;
+    @FXML private ImageView faithPath15;
+    @FXML private ImageView faithPath16;
+    @FXML private ImageView faithPath17;
+    @FXML private ImageView faithPath18;
+    @FXML private ImageView faithPath19;
+    @FXML private ImageView faithPath20;
+    @FXML private ImageView faithPath21;
+    @FXML private ImageView faithPath22;
+    @FXML private ImageView faithPath23;
+    @FXML private ImageView faithPath24;
+    @FXML private ImageView blackCross1;
+    @FXML private ImageView blackCross2;
+    @FXML private ImageView blackCross3;
+    @FXML private ImageView blackCross4;
+    @FXML private ImageView blackCross5;
+    @FXML private ImageView blackCross6;
+    @FXML private ImageView blackCross7;
+    @FXML private ImageView blackCross8;
+    @FXML private ImageView blackCross9;
+    @FXML private ImageView blackCross10;
+    @FXML private ImageView blackCross11;
+    @FXML private ImageView blackCross12;
+    @FXML private ImageView blackCross13;
+    @FXML private ImageView blackCross14;
+    @FXML private ImageView blackCross15;
+    @FXML private ImageView blackCross16;
+    @FXML private ImageView blackCross17;
+    @FXML private ImageView blackCross18;
+    @FXML private ImageView blackCross19;
+    @FXML private ImageView blackCross20;
+    @FXML private ImageView blackCross21;
+    @FXML private ImageView blackCross22;
+    @FXML private ImageView blackCross23;
+    @FXML private ImageView blackCross24;
+    @FXML private ImageView pope1;
+    @FXML private ImageView pope2;
+    @FXML private ImageView pope3;
+    @FXML private ImageView unknownInput1;
+    @FXML private ImageView unknownInput2;
+    @FXML private ImageView unknownOutput;
 
     /**
      * hides and shows the strongbox Panel
@@ -188,26 +247,42 @@ public class BoardController extends ControllerGUI {
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
     public void updateLCards() {
-        if (setup) {
+        if (gui.getClientModel().getGamePhase().equals(GamePhase.SETUP)) {
             leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName());
             leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
-            leaderCard1.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
-            leaderCard2.setImage(new Image("/images/leader_cards" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
-            setup = false;
+            leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
+            leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
         }
-        if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && setup){
-            if(!gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(0))) leaderCard2.setImage(new Image("/images/back LCard.png"));
-            if(!gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(1))) leaderCard1.setImage(new Image("/images/back LCard.png"));
+        //board vuota, 1 o 2 scartate
+        if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && gui.getClientModel().getMyBoard().getLeadersInHand().size() < 2){
+            if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0){
+                leaderCard1.setImage(new Image("/images/back LCard.png"));
+                leaderCard2.setImage(new Image("/images/back LCard.png"));
+            }
+            else if(gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(0))) leaderCard2.setImage(new Image("/images/back LCard.png"));
+            else leaderCard1.setImage(new Image("/images/back LCard.png"));
         }
-        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size()==1){
-            if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(leaderID.get(0))) leader1.setFill(Color.GREEN);
-            else leader2.setFill(Color.GREEN);
+        //almeno 1 in board, l'altra in mano o scartata
+        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 1){
+            //carta in gioco è la prima e non ci sono carte in mano (seconda scartata)
+            if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(leaderID.get(0))) {
+                leader1.setFill(Color.GREEN);
+                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
+                    leaderCard2.setImage(new Image("/images/back LCard.png"));
+            }
+            //carta in gioco è la seconda e non ci sono carte in mano (prima scartata)
+            else {
+                leader2.setFill(Color.GREEN);
+                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
+                    leaderCard1.setImage(new Image("/images/back LCard.png"));
+            }
         }
-        else {
+        //entrambe in board
+        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 2){
             leader1.setFill(Color.GREEN);
             leader1.setFill(Color.GREEN);
         }
-
+        else return;
     }
 
     /**
@@ -215,18 +290,20 @@ public class BoardController extends ControllerGUI {
      */
     public void updateWarehouse(ClientDeposits clientDeposits){
         String resType;
-        if(clientDeposits.getShelf(1).getEmpty() != 0)
-            resSlot1.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(1))+".png"));
-        if(clientDeposits.getShelf(2).getEmpty() != 0){
+        if(clientDeposits.getShelf(1).getEmpty() == 0) {
+            resType = checkResType(clientDeposits.getShelf(1));
+            resSlot1.setImage(new Image("/images/resources/" +resType+ ".png"));
+        }
+        if(clientDeposits.getShelf(2).getEmpty() < 2){
             resType = checkResType(clientDeposits.getShelf(2));
             resSlot21.setImage(new Image("/images/resources/"+resType+".png"));
             if(clientDeposits.getShelf(2).getEmpty() == 0)
                 resSlot22.setImage(new Image("/images/resources/"+resType+".png"));
         }
-        if(clientDeposits.getShelf(2).getEmpty() != 0){
+        if(clientDeposits.getShelf(3).getEmpty() < 3){
             resType = checkResType(clientDeposits.getShelf(3));
             resSlot31.setImage(new Image("/images/resources/"+resType+".png"));
-            if(clientDeposits.getShelf(3).getEmpty() != 0)
+            if(clientDeposits.getShelf(3).getEmpty() == 1)
                 resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
             else {
                 resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
@@ -246,10 +323,9 @@ public class BoardController extends ControllerGUI {
 
     public String checkResType(Shelf shelf){
         if(shelf.getSpaces().equals(Resource.COIN)) return "coin";
-        if(shelf.getSpaces().equals(Resource.SHIELD)) return "shield";
-        if(shelf.getSpaces().equals(Resource.SERVANT)) return "servant";
-        if(shelf.getSpaces().equals(Resource.STONE))return "stone";
-        else return null;
+        else if(shelf.getSpaces().equals(Resource.SHIELD)) return "shield";
+        else if(shelf.getSpaces().equals(Resource.SERVANT)) return "servant";
+        else return "stone";
     }
 
     /**
@@ -261,26 +337,42 @@ public class BoardController extends ControllerGUI {
     /**
      * shows which resources you got from the resource market
      */
-    public void updatePending(List<Resource> pending){
+    public void updatePending(List<Resource> pending){}
 
-    }
-
+    /**
+     * based on the client card this function shows the top card of each pile, obscures the card if pile's empty
+     */
     public void updateCardMatrix(){
         Stack<DevelopmentCard>[][] cards = gui.getClientModel().getCardMatrix().getCards();
-        green1.setImage(new Image("/images/development_cards/"+cards[0][0].peek().getName()+".png"));
-        green2.setImage(new Image("/images/development_cards/"+cards[1][0].peek().getName()+".png"));
-        green3.setImage(new Image("/images/development_cards/"+cards[2][0].peek().getName()+".png"));
-        blue1.setImage(new Image("/images/development_cards/"+cards[0][1].peek().getName()+".png"));
-        blue2.setImage(new Image("/images/development_cards/"+cards[1][1].peek().getName()+".png"));
-        blue3.setImage(new Image("/images/development_cards/"+cards[2][1].peek().getName()+".png"));
-        yellow1.setImage(new Image("/images/development_cards/"+cards[0][2].peek().getName()+".png"));
-        yellow2.setImage(new Image("/images/development_cards/"+cards[1][2].peek().getName()+".png"));
-        yellow3.setImage(new Image("/images/development_cards/"+cards[2][2].peek().getName()+".png"));
-        purple1.setImage(new Image("/images/development_cards/"+cards[0][3].peek().getName()+".png"));
-        purple2.setImage(new Image("/images/development_cards/"+cards[1][3].peek().getName()+".png"));
-        purple3.setImage(new Image("/images/development_cards/"+cards[2][3].peek().getName()+".png"));
+        if(cards[0][0].peek().equals(null)) green1.setOpacity(0);
+        else green1.setImage(new Image("/images/development_cards/"+cards[0][0].peek().getName()+".png"));
+        if(cards[1][0].peek().equals(null)) green2.setOpacity(0);
+        else green2.setImage(new Image("/images/development_cards/"+cards[1][0].peek().getName()+".png"));
+        if(cards[2][0].peek().equals(null)) green3.setOpacity(0);
+        else green3.setImage(new Image("/images/development_cards/"+cards[2][0].peek().getName()+".png"));
+        if(cards[0][1].peek().equals(null)) blue1.setOpacity(0);
+        else blue1.setImage(new Image("/images/development_cards/"+cards[0][1].peek().getName()+".png"));
+        if(cards[1][1].peek().equals(null)) blue2.setOpacity(0);
+        else blue2.setImage(new Image("/images/development_cards/"+cards[1][1].peek().getName()+".png"));
+        if(cards[2][1].peek().equals(null)) blue3.setOpacity(0);
+        else blue3.setImage(new Image("/images/development_cards/"+cards[2][1].peek().getName()+".png"));
+        if(cards[0][2].peek().equals(null)) yellow1.setOpacity(0);
+        else yellow1.setImage(new Image("/images/development_cards/"+cards[0][2].peek().getName()+".png"));
+        if(cards[1][2].peek().equals(null)) yellow2.setOpacity(0);
+        else yellow2.setImage(new Image("/images/development_cards/"+cards[1][2].peek().getName()+".png"));
+        if(cards[2][2].peek().equals(null)) yellow3.setOpacity(0);
+        else yellow3.setImage(new Image("/images/development_cards/"+cards[2][2].peek().getName()+".png"));
+        if(cards[0][3].peek().equals(null)) purple1.setOpacity(0);
+        else purple1.setImage(new Image("/images/development_cards/"+cards[0][3].peek().getName()+".png"));
+        if(cards[1][3].peek().equals(null)) purple2.setOpacity(0);
+        else purple2.setImage(new Image("/images/development_cards/"+cards[1][3].peek().getName()+".png"));
+        if(cards[2][3].peek().equals(null)) purple3.setOpacity(0);
+        else purple3.setImage(new Image("/images/development_cards/"+cards[2][3].peek().getName()+".png"));
     }
 
+    /**
+     * based on the marble's list, the function shows the marble's market
+     */
     public void updateResMarket(){
         List<ResourceType> marbles = gui.getClientModel().getMarket().getMarbles();
         marble00.setImage(new Image("/images/marbles/"+setColor(marbles.get(0))+".png"));
@@ -298,6 +390,11 @@ public class BoardController extends ControllerGUI {
         pendingMarble.setImage(new Image("/images/marbles/"+setColor(marbles.get(12))+".png"));
     }
 
+    /**
+     * this function is needed to find the correct resource path based on the resource
+     * @param resourceType this helps to find which resource is in a precise list place
+     * @return the string of the resource in the passed parameter
+     */
     public String setColor(ResourceType resourceType){
         if(resourceType.equals(ResourceType.RED)) return "red";
         else if(resourceType.equals(ResourceType.BLUE)) return "blue";
@@ -305,6 +402,140 @@ public class BoardController extends ControllerGUI {
         else if(resourceType.equals(ResourceType.VIOLET)) return "purple";
         else if(resourceType.equals(ResourceType.GREY)) return  "grey";
         else return "white";
+    }
+
+    /**
+     * updates the red cross image based on the value of the player's faithpath position
+     */
+    public void updateFaithPath(){
+        faithPath1.setOpacity(0);
+        faithPath2.setOpacity(0);
+        faithPath3.setOpacity(0);
+        faithPath4.setOpacity(0);
+        faithPath5.setOpacity(0);
+        faithPath6.setOpacity(0);
+        faithPath7.setOpacity(0);
+        faithPath8.setOpacity(0);
+        faithPath9.setOpacity(0);
+        faithPath10.setOpacity(0);
+        faithPath11.setOpacity(0);
+        faithPath12.setOpacity(0);
+        faithPath13.setOpacity(0);
+        faithPath14.setOpacity(0);
+        faithPath15.setOpacity(0);
+        faithPath16.setOpacity(0);
+        faithPath17.setOpacity(0);
+        faithPath18.setOpacity(0);
+        faithPath19.setOpacity(0);
+        faithPath20.setOpacity(0);
+        faithPath21.setOpacity(0);
+        faithPath22.setOpacity(0);
+        faithPath23.setOpacity(0);
+        faithPath24.setOpacity(0);
+        switch(gui.getClientModel().getMyBoard().getFaithPath().getPosition()){
+            case 1: faithPath1.setOpacity(100);
+            case 2: faithPath2.setOpacity(100);
+            case 3: faithPath3.setOpacity(100);
+            case 4: faithPath3.setOpacity(100);
+            case 5: faithPath5.setOpacity(100);
+            case 6: faithPath6.setOpacity(100);
+            case 7: faithPath7.setOpacity(100);
+            case 8: faithPath8.setOpacity(100);
+            case 9: faithPath9.setOpacity(100);
+            case 10: faithPath10.setOpacity(100);
+            case 11: faithPath11.setOpacity(100);
+            case 12: faithPath12.setOpacity(100);
+            case 13: faithPath13.setOpacity(100);
+            case 14: faithPath14.setOpacity(100);
+            case 15: faithPath15.setOpacity(100);
+            case 16: faithPath16.setOpacity(100);
+            case 17: faithPath17.setOpacity(100);
+            case 18: faithPath18.setOpacity(100);
+            case 19: faithPath19.setOpacity(100);
+            case 20: faithPath20.setOpacity(100);
+            case 21: faithPath21.setOpacity(100);
+            case 22: faithPath22.setOpacity(100);
+            case 23: faithPath23.setOpacity(100);
+            case 24: faithPath24.setOpacity(100);
+        }
+    }
+
+    /**
+     * updates the black cross image based on the value of Lorenzo's position
+     */
+    public void updateBlackCross(){
+        blackCross1.setOpacity(0);
+        blackCross2.setOpacity(0);
+        blackCross3.setOpacity(0);
+        blackCross4.setOpacity(0);
+        blackCross5.setOpacity(0);
+        blackCross6.setOpacity(0);
+        blackCross7.setOpacity(0);
+        blackCross8.setOpacity(0);
+        blackCross9.setOpacity(0);
+        blackCross10.setOpacity(0);
+        blackCross11.setOpacity(0);
+        blackCross12.setOpacity(0);
+        blackCross13.setOpacity(0);
+        blackCross14.setOpacity(0);
+        blackCross15.setOpacity(0);
+        blackCross16.setOpacity(0);
+        blackCross17.setOpacity(0);
+        blackCross18.setOpacity(0);
+        blackCross19.setOpacity(0);
+        blackCross20.setOpacity(0);
+        blackCross21.setOpacity(0);
+        blackCross22.setOpacity(0);
+        blackCross23.setOpacity(0);
+        blackCross24.setOpacity(0);
+        switch(gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition()){
+            case 1: blackCross1.setOpacity(100);
+            case 2: blackCross2.setOpacity(100);
+            case 3: blackCross3.setOpacity(100);
+            case 4: blackCross4.setOpacity(100);
+            case 5: blackCross5.setOpacity(100);
+            case 6: blackCross6.setOpacity(100);
+            case 7: blackCross7.setOpacity(100);
+            case 8: blackCross8.setOpacity(100);
+            case 9: blackCross9.setOpacity(100);
+            case 10: blackCross10.setOpacity(100);
+            case 11: blackCross11.setOpacity(100);
+            case 12: blackCross12.setOpacity(100);
+            case 13: blackCross13.setOpacity(100);
+            case 14: blackCross14.setOpacity(100);
+            case 15: blackCross15.setOpacity(100);
+            case 16: blackCross16.setOpacity(100);
+            case 17: blackCross17.setOpacity(100);
+            case 18: blackCross18.setOpacity(100);
+            case 19: blackCross19.setOpacity(100);
+            case 20: blackCross20.setOpacity(100);
+            case 21: blackCross21.setOpacity(100);
+            case 22: blackCross22.setOpacity(100);
+            case 23: blackCross23.setOpacity(100);
+            case 24: blackCross24.setOpacity(100);
+        }
+    }
+
+    /**
+     * based on the value got by the pope favor map's Client model load a new image if active or remove image if discarded
+     */
+    //anche se non ci sarebbe bisogno di controllare i pope favor dopo averli cambiati
+    public void updatePopeFavor(){
+        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(0).equals(ClientPopeFavorState.ACTIVE))
+            pope1.setImage(new Image("/images/faithpath/pope_favor1_front.png"));
+        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(0).equals(ClientPopeFavorState.DISCARDED))
+            pope1.setOpacity(0);
+        else;
+        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(1).equals(ClientPopeFavorState.ACTIVE))
+            pope2.setImage(new Image("/images/faithpath/pope_favor2_front.png"));
+        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(1).equals(ClientPopeFavorState.DISCARDED))
+            pope2.setOpacity(0);
+        else;
+        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(2).equals(ClientPopeFavorState.ACTIVE))
+            pope3.setImage(new Image("/images/faithpath/pope_favor3_front.png"));
+        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(2).equals(ClientPopeFavorState.DISCARDED))
+            pope3.setOpacity(0);
+        else;
     }
 
 //---------------------------------out messages--------------------------------------------------------------
@@ -315,16 +546,16 @@ public class BoardController extends ControllerGUI {
      */
     public void clickedRes(MouseEvent mouseEvent) {
         if(mouseEvent.getSource().toString().equals("ImageView[id=pickStone, styleClass=image-view]")) {
-            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.GREY)));
+            gui.send(new StrongboxPickUpCommand(ResourceType.GREY));
         }
         else if(mouseEvent.getSource().toString().equals("ImageView[id=pickServant, styleClass=image-view]")) {
-            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.VIOLET)));
+            gui.send(new StrongboxPickUpCommand(ResourceType.VIOLET));
         }
         else if(mouseEvent.getSource().toString().equals("ImageView[id=pickShield, styleClass=image-view]")) {
-            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.BLUE)));
+            gui.send(new StrongboxPickUpCommand(ResourceType.BLUE));
         }
         else {
-            gui.getOut().println(gui.getGson().toJson(new StrongboxPickUpCommand(ResourceType.YELLOW)));
+            gui.send(new StrongboxPickUpCommand(ResourceType.YELLOW));
         }
     }
 
@@ -333,7 +564,7 @@ public class BoardController extends ControllerGUI {
      * @param event left mouse click on the button
      */
     public void produce(ActionEvent event) {
-        gui.getOut().println(gui.getGson().toJson(new ActivateProductionsCommand()));
+        gui.send(new ActivateProductionsCommand());
     }
 
     /**
@@ -343,7 +574,7 @@ public class BoardController extends ControllerGUI {
     public void playLeader(ActionEvent event) {
         if(event.getSource().toString().equals("playL1")) lCard = 0;
         else lCard = 1;
-        gui.getOut().println(gui.getGson().toJson(new PlayLeaderCommand(lCard)));
+        gui.send(new PlayLeaderCommand(lCard));
     }
 
     /**
@@ -353,7 +584,7 @@ public class BoardController extends ControllerGUI {
     public void discardLeader(ActionEvent event) {
         if(event.getSource().toString().equals("discardL1")) lCard = 0;
         else lCard = 1;
-        gui.getOut().println(gui.getGson().toJson(new DiscardLeaderCommand(lCard)));
+        gui.send(new DiscardLeaderCommand(lCard));
     }
 
     /**
@@ -378,7 +609,7 @@ public class BoardController extends ControllerGUI {
         else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
                 || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]" )) slot = 2;
         else slot = 3;
-        gui.getOut().println(gui.getGson().toJson(new DepositResourceCommand(movedRes, slot)));
+        gui.send(new DepositResourceCommand(movedRes, slot));
     }
 
     /**
@@ -417,7 +648,7 @@ public class BoardController extends ControllerGUI {
      * @param event left click of the pass button
      */
     public void pass(ActionEvent event) {
-        gui.getOut().println(gui.getGson().toJson(new PassCommand()));
+        gui.send(new PassCommand());
     }
 
     /**
@@ -497,7 +728,7 @@ public class BoardController extends ControllerGUI {
                 dragEvent.getTarget().toString().equals("ImageView[id=slot22, styleClass=image-view]") ||
                 dragEvent.getTarget().toString().equals("ImageView[id=slot23, styleClass=image-view]")) dCardSlot = 2;
         else dCardSlot = 3;
-        gui.getOut().println(gui.getGson().toJson(new BuyCardCommand(row, column, dCardSlot)));
+        gui.send(new BuyCardCommand(row, column, dCardSlot));
     }
 
     /**
@@ -539,11 +770,55 @@ public class BoardController extends ControllerGUI {
             line = 'r';
             pos = 3;
         }
-        gui.getOut().println(gui.getGson().toJson(new BuyFromMarketCommand(line, pos)));
+        gui.send(new BuyFromMarketCommand(line, pos));
     }
 
     //because the deposit of resources is a drag e drop, it will be also with the discard
     public void discardResources(MouseEvent mouseEvent) {
 //        gui.getOut().println(gui.getGson().toJson(new DiscardResourceCommand()));
+    }
+
+    /**
+     * sets in the top left corner images and names based on the other players in the lobby
+     */
+    public void setIcons(){
+        List<String> players = gui.getClientModel().getPlayersInOrder();
+        players.remove(gui.getClientModel().getNickname());
+        if(players.size()==1){
+            player1Name.setText(players.get(0));
+            p1Board.setOpacity(100);
+        }
+        else if(players.size()==2){
+            player1Name.setText(players.get(0));
+            p1Board.setOpacity(100);
+            player2Name.setText(players.get(1));
+            p2Board.setOpacity(100);
+        }
+        else if(players.size()==3){
+            player1Name.setText(players.get(0));
+            p1Board.setOpacity(100);
+            player2Name.setText(players.get(1));
+            p2Board.setOpacity(100);
+            player3Name.setText(players.get(2));
+            p3Board.setOpacity(100);
+        }
+        else return;
+    }
+
+    /**
+     * toggles the production based on which anchorpane is selected
+     * @param mouseEvent left click mouse in the slot(Anchorpane)
+     */
+    public void toggleProduction(MouseEvent mouseEvent) {
+        int toggled;
+        if(mouseEvent.getSource().toString().equals("a")) toggled = 1;
+        else if(mouseEvent.getSource().toString().equals("b")) toggled = 2;
+        else if(mouseEvent.getSource().toString().equals("c")) toggled = 3;
+        else toggled = 0;
+        gui.send(new ToggleProductionCommand(toggled));
+    }
+
+    public void substituteUnknown(MouseEvent mouseEvent) {
+
     }
 }

@@ -35,7 +35,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player1Name" alignment="CENTER" contentDisplay="CENTER" layoutX="68.0" layoutY="111.0" prefHeight="17.0" prefWidth="60.0" textAlignment="CENTER">
+            <Label fx:id="player1Name" alignment="CENTER" contentDisplay="CENTER" layoutX="55.0" layoutY="112.0" prefHeight="30.0" prefWidth="86.0" textAlignment="CENTER">
                <font>
                   <Font name="Gabriola" size="24.0" />
                </font></Label>
@@ -47,7 +47,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player2Name" alignment="CENTER" contentDisplay="CENTER" layoutX="199.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0">
+            <Label fx:id="player2Name" alignment="CENTER" contentDisplay="CENTER" layoutX="186.0" layoutY="112.0" prefHeight="30.0" prefWidth="86.0">
                <font>
                   <Font name="Gabriola" size="24.0" />
                </font></Label>
@@ -59,7 +59,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Label fx:id="player3Name" alignment="CENTER" layoutX="328.0" layoutY="112.0" prefHeight="17.0" prefWidth="60.0">
+            <Label fx:id="player3Name" alignment="CENTER" layoutX="315.0" layoutY="109.0" prefHeight="35.0" prefWidth="86.0">
                <font>
                   <Font size="24.0" />
                </font></Label>
@@ -162,7 +162,7 @@
             <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
-            <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
+            <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
                <children>
                   <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
                      <cursor>
@@ -181,7 +181,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
+            <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
                <children>
                   <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
                      <cursor>
@@ -200,7 +200,7 @@
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
+            <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
                <children>
                   <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
                      <cursor>
@@ -221,14 +221,114 @@
             </AnchorPane>
             <AnchorPane layoutX="83.0" layoutY="-1.0" prefHeight="135.0" prefWidth="821.0">
                <children>
-                  <ImageView fx:id="faithPath110" fitHeight="34.0" fitWidth="41.0" layoutX="50.0" layoutY="82.0" pickOnBounds="true">
+                  <ImageView fx:id="blackCross7" fitHeight="34.0" fitWidth="41.0" layoutX="218.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
                      <image>
                         <Image url="@../images/croce nera.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="faithPath1" fitHeight="43.0" fitWidth="28.0" layoutX="57.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="blackCross8" fitHeight="34.0" fitWidth="41.0" layoutX="260.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross9" fitHeight="34.0" fitWidth="41.0" layoutX="303.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross10" fitHeight="34.0" fitWidth="41.0" layoutX="303.0" layoutY="43.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross11" fitHeight="34.0" fitWidth="41.0" layoutX="303.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross12" fitHeight="34.0" fitWidth="41.0" layoutX="344.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross13" fitHeight="34.0" fitWidth="41.0" layoutX="387.0" layoutY="81.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross14" fitHeight="34.0" fitWidth="41.0" layoutX="430.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross15" fitHeight="34.0" fitWidth="41.0" layoutX="471.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross16" fitHeight="34.0" fitWidth="41.0" layoutX="514.0" layoutY="83.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross17" fitHeight="34.0" fitWidth="41.0" layoutX="514.0" layoutY="43.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross18" fitHeight="34.0" fitWidth="41.0" layoutX="514.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross19" fitHeight="34.0" fitWidth="41.0" layoutX="556.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross20" fitHeight="34.0" fitWidth="41.0" layoutX="600.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross21" fitHeight="34.0" fitWidth="41.0" layoutX="642.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross22" fitHeight="34.0" fitWidth="41.0" layoutX="684.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross23" fitHeight="34.0" fitWidth="41.0" layoutX="727.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross24" fitHeight="34.0" fitWidth="41.0" layoutX="767.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross1" fitHeight="34.0" fitWidth="41.0" layoutX="50.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="faithPath1" fitHeight="43.0" fitWidth="28.0" layoutX="57.0" layoutY="81.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross2" fitHeight="34.0" fitWidth="41.0" layoutX="91.0" layoutY="82.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross3" fitHeight="34.0" fitWidth="41.0" layoutX="91.0" layoutY="43.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="faithPath2" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="81.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
@@ -241,14 +341,29 @@
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="blackCross4" fitHeight="34.0" fitWidth="41.0" layoutX="90.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
                   <ImageView fx:id="faithPath4" fitHeight="43.0" fitWidth="28.0" layoutX="97.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="blackCross5" fitHeight="34.0" fitWidth="41.0" layoutX="132.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
+                     </image>
+                  </ImageView>
                   <ImageView fx:id="faithPath5" fitHeight="43.0" fitWidth="28.0" layoutX="139.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="blackCross6" fitHeight="34.0" fitWidth="41.0" layoutX="176.0" layoutY="5.0" opacity="0.0" pickOnBounds="true">
+                     <image>
+                        <Image url="@../images/croce nera.png" />
                      </image>
                   </ImageView>
                   <ImageView fx:id="faithPath6" fitHeight="43.0" fitWidth="28.0" layoutX="183.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
@@ -346,6 +461,28 @@
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
+                  <ImageView fx:id="pope1" fitHeight="54.0" fitWidth="54.0" layoutX="191.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/faithpath/pope_favor1_back.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="pope2" fitHeight="54.0" fitWidth="54.0" layoutX="402.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/faithpath/pope_favor2_back.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="pope3" fitHeight="54.0" fitWidth="54.0" layoutX="656.0" layoutY="53.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/faithpath/pope_favor3_back.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="baseProduction" layoutX="262.0" layoutY="343.0" onMouseClicked="#toggleProduction" prefHeight="102.0" prefWidth="122.0">
+               <children>
+                  <ImageView fx:id="unknownInput1" fitHeight="24.0" fitWidth="27.0" layoutX="24.0" layoutY="27.0" onMouseClicked="#substituteUnknown" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="unknownInput2" fitHeight="24.0" fitWidth="27.0" layoutX="24.0" layoutY="52.0" onMouseClicked="#substituteUnknown" pickOnBounds="true" preserveRatio="true" />
+                  <ImageView fx:id="unknownOutput" fitHeight="24.0" fitWidth="27.0" layoutX="77.0" layoutY="39.0" onMouseClicked="#substituteUnknown" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
          </children>
