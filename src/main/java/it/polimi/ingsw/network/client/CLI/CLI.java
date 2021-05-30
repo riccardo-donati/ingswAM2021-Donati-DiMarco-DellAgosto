@@ -5,8 +5,10 @@ import com.google.gson.Gson;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.Parser;
 import it.polimi.ingsw.network.Utilities;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.CLI.enums.Color;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
@@ -317,6 +319,38 @@ public class CLI implements Client {
     public void visualizeRegisterRequest() {
         System.out.println("Please insert your nickname: ");
         currCommand="register ";
+    }
+
+    @Override
+    public void visualizeReconnection(ReconnectUpdate message) {
+        System.out.println(clientModel);
+        System.out.println("-----------------------------");
+        System.out.println("You just reconnected!");
+        System.out.println("Phase: "+clientModel.getGamePhase());
+        System.out.println("Turn: "+clientModel.getCurrentNickname());
+        StringBuilder sb=new StringBuilder();
+        if(clientModel.getGamePhase()==GamePhase.SETUP && clientModel.getCurrentNickname().equals(clientModel.getNickname()) && clientModel.getCurrentBoard().getLeadersInHand().size()==0){
+            //if you haven't chosen leadercards in singleplayer
+            sb.append("Choose 2 leader cards: \n");
+            List<String> leaderCards=message.getFourLeaderCards();
+            for(int i=0;i<leaderCards.size();i++){
+                sb.append(Color.ANSI_RED.escape()).append(i+1).append(Color.RESET).append(": ").append(clientModel.stringifyLeaderCardFromName(leaderCards.get(i))).append("\n");
+            }
+        }
+        if(message.getPendingResources().size()>0){
+            if(message.getPendingResources().size() > 0) {
+                sb.append("Deposit this pending resources:\n[");
+                for (ResourceType resourceType : message.getPendingResources()) {
+                    Resource resource = Resource.valueOf(resourceType.label.toUpperCase());
+                    sb.append(resourceType.label).append("(").append(resource.label).append("),");
+                    //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
+                }
+                if (message.getPendingResources().size() > 0) sb.deleteCharAt(sb.toString().length() - 1);
+                sb.append("]");
+            }
+        }
+        System.out.println("-----------------------------");
+        System.out.println(sb.toString());
     }
 
 }

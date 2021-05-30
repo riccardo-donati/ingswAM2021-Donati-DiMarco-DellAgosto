@@ -5,6 +5,7 @@ import it.polimi.ingsw.network.messages.commands.ChooseBonusResourceCommand;
 import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 import it.polimi.ingsw.network.messages.commands.PassCommand;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -113,8 +114,9 @@ public class SetupController extends ControllerGUI{
     }
 
     public void placeResource(MouseEvent mouseEvent) {
-        if(mouseEvent.getSource().toString().equals("Button[id=warehouse1, styleClass=button]'Warehouse    1'")) id = 1;
-        else if(mouseEvent.getSource().toString().equals("Button[id=warehouse2, styleClass=button]'Warehouse    2'")) id = 2;
+        Node node=(Node)mouseEvent.getSource();
+        if(node.getId().equals("warehouse1")) id = 1;
+        else if(node.getId().equals("warehouse2")) id = 2;
         else id = 3;
         selectedCoin.setOpacity(0);
         selectedShield.setOpacity(0);

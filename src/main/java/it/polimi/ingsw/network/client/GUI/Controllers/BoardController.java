@@ -41,7 +41,22 @@ public class BoardController extends ControllerGUI {
     public BoardController(){
 
     }
-
+    @Override
+    public void initializeElements(){
+        List<ImageView> slot1=new ArrayList<>();
+        slot1.add(resSlot1);
+        List<ImageView> slot2=new ArrayList<>();
+        slot2.add(resSlot21);
+        slot2.add(resSlot22);
+        List<ImageView> slot3=new ArrayList<>();
+        slot3.add(resSlot31);
+        slot3.add(resSlot32);
+        slot3.add(resSlot33);
+        warehouse.add(slot1);
+        warehouse.add(slot2);
+        warehouse.add(slot3);
+    }
+    List<List<ImageView>> warehouse=new ArrayList<>();
     @FXML private AnchorPane hiddenPanel;
     @FXML private Label pickedCoins;
     @FXML private Label pickedServants;
@@ -287,6 +302,19 @@ public class BoardController extends ControllerGUI {
         else return;
     }
 
+    public void updateWarehouse2(ClientDeposits clientDeposits){
+        List<Shelf> shelves=clientDeposits.getShelves();
+        for(int i=0;i<shelves.size();i++){
+            List<ImageView> slotImageViews=warehouse.get(i);
+            for(int j=0;j<slotImageViews.size();j++){
+                if(shelves.get(i).getSpaces()[j]==Resource.EMPTY)
+                    slotImageViews.get(j).setImage(null);
+                else{
+                    slotImageViews.get(j).setImage(new Image("/images/resources/" +shelves.get(i).getSpaces()[j].toString().toLowerCase()+ ".png"));
+                }
+            }
+        }
+    }
     /**
      * function that will update the result of the drag & drop event in the warehouse
      */
@@ -324,9 +352,9 @@ public class BoardController extends ControllerGUI {
     }
 
     public String checkResType(Shelf shelf){
-        if(shelf.getSpaces().equals(Resource.COIN)) return "coin";
-        else if(shelf.getSpaces().equals(Resource.SHIELD)) return "shield";
-        else if(shelf.getSpaces().equals(Resource.SERVANT)) return "servant";
+        if(shelf.getSpaces()[0].equals(Resource.COIN)) return "coin";
+        else if(shelf.getSpaces()[0].equals(Resource.SHIELD)) return "shield";
+        else if(shelf.getSpaces()[0].equals(Resource.SERVANT)) return "servant";
         else return "stone";
     }
 

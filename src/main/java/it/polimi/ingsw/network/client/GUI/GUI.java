@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
 import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
+import it.polimi.ingsw.network.messages.updates.ReconnectUpdate;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -114,6 +115,7 @@ public class GUI extends Application implements Client {
                 buildedScenes.put(path, new Scene(content));
                 ControllerGUI controller = loader.getController();
                 controller.setGUI(this);
+                controller.initializeElements();
                 buildedControllers.put(path, controller);
             }
         }catch (IOException e){
@@ -223,13 +225,23 @@ public class GUI extends Application implements Client {
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname()))
+            bc.updateWarehouse2(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
     public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
 //        if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
-            ComunicationController.showLorenzo(currentScene, message.getMessage());
+        if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
+            BoardController bc = (BoardController) buildedControllers.get(BOARD);
+            bc.setIcons();
+            Platform.runLater(new Thread(() -> changeScene(BOARD)));
+        }
+        if(previousGamePhase==GamePhase.SETUP && clientModel.getGamePhase()==GamePhase.ONGOING){
+            ComunicationController.showLorenzo(currentScene, "Welcome to Florence! May the best man win");
+        }else ComunicationController.showLorenzo(currentScene, message.getMessage());
+
+
     }
 
     @Override
@@ -314,6 +326,25 @@ public class GUI extends Application implements Client {
         if(currentScene==buildedScenes.get(LOGIN)){
             LogIn l=(LogIn)buildedControllers.get(LOGIN);
             l.register();
+        }else{
+            changeScene(LOGIN);
         }
+    }
+
+    @Override
+    public void visualizeReconnection(ReconnectUpdate message) {
+        if(clientModel.getGamePhase()==GamePhase.SETUP && clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            changeScene(SETUP);
+        }else if(clientModel.getGamePhase()==GamePhase.SETUP && !clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+            changeScene(WAITING);
+        }
+        else if(clientModel.getGamePhase()==GamePhase.ONGOING){
+            changeScene(BOARD);
+        }
+        StringBuilder sb=new StringBuilder();
+        sb.append("You just reconnected:\n");
+        sb.append("Phase: ").append(clientModel.getGamePhase()).append("\n");
+        sb.append("Turn: ").append(clientModel.getCurrentNickname()).append("\n");
+        ComunicationController.showInfo(currentScene,sb.toString());
     }
 }

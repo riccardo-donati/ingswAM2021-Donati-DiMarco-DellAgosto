@@ -218,7 +218,7 @@ public class Server {
         }
         else if (vLook != null && vLook.getClientHandler().isConnected()) {
             //nickname is not unique
-            vc.getClientHandler().send(new GenericMessage("Nickname already taken"));
+            vc.getClientHandler().send(new ErrorMessage("Nickname already taken"));
             vc.getClientHandler().send(new RegisterRequest());
             throw new IllegalArgumentException();
         } else if (vLook != null && !vLook.getClientHandler().isConnected()) {

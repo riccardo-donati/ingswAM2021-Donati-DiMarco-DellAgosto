@@ -50,6 +50,12 @@ public class LorenzoUpdate implements Update {
 
     @Override
     public String getMessage() {
+        if(lastUsedToken instanceof TokenPush)
+            return "Lorenzo +1 FaithPath";
+        if(lastUsedToken instanceof TokenPushShuffle)
+            return "Lorenzo +1 FaithPath + token shuffle";
+        if(lastUsedToken instanceof TokenDiscard)
+            return "Lorenzo discarded 2 "+((TokenDiscard) lastUsedToken).getColor().toString().toLowerCase()+" cards from the matrix";
         return null;
     }
 
