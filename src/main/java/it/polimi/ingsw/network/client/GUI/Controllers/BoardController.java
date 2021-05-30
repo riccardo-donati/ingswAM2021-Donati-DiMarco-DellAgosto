@@ -8,6 +8,7 @@ import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
+import it.polimi.ingsw.network.client.GUI.GUI;
 import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
@@ -24,7 +25,6 @@ import javafx.util.Duration;
 import java.util.*;
 
 public class BoardController extends ControllerGUI {
-    Map<Resource, Integer> strongbox;
     List<String> leaderID = new ArrayList<>();
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
@@ -55,8 +55,91 @@ public class BoardController extends ControllerGUI {
         warehouse.add(slot1);
         warehouse.add(slot2);
         warehouse.add(slot3);
+
+        faithPath.add(faithPath1);
+        faithPath.add(faithPath2);
+        faithPath.add(faithPath3);
+        faithPath.add(faithPath4);
+        faithPath.add(faithPath5);
+        faithPath.add(faithPath6);
+        faithPath.add(faithPath7);
+        faithPath.add(faithPath8);
+        faithPath.add(faithPath9);
+        faithPath.add(faithPath10);
+        faithPath.add(faithPath11);
+        faithPath.add(faithPath12);
+        faithPath.add(faithPath13);
+        faithPath.add(faithPath14);
+        faithPath.add(faithPath15);
+        faithPath.add(faithPath16);
+        faithPath.add(faithPath17);
+        faithPath.add(faithPath18);
+        faithPath.add(faithPath19);
+        faithPath.add(faithPath20);
+        faithPath.add(faithPath21);
+        faithPath.add(faithPath22);
+        faithPath.add(faithPath23);
+        faithPath.add(faithPath24);
+
+        blackCross.add(blackCross1);
+        blackCross.add(blackCross2);
+        blackCross.add(blackCross3);
+        blackCross.add(blackCross4);
+        blackCross.add(blackCross5);
+        blackCross.add(blackCross6);
+        blackCross.add(blackCross7);
+        blackCross.add(blackCross8);
+        blackCross.add(blackCross9);
+        blackCross.add(blackCross10);
+        blackCross.add(blackCross11);
+        blackCross.add(blackCross12);
+        blackCross.add(blackCross13);
+        blackCross.add(blackCross14);
+        blackCross.add(blackCross15);
+        blackCross.add(blackCross16);
+        blackCross.add(blackCross17);
+        blackCross.add(blackCross18);
+        blackCross.add(blackCross19);
+        blackCross.add(blackCross20);
+        blackCross.add(blackCross21);
+        blackCross.add(blackCross22);
+        blackCross.add(blackCross23);
+        blackCross.add(blackCross24);
+
+        marbles.add(marble00);
+        marbles.add(marble01);
+        marbles.add(marble02);
+        marbles.add(marble03);
+        marbles.add(marble10);
+        marbles.add(marble11);
+        marbles.add(marble12);
+        marbles.add(marble13);
+        marbles.add(marble20);
+        marbles.add(marble21);
+        marbles.add(marble22);
+        marbles.add(marble23);
+        marbles.add(pendingMarble);
+
+        imageViewMatrix[0][0]=green1;
+        imageViewMatrix[1][0]=green2;
+        imageViewMatrix[2][0]=green3;
+        imageViewMatrix[0][1]=blue1;
+        imageViewMatrix[1][1]=blue2;
+        imageViewMatrix[2][1]=blue3;
+        imageViewMatrix[0][2]=yellow1;
+        imageViewMatrix[1][2]=yellow2;
+        imageViewMatrix[2][2]=yellow3;
+        imageViewMatrix[0][3]=purple1;
+        imageViewMatrix[1][3]=purple2;
+        imageViewMatrix[2][3]=purple3;
+
     }
     List<List<ImageView>> warehouse=new ArrayList<>();
+    List<ImageView> faithPath=new ArrayList<>();
+    List<ImageView> blackCross=new ArrayList<>();
+    List<ImageView> marbles=new ArrayList<>();
+    ImageView[][] imageViewMatrix=new ImageView[3][4];
+
     @FXML private AnchorPane hiddenPanel;
     @FXML private Label pickedCoins;
     @FXML private Label pickedServants;
@@ -243,6 +326,7 @@ public class BoardController extends ControllerGUI {
      * function that updates every resource in the strongbox with it's value
      */
     public void updateDeposits() {
+        Map<Resource, Integer> strongbox=gui.getClientModel().getMyBoard().getDeposits().getStrongbox();
         strongboxCoins.setText(strongbox.get(Resource.COIN).toString());
         strongboxServants.setText(strongbox.get(Resource.SERVANT).toString());
         strongboxShields.setText(strongbox.get(Resource.SHIELD).toString());
@@ -302,7 +386,10 @@ public class BoardController extends ControllerGUI {
         else return;
     }
 
-    public void updateWarehouse2(ClientDeposits clientDeposits){
+    /**
+     * function that will update the result of the drag & drop event in the warehouse
+     */
+    public void updateWarehouse(ClientDeposits clientDeposits){
         List<Shelf> shelves=clientDeposits.getShelves();
         for(int i=0;i<shelves.size();i++){
             List<ImageView> slotImageViews=warehouse.get(i);
@@ -315,54 +402,16 @@ public class BoardController extends ControllerGUI {
             }
         }
     }
-    /**
-     * function that will update the result of the drag & drop event in the warehouse
-     */
-    public void updateWarehouse(ClientDeposits clientDeposits){
-        String resType;
-        if(clientDeposits.getShelf(1).getEmpty() == 0) {
-            resType = checkResType(clientDeposits.getShelf(1));
-            resSlot1.setImage(new Image("/images/resources/" +resType+ ".png"));
-        }
-        if(clientDeposits.getShelf(2).getEmpty() < 2){
-            resType = checkResType(clientDeposits.getShelf(2));
-            resSlot21.setImage(new Image("/images/resources/"+resType+".png"));
-            if(clientDeposits.getShelf(2).getEmpty() == 0)
-                resSlot22.setImage(new Image("/images/resources/"+resType+".png"));
-        }
-        if(clientDeposits.getShelf(3).getEmpty() < 3){
-            resType = checkResType(clientDeposits.getShelf(3));
-            resSlot31.setImage(new Image("/images/resources/"+resType+".png"));
-            if(clientDeposits.getShelf(3).getEmpty() == 1)
-                resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
-            else {
-                resSlot32.setImage(new Image("/images/resources/"+resType+".png"));
-                resSlot33.setImage(new Image("/images/resources/"+resType+".png"));
-            }
-        }
-        //extraDepots if they don't exist the result of this condition is null?
-//        if(!clientDeposits.getShelf(3).getSpaces().equals(ResourceType.EMPTY)){
-//            resSlot41.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(3))+".png"));
-//            if(getEmpty(clientDeposits.getShelf(3)) == 0) resSlot42.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(3))+".png"));
-//        }
-//        if(!clientDeposits.getShelf(4).getSpaces().equals(ResourceType.EMPTY)){
-//            resSlot51.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(4))+".png"));
-//            if(getEmpty(clientDeposits.getShelf(4)) == 0) resSlot52.setImage(new Image("/images/resources/"+checkResType(clientDeposits.getShelf(4))+".png"));
-//        }
-    }
-
-    public String checkResType(Shelf shelf){
-        if(shelf.getSpaces()[0].equals(Resource.COIN)) return "coin";
-        else if(shelf.getSpaces()[0].equals(Resource.SHIELD)) return "shield";
-        else if(shelf.getSpaces()[0].equals(Resource.SERVANT)) return "servant";
-        else return "stone";
-    }
 
     /**
      * visualize the board passed like parameter
-     * @param clientBoard the user board passed
+     * @param nickname the username passed
      */
-    public void updateBoard(ClientBoard clientBoard){}
+    public void updateBoard(String nickname){
+        gui.changeScene(GUI.OTHERBOARD);
+        OtherBoardController obc=(OtherBoardController)gui.getBuildedControllers().get(GUI.OTHERBOARD);
+        obc.visualizeBoard(nickname);
+    }
 
     /**
      * shows which resources you got from the resource market
@@ -374,30 +423,12 @@ public class BoardController extends ControllerGUI {
      */
     public void updateCardMatrix(){
         Stack<DevelopmentCard>[][] cards = gui.getClientModel().getCardMatrix().getCards();
-        if(cards[0][0].peek().equals(null)) green1.setOpacity(0);
-        else green1.setImage(new Image("/images/development_cards/"+cards[0][0].peek().getName()+".png"));
-        if(cards[1][0].peek().equals(null)) green2.setOpacity(0);
-        else green2.setImage(new Image("/images/development_cards/"+cards[1][0].peek().getName()+".png"));
-        if(cards[2][0].peek().equals(null)) green3.setOpacity(0);
-        else green3.setImage(new Image("/images/development_cards/"+cards[2][0].peek().getName()+".png"));
-        if(cards[0][1].peek().equals(null)) blue1.setOpacity(0);
-        else blue1.setImage(new Image("/images/development_cards/"+cards[0][1].peek().getName()+".png"));
-        if(cards[1][1].peek().equals(null)) blue2.setOpacity(0);
-        else blue2.setImage(new Image("/images/development_cards/"+cards[1][1].peek().getName()+".png"));
-        if(cards[2][1].peek().equals(null)) blue3.setOpacity(0);
-        else blue3.setImage(new Image("/images/development_cards/"+cards[2][1].peek().getName()+".png"));
-        if(cards[0][2].peek().equals(null)) yellow1.setOpacity(0);
-        else yellow1.setImage(new Image("/images/development_cards/"+cards[0][2].peek().getName()+".png"));
-        if(cards[1][2].peek().equals(null)) yellow2.setOpacity(0);
-        else yellow2.setImage(new Image("/images/development_cards/"+cards[1][2].peek().getName()+".png"));
-        if(cards[2][2].peek().equals(null)) yellow3.setOpacity(0);
-        else yellow3.setImage(new Image("/images/development_cards/"+cards[2][2].peek().getName()+".png"));
-        if(cards[0][3].peek().equals(null)) purple1.setOpacity(0);
-        else purple1.setImage(new Image("/images/development_cards/"+cards[0][3].peek().getName()+".png"));
-        if(cards[1][3].peek().equals(null)) purple2.setOpacity(0);
-        else purple2.setImage(new Image("/images/development_cards/"+cards[1][3].peek().getName()+".png"));
-        if(cards[2][3].peek().equals(null)) purple3.setOpacity(0);
-        else purple3.setImage(new Image("/images/development_cards/"+cards[2][3].peek().getName()+".png"));
+        for(int r=0;r<3;r++){
+            for(int c=0;c<4;c++){
+                if(cards[r][c].size()==0) imageViewMatrix[r][c].setOpacity(0);
+                else imageViewMatrix[r][c].setImage(new Image("/images/development_cards/"+cards[r][c].peek().getName()+".png"));
+            }
+        }
     }
 
     /**
@@ -405,19 +436,8 @@ public class BoardController extends ControllerGUI {
      */
     public void updateResMarket(){
         List<ResourceType> marbles = gui.getClientModel().getMarket().getMarbles();
-        marble00.setImage(new Image("/images/marbles/"+setColor(marbles.get(0))+".png"));
-        marble01.setImage(new Image("/images/marbles/"+setColor(marbles.get(1))+".png"));
-        marble02.setImage(new Image("/images/marbles/"+setColor(marbles.get(2))+".png"));
-        marble03.setImage(new Image("/images/marbles/"+setColor(marbles.get(3))+".png"));
-        marble10.setImage(new Image("/images/marbles/"+setColor(marbles.get(4))+".png"));
-        marble11.setImage(new Image("/images/marbles/"+setColor(marbles.get(5))+".png"));
-        marble12.setImage(new Image("/images/marbles/"+setColor(marbles.get(6))+".png"));
-        marble13.setImage(new Image("/images/marbles/"+setColor(marbles.get(7))+".png"));
-        marble20.setImage(new Image("/images/marbles/"+setColor(marbles.get(8))+".png"));
-        marble21.setImage(new Image("/images/marbles/"+setColor(marbles.get(9))+".png"));
-        marble22.setImage(new Image("/images/marbles/"+setColor(marbles.get(10))+".png"));
-        marble23.setImage(new Image("/images/marbles/"+setColor(marbles.get(11))+".png"));
-        pendingMarble.setImage(new Image("/images/marbles/"+setColor(marbles.get(12))+".png"));
+        for(int i=0;i<marbles.size();i++)
+            this.marbles.get(i).setImage(new Image("/images/marbles/"+setColor(marbles.get(i))+".png"));
     }
 
     /**
@@ -438,112 +458,18 @@ public class BoardController extends ControllerGUI {
      * updates the red cross image based on the value of the player's faithpath position
      */
     public void updateFaithPath(){
-        faithPath1.setOpacity(0);
-        faithPath2.setOpacity(0);
-        faithPath3.setOpacity(0);
-        faithPath4.setOpacity(0);
-        faithPath5.setOpacity(0);
-        faithPath6.setOpacity(0);
-        faithPath7.setOpacity(0);
-        faithPath8.setOpacity(0);
-        faithPath9.setOpacity(0);
-        faithPath10.setOpacity(0);
-        faithPath11.setOpacity(0);
-        faithPath12.setOpacity(0);
-        faithPath13.setOpacity(0);
-        faithPath14.setOpacity(0);
-        faithPath15.setOpacity(0);
-        faithPath16.setOpacity(0);
-        faithPath17.setOpacity(0);
-        faithPath18.setOpacity(0);
-        faithPath19.setOpacity(0);
-        faithPath20.setOpacity(0);
-        faithPath21.setOpacity(0);
-        faithPath22.setOpacity(0);
-        faithPath23.setOpacity(0);
-        faithPath24.setOpacity(0);
-        switch(gui.getClientModel().getMyBoard().getFaithPath().getPosition()){
-            case 1: faithPath1.setOpacity(100);
-            case 2: faithPath2.setOpacity(100);
-            case 3: faithPath3.setOpacity(100);
-            case 4: faithPath3.setOpacity(100);
-            case 5: faithPath5.setOpacity(100);
-            case 6: faithPath6.setOpacity(100);
-            case 7: faithPath7.setOpacity(100);
-            case 8: faithPath8.setOpacity(100);
-            case 9: faithPath9.setOpacity(100);
-            case 10: faithPath10.setOpacity(100);
-            case 11: faithPath11.setOpacity(100);
-            case 12: faithPath12.setOpacity(100);
-            case 13: faithPath13.setOpacity(100);
-            case 14: faithPath14.setOpacity(100);
-            case 15: faithPath15.setOpacity(100);
-            case 16: faithPath16.setOpacity(100);
-            case 17: faithPath17.setOpacity(100);
-            case 18: faithPath18.setOpacity(100);
-            case 19: faithPath19.setOpacity(100);
-            case 20: faithPath20.setOpacity(100);
-            case 21: faithPath21.setOpacity(100);
-            case 22: faithPath22.setOpacity(100);
-            case 23: faithPath23.setOpacity(100);
-            case 24: faithPath24.setOpacity(100);
-        }
+        for(ImageView i : faithPath) i.setOpacity(0);
+        int position=gui.getClientModel().getMyBoard().getFaithPath().getPosition();
+        if(position>0) faithPath.get(position-1).setOpacity(100);
     }
 
     /**
      * updates the black cross image based on the value of Lorenzo's position
      */
     public void updateBlackCross(){
-        blackCross1.setOpacity(0);
-        blackCross2.setOpacity(0);
-        blackCross3.setOpacity(0);
-        blackCross4.setOpacity(0);
-        blackCross5.setOpacity(0);
-        blackCross6.setOpacity(0);
-        blackCross7.setOpacity(0);
-        blackCross8.setOpacity(0);
-        blackCross9.setOpacity(0);
-        blackCross10.setOpacity(0);
-        blackCross11.setOpacity(0);
-        blackCross12.setOpacity(0);
-        blackCross13.setOpacity(0);
-        blackCross14.setOpacity(0);
-        blackCross15.setOpacity(0);
-        blackCross16.setOpacity(0);
-        blackCross17.setOpacity(0);
-        blackCross18.setOpacity(0);
-        blackCross19.setOpacity(0);
-        blackCross20.setOpacity(0);
-        blackCross21.setOpacity(0);
-        blackCross22.setOpacity(0);
-        blackCross23.setOpacity(0);
-        blackCross24.setOpacity(0);
-        switch(gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition()){
-            case 1: blackCross1.setOpacity(100);
-            case 2: blackCross2.setOpacity(100);
-            case 3: blackCross3.setOpacity(100);
-            case 4: blackCross4.setOpacity(100);
-            case 5: blackCross5.setOpacity(100);
-            case 6: blackCross6.setOpacity(100);
-            case 7: blackCross7.setOpacity(100);
-            case 8: blackCross8.setOpacity(100);
-            case 9: blackCross9.setOpacity(100);
-            case 10: blackCross10.setOpacity(100);
-            case 11: blackCross11.setOpacity(100);
-            case 12: blackCross12.setOpacity(100);
-            case 13: blackCross13.setOpacity(100);
-            case 14: blackCross14.setOpacity(100);
-            case 15: blackCross15.setOpacity(100);
-            case 16: blackCross16.setOpacity(100);
-            case 17: blackCross17.setOpacity(100);
-            case 18: blackCross18.setOpacity(100);
-            case 19: blackCross19.setOpacity(100);
-            case 20: blackCross20.setOpacity(100);
-            case 21: blackCross21.setOpacity(100);
-            case 22: blackCross22.setOpacity(100);
-            case 23: blackCross23.setOpacity(100);
-            case 24: blackCross24.setOpacity(100);
-        }
+        for(ImageView i : blackCross)i.setOpacity(0);
+        int position=gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition();
+        if(position>0) blackCross.get(position-1).setOpacity(100);
     }
 
     /**
@@ -767,9 +693,9 @@ public class BoardController extends ControllerGUI {
      * @param mouseEvent the left mouse click on a player's image in the top left corner
      */
     public void playerBoard(MouseEvent mouseEvent) {
-        if (mouseEvent.getSource().toString().equals("ImageView[id=p1Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player1Name.getText()));
-        else if (mouseEvent.getSource().toString().equals("ImageView[id=p2Board, styleClass=image-view]")) updateBoard(gui.getClientModel().getBoards().get(player2Name.getText()));
-        else updateBoard(gui.getClientModel().getBoards().get(player3Name.getText()));
+        if (mouseEvent.getSource().toString().equals("ImageView[id=p1Board, styleClass=image-view]")) updateBoard(player1Name.getText());
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=p2Board, styleClass=image-view]")) updateBoard(player2Name.getText());
+        else updateBoard(player3Name.getText());
     }
 
     public void getResources(MouseEvent mouseEvent) {

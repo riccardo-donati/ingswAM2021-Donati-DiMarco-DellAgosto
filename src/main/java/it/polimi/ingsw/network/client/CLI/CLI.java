@@ -353,4 +353,22 @@ public class CLI implements Client {
         System.out.println(sb.toString());
     }
 
+    @Override
+    public void visualizeDiscardLeaderUpdate() {
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())) {
+            System.out.println(clientModel.getMyBoard().getFaithPath());
+            System.out.println(clientModel.getMyBoard().stringifyLeaders());
+        }
+    }
+
+    @Override
+    public void visualizeFaithUpdate() {
+        //do nothing
+    }
+
+    @Override
+    public void visualizeMarketUpdate() {
+        //do nothing
+    }
+
 }

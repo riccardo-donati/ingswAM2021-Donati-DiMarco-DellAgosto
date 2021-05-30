@@ -49,5 +49,8 @@ public interface Client {
     void visualizeWait();
     void visualizeRegisterRequest();
     void visualizeReconnection(ReconnectUpdate message);
+    void visualizeDiscardLeaderUpdate();
+    void visualizeFaithUpdate();
+    void visualizeMarketUpdate();
 
 }

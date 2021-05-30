@@ -206,11 +206,15 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DiscardLeaderUpdate message, Client client) {
         message.update(client.getClientModel());
+
+        client.visualizeDiscardLeaderUpdate();
     }
 
     @Override
     public void visit(FaithUpdate message, Client client) {
         message.update(client.getClientModel());
+
+
     }
 
     @Override

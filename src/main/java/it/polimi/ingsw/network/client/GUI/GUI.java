@@ -32,13 +32,13 @@ public class GUI extends Application implements Client {
     private Scene currentScene;
     private final Map<String, Scene> buildedScenes = new HashMap<>();
     private final Map<String, ControllerGUI> buildedControllers = new HashMap<>();
-    private static final String LOGIN = "login.fxml";
-    private static final String WAITING = "waiting_screen.fxml";
-    private static final String NPLAYERS = "numbers.fxml";
-    private static final String BOARD = "board.fxml";
-    private static final String LOBBY = "lobby.fxml";
-    private static final String SETUP = "setup_phase.fxml";
-    private static final String OTHERBOARD = "otherPlayersBoard.fxml";
+    public static final String LOGIN = "login.fxml";
+    public static final String WAITING = "waiting_screen.fxml";
+    public static final String NPLAYERS = "numbers.fxml";
+    public static final String BOARD = "board.fxml";
+    public static final String LOBBY = "lobby.fxml";
+    public static final String SETUP = "setup_phase.fxml";
+    public static final String OTHERBOARD = "otherPlayersBoard.fxml";
 
 
     private String serverIP;
@@ -49,6 +49,10 @@ public class GUI extends Application implements Client {
     private Gson gson;
     private final ClientVisitorHandler clientVisitorHandler;
     private final ClientModel clientModel;
+
+    public Map<String, ControllerGUI> getBuildedControllers() {
+        return buildedControllers;
+    }
 
     public GUI(){
         clientVisitorHandler = new ClientVisitorHandler();
@@ -208,6 +212,7 @@ public class GUI extends Application implements Client {
         }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
+            bc.updateFaithPath();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
     }
@@ -226,7 +231,7 @@ public class GUI extends Application implements Client {
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         if(clientModel.getNickname().equals(clientModel.getCurrentNickname()))
-            bc.updateWarehouse2(getClientModel().getCurrentBoard().getDeposits());
+            bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
@@ -346,5 +351,24 @@ public class GUI extends Application implements Client {
         sb.append("Phase: ").append(clientModel.getGamePhase()).append("\n");
         sb.append("Turn: ").append(clientModel.getCurrentNickname()).append("\n");
         ComunicationController.showInfo(currentScene,sb.toString());
+    }
+
+    @Override
+    public void visualizeDiscardLeaderUpdate() {
+
+    }
+
+    @Override
+    public void visualizeFaithUpdate() {
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
+            BoardController l=(BoardController)buildedControllers.get(BOARD);
+            l.updateFaithPath();
+        }
+    }
+
+    @Override
+    public void visualizeMarketUpdate() {
+        BoardController l=(BoardController)buildedControllers.get(BOARD);
+        l.updateResMarket();
     }
 }

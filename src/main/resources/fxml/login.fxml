@@ -45,27 +45,27 @@
             <Font name="Gabriola" size="26.0" />
          </font>
       </Label>
-      <ImageView fitHeight="216.0" fitWidth="415.0" layoutX="188.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="257.0" fitWidth="543.0" layoutX="136.0" layoutY="62.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/logo.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="142.0" layoutY="125.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="103.0" layoutY="94.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/resources/stone.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="92.0" layoutY="172.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="42.0" layoutY="143.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/resources/coin.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="565.0" layoutY="123.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="603.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/resources/servant.png" />
          </image>
       </ImageView>
-      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="624.0" layoutY="149.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitHeight="97.0" fitWidth="100.0" layoutX="663.0" layoutY="128.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../images/resources/shield.png" />
          </image>
