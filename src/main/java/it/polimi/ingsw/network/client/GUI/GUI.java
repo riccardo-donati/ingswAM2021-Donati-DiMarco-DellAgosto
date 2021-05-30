@@ -119,7 +119,7 @@ public class GUI extends Application implements Client {
         }catch (IOException e){
             e.printStackTrace();
         }
-        currentScene = buildedScenes.get(LOGIN);
+        currentScene = buildedScenes.get(BOARD);
     }
 
     public void changeScene(String newScene) {

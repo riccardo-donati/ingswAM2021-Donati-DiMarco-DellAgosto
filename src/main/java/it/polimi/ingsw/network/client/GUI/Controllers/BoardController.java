@@ -608,12 +608,21 @@ public class BoardController extends ControllerGUI {
      */
     public void placeWarehouse(DragEvent dragEvent){
 //        draggedRes = dragEvent.getDragboard().getImage();
-        Integer slot;
-        if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
-                || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]" )) slot = 2;
-        else slot = 3;
-        gui.send(new DepositResourceCommand(movedRes, slot));
+//        for(ImageView i  : LISTA DI IMMAGINI WAREHOUSE){
+//            if(dragEvent.getSource().toString().equals(i)){
+//          gui.send(new MoveResourceCommand(PROVENIENZA, ARRIVO));
+            //}
+        //}
+
+//        else{
+            Integer slot;
+            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+            else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
+                slot = 2;
+            else slot = 3;
+            gui.send(new DepositResourceCommand(movedRes, slot));
+//      }
     }
 
     /**
@@ -622,10 +631,12 @@ public class BoardController extends ControllerGUI {
      * @param mouseEvent detects the drag event
      */
     //based on how we would like to structure the updateWarehouse i don't have to save the Resource(?)
-    public void movePendingRes(MouseEvent mouseEvent){
+    public void moveRes(MouseEvent mouseEvent){
         ClipboardContent cb = new ClipboardContent();
         ImageView source;
-        if(mouseEvent.getSource().toString().equals("ImageView[id=pendingCoin, styleClass=image-view]")) {
+        if(mouseEvent.getSource().toString().equals("ImageView[id=pendingCoin, styleClass=image-view]")
+        // OR THE SOURCE EQUALS AN IMAGEVIEW DROM THE RESSLOT1, RESSLOT21......
+        ) {
             movedRes = ResourceType.YELLOW;
             source = pendingCoin;
         }
@@ -777,9 +788,12 @@ public class BoardController extends ControllerGUI {
         gui.send(new BuyFromMarketCommand(line, pos));
     }
 
-    //because the deposit of resources is a drag e drop, it will be also with the discard
-    public void discardResources(MouseEvent mouseEvent) {
-//        gui.getOut().println(gui.getGson().toJson(new DiscardResourceCommand()));
+    /**
+     * in the drag event Moveres i save the resourceType of what i'm dragging, i also can use it to discard a resource
+     * @param dragEvent the dragging of a resource from the pending resources
+     */
+    public void discardResources(DragEvent dragEvent) {
+        gui.send(new DiscardResourceCommand(movedRes));
     }
 
     /**
