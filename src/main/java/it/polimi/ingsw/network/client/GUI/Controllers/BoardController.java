@@ -12,6 +12,7 @@ import it.polimi.ingsw.network.messages.commands.*;
 import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -790,20 +791,26 @@ public class BoardController extends ControllerGUI {
         if(players.size()==1){
             player1Name.setText(players.get(0));
             p1Board.setOpacity(100);
+            p1Board.setCursor(Cursor.HAND);
         }
         else if(players.size()==2){
             player1Name.setText(players.get(0));
             p1Board.setOpacity(100);
+            p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));
             p2Board.setOpacity(100);
+            p2Board.setCursor(Cursor.HAND);
         }
         else if(players.size()==3){
             player1Name.setText(players.get(0));
             p1Board.setOpacity(100);
+            p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));
             p2Board.setOpacity(100);
+            p2Board.setCursor(Cursor.HAND);
             player3Name.setText(players.get(2));
             p3Board.setOpacity(100);
+            p3Board.setCursor(Cursor.HAND);
         }
         else return;
     }
