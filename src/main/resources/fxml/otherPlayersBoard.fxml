@@ -23,14 +23,14 @@
       </ImageView>
       <AnchorPane fx:id="playerStatus" prefHeight="116.0" prefWidth="807.0">
          <children>
-            <ImageView fitHeight="120.0" fitWidth="255.0" layoutX="501.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/logo.png" />
-               </image>
-            </ImageView>
             <ImageView fitHeight="129.0" fitWidth="149.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/goBackArrow.png" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="144.0" fitWidth="357.0" layoutX="458.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../images/logo.png" />
                </image>
             </ImageView>
          </children>
@@ -45,8 +45,8 @@
                   <DropShadow height="10.0" radius="4.5" spread="0.8" width="10.0" />
                </effect>
             </ImageView>
-            <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0"  pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0"  pickOnBounds="true" preserveRatio="true" />
+            <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot22" fitHeight="30.0" fitWidth="27.0" layoutX="172.0" layoutY="265.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true" />
@@ -227,6 +227,11 @@
                      </image>
                   </ImageView>
                   <ImageView fx:id="faithPath24" fitHeight="43.0" fitWidth="28.0" layoutX="773.0" layoutY="5.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../images/red cross.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="faithPath0" fitHeight="43.0" fitWidth="28.0" layoutX="14.0" layoutY="81.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/red cross.png" />
                      </image>

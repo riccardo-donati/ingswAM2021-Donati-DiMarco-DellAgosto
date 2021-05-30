@@ -1,6 +1,9 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
+import it.polimi.ingsw.network.client.ClientModel.ClientDeposits;
+import it.polimi.ingsw.network.client.ClientModel.Shelf;
 import it.polimi.ingsw.network.messages.commands.ChooseBonusResourceCommand;
 import it.polimi.ingsw.network.messages.commands.ChooseLeadersCommand;
 import it.polimi.ingsw.network.messages.commands.PassCommand;
@@ -26,16 +29,35 @@ public class SetupController extends ControllerGUI{
     ResourceType res;
     List<String> leaderCards;
 
+    @Override
+    public void initializeElements(){
+        leadersImageViews.add(leaderCard1);
+        leadersImageViews.add(leaderCard2);
+        leadersImageViews.add(leaderCard3);
+        leadersImageViews.add(leaderCard4);
+
+        List<ImageView> slot1=new ArrayList<>();
+        slot1.add(res11);
+        List<ImageView> slot2=new ArrayList<>();
+        slot2.add(res21);
+        slot2.add(res22);
+        List<ImageView> slot3=new ArrayList<>();
+        slot3.add(res31);
+        slot3.add(res32);
+        slot3.add(res33);
+        warehouse.add(slot1);
+        warehouse.add(slot2);
+        warehouse.add(slot3);
+    }
     public SetupController(){
     }
+    List<ImageView> leadersImageViews=new ArrayList<>();
+    List<List<ImageView>> warehouse=new ArrayList<>();
 
     @FXML private ImageView leaderCard1;
     @FXML private ImageView leaderCard2;
     @FXML private ImageView leaderCard3;
     @FXML private ImageView leaderCard4;
-    @FXML private Button warehouse1;
-    @FXML private Button warehouse2;
-    @FXML private Button warehouse3;
     @FXML private Rectangle l1Cover;
     @FXML private Rectangle l2Cover;
     @FXML private Rectangle l4Cover;
@@ -44,13 +66,17 @@ public class SetupController extends ControllerGUI{
     @FXML private ImageView selectedCoin;
     @FXML private ImageView selectedShield;
     @FXML private ImageView selectedStone;
+    @FXML private ImageView res11;
+    @FXML private ImageView res21;
+    @FXML private ImageView res22;
+    @FXML private ImageView res31;
+    @FXML private ImageView res32;
+    @FXML private ImageView res33;
 
     public void updateLeader(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
-        leaderCard1.setImage(new Image("/images/leader_cards/"+leaderCards.get(0)+".png"));
-        leaderCard2.setImage(new Image("/images/leader_cards/"+leaderCards.get(1)+".png"));
-        leaderCard3.setImage(new Image("/images/leader_cards/"+leaderCards.get(2)+".png"));
-        leaderCard4.setImage(new Image("/images/leader_cards/"+leaderCards.get(3)+".png"));
+        for(int i=0;i<leaderCards.size();i++)
+            leadersImageViews.get(i).setImage(new Image("/images/leader_cards/"+leaderCards.get(i)+".png"));
     }
 
     public void colorLeader(MouseEvent mouseEvent) {
@@ -113,6 +139,20 @@ public class SetupController extends ControllerGUI{
         return chosenL;
     }
 
+    public void updateWarehouse(){
+        ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
+        List<Shelf> shelves=clientDeposits.getShelves();
+        for(int i=0;i<shelves.size();i++){
+            List<ImageView> slotImageViews=warehouse.get(i);
+            for(int j=0;j<slotImageViews.size();j++){
+                if(shelves.get(i).getSpaces()[j]== Resource.EMPTY)
+                    slotImageViews.get(j).setImage(null);
+                else{
+                    slotImageViews.get(j).setImage(new Image("/images/resources/" +shelves.get(i).getSpaces()[j].toString().toLowerCase()+ ".png"));
+                }
+            }
+        }
+    }
     public void placeResource(MouseEvent mouseEvent) {
         Node node=(Node)mouseEvent.getSource();
         if(node.getId().equals("warehouse1")) id = 1;

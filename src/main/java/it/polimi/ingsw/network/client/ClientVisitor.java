@@ -38,4 +38,6 @@ public interface ClientVisitor {
     void visit(PendingResourcesUpdate message, Client client);
 
     void visit(WaitMessage message, Client client);
+
+    void visit(DisconnectedMessage message, Client client);
 }

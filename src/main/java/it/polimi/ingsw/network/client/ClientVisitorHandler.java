@@ -82,8 +82,13 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(WaitMessage message, Client client) {
-
         client.visualizeWait();
+    }
+
+    @Override
+    public void visit(DisconnectedMessage message, Client client) {
+        message.update(client.getClientModel());
+        client.visualizeDisconnectedMessage();
     }
 
     @Override
@@ -128,6 +133,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(MarketUpdate message, Client client) {
         message.update(client.getClientModel());
+        client.visualizeMarketUpdate();
     }
 
     @Override
@@ -213,7 +219,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(FaithUpdate message, Client client) {
         message.update(client.getClientModel());
-
+        client.visualizeFaithUpdate();
 
     }
 

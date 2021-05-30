@@ -95,18 +95,21 @@ public class GUI extends Application implements Client {
             Platform.runLater(new Thread(()->message.accept(clientVisitorHandler, this)));
         }
     }
-    public void connect(String serverIP,Integer serverPortNumber){
+    public boolean connect(String serverIP,Integer serverPortNumber){
         try {
             socket = new Socket(serverIP, serverPortNumber);
             out = new PrintWriter(socket.getOutputStream(), true);
             in = new Scanner(socket.getInputStream());
         } catch (IOException e) {
-            System.out.println("Server not available");
-            return;
+            ComunicationController.showError(currentScene,"Server not available");
+            LogIn s=(LogIn)buildedControllers.get(LOGIN);
+            s.unlock();
+            return false;
         }
         this.serverIP=serverIP;
         this.serverPortNumber=serverPortNumber;
         new Thread(this::handleMessages).start();
+        return true;
 
     }
 
@@ -193,11 +196,7 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeStartGameUpdate() {
-        SetupController sc = (SetupController) buildedControllers.get(SETUP);
-        sc.updateLeader();
-        BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updateCardMatrix();
-        bc.updateResMarket();
+        refreshBoard();
         if(clientModel.getCurrentNickname().equals(clientModel.getNickname()))
             Platform.runLater(new Thread(()->changeScene(SETUP)));
         else Platform.runLater(new Thread(()->changeScene(WAITING)));
@@ -212,7 +211,6 @@ public class GUI extends Application implements Client {
         }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
-            bc.updateFaithPath();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
     }
@@ -230,8 +228,14 @@ public class GUI extends Application implements Client {
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        if(clientModel.getNickname().equals(clientModel.getCurrentNickname()))
-            bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())) {
+            if(clientModel.getGamePhase()==GamePhase.SETUP)
+            {
+                SetupController s = (SetupController) buildedControllers.get(SETUP);
+                s.updateWarehouse();
+            }
+            bc.updateWarehouse();
+        }
     }
 
     @Override
@@ -239,12 +243,16 @@ public class GUI extends Application implements Client {
 //        if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
         if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
-            bc.setIcons();
+
+            bc.updateBlackCross();
+            bc.updateCardMatrix();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
         if(previousGamePhase==GamePhase.SETUP && clientModel.getGamePhase()==GamePhase.ONGOING){
             ComunicationController.showLorenzo(currentScene, "Welcome to Florence! May the best man win");
-        }else ComunicationController.showLorenzo(currentScene, message.getMessage());
+        }else {
+            ComunicationController.showLorenzo(currentScene, message.getMessage());
+        }
 
 
     }
@@ -351,6 +359,24 @@ public class GUI extends Application implements Client {
         sb.append("Phase: ").append(clientModel.getGamePhase()).append("\n");
         sb.append("Turn: ").append(clientModel.getCurrentNickname()).append("\n");
         ComunicationController.showInfo(currentScene,sb.toString());
+
+        refreshBoard();
+    }
+    public void refreshBoard(){
+        BoardController l=(BoardController)buildedControllers.get(BOARD);
+        l.updateBlackCross();
+        l.updateFaithPath();
+        l.updateCardMatrix();
+        l.updateResMarket();
+        l.updateWarehouse();
+        l.setIcons();
+        l.updatePopeFavor();
+        l.updateStrongbox();
+        SetupController s=(SetupController)buildedControllers.get(SETUP);
+        s.updateLeader();
+        s.updateWarehouse();
+
+
     }
 
     @Override
@@ -370,5 +396,10 @@ public class GUI extends Application implements Client {
     public void visualizeMarketUpdate() {
         BoardController l=(BoardController)buildedControllers.get(BOARD);
         l.updateResMarket();
+    }
+
+    @Override
+    public void visualizeDisconnectedMessage() {
+
     }
 }

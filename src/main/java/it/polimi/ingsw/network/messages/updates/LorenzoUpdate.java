@@ -51,7 +51,7 @@ public class LorenzoUpdate implements Update {
     @Override
     public String getMessage() {
         if(lastUsedToken instanceof TokenPush)
-            return "Lorenzo +1 FaithPath";
+            return "Lorenzo +2 FaithPath";
         if(lastUsedToken instanceof TokenPushShuffle)
             return "Lorenzo +1 FaithPath + token shuffle";
         if(lastUsedToken instanceof TokenDiscard)
