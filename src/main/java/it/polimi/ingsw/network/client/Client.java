@@ -8,6 +8,7 @@ import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.DepositUpdate;
 import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
 import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
+import it.polimi.ingsw.network.messages.updates.ReconnectUpdate;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -47,5 +48,9 @@ public interface Client {
     void visualizeNumberOfPlayer(PlayerNumberRequest message);
     void visualizeWait();
     void visualizeRegisterRequest();
+    void visualizeReconnection(ReconnectUpdate message);
+    void visualizeDiscardLeaderUpdate();
+    void visualizeFaithUpdate();
+    void visualizeMarketUpdate();
 
 }

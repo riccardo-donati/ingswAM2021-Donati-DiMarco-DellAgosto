@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network;
 
+import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
@@ -8,9 +9,7 @@ import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -368,7 +367,13 @@ public class Parser {
     }
 
     private static void help() throws IOException {
-        BufferedReader br = new BufferedReader(new FileReader("src/main/resources/CLICommands.txt"));
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        InputStream is = classloader.getResourceAsStream("CLICommands.txt");
+        if(is==null) {
+            System.out.println("CLICommands.txt not found");
+            return;
+        }
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
         String line;
         System.out.println("------------------------------------------------------------------------------");
         while ((line = br.readLine()) != null) {

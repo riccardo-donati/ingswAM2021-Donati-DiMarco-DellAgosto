@@ -32,7 +32,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         } else {
             String nickname = response.getNickname();
             if(nickname == null || nickname.equals("")) {
-                clientHandler.send(new GenericMessage("Illegal nickname"));
+                clientHandler.send(new ErrorMessage("Illegal nickname"));
                 clientHandler.startTimer(50000);
                 clientHandler.send(new RegisterRequest());
                 return;

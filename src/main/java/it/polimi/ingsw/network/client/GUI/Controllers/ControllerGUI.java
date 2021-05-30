@@ -8,4 +8,5 @@ public abstract class ControllerGUI {
     public void setGUI(GUI gui){
         this.gui = gui;
     }
+    public void initializeElements(){}
 }

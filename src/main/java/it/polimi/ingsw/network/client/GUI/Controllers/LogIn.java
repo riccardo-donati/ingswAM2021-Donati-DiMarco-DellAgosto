@@ -9,6 +9,8 @@ import javafx.scene.control.TextField;
 
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class LogIn extends ControllerGUI{
@@ -17,6 +19,7 @@ public class LogIn extends ControllerGUI{
     public LogIn(){
     }
 
+    List<TextField> campi=new ArrayList<>();
     @FXML private TextField username;
     @FXML private TextField ipAddress;
     @FXML private TextField portNumber;
@@ -28,6 +31,8 @@ public class LogIn extends ControllerGUI{
         }
         else{
             gui.connect(ipAddress.getText(),Integer.parseInt(portNumber.getText()));
+            ipAddress.setDisable(true);
+            portNumber.setDisable(true);
         }
     }
 
