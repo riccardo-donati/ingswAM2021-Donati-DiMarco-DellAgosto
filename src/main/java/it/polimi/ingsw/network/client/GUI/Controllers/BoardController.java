@@ -188,6 +188,9 @@ public class BoardController extends ControllerGUI {
     @FXML private Label player1Name;
     @FXML private Label player2Name;
     @FXML private Label player3Name;
+    @FXML private ImageView disc1;
+    @FXML private ImageView disc2;
+    @FXML private ImageView disc3;
     @FXML private ImageView marble00;
     @FXML private ImageView marble01;
     @FXML private ImageView marble02;
@@ -742,14 +745,18 @@ public class BoardController extends ControllerGUI {
      */
     public void setIcons(){
         List<String> players = gui.getClientModel().getPlayersInOrder();
+        List<String> disconnected=gui.getClientModel().getDisconnectedPlayers();
         players.remove(gui.getClientModel().getNickname());
         if(players.size()==1){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
         }
         else if(players.size()==2){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
+            disc2.setVisible(disconnected.contains(players.get(1)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));
@@ -758,6 +765,9 @@ public class BoardController extends ControllerGUI {
         }
         else if(players.size()==3){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
+            disc2.setVisible(disconnected.contains(players.get(1)));
+            disc3.setVisible(disconnected.contains(players.get(2)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));

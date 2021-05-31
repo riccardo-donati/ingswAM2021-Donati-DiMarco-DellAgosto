@@ -121,7 +121,7 @@ public class ClientHandler implements Runnable {
                 try {
                     ping = false;
                     send(new PingRequest());
-                    Thread.sleep(1000);
+                    Thread.sleep(1500);
                 } catch (InterruptedException e) {
                     return;
                 }

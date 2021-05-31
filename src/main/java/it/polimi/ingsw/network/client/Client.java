@@ -5,10 +5,7 @@ import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
-import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
-import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
-import it.polimi.ingsw.network.messages.updates.ReconnectUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -53,5 +50,6 @@ public interface Client {
     void visualizeFaithUpdate();
     void visualizeMarketUpdate();
     void visualizeDisconnectedMessage();
+    void visualizeReconnectMessage(ReconnectMessage message);
 
 }

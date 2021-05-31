@@ -16,13 +16,13 @@
             <GaussianBlur radius="0.0" />
          </effect>
       </ImageView>
-      <TextField fx:id="username" layoutX="369.0" layoutY="310.0" prefHeight="25.0" prefWidth="234.0" promptText="Riki001" style="-fx-border-color: black;" />
+      <TextField fx:id="username" layoutX="369.0" layoutY="310.0" prefHeight="25.0" prefWidth="234.0" promptText="PincoPallino" style="-fx-border-color: black;" />
       <Label layoutX="142.0" layoutY="356.0" prefHeight="30.0" prefWidth="134.0" text=" IP ADDRESS:">
          <font>
             <Font name="Gabriola" size="26.0" />
          </font></Label>
-      <TextField fx:id="ipAddress" layoutX="369.0" layoutY="360.0" prefHeight="25.0" prefWidth="234.0" promptText="127.0.0.1" style="-fx-border-color: black;" />
-      <TextField fx:id="portNumber" layoutX="369.0" layoutY="410.0" prefHeight="25.0" prefWidth="234.0" promptText="1337" style="-fx-border-color: black;" />
+      <TextField fx:id="ipAddress" layoutX="369.0" layoutY="360.0" prefHeight="25.0" prefWidth="234.0" promptText="127.0.0.1" style="-fx-border-color: black;" text="127.0.0.1" />
+      <TextField fx:id="portNumber" layoutX="369.0" layoutY="410.0" prefHeight="25.0" prefWidth="234.0" promptText="1337" style="-fx-border-color: black;" text="1337" />
       <Button fx:id="logIn" layoutX="298.0" layoutY="493.0" mnemonicParsing="false" onAction="#userLogIn" prefHeight="26.0" prefWidth="218.0" style="-fx-background-color: E7D2AB; -fx-border-color: black;" text="LOGIN">
          <font>
             <Font name="Gabriola" size="18.0" />

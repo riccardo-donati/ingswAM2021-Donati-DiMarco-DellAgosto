@@ -31,8 +31,9 @@ public class ReconnectUpdate implements Update{
     private final GamePhase gamePhase;
     private final List<String> fourLeaderCards;
     private final List<ResourceType> pendingResources;
+    private final List<String> activePlayers;
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -48,6 +49,7 @@ public class ReconnectUpdate implements Update{
         this.gamePhase=gamePhase;
         this.fourLeaderCards=fourLeaderCards;
         this.pendingResources=pendingResources;
+        this.activePlayers=activePlayers;
     }
 
     @Override
@@ -115,6 +117,11 @@ public class ReconnectUpdate implements Update{
         //update 4 leaders
         for (String leaderCard : fourLeaderCards)
             clientModel.addSetupPhaseLeaderCard(leaderCard);
+
+        //update disconnected players
+        for(String nick : playerOrder)
+            if(!activePlayers.contains(nick))
+                clientModel.addDisconnected(nick);
     }
 
     public List<ResourceType> getPendingResources() {

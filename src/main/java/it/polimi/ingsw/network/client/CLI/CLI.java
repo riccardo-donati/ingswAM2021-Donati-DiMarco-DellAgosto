@@ -377,4 +377,12 @@ public class CLI implements Client {
         System.out.println(clientModel.getDisconnectedPlayers());
     }
 
+    @Override
+    public void visualizeReconnectMessage(ReconnectMessage message) {
+        System.out.println(message.getMessage());
+        if (clientModel.getNickname().equals(message.getReconnectedNickname())) {
+            currCommand = "";
+        }
+    }
+
 }

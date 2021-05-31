@@ -10,8 +10,10 @@ import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.updates.ReconnectMessage;
 
 import java.io.*;
+import java.net.BindException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -43,7 +45,6 @@ public class Server {
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException e) {
-            e.printStackTrace();
             System.out.println("The server socket could not be created");
             System.out.println("Closing . . .");
             return;
