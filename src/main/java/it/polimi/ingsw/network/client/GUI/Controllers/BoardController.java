@@ -1,7 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -31,6 +30,10 @@ public class BoardController extends ControllerGUI {
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
+    Boolean baseSelected = false;
+    Boolean slot1Selected = false;
+    Boolean slot2Selected = false;
+    Boolean slot3Selected = false;
     ResourceType movedRes;
     Integer row;
     Integer column;
@@ -38,11 +41,14 @@ public class BoardController extends ControllerGUI {
     Integer pos;
     Boolean setup = true;
     Integer lCard;
-    Image img;
+    int from;
+    Boolean moving;
+    Boolean fromStrongbox;
 
     public BoardController(){
 
     }
+
     @Override
     public void initializeElements(){
         List<ImageView> slot1=new ArrayList<>();
@@ -267,6 +273,15 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView unknownInput1;
     @FXML private ImageView unknownInput2;
     @FXML private ImageView unknownOutput;
+    @FXML private ImageView toggledBaseProd;
+    @FXML private ImageView toggledSlot1;
+    @FXML private ImageView toggledSlot2;
+    @FXML private ImageView toggledSlot3;
+    @FXML private Label numberPendingCoin;
+    @FXML private Label numberPendingServant;
+    @FXML private Label numberPendingShield;
+    @FXML private Label numberPendingStone;
+
 
     /**
      * hides and shows the strongbox Panel
@@ -458,7 +473,20 @@ public class BoardController extends ControllerGUI {
     /**
      * shows which resources you got from the resource market
      */
-    public void updatePending(List<Resource> pending){}
+    //TODO: SET THE VALUE OF THE PENDING LABELS TO THEIR VALUE, I THINK I HAVE TO ADD A FUNCTION THAT RETURNS ALSO THE NUMBER OF
+    // A RELATIVE REOURCE IN THE PENDING
+    public void updatePending(List<ResourceType> pending){
+        if(pending.contains(ResourceType.YELLOW))  {
+            pendingCoin.setOpacity(100);
+        }
+        else pendingCoin.setOpacity(0);
+        if(pending.contains(ResourceType.BLUE))   pendingShield.setOpacity(100);
+        else pendingShield.setOpacity(0);
+        if(pending.contains(ResourceType.VIOLET))   pendingServant.setOpacity(100);
+        else pendingServant.setOpacity(0);
+        if(pending.contains(ResourceType.GREY)) pendingStone.setOpacity(100);
+        else pendingStone.setOpacity(0);
+    }
 
     /**
      * based on the client card this function shows the top card of each pile, obscures the card if pile's empty
@@ -533,19 +561,36 @@ public class BoardController extends ControllerGUI {
      * the click event on a Resource image sends a message of a picked resource
      * @param mouseEvent left mouse click on a specific resource
      */
-    public void clickedRes(MouseEvent mouseEvent) {
-        if(mouseEvent.getSource().toString().equals("ImageView[id=pickStone, styleClass=image-view]")) {
-            gui.send(new StrongboxPickUpCommand(ResourceType.GREY));
-        }
-        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickServant, styleClass=image-view]")) {
-            gui.send(new StrongboxPickUpCommand(ResourceType.VIOLET));
-        }
-        else if(mouseEvent.getSource().toString().equals("ImageView[id=pickShield, styleClass=image-view]")) {
-            gui.send(new StrongboxPickUpCommand(ResourceType.BLUE));
-        }
-        else {
-            gui.send(new StrongboxPickUpCommand(ResourceType.YELLOW));
-        }
+    public void clickedStrongboxRes(MouseEvent mouseEvent) {
+        ResourceType res;
+        if (mouseEvent.getSource().toString().equals("ImageView[id=pickStone, styleClass=image-view]"))
+            res = ResourceType.GREY;
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=pickServant, styleClass=image-view]"))
+            res = ResourceType.VIOLET;
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=pickShield, styleClass=image-view]"))
+            res = ResourceType.BLUE;
+        else res = ResourceType.YELLOW;
+        gui.send(new StrongboxPickUpCommand(res));
+
+    }
+
+    public void clickedWarehouseRes(MouseEvent mouseEvent) {
+        int slot;
+        if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
+            slot = 2;
+        else
+//        if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
+//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
+//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
+            slot = 3;
+        gui.send(new WarehousePickUpCommand(slot));
+    }
+
+    //update the pickedresources and the warehouse
+    public void revert(ActionEvent event) {
+        gui.send(new RevertPickUpCommand());
     }
 
     /**
@@ -553,6 +598,10 @@ public class BoardController extends ControllerGUI {
      * @param event left mouse click on the button
      */
     public void produce(ActionEvent event) {
+        toggledBaseProd.setOpacity(0);
+        toggledSlot1.setOpacity(0);
+        toggledSlot2.setOpacity(0);
+        toggledSlot3.setOpacity(0);
         gui.send(new ActivateProductionsCommand());
     }
 
@@ -613,13 +662,18 @@ public class BoardController extends ControllerGUI {
      * @param dragEvent this event identifies the end of a drag & drop event
      */
     public void placeWarehouse(DragEvent dragEvent){
-//        draggedRes = dragEvent.getDragboard().getImage();
         Integer slot;
-        if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
-        else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
-                || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]" )) slot = 2;
+        if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+        else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
+                || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
+            slot = 2;
         else slot = 3;
-        gui.send(new DepositResourceCommand(movedRes, slot));
+        if(moving){
+            gui.send(new MoveResourceCommand(from, slot));
+        }
+        else{
+            gui.send(new DepositResourceCommand(movedRes, slot));
+        }
     }
 
     /**
@@ -629,8 +683,9 @@ public class BoardController extends ControllerGUI {
      */
     //based on how we would like to structure the updateWarehouse i don't have to save the Resource(?)
     public void movePendingRes(MouseEvent mouseEvent){
-        ClipboardContent cb = new ClipboardContent();
+        moving = false;
         ImageView source;
+        ClipboardContent cb = new ClipboardContent();
         if(mouseEvent.getSource().toString().equals("ImageView[id=pendingCoin, styleClass=image-view]")) {
             movedRes = ResourceType.YELLOW;
             source = pendingCoin;
@@ -651,6 +706,46 @@ public class BoardController extends ControllerGUI {
         cb.putImage(source.getImage());
         db.setContent(cb);
         mouseEvent.consume();
+    }
+
+    /**
+     * moving a resource between shelves using drag & drop
+     * @param mouseEvent catches the drag event
+     */
+    public void moveRes(MouseEvent mouseEvent) {
+        moving = true;
+        ImageView source;
+        ClipboardContent cb = new ClipboardContent();
+        if(mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")){
+//            source.setImage(warehouse.get(0).get(0).getImage());
+            source = resType(0);
+            from = 1;
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot21, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot22, styleClass=image-view]")){
+            source = resType(1);
+            from = 2;
+        }
+        else {
+            source = resType(2);
+            from = 3;
+        }
+        Dragboard db = source.startDragAndDrop(TransferMode.COPY);
+        cb.putImage(source.getImage());
+        db.setContent(cb);
+        mouseEvent.consume();
+    }
+
+    public ImageView resType(int index){
+        if(warehouse.get(index).get(0).getImage().getUrl().contains("coin.png"))
+            return pendingCoin;
+        else if(warehouse.get(index).get(0).getImage().getUrl().contains("servant.png"))
+            return pendingServant;
+        else if(warehouse.get(index).get(0).getImage().getUrl().contains("shield.png"))
+            return pendingShield;
+        else if(warehouse.get(index).get(0).getImage().getUrl().contains("stone.png"))
+            return pendingStone;
+        else return null;
     }
 
     /**
@@ -783,9 +878,13 @@ public class BoardController extends ControllerGUI {
         gui.send(new BuyFromMarketCommand(line, pos));
     }
 
-    //because the deposit of resources is a drag e drop, it will be also with the discard
-    public void discardResources(MouseEvent mouseEvent) {
-//        gui.getOut().println(gui.getGson().toJson(new DiscardResourceCommand()));
+    /**
+     * in the drag event Moveres i save the resourceType of what i'm dragging, i also can use it to discard a resource
+     * @param dragEvent the dragging of a resource from the pending resources
+     */
+    public void discardResources(DragEvent dragEvent) {
+        //has to update the pending res, but i think it doesn't work properly
+        gui.send(new DiscardResourceCommand(movedRes));
     }
 
     /**
@@ -853,16 +952,68 @@ public class BoardController extends ControllerGUI {
      * toggles the production based on which anchorpane is selected
      * @param mouseEvent left click mouse in the slot(Anchorpane)
      */
+    //TODO: I TURN GREEN THE SLOT BEFORE I SEND THE MASSAGE, SHOULD BE THE OPPOSITE BASED ON THE MESSAGE
     public void toggleProduction(MouseEvent mouseEvent) {
         int toggled;
-        if(mouseEvent.getSource().toString().equals("a")) toggled = 1;
-        else if(mouseEvent.getSource().toString().equals("b")) toggled = 2;
-        else if(mouseEvent.getSource().toString().equals("c")) toggled = 3;
-        else toggled = 0;
+        if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot1]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot11, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot12, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot13, styleClass=image-view]")) {
+            toggled = 1;
+            if(!slot1Selected){
+                slot1Selected = true;
+                toggledSlot1.setOpacity(100);
+            }
+            else{
+                slot1Selected = false;
+                toggledSlot1.setOpacity(0);
+            }
+        }
+        else if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot2]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot21, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot22, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot23, styleClass=image-view]")) {
+            toggled = 2;
+            if(!slot2Selected){
+                slot2Selected = true;
+                toggledSlot2.setOpacity(100);
+            }
+            else{
+                slot2Selected = false;
+                toggledSlot2.setOpacity(0);
+            }
+        }
+        else if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot3]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot31, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot32, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=slot33, styleClass=image-view]")) {
+            toggled = 3;
+            if(!slot3Selected){
+                slot3Selected = true;
+                toggledSlot3.setOpacity(100);
+            }
+            else{
+                slot3Selected = false;
+                toggledSlot3.setOpacity(0);
+            }
+        }
+        else {
+            toggled = 0;
+            if(!baseSelected){
+                baseSelected = true;
+                toggledBaseProd.setOpacity(100);
+            }
+            else{
+                baseSelected = false;
+                toggledBaseProd.setOpacity(0);
+            }
+        }
         gui.send(new ToggleProductionCommand(toggled));
     }
 
     public void substituteUnknown(MouseEvent mouseEvent) {
 
     }
+
+
 }
