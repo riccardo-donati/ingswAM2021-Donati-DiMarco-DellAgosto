@@ -1,15 +1,11 @@
 package it.polimi.ingsw.network.client;
 
 import it.polimi.ingsw.model.enums.GamePhase;
-import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.CLI.CLI;
-import it.polimi.ingsw.network.client.CLI.enums.Color;
-import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
 import java.io.IOException;
-import java.util.List;
 
 public class ClientVisitorHandler implements ClientVisitor{
     @Override
@@ -93,12 +89,8 @@ public class ClientVisitorHandler implements ClientVisitor{
 
     @Override
     public void visit(ReconnectMessage message, Client client) {
-        System.out.println(message.getMessage());
-        if(client.getClientModel().getNickname().equals(message.getReconnectedNickname())){
-        if (client instanceof CLI)
-            ((CLI) client).setCurrCommand("");
-            //import the local Model
-        }
+        message.update(client.getClientModel());
+        client.visualizeReconnectMessage(message);
     }
 
     @Override

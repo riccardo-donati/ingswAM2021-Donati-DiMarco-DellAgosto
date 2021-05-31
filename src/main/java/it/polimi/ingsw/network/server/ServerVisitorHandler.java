@@ -266,6 +266,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | RequirementNotMetException | IllegalActionException | CardNotAvailableException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        } catch (IndexOutOfBoundsException e){
+            clientHandler.send(new ErrorMessage("Not in hand"));
         }
     }
 
@@ -276,6 +278,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        } catch (IndexOutOfBoundsException e){
+            clientHandler.send(new ErrorMessage("Not in hand"));
         }
     }
 

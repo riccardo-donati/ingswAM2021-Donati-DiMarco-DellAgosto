@@ -9,10 +9,7 @@ import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitorHandler;
 import it.polimi.ingsw.network.client.GUI.Controllers.*;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.updates.DepositUpdate;
-import it.polimi.ingsw.network.messages.updates.LorenzoUpdate;
-import it.polimi.ingsw.network.messages.updates.PendingResourcesUpdate;
-import it.polimi.ingsw.network.messages.updates.ReconnectUpdate;
+import it.polimi.ingsw.network.messages.updates.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -209,6 +206,9 @@ public class GUI extends Application implements Client {
                 Platform.runLater(new Thread(()->changeScene(SETUP)));
             else Platform.runLater(new Thread(()->changeScene(WAITING)));
         }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
+            if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+                ComunicationController.showInfo(currentScene,"It's your turn sir    1");
+            }
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
@@ -371,6 +371,7 @@ public class GUI extends Application implements Client {
         l.updateCardMatrix();
         l.updateResMarket();
         l.updateWarehouse();
+        //l.updateLCards();
         l.setIcons();
         l.updatePopeFavor();
         l.updateStrongbox();
@@ -383,9 +384,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeDiscardLeaderUpdate() {
-        BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updateLCards();
-
+        BoardController l=(BoardController)buildedControllers.get(BOARD);
+        l.updateLCards();
     }
 
     @Override
@@ -404,6 +404,17 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeDisconnectedMessage() {
+        ComunicationController.showInfo(currentScene,"A player disconnected: "+clientModel.getDisconnectedPlayers());
+        BoardController l=(BoardController)buildedControllers.get(BOARD);
+        l.setIcons();
+    }
 
+    @Override
+    public void visualizeReconnectMessage(ReconnectMessage message) {
+        if(clientModel.getCurrentNickname()!=null && !message.getReconnectedNickname().equals(clientModel.getNickname())){
+            ComunicationController.showInfo(currentScene, message.getMessage());
+            BoardController l = (BoardController) buildedControllers.get(BOARD);
+            l.setIcons();
+        }
     }
 }

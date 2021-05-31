@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.GUI.GUI;
@@ -7,9 +8,13 @@ import javafx.fxml.FXML;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView faithPath0;
@@ -43,6 +48,11 @@ public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView faithPath22;
     @FXML private ImageView faithPath23;
     @FXML private ImageView faithPath24;
+
+    @FXML private Rectangle leader1;
+    @FXML private Rectangle leader2;
+    @FXML private ImageView leaderCard1;
+    @FXML private ImageView leaderCard2;
 
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
@@ -104,6 +114,27 @@ public class OtherBoardController extends ControllerGUI{
             }
         }
     }
+    public void updateLCards(ClientBoard clientBoard){
+        Map<Integer,String> disc=clientBoard.getDiscardedCards();
+        Map<Integer,String> played=clientBoard.getPlayedCards();
+        if(disc.get(0)!=null) {
+            leaderCard1.setImage(new Image("/images/back LCard.png"));
+            leader1.setFill(Color.RED);
+        }
+        if(disc.get(1)!=null){
+            leaderCard2.setImage(new Image("/images/back LCard.png"));
+            leader2.setFill(Color.RED);
+        }
+        if(played.get(0)!=null){
+            leaderCard1.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(0).getName() + ".png"));
+            leader1.setFill(Color.GREEN);
+        }
+        if(played.get(1)!=null){
+            leaderCard2.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(1).getName() + ".png"));
+            leader2.setFill(Color.GREEN);
+        }
+
+    }
     public void updateFaithPath(ClientFaithPath clientFaithPath){
         for(ImageView i : faithPath) i.setOpacity(0);
         Integer position=clientFaithPath.getPosition();
@@ -115,6 +146,7 @@ public class OtherBoardController extends ControllerGUI{
         if(cb!=null){
             updateWarehouse(cb.getDeposits());
             updateFaithPath(cb.getFaithPath());
+            updateLCards(cb);
         }
     }
 

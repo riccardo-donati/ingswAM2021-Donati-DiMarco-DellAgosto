@@ -1,9 +1,11 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
+import it.polimi.ingsw.network.messages.updates.Update;
 
-public class ReconnectMessage implements ClientMessage {
+public class ReconnectMessage implements Update {
     private final String reconnectedNickname;
 
     public ReconnectMessage(String nickname){
@@ -21,5 +23,10 @@ public class ReconnectMessage implements ClientMessage {
     @Override
     public void accept(ClientVisitor visitor, Client client) {
         visitor.visit(this, client);
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        clientModel.removeDisconnected(reconnectedNickname);
     }
 }

@@ -13,6 +13,7 @@ import javafx.animation.TranslateTransition;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Cursor;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -194,6 +195,9 @@ public class BoardController extends ControllerGUI {
     @FXML private Label player1Name;
     @FXML private Label player2Name;
     @FXML private Label player3Name;
+    @FXML private ImageView disc1;
+    @FXML private ImageView disc2;
+    @FXML private ImageView disc3;
     @FXML private ImageView marble00;
     @FXML private ImageView marble01;
     @FXML private ImageView marble02;
@@ -210,6 +214,9 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView p1Board;
     @FXML private ImageView p2Board;
     @FXML private ImageView p3Board;
+    @FXML private ImageView active1;
+    @FXML private ImageView active2;
+    @FXML private ImageView active3;
     @FXML private ImageView faithPath0;
     @FXML private ImageView faithPath1;
     @FXML private ImageView faithPath2;
@@ -367,48 +374,31 @@ public class BoardController extends ControllerGUI {
         pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SHIELD).toString());
         pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.STONE).toString());
     }
-
     /**
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
-    public void updateLCards() {
-        if (gui.getClientModel().getGamePhase().equals(GamePhase.SETUP)) {
-            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName());
-            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
+    public void updateLCards(){
+        if(gui.getClientModel().getMyBoard().getLeadersInHand().size()==2){
             leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
             leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
-            setup = false;
         }
-        //board vuota, 1 o 2 scartate
-        if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && gui.getClientModel().getMyBoard().getLeadersInHand().size() < 2){
-            if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0){
-                leaderCard1.setImage(new Image("/images/back LCard.png"));
-                leaderCard2.setImage(new Image("/images/back LCard.png"));
-            }
-            else if(gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(0))) leaderCard2.setImage(new Image("/images/back LCard.png"));
-            else leaderCard1.setImage(new Image("/images/back LCard.png"));
+        Map<Integer,String> disc=gui.getClientModel().getMyBoard().getDiscardedCards();
+        Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+        if(disc.get(0)!=null) {
+            leaderCard1.setImage(new Image("/images/back LCard.png"));
+            leader1.setFill(Color.RED);
         }
-        //almeno 1 in board, l'altra in mano o scartata
-        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 1){
-            //carta in gioco è la prima e non ci sono carte in mano (seconda scartata)
-            if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(leaderID.get(0))) {
-                leader1.setFill(Color.GREEN);
-                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
-                    leaderCard2.setImage(new Image("/images/back LCard.png"));
-            }
-            //carta in gioco è la seconda e non ci sono carte in mano (prima scartata)
-            else {
-                leader2.setFill(Color.GREEN);
-                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
-                    leaderCard1.setImage(new Image("/images/back LCard.png"));
-            }
+        if(disc.get(1)!=null){
+            leaderCard2.setImage(new Image("/images/back LCard.png"));
+            leader2.setFill(Color.RED);
         }
-        //entrambe in board
-        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 2){
-            leader1.setFill(Color.GREEN);
+        if(played.get(0)!=null){
             leader1.setFill(Color.GREEN);
         }
-        else return;
+        if(played.get(1)!=null){
+            leader2.setFill(Color.GREEN);
+        }
+
     }
 
     /**
@@ -619,8 +609,23 @@ public class BoardController extends ControllerGUI {
      * @param event on click calls the play leader button
      */
     public void playLeader(ActionEvent event) {
-        if(event.getSource().toString().equals("playL1")) lCard = 0;
+        Integer lCard;
+        Node node=(Node)event.getSource();
+        Integer played=gui.getClientModel().getMyBoard().getPlayedCards().size();
+        Integer discarded=gui.getClientModel().getMyBoard().getDiscardedCards().size();
+        if(node.getId().equals("playL1")) lCard = 0;
         else lCard = 1;
+
+        if(gui.getClientModel().getMyBoard().getPlayedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already played!");
+            return;
+        }
+        if(gui.getClientModel().getMyBoard().getDiscardedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already discarded!");
+            return;
+        }
+        if(played+discarded==1 && lCard==1 && node.getId().equals("playL2"))
+            lCard=0;
         gui.send(new PlayLeaderCommand(lCard));
     }
 
@@ -630,8 +635,23 @@ public class BoardController extends ControllerGUI {
      */
     public void discardLeader(ActionEvent event) {
         Integer lCard;
-        if(event.getSource().toString().equals("discardL1")) lCard = 0;
+        Node node=(Node)event.getSource();
+        Integer played=gui.getClientModel().getMyBoard().getPlayedCards().size();
+        Integer discarded=gui.getClientModel().getMyBoard().getDiscardedCards().size();
+        if(node.getId().equals("discardL1")) lCard = 0;
         else lCard = 1;
+
+        if(gui.getClientModel().getMyBoard().getDiscardedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already discarded!");
+            return;
+        }
+        if(gui.getClientModel().getMyBoard().getPlayedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already played!");
+            return;
+        }
+
+        if(discarded+played==1 && lCard==1 && node.getId().equals("discardL2"))
+            lCard=0;
         gui.send(new DiscardLeaderCommand(lCard));
     }
 
@@ -881,22 +901,38 @@ public class BoardController extends ControllerGUI {
      */
     public void setIcons(){
         List<String> players = gui.getClientModel().getPlayersInOrder();
+        List<String> disconnected=gui.getClientModel().getDisconnectedPlayers();
         players.remove(gui.getClientModel().getNickname());
         if(players.size()==1){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
+            if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
+                active1.setOpacity(100);
+            else active1.setOpacity(0);
         }
         else if(players.size()==2){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
+            disc2.setVisible(disconnected.contains(players.get(1)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));
             p2Board.setOpacity(100);
             p2Board.setCursor(Cursor.HAND);
+            if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
+                active1.setOpacity(100);
+            else active1.setOpacity(0);
+            if(gui.getClientModel().getCurrentNickname().equals(player2Name.getText()))
+                active2.setOpacity(100);
+            else active2.setOpacity(0);;
         }
         else if(players.size()==3){
             player1Name.setText(players.get(0));
+            disc1.setVisible(disconnected.contains(players.get(0)));
+            disc2.setVisible(disconnected.contains(players.get(1)));
+            disc3.setVisible(disconnected.contains(players.get(2)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
             player2Name.setText(players.get(1));
@@ -905,6 +941,15 @@ public class BoardController extends ControllerGUI {
             player3Name.setText(players.get(2));
             p3Board.setOpacity(100);
             p3Board.setCursor(Cursor.HAND);
+            if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
+                active1.setOpacity(100);
+            else active1.setOpacity(0);
+            if(gui.getClientModel().getCurrentNickname().equals(player2Name.getText()))
+                active2.setOpacity(100);
+            else active2.setOpacity(0);
+            if(gui.getClientModel().getCurrentNickname().equals(player3Name.getText()))
+                active3.setOpacity(100);
+            else active3.setOpacity(0);
         }
         else return;
     }
