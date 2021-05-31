@@ -29,6 +29,7 @@ public class PlayLeaderUpdate implements Update {
                     clientModel.getCurrentBoard().addExtraProd(sp.getResourceType());
                 }
             }
+            clientModel.getCurrentBoard().putPlayedCard(index,leaderCard.getName());
         }
     }
 

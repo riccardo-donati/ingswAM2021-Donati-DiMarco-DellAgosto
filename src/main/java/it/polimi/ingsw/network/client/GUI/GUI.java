@@ -366,6 +366,7 @@ public class GUI extends Application implements Client {
         l.updateCardMatrix();
         l.updateResMarket();
         l.updateWarehouse();
+        //l.updateLCards();
         l.setIcons();
         l.updatePopeFavor();
         l.updateStrongbox();
@@ -378,7 +379,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeDiscardLeaderUpdate() {
-
+        BoardController l=(BoardController)buildedControllers.get(BOARD);
+        l.updateLCards();
     }
 
     @Override

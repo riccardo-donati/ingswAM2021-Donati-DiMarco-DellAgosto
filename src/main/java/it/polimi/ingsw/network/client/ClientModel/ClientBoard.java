@@ -16,11 +16,14 @@ public class ClientBoard {
     private Integer totalCardsBought;
     private List<LeaderCard> leadersInHand = new ArrayList<>();
     private final List<LeaderCard> leadersInBoard = new ArrayList<>();
+    private Map<Integer,String> discardedCards=new HashMap<>();
+    private Map<Integer,String> playedCards=new HashMap<>();
 
     private List<Production> activeProductions = new ArrayList<>();
     private final Production baseProduction;
     private List<Production> extraProductions = new ArrayList<>();
     private List<ResourceDiscount> discounts = new ArrayList<>();
+
 
     public ClientBoard(){
         deposits = new ClientDeposits();
@@ -47,6 +50,22 @@ public class ClientBoard {
     public ClientFaithPath getFaithPath() {
         return faithPath;
     }
+
+    public void putPlayedCard(Integer index,String ld){
+        if(playedCards.get(index)!=null)
+            playedCards.put(index+1,ld);
+        else playedCards.put(index,ld);
+    }
+
+    public Map<Integer,String> getPlayedCards() { return playedCards; }
+
+    public void putDiscardedCard(Integer index,String ld){
+        if(discardedCards.get(index)!=null)
+            discardedCards.put(index+1,ld);
+        else discardedCards.put(index,ld);
+    }
+
+    public Map<Integer,String> getDiscardedCards() { return discardedCards; }
 
     public Production getBaseProduction() {
         return baseProduction;

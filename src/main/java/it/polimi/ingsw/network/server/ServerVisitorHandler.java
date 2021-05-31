@@ -276,6 +276,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | CardNotAvailableException | NotYourTurnException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        } catch (IndexOutOfBoundsException e){
+            clientHandler.send(new ErrorMessage("Error leader index"));
         }
     }
 

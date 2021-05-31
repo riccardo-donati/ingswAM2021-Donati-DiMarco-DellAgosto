@@ -17,8 +17,15 @@ public class DiscardLeaderUpdate implements Update {
         clientModel.getCurrentBoard().getFaithPath().addToFaithPath(1);
         if(clientModel.getNickname().equals(clientModel.getCurrentNickname())) {
             LeaderCard ld = clientModel.getCurrentBoard().getLeadersInHand().get(index);
-            if (ld != null) clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+            if (ld != null) {
+                clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+                clientModel.getCurrentBoard().putDiscardedCard(index,ld.getName());
+            }
+        }else{
+            //i cant see the discarded card of the other player
+            clientModel.getCurrentBoard().putDiscardedCard(index,"");
         }
+
     }
 
     @Override
