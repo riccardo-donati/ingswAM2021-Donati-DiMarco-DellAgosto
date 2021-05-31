@@ -151,23 +151,23 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="production" layoutX="603.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" text="PRODUCE">
+            <Button fx:id="production" layoutX="712.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" text="PRODUCE">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
             </Button>
             <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" onMouseClicked="#openStrongbox" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="pickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot22" fitHeight="30.0" fitWidth="27.0" layoutX="172.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot22" fitHeight="30.0" fitWidth="27.0" layoutX="172.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
+            <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
                <children>
                   <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
@@ -521,6 +521,11 @@
                   <Image url="@../images/toggled.png" />
                </image>
             </ImageView>
+            <Button fx:id="revert" layoutX="584.0" layoutY="559.0" mnemonicParsing="false" onAction="#revert" prefHeight="36.0" prefWidth="97.0" text="REVERT">
+               <font>
+                  <Font name="Gabriola" size="18.0" />
+               </font>
+            </Button>
          </children>
       </AnchorPane>
       <AnchorPane fx:id="leaderCardSlot" layoutX="49.0" layoutY="181.0" prefHeight="623.0" prefWidth="196.0">
@@ -576,7 +581,7 @@
                   <Font name="Gabriola" size="20.0" />
                </font>
             </Label>
-            <ImageView fx:id="pickCoin" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="230.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickCoin" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="230.0" onMouseClicked="#clickedStrongboxRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/coin.png" />
                </image>
@@ -589,7 +594,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ImageView fx:id="pickServant" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="330.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickServant" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="330.0" onMouseClicked="#clickedStrongboxRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/servant.png" />
                </image>
@@ -602,7 +607,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ImageView fx:id="pickShield" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="430.0" onMouseClicked="#clickedRes" pickOnBounds="true">
+            <ImageView fx:id="pickShield" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="430.0" onMouseClicked="#clickedStrongboxRes" pickOnBounds="true">
                <image>
                   <Image url="@../images/resources/shield.png" />
                </image>
@@ -615,7 +620,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <ImageView fx:id="pickStone" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="530.0" onMouseClicked="#clickedRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickStone" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="530.0" onMouseClicked="#clickedStrongboxRes" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/stone.png" />
                </image>
@@ -722,7 +727,7 @@
                <effect>
                   <DropShadow height="10.0" radius="4.5" spread="0.8" width="10.0" />
                </effect></ImageView>
-            <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="390.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="390.0" onDragDetected="#movePendingRes" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/coin.png" />
                </image>
@@ -730,7 +735,7 @@
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="pendingServant" fitHeight="50.0" fitWidth="50.0" layoutX="260.0" layoutY="390.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pendingServant" fitHeight="50.0" fitWidth="50.0" layoutX="260.0" layoutY="390.0" onDragDetected="#movePendingRes" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/servant.png" />
                </image>
@@ -738,7 +743,7 @@
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="pendingShield" fitHeight="50.0" fitWidth="50.0" layoutX="340.0" layoutY="390.0" onDragDetected="#movePendingRes" pickOnBounds="true">
+            <ImageView fx:id="pendingShield" fitHeight="50.0" fitWidth="50.0" layoutX="340.0" layoutY="390.0" onDragDetected="#movePendingRes" opacity="0.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/resources/shield.png" />
                </image>
@@ -746,7 +751,7 @@
                   <Cursor fx:constant="CLOSED_HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="pendingStone" fitHeight="50.0" fitWidth="50.0" layoutX="420.0" layoutY="390.0" onDragDetected="#movePendingRes" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pendingStone" fitHeight="50.0" fitWidth="50.0" layoutX="420.0" layoutY="390.0" onDragDetected="#movePendingRes" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/stone.png" />
                </image>
