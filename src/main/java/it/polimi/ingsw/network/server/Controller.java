@@ -212,6 +212,7 @@ public class Controller implements GameObserver {
             Message m=new StartGameUpdate(getOrderPlayerList(),l,getFaithPathsMap(),getMarblesInList(),getCardMatrix());
             vc.send(m);
         }
+        setGameState(GamePhase.SETUP);
     }
 
     public synchronized void addPlayerInLobby(VirtualClient vc){

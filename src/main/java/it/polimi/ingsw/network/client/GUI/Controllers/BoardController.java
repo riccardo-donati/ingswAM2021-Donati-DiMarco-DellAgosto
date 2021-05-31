@@ -62,6 +62,7 @@ public class BoardController extends ControllerGUI {
         warehouse.add(slot2);
         warehouse.add(slot3);
 
+        faithPath.add(faithPath0);
         faithPath.add(faithPath1);
         faithPath.add(faithPath2);
         faithPath.add(faithPath3);
@@ -87,6 +88,7 @@ public class BoardController extends ControllerGUI {
         faithPath.add(faithPath23);
         faithPath.add(faithPath24);
 
+        blackCross.add(blackCross0);
         blackCross.add(blackCross1);
         blackCross.add(blackCross2);
         blackCross.add(blackCross3);
@@ -139,11 +141,16 @@ public class BoardController extends ControllerGUI {
         imageViewMatrix[1][3]=purple2;
         imageViewMatrix[2][3]=purple3;
 
+        popes.add(pope1);
+        popes.add(pope2);
+        popes.add(pope3);
+
     }
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
     List<ImageView> blackCross=new ArrayList<>();
     List<ImageView> marbles=new ArrayList<>();
+    List<ImageView> popes=new ArrayList<>();
     ImageView[][] imageViewMatrix=new ImageView[3][4];
 
     @FXML private AnchorPane hiddenPanel;
@@ -202,6 +209,7 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView p1Board;
     @FXML private ImageView p2Board;
     @FXML private ImageView p3Board;
+    @FXML private ImageView faithPath0;
     @FXML private ImageView faithPath1;
     @FXML private ImageView faithPath2;
     @FXML private ImageView faithPath3;
@@ -226,6 +234,7 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView faithPath22;
     @FXML private ImageView faithPath23;
     @FXML private ImageView faithPath24;
+    @FXML private ImageView blackCross0;
     @FXML private ImageView blackCross1;
     @FXML private ImageView blackCross2;
     @FXML private ImageView blackCross3;
@@ -336,7 +345,7 @@ public class BoardController extends ControllerGUI {
     /**
      * function that updates every resource in the strongbox with it's value
      */
-    public void updateDeposits() {
+    public void updateStrongbox() {
         Map<Resource, Integer> strongbox=gui.getClientModel().getMyBoard().getDeposits().getStrongbox();
         strongboxCoins.setText(strongbox.get(Resource.COIN).toString());
         strongboxServants.setText(strongbox.get(Resource.SERVANT).toString());
@@ -400,7 +409,8 @@ public class BoardController extends ControllerGUI {
     /**
      * function that will update the result of the drag & drop event in the warehouse
      */
-    public void updateWarehouse(ClientDeposits clientDeposits){
+    public void updateWarehouse(){
+        ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
         List<Shelf> shelves=clientDeposits.getShelves();
         for(int i=0;i<shelves.size();i++){
             List<ImageView> slotImageViews=warehouse.get(i);
@@ -471,7 +481,7 @@ public class BoardController extends ControllerGUI {
     public void updateFaithPath(){
         for(ImageView i : faithPath) i.setOpacity(0);
         int position=gui.getClientModel().getMyBoard().getFaithPath().getPosition();
-        if(position>0) faithPath.get(position-1).setOpacity(100);
+        faithPath.get(position).setOpacity(100);
     }
 
     /**
@@ -479,8 +489,8 @@ public class BoardController extends ControllerGUI {
      */
     public void updateBlackCross(){
         for(ImageView i : blackCross)i.setOpacity(0);
-        int position=gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition();
-        if(position>0) blackCross.get(position-1).setOpacity(100);
+        Integer position=gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition();
+        if(position!=null) blackCross.get(position).setOpacity(100);
     }
 
     /**
@@ -488,21 +498,12 @@ public class BoardController extends ControllerGUI {
      */
     //anche se non ci sarebbe bisogno di controllare i pope favor dopo averli cambiati
     public void updatePopeFavor(){
-        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(0).equals(ClientPopeFavorState.ACTIVE))
-            pope1.setImage(new Image("/images/faithpath/pope_favor1_front.png"));
-        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(0).equals(ClientPopeFavorState.DISCARDED))
-            pope1.setOpacity(0);
-        else;
-        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(1).equals(ClientPopeFavorState.ACTIVE))
-            pope2.setImage(new Image("/images/faithpath/pope_favor2_front.png"));
-        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(1).equals(ClientPopeFavorState.DISCARDED))
-            pope2.setOpacity(0);
-        else;
-        if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(2).equals(ClientPopeFavorState.ACTIVE))
-            pope3.setImage(new Image("/images/faithpath/pope_favor3_front.png"));
-        else if(gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(2).equals(ClientPopeFavorState.DISCARDED))
-            pope3.setOpacity(0);
-        else;
+        for(int i=0;i<popes.size();i++) {
+            if (gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
+                popes.get(i).setImage(new Image("/images/faithpath/pope_favor1_front.png"));
+            else if (gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(i+1).equals(ClientPopeFavorState.DISCARDED))
+                popes.get(i).setOpacity(0);
+        }
     }
 
 //---------------------------------out messages--------------------------------------------------------------

@@ -27,6 +27,7 @@ public class ClientModel {
     private List<String> playersInOrder;
     private String myNickname;
     private String currentNickname;
+    private List<String> disconnectedPlayers=new ArrayList<>();
 
     // phases
     private TurnPhase turnPhase;
@@ -65,6 +66,12 @@ public class ClientModel {
     public List<String> getSetupPhaseLeaderCards() {
         return setupPhaseLeaderCards;
     }
+
+    public void addDisconnected(String nickname){disconnectedPlayers.add(nickname);}
+
+    public void removeDisconnected(String nickname){disconnectedPlayers.remove(nickname);}
+
+    public List<String> getDisconnectedPlayers() { return disconnectedPlayers; }
 
     public String getNickname() {
         return myNickname;

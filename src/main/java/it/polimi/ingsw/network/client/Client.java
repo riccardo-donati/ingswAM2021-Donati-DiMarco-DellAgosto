@@ -52,5 +52,6 @@ public interface Client {
     void visualizeDiscardLeaderUpdate();
     void visualizeFaithUpdate();
     void visualizeMarketUpdate();
+    void visualizeDisconnectedMessage();
 
 }

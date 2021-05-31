@@ -15,8 +15,9 @@ import java.util.Scanner;
 
 public class LogIn extends ControllerGUI{
 
-
+    private boolean connected;
     public LogIn(){
+        connected=false;
     }
 
     List<TextField> campi=new ArrayList<>();
@@ -26,14 +27,28 @@ public class LogIn extends ControllerGUI{
     @FXML private Label emptyInfo;
 
     public void userLogIn(ActionEvent event)throws Exception{
-        if(username.getText().isEmpty() || ipAddress.getText().isEmpty() || portNumber.getText().isEmpty()){
-            emptyInfo.setText("Empty info, try Again");
-        }
-        else{
-            gui.connect(ipAddress.getText(),Integer.parseInt(portNumber.getText()));
-            ipAddress.setDisable(true);
-            portNumber.setDisable(true);
-        }
+        if(!connected) {
+            if (username.getText().isEmpty() || ipAddress.getText().isEmpty() || portNumber.getText().isEmpty()) {
+                emptyInfo.setText("Empty info, try Again");
+            } else {
+                boolean response=false;
+                try {
+                    response=gui.connect(ipAddress.getText(), Integer.parseInt(portNumber.getText()));
+                }catch (NumberFormatException e){
+                    ComunicationController.showError(gui.getCurrentScene(),"Insert a valid number for the port");
+                    return;
+                }
+                if(response) {
+                    ipAddress.setDisable(true);
+                    portNumber.setDisable(true);
+                    connected = true;
+                }
+            }
+        }else register();
+    }
+    public void unlock(){
+        ipAddress.setDisable(false);
+        portNumber.setDisable(false);
     }
 
     public void register(){

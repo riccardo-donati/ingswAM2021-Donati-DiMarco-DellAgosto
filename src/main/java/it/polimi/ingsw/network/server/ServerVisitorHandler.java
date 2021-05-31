@@ -38,7 +38,6 @@ public class ServerVisitorHandler implements ServerVisitor {
                 return;
             }
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
-            System.out.println("Created virtual client for " + nickname);
             this.nickname=nickname;
             clientHandler.send(new WaitMessage());
             try {
@@ -49,6 +48,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                 clientHandler.getPinger().start();
                 return;
             }
+            System.out.println("Created virtual client for " + nickname);
 
             synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {

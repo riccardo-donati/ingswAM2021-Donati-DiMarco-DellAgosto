@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OtherBoardController extends ControllerGUI{
+    @FXML private ImageView faithPath0;
     @FXML private ImageView resSlot1;
     @FXML private ImageView resSlot21;
     @FXML private ImageView resSlot22;
@@ -60,6 +61,7 @@ public class OtherBoardController extends ControllerGUI{
         warehouse.add(slot2);
         warehouse.add(slot3);
 
+        faithPath.add(faithPath0);
         faithPath.add(faithPath1);
         faithPath.add(faithPath2);
         faithPath.add(faithPath3);
@@ -104,8 +106,8 @@ public class OtherBoardController extends ControllerGUI{
     }
     public void updateFaithPath(ClientFaithPath clientFaithPath){
         for(ImageView i : faithPath) i.setOpacity(0);
-        int position=clientFaithPath.getPosition();
-        if(position>0) faithPath.get(position-1).setOpacity(100);
+        Integer position=clientFaithPath.getPosition();
+        faithPath.get(position).setOpacity(100);
     }
 
     public void visualizeBoard(String nickname){

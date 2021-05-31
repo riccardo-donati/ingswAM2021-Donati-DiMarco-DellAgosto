@@ -371,4 +371,10 @@ public class CLI implements Client {
         //do nothing
     }
 
+    @Override
+    public void visualizeDisconnectedMessage() {
+        System.out.println("Disconnected Players: ");
+        System.out.println(clientModel.getDisconnectedPlayers());
+    }
+
 }
