@@ -206,6 +206,9 @@ public class GUI extends Application implements Client {
                 Platform.runLater(new Thread(()->changeScene(SETUP)));
             else Platform.runLater(new Thread(()->changeScene(WAITING)));
         }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
+            if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
+                ComunicationController.showInfo(currentScene,"It's your turn sir    1");
+            }
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));

@@ -14,6 +14,7 @@ import javafx.scene.shape.Rectangle;
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView faithPath0;
@@ -113,31 +114,24 @@ public class OtherBoardController extends ControllerGUI{
             }
         }
     }
-    public void updateLCards(ClientBoard clientBoard) {
-
-        if (clientBoard.getLeadersInBoard().size() == 2) {
-            leaderCard1.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(0).getName() + ".png"));
-            leaderCard2.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(1).getName() + ".png"));
-            leader1.setFill(Color.GREEN);
-            leader2.setFill(Color.GREEN);
-        }
-        if(clientBoard.getLeadersInBoard().size()==1){
-            leaderCard1.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(0).getName() + ".png"));
-            leaderCard2.setImage(new Image("/images/back LCard.png"));
-            leader1.setFill(Color.GREEN);
-            if(clientBoard.getDiscardedCards().size()==1) leader2.setFill(Color.RED);
-            else leader2.setFill(Color.GREY);
-        }
-        if(clientBoard.getLeadersInBoard().size()==0){
+    public void updateLCards(ClientBoard clientBoard){
+        Map<Integer,String> disc=clientBoard.getDiscardedCards();
+        Map<Integer,String> played=clientBoard.getPlayedCards();
+        if(disc.get(0)!=null) {
             leaderCard1.setImage(new Image("/images/back LCard.png"));
+            leader1.setFill(Color.RED);
+        }
+        if(disc.get(1)!=null){
             leaderCard2.setImage(new Image("/images/back LCard.png"));
-            if(clientBoard.getDiscardedCards().size()==1) {
-                leader2.setFill(Color.RED);
-            }
-            else if(clientBoard.getDiscardedCards().size()==2) {
-                leader1.setFill(Color.RED);
-                leader2.setFill(Color.RED);
-            }
+            leader2.setFill(Color.RED);
+        }
+        if(played.get(0)!=null){
+            leaderCard1.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(0).getName() + ".png"));
+            leader1.setFill(Color.GREEN);
+        }
+        if(played.get(1)!=null){
+            leaderCard2.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(1).getName() + ".png"));
+            leader2.setFill(Color.GREEN);
         }
 
     }

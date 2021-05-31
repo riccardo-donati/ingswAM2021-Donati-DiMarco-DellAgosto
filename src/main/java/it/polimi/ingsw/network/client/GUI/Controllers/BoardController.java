@@ -374,7 +374,9 @@ public class BoardController extends ControllerGUI {
         pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SHIELD).toString());
         pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.STONE).toString());
     }
-
+    /**
+     *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
+     */
     public void updateLCards(){
         if(gui.getClientModel().getMyBoard().getLeadersInHand().size()==2){
             leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
@@ -397,49 +399,6 @@ public class BoardController extends ControllerGUI {
             leader2.setFill(Color.GREEN);
         }
 
-    }
-    /**
-     *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
-     */
-    public void updateLCards2() {
-        if (gui.getClientModel().getGamePhase().equals(GamePhase.SETUP)) {
-            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName());
-            leaderID.add(gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName());
-            leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
-            leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
-            setup = false;
-
-        }
-        //board vuota, 1 o 2 scartate
-        if(gui.getClientModel().getMyBoard().getLeadersInBoard().isEmpty() && gui.getClientModel().getMyBoard().getLeadersInHand().size() < 2){
-            if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0){
-                leaderCard1.setImage(new Image("/images/back LCard.png"));
-                leaderCard2.setImage(new Image("/images/back LCard.png"));
-            }
-            else if(gui.getClientModel().getMyBoard().getLeadersInHand().contains(leaderID.get(0))) leaderCard2.setImage(new Image("/images/back LCard.png"));
-            else leaderCard1.setImage(new Image("/images/back LCard.png"));
-        }
-        //almeno 1 in board, l'altra in mano o scartata
-        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 1){
-            //carta in gioco è la prima e non ci sono carte in mano (seconda scartata)
-            if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(leaderID.get(0))) {
-                leader1.setFill(Color.GREEN);
-                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
-                    leaderCard2.setImage(new Image("/images/back LCard.png"));
-            }
-            //carta in gioco è la seconda e non ci sono carte in mano (prima scartata)
-            else {
-                leader2.setFill(Color.GREEN);
-                if(gui.getClientModel().getMyBoard().getLeadersInHand().size() == 0)
-                    leaderCard1.setImage(new Image("/images/back LCard.png"));
-            }
-        }
-        //entrambe in board
-        else if(gui.getClientModel().getMyBoard().getLeadersInBoard().size() == 2){
-            leader1.setFill(Color.GREEN);
-            leader1.setFill(Color.GREEN);
-        }
-        else return;
     }
 
     /**
@@ -613,6 +572,7 @@ public class BoardController extends ControllerGUI {
         Integer lCard;
         Node node=(Node)event.getSource();
         Integer played=gui.getClientModel().getMyBoard().getPlayedCards().size();
+        Integer discarded=gui.getClientModel().getMyBoard().getDiscardedCards().size();
         if(node.getId().equals("playL1")) lCard = 0;
         else lCard = 1;
 
@@ -620,7 +580,11 @@ public class BoardController extends ControllerGUI {
             ComunicationController.showError(gui.getCurrentScene(), "Already played!");
             return;
         }
-        if(played==1 && lCard==1 && node.getId().equals("playL2"))
+        if(gui.getClientModel().getMyBoard().getDiscardedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already discarded!");
+            return;
+        }
+        if(played+discarded==1 && lCard==1 && node.getId().equals("playL2"))
             lCard=0;
         gui.send(new PlayLeaderCommand(lCard));
     }
@@ -632,6 +596,7 @@ public class BoardController extends ControllerGUI {
     public void discardLeader(ActionEvent event) {
         Integer lCard;
         Node node=(Node)event.getSource();
+        Integer played=gui.getClientModel().getMyBoard().getPlayedCards().size();
         Integer discarded=gui.getClientModel().getMyBoard().getDiscardedCards().size();
         if(node.getId().equals("discardL1")) lCard = 0;
         else lCard = 1;
@@ -640,8 +605,12 @@ public class BoardController extends ControllerGUI {
             ComunicationController.showError(gui.getCurrentScene(), "Already discarded!");
             return;
         }
+        if(gui.getClientModel().getMyBoard().getPlayedCards().get(lCard)!=null) {
+            ComunicationController.showError(gui.getCurrentScene(), "Already played!");
+            return;
+        }
 
-        if(discarded==1 && lCard==1 && node.getId().equals("discardL2"))
+        if(discarded+played==1 && lCard==1 && node.getId().equals("discardL2"))
             lCard=0;
         gui.send(new DiscardLeaderCommand(lCard));
     }
@@ -894,9 +863,6 @@ public class BoardController extends ControllerGUI {
         List<String> players = gui.getClientModel().getPlayersInOrder();
         List<String> disconnected=gui.getClientModel().getDisconnectedPlayers();
         players.remove(gui.getClientModel().getNickname());
-        if(gui.getClientModel().getCurrentNickname().equals(gui.getClientModel().getNickname())) {
-            //do something
-        }
         if(players.size()==1){
             player1Name.setText(players.get(0));
             disc1.setVisible(disconnected.contains(players.get(0)));
