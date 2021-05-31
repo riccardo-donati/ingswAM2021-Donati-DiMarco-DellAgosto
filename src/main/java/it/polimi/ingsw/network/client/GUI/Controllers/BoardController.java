@@ -445,16 +445,56 @@ public class BoardController extends ControllerGUI {
     //TODO: SET THE VALUE OF THE PENDING LABELS TO THEIR VALUE, I THINK I HAVE TO ADD A FUNCTION THAT RETURNS ALSO THE NUMBER OF
     // A RELATIVE REOURCE IN THE PENDING
     public void updatePending(List<ResourceType> pending){
-        if(pending.contains(ResourceType.YELLOW))  {
+        String nCoin = countPending(pending, ResourceType.YELLOW);
+        String nServant = countPending(pending, ResourceType.VIOLET);
+        String nShield = countPending(pending, ResourceType.BLUE);
+        String nStone = countPending(pending, ResourceType.GREY);
+        if(nCoin != null ){
+            pendingCoin.setCursor(Cursor.CLOSED_HAND);
             pendingCoin.setOpacity(100);
         }
-        else pendingCoin.setOpacity(0);
-        if(pending.contains(ResourceType.BLUE))   pendingShield.setOpacity(100);
-        else pendingShield.setOpacity(0);
-        if(pending.contains(ResourceType.VIOLET))   pendingServant.setOpacity(100);
-        else pendingServant.setOpacity(0);
-        if(pending.contains(ResourceType.GREY)) pendingStone.setOpacity(100);
-        else pendingStone.setOpacity(0);
+        else {
+            pendingCoin.setCursor(Cursor.DEFAULT);
+            pendingCoin.setOpacity(0);
+        }
+        if(nShield != null) {
+            pendingShield.setCursor(Cursor.CLOSED_HAND);
+            pendingShield.setOpacity(100);
+        }
+        else {
+            pendingShield.setCursor(Cursor.DEFAULT);
+            pendingShield.setOpacity(0);
+        }
+        if(nServant != null) {
+            pendingServant.setCursor(Cursor.CLOSED_HAND);
+            pendingServant.setOpacity(100);
+        }
+        else {
+            pendingServant.setCursor(Cursor.DEFAULT);
+            pendingServant.setOpacity(0);
+        }
+        if(nStone != null) {
+            pendingStone.setCursor(Cursor.CLOSED_HAND);
+            pendingStone.setOpacity(100);
+        }
+        else {
+            pendingStone.setCursor(Cursor.DEFAULT);
+            pendingStone.setOpacity(0);
+        }
+
+        numberPendingCoin.setText(nCoin);
+        numberPendingServant.setText(nServant);
+        numberPendingShield.setText(nShield);
+        numberPendingStone.setText(nStone);
+    }
+
+    public String countPending(List<ResourceType> pending, ResourceType check){
+        Integer count=0;
+        for(ResourceType res : pending){
+            if(res.equals(check)) count++;
+        }
+        if(count == 0) return null;
+        else return count.toString();
     }
 
     /**

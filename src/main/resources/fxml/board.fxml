@@ -853,22 +853,22 @@
                   <Image url="@../images/discard.png" />
                </image>
             </ImageView>
-            <Label fx:id="numberPendingCoin" alignment="CENTER" layoutX="178.0" layoutY="427.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPendingCoin" alignment="CENTER" layoutX="172.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="numberPendingServants" alignment="CENTER" layoutX="258.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPendingServant" alignment="CENTER" layoutX="252.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="numberPendingShield" alignment="CENTER" layoutX="338.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPendingShield" alignment="CENTER" layoutX="332.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
             </Label>
-            <Label fx:id="numberPendingStone" alignment="CENTER" layoutX="418.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPendingStone" alignment="CENTER" layoutX="412.0" layoutY="426.0" prefHeight="54.0" prefWidth="65.0">
                <font>
                   <Font size="18.0" />
                </font>
