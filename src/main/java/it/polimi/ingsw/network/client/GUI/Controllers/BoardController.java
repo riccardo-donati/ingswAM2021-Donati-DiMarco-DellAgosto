@@ -699,22 +699,26 @@ public class BoardController extends ControllerGUI {
             source = resType(2);
             from = 3;
         }
-        Dragboard db = source.startDragAndDrop(TransferMode.COPY);
-        cb.putImage(source.getImage());
-        db.setContent(cb);
-        mouseEvent.consume();
+        if(source!=null) {
+            Dragboard db = source.startDragAndDrop(TransferMode.COPY);
+            cb.putImage(source.getImage());
+            db.setContent(cb);
+            mouseEvent.consume();
+        }
     }
 
     public ImageView resType(int index){
-        if(warehouse.get(index).get(0).getImage().getUrl().contains("coin.png"))
-            return pendingCoin;
-        else if(warehouse.get(index).get(0).getImage().getUrl().contains("servant.png"))
-            return pendingServant;
-        else if(warehouse.get(index).get(0).getImage().getUrl().contains("shield.png"))
-            return pendingShield;
-        else if(warehouse.get(index).get(0).getImage().getUrl().contains("stone.png"))
-            return pendingStone;
-        else return null;
+        try {
+            if (warehouse.get(index).get(0).getImage().getUrl().contains("coin.png"))
+                return pendingCoin;
+            else if (warehouse.get(index).get(0).getImage().getUrl().contains("servant.png"))
+                return pendingServant;
+            else if (warehouse.get(index).get(0).getImage().getUrl().contains("shield.png"))
+                return pendingShield;
+            else if (warehouse.get(index).get(0).getImage().getUrl().contains("stone.png"))
+                return pendingStone;
+            else return null;
+        }catch (NullPointerException e){return null;}
     }
 
     /**
@@ -868,6 +872,7 @@ public class BoardController extends ControllerGUI {
             disc1.setVisible(disconnected.contains(players.get(0)));
             p1Board.setOpacity(100);
             p1Board.setCursor(Cursor.HAND);
+            p1Board.setDisable(false);
             if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
                 active1.setOpacity(100);
             else active1.setOpacity(0);
@@ -881,6 +886,8 @@ public class BoardController extends ControllerGUI {
             player2Name.setText(players.get(1));
             p2Board.setOpacity(100);
             p2Board.setCursor(Cursor.HAND);
+            p1Board.setDisable(false);
+            p2Board.setDisable(false);
             if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
                 active1.setOpacity(100);
             else active1.setOpacity(0);
@@ -901,6 +908,9 @@ public class BoardController extends ControllerGUI {
             player3Name.setText(players.get(2));
             p3Board.setOpacity(100);
             p3Board.setCursor(Cursor.HAND);
+            p1Board.setDisable(false);
+            p2Board.setDisable(false);
+            p3Board.setDisable(false);
             if(gui.getClientModel().getCurrentNickname().equals(player1Name.getText()))
                 active1.setOpacity(100);
             else active1.setOpacity(0);

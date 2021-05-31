@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.enums.GamePhase;
+import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.GUI.GUI;
@@ -54,6 +55,11 @@ public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView leaderCard1;
     @FXML private ImageView leaderCard2;
 
+    @FXML private ImageView pope1;
+    @FXML private ImageView pope2;
+    @FXML private ImageView pope3;
+
+    List<ImageView> popes=new ArrayList<>();
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
     @Override
@@ -96,6 +102,10 @@ public class OtherBoardController extends ControllerGUI{
         faithPath.add(faithPath22);
         faithPath.add(faithPath23);
         faithPath.add(faithPath24);
+
+        popes.add(pope1);
+        popes.add(pope2);
+        popes.add(pope3);
     }
     public void goBack(MouseEvent mouseEvent) {
         gui.changeScene(GUI.BOARD);
@@ -114,15 +124,23 @@ public class OtherBoardController extends ControllerGUI{
             }
         }
     }
+    public void updatePopeFavor(ClientFaithPath cfp){
+        for(int i=0;i<popes.size();i++) {
+            if (cfp.getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
+                popes.get(i).setImage(new Image("/images/faithpath/pope_favor1_front.png"));
+            else if (cfp.getPopeFavor().get(i+1).equals(ClientPopeFavorState.DISCARDED))
+                popes.get(i).setOpacity(0);
+        }
+    }
     public void updateLCards(ClientBoard clientBoard){
+        leaderCard1.setImage(new Image("/images/back LCard.png"));
+        leaderCard2.setImage(new Image("/images/back LCard.png"));
         Map<Integer,String> disc=clientBoard.getDiscardedCards();
         Map<Integer,String> played=clientBoard.getPlayedCards();
         if(disc.get(0)!=null) {
-            leaderCard1.setImage(new Image("/images/back LCard.png"));
             leader1.setFill(Color.RED);
         }
         if(disc.get(1)!=null){
-            leaderCard2.setImage(new Image("/images/back LCard.png"));
             leader2.setFill(Color.RED);
         }
         if(played.get(0)!=null){
@@ -147,6 +165,7 @@ public class OtherBoardController extends ControllerGUI{
             updateWarehouse(cb.getDeposits());
             updateFaithPath(cb.getFaithPath());
             updateLCards(cb);
+            updatePopeFavor(cb.getFaithPath());
         }
     }
 
