@@ -125,7 +125,7 @@ public class GUI extends Application implements Client {
         }catch (IOException e){
             e.printStackTrace();
         }
-        currentScene = buildedScenes.get(BOARD);
+        currentScene = buildedScenes.get(LOGIN);
     }
 
     public void changeScene(String newScene) {
@@ -257,7 +257,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeMoveResourceUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateWarehouse(getClientModel().getCurrentBoard().getDeposits());
     }
 
     @Override
