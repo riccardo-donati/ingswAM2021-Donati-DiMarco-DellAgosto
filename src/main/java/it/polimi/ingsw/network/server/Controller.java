@@ -548,9 +548,10 @@ public class Controller implements GameObserver {
             if (getCurrentNickname().equals(nickname)) {
                 game.revertPickUp();
                 VirtualClient vc = getVirtualClient(nickname);
-                if (vc != null)
+                if (vc != null) {
+                    vc.send(new RevertUpdate());
                     vc.send(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
-
+                }
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
@@ -569,6 +570,10 @@ public class Controller implements GameObserver {
             if (getCurrentNickname().equals(nickname)) {
                 game.buyCard(row, col, slot);
                 //update
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) {
+                    vc.send(new RevertUpdate());
+                }
                 notifyLobby(new SlotUpdate(slot, row, col));
                 notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
             } else throw new NotYourTurnException();

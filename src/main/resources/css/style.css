@@ -1,27 +1,31 @@
-#record-sales {
+.record-sales {
     -fx-padding: 8 15 15 15;
     -fx-background-insets: 0,0 0 5 0, 0 0 6 0, 0 0 7 0;
     -fx-background-radius: 8;
     -fx-background-color: 
-        linear-gradient(from 0% 93% to 0% 100%, #615853 0%, #4f4946 100%),
-		#5c5554,
-        #d86e3a,
-        radial-gradient(center 50% 50%, radius 100%, #bfb4ae, #998f8d);
+        linear-gradient(from 0% 93% to 0% 100%, #8c817b 0%, #544e4b 100%),
+        #5e5552,
+        #bfb4ae,
+        radial-gradient(center 50% 50%, radius 100%, #c9bdb7, #c9bab5);
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.75) , 4,0,0,1 );
-    -fx-font-size: 1.1em;
 }
-#record-sales:hover {
+.record-sales:hover {
     -fx-background-color: 
-        linear-gradient(from 0% 93% to 0% 100%, #a34313 0%, #903b12 100%),
-        #9d4024,
-        #d86e3a,
-        radial-gradient(center 50% 50%, radius 100%, #ea7f4b, #c54e2c);
+        linear-gradient(from 0% 93% to 0% 100%, #877c77 0%, #736a66 100%),
+        #665d5b,
+        #968e89,
+        radial-gradient(center 50% 50%, radius 100%, #ccc0ba, #ab9f9b);
 }
-#record-sales:pressed {
+.record-sales:pressed {
     -fx-padding: 10 15 13 15;
     -fx-background-insets: 2 0 0 0,2 0 3 0, 2 0 4 0, 2 0 5 0;
 }
-#record-sales Text {
-    -fx-fill: white;
-    -fx-effect: dropshadow( gaussian , #a30000 , 0,0,0,2 );
+.login-button {
+    -fx-background-color:
+        linear-gradient(#000000, #000000),
+        radial-gradient(center 50% -40%, radius 200%, #76b7e8 45%, #4a9bd9 50%);
+    -fx-background-radius: 6, 5;
+    -fx-background-insets: 0, 1;
+    -fx-effect: dropshadow( three-pass-box , rgba(0,0,0,0.4) , 5, 0.0 , 0 , 1 );
+    -fx-text-fill: #black;
 }

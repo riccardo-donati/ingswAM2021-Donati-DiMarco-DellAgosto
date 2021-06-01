@@ -148,6 +148,23 @@ public class BoardController extends ControllerGUI {
         popes.add(pope2);
         popes.add(pope3);
 
+        List<ImageView> slotDC1=new ArrayList<>();
+        List<ImageView> slotDC2=new ArrayList<>();
+        List<ImageView> slotDC3=new ArrayList<>();
+        slotDC1.add(slot11);
+        slotDC1.add(slot12);
+        slotDC1.add(slot13);
+        slotDC2.add(slot21);
+        slotDC2.add(slot22);
+        slotDC2.add(slot23);
+        slotDC3.add(slot31);
+        slotDC3.add(slot32);
+        slotDC3.add(slot33);
+
+        slotsDC.add(slotDC1);
+        slotsDC.add(slotDC2);
+        slotsDC.add(slotDC3);
+
     }
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
@@ -155,6 +172,7 @@ public class BoardController extends ControllerGUI {
     List<ImageView> marbles=new ArrayList<>();
     List<ImageView> popes=new ArrayList<>();
     ImageView[][] imageViewMatrix=new ImageView[3][4];
+    List<List<ImageView>> slotsDC=new ArrayList<>();;
 
     @FXML private AnchorPane hiddenPanel;
     @FXML private Label numberPickedCoins;
@@ -286,6 +304,15 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView pickedServant;
     @FXML private ImageView pickedShield;
     @FXML private ImageView pickedStone;
+    @FXML private ImageView slot11;
+    @FXML private ImageView slot12;
+    @FXML private ImageView slot13;
+    @FXML private ImageView slot21;
+    @FXML private ImageView slot22;
+    @FXML private ImageView slot23;
+    @FXML private ImageView slot31;
+    @FXML private ImageView slot32;
+    @FXML private ImageView slot33;
 
     /**
      * hides and shows the strongbox Panel
@@ -305,6 +332,17 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
+    /**
+     * update the slots from the client model
+     */
+    public void updateSlots(){
+        Map<Integer, Stack<DevelopmentCard>> slots=gui.getClientModel().getMyBoard().getSlots();
+        for(int i=1;i<=slots.size();i++) {
+            for (int j = 0; j < slots.get(i).size(); j++) {
+                slotsDC.get(i-1).get(j).setImage(new Image("/images/development_cards/"+slots.get(i).get(j).getName()+".png"));
+            }
+        }
+    }
     /**
      * hides and shows the Card Market Panel
      */
@@ -373,7 +411,7 @@ public class BoardController extends ControllerGUI {
      * function that updates the value of the resource currently picked
      */
     public void updatePickedRes(){
-        for (Map.Entry<Resource, Integer> entry : gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().entrySet()) {
+        for (Map.Entry<Resource, Integer> entry : gui.getClientModel().getMyBoard().getDeposits().getHandResources().entrySet()) {
             if(entry.getKey().equals(Resource.COIN)){
                 if(entry.getValue() > 0){
                     numberPickedCoins.setText(entry.getValue().toString());
@@ -827,52 +865,52 @@ public class BoardController extends ControllerGUI {
         ImageView source;
         if (mouseEvent.getSource().toString().equals("ImageView[id=green1, styleClass=image-view]")) {
             source = green1;
-            row = 1;
-            column = 1;
+            row = 0;
+            column = 0;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=green2, styleClass=image-view]")) {
             source = green2;
-            row = 2;
-            column = 1;
+            row = 1;
+            column = 0;
         } else if(mouseEvent.getSource().toString().equals("ImageView[id=green3, styleClass=image-view]")) {
             source = green3;
-            row = 3;
-            column = 1;
+            row = 2;
+            column = 0;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=blue1, styleClass=image-view]")) {
             source = blue1;
-            row = 1;
-            column = 2;
+            row = 0;
+            column = 1;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=blue2, styleClass=image-view]")) {
             source = blue2;
-            row = 2;
-            column = 2;
+            row = 1;
+            column = 1;
         } else if(mouseEvent.getSource().toString().equals("ImageView[id=blue3, styleClass=image-view]")) {
             source = blue3;
-            row = 3;
-            column = 2;
+            row = 2;
+            column = 1;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=yellow1, styleClass=image-view]")) {
             source = yellow1;
-            row = 1;
-            column = 3;
+            row = 0;
+            column = 2;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=yellow2, styleClass=image-view]")) {
             source = yellow2;
-            row = 2;
-            column = 3;
+            row = 1;
+            column = 2;
         } else if(mouseEvent.getSource().toString().equals("ImageView[id=yellow3, styleClass=image-view]")) {
             source = yellow3;
-            row = 3;
-            column = 3;
+            row = 2;
+            column = 2;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=purple1, styleClass=image-view]")) {
             source = purple1;
-            row = 1;
-            column = 4;
+            row = 0;
+            column = 3;
         } else if (mouseEvent.getSource().toString().equals("ImageView[id=purple2, styleClass=image-view]")) {
             source = purple2;
-            row = 2;
-            column = 4;
+            row = 1;
+            column = 3;
         } else {
             source = purple3;
-            row = 3;
-            column = 4;
+            row = 2;
+            column = 3;
         }
         Dragboard db = source.startDragAndDrop(TransferMode.COPY);
         cb.putImage(source.getImage());

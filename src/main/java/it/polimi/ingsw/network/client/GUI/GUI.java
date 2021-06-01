@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI;
 
 import com.google.gson.Gson;
+import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.Utilities;
@@ -189,7 +190,9 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeSlotUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateCardMatrix();
+        bc.updateSlots();
     }
 
     @Override
@@ -284,7 +287,10 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeDepositsUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updatePickedRes();
+        bc.updateWarehouse();
+        bc.updateStrongbox();
     }
 
     @Override
@@ -423,5 +429,18 @@ public class GUI extends Application implements Client {
             BoardController l = (BoardController) buildedControllers.get(BOARD);
             l.setIcons();
         }
+    }
+
+    @Override
+    public void visualizeDiscardResource() {
+        BoardController l = (BoardController) buildedControllers.get(BOARD);
+        l.updateBlackCross();
+        l.updatePending();
+    }
+
+    @Override
+    public void visualizeRevert() {
+        BoardController l = (BoardController) buildedControllers.get(BOARD);
+        l.updatePickedRes();
     }
 }
