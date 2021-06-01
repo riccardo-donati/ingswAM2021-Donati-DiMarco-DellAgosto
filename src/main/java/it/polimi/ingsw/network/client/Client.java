@@ -51,5 +51,7 @@ public interface Client {
     void visualizeMarketUpdate();
     void visualizeDisconnectedMessage();
     void visualizeReconnectMessage(ReconnectMessage message);
+    void visualizeDiscardResource();
+    void visualizeRevert();
 
 }

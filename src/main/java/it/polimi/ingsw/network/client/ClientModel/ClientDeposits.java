@@ -26,6 +26,11 @@ public class ClientDeposits {
         shelves.add(new Shelf(3,3));
     }
 
+    public void clearHandResources(){
+        for (Map.Entry<Resource, Integer> entry : handResources.entrySet()) {
+            entry.setValue(0);
+        }
+    }
     public Map<Resource, Integer> getStrongbox() {
         return strongbox;
     }

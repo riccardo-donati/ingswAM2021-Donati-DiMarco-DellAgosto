@@ -40,4 +40,6 @@ public interface ClientVisitor {
     void visit(WaitMessage message, Client client);
 
     void visit(DisconnectedMessage message, Client client);
+
+    void visit(RevertUpdate message, Client client);
 }

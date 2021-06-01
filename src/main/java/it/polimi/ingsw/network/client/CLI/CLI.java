@@ -385,4 +385,16 @@ public class CLI implements Client {
         }
     }
 
+    @Override
+    public void visualizeDiscardResource() {
+        if(clientModel.getMyBoard().getFaithPath().getLorenzoPosition()!=null){
+            System.out.println(clientModel.getMyBoard().getFaithPath());
+        }
+    }
+
+    @Override
+    public void visualizeRevert() {
+        //do nothing
+    }
+
 }

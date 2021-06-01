@@ -249,7 +249,8 @@ public class ClientBoard {
         if(pendingResources.size() > 0) {
             mex.append("Deposit these pending resources:\n[");
             for (Resource resource : pendingResources) {
-                mex.append(resource).append("(").append(resource.label).append("),");
+                String res=resource.toString().toLowerCase();
+                mex.append(res).append("(").append(resource.label).append("),");
                 //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
             }
             mex.deleteCharAt(mex.toString().length() - 1);

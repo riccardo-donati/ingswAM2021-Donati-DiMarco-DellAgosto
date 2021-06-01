@@ -88,6 +88,12 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
+    public void visit(RevertUpdate message, Client client) {
+        message.update(client.getClientModel());
+        client.visualizeRevert();
+    }
+
+    @Override
     public void visit(ReconnectMessage message, Client client) {
         message.update(client.getClientModel());
         client.visualizeReconnectMessage(message);
@@ -199,6 +205,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DiscardResourceUpdate message, Client client) {
         message.update(client.getClientModel());
+        client.visualizeDiscardResource();
     }
 
     @Override
