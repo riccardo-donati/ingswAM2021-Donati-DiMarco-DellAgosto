@@ -180,16 +180,26 @@ public class Warehouse {
         }
 
         //swap all the Resource in the deposit if possibile
-        if(cont1>0 && cont2>0 && cont1<=d2.getDimension() && cont2<=d1.getDimension() && d1.getType()!=d2.getType()){
+        if(cont1>0 && cont2>0 && cont1<=d2.getDimension() && cont2<=d1.getDimension() && d1.getType()!=d2.getType() && id1<=3 && id2<=3){
             List<ResourceType> res1=new ArrayList<>();
             List<ResourceType> res2=new ArrayList<>();
             ResourceType type1=d1.getType();
             ResourceType type2=d2.getType();
             for(int i=0;i<cont1;i++){
-                res1.add(d1.removeResource());
+                try {
+                    res1.add(removeResourceFromDeposit(d1.getId()));
+                } catch (DepositNotExistingException e) {
+                    e.printStackTrace();
+                }
+                //res1.add(d1.removeResource());
             }
             for(int i=0;i<cont2;i++){
-                res2.add(d2.removeResource());
+                try {
+                    res2.add(removeResourceFromDeposit(d2.getId()));
+                } catch (DepositNotExistingException e) {
+                    e.printStackTrace();
+                }
+                //res2.add(d2.removeResource());
             }
             d1.changeType(type2);
             d2.changeType(type1);
@@ -207,7 +217,27 @@ public class Warehouse {
             if(d2.getDimension()<cont1) throw new FullSpaceException();
             ResourceType res=d1.getType();
             for(int i=0;i<cont1;i++){
-                d1.removeResource();
+                try {
+                    removeResourceFromDeposit(d1.getId());
+                } catch (DepositNotExistingException e) {
+                    e.printStackTrace();
+                }
+                //d1.removeResource();
+            }
+            for(int i=0;i<cont1;i++){
+                d2.addResource(res);
+            }
+        }
+        //swap between extradeposit
+        if(id1>3 && id2>3 && d1.getType()==d2.getType() && cont1>0 && cont2>0 && d1.getDimension().equals(d2.getDimension())){
+            ResourceType res=d1.getType();
+            for(int i=0;i<cont1;i++){
+                try {
+                    removeResourceFromDeposit(d1.getId());
+                } catch (DepositNotExistingException e) {
+                    e.printStackTrace();
+                }
+                //d1.removeResource();
             }
             for(int i=0;i<cont1;i++){
                 d2.addResource(res);
@@ -217,8 +247,14 @@ public class Warehouse {
         if(cont1==1 && cont2==0 || cont1>0 && d2.freeSpaces()>=cont1 && d1.getType()==d2.getType()){
             ResourceType r1=d1.getType();
             d2.addResource(r1);
-            d1.removeResource();
+            try {
+                removeResourceFromDeposit(d1.getId());
+            } catch (DepositNotExistingException e) {
+                e.printStackTrace();
+            }
+            //d1.removeResource();
         }
+
 
     }
 
