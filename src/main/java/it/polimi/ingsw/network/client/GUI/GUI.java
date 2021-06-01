@@ -245,7 +245,6 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
-//        if(clientModel.getGamePhase().equals(GamePhase.ONGOING))
         if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
 
@@ -283,6 +282,9 @@ public class GUI extends Application implements Client {
     public void visualizeLeadersInHandUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
+        //togli
+        bc.setupLeader();
+        bc.setLeaderPower();
     }
 
     @Override

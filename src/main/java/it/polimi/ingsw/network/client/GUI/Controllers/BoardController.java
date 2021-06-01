@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
@@ -61,9 +62,17 @@ public class BoardController extends ControllerGUI {
         slot3.add(resSlot31);
         slot3.add(resSlot32);
         slot3.add(resSlot33);
+        List<ImageView> slot4=new ArrayList<>();
+        slot4.add(resSlot41);
+        slot4.add(resSlot42);
+        List<ImageView> slot5=new ArrayList<>();
+        slot5.add(resSlot51);
+        slot5.add(resSlot52);
         warehouse.add(slot1);
         warehouse.add(slot2);
         warehouse.add(slot3);
+        warehouse.add(slot4);
+        warehouse.add(slot5);
 
         faithPath.add(faithPath0);
         faithPath.add(faithPath1);
@@ -195,6 +204,10 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView resSlot31;
     @FXML private ImageView resSlot32;
     @FXML private ImageView resSlot33;
+    @FXML private ImageView resSlot41;
+    @FXML private ImageView resSlot42;
+    @FXML private ImageView resSlot51;
+    @FXML private ImageView resSlot52;
     @FXML private ImageView pendingCoin;
     @FXML private ImageView pendingServant;
     @FXML private ImageView pendingShield;
@@ -313,6 +326,8 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView slot31;
     @FXML private ImageView slot32;
     @FXML private ImageView slot33;
+    @FXML private ImageView extraProd1;
+    @FXML private ImageView extraProd2;
 
     /**
      * hides and shows the strongbox Panel
@@ -458,8 +473,8 @@ public class BoardController extends ControllerGUI {
             leaderCard1.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName() + ".png"));
             leaderCard2.setImage(new Image("/images/leader_cards/" + gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName() + ".png"));
         }
-        Map<Integer,String> disc=gui.getClientModel().getMyBoard().getDiscardedCards();
-        Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+        Map<Integer,String> disc = gui.getClientModel().getMyBoard().getDiscardedCards();
+        Map<Integer,String> played = gui.getClientModel().getMyBoard().getPlayedCards();
         if(disc.get(0)!=null) {
             leaderCard1.setImage(new Image("/images/back LCard.png"));
             leader1.setFill(Color.RED);
@@ -474,7 +489,44 @@ public class BoardController extends ControllerGUI {
         if(played.get(1)!=null){
             leader2.setFill(Color.GREEN);
         }
+    }
 
+    public void setupLeader(){
+        //metto inutilizabili gli extraDeposit 4 e 5 a meno che le LCard siano di questo tipo
+        resSlot41.setDisable(true);
+        resSlot42.setDisable(true);
+        resSlot51.setDisable(true);
+        resSlot52.setDisable(true);
+        //disabilito il click sulla carta, utile per attivazione e disattivazione discount e whiteto
+        leaderCard1.setDisable(true);
+        leaderCard2.setDisable(true);
+        //disabilito i pulsanti per le produzioni extra che sta facendo riccardo
+        extraProd1.setDisable(true);
+        extraProd2.setDisable(true);
+    }
+
+    /**
+     * has to be called at the start of the gaem to activate a leader card specific power
+     */
+    public void setLeaderPower(){
+        String l = gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName();
+        if(l.equals("5L") || l.equals("6L") || l.equals("7L") || l.equals("8L")) {
+            resSlot41.setDisable(false);
+            resSlot42.setDisable(false);
+        }
+        else if(l.equals("13L") || l.equals("14L") || l.equals("15L") || l.equals("16L"))
+            extraProd1.setDisable(false);
+        else    leaderCard1.setDisable(false);
+
+        l = gui.getClientModel().getMyBoard().getLeadersInHand().get(1).getName();
+        if(l.equals("5L") || l.equals("6L") || l.equals("7L") || l.equals("8L")) {
+            resSlot51.setDisable(false);
+            resSlot52.setDisable(false);
+        }
+        else if(l.equals("13L") || l.equals("14L") || l.equals("15L") || l.equals("16L")) {
+            extraProd2.setDisable(false);
+        }
+        else    leaderCard2.setDisable(false);
     }
 
     /**
@@ -619,7 +671,6 @@ public class BoardController extends ControllerGUI {
     /**
      * based on the value got by the pope favor map's Client model load a new image if active or remove image if discarded
      */
-    //anche se non ci sarebbe bisogno di controllare i pope favor dopo averli cambiati
     public void updatePopeFavor(){
         for(int i=0;i<popes.size();i++) {
             if (gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
@@ -754,11 +805,29 @@ public class BoardController extends ControllerGUI {
      */
     public void placeWarehouse(DragEvent dragEvent){
         Integer slot;
-        if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
-        else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
-                || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
-            slot = 2;
-        else slot = 3;
+        //la prima carta è extraslot, è attiva e il drop è su 4
+        if(!resSlot41.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(0) != null &&
+                (dragEvent.getTarget().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
+                        dragEvent.getTarget().toString().equals("ImageView[id=resSlot42, styleClass=image-view]"))){
+            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
+            else slot =5;
+        }
+        //la seconda carta è extraslot, è attiva e il drop è su 5
+        else if(!resSlot51.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(1) != null &&
+                (dragEvent.getTarget().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
+                        dragEvent.getTarget().toString().equals("ImageView[id=resSlot52, styleClass=image-view]"))){
+            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
+            else slot = 5;
+        }
+        //tutti altri casi
+        else {
+            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+            else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
+                slot = 2;
+            else slot = 3;
+        }
+        //update based on LCards, il moving su 4o/5o slot è ammesso?
         if(moving){
             gui.send(new MoveResourceCommand(from, slot));
         }
@@ -859,7 +928,6 @@ public class BoardController extends ControllerGUI {
      * function that, based on the source of the dragging event, assigns from which row and column the card is taken from
      * @param mouseEvent drag the card from the card matrix
      */
-    //don't think the drag e drop works
     public void moveDCard(MouseEvent mouseEvent) {
         ClipboardContent cb = new ClipboardContent();
         ImageView source;
@@ -987,7 +1055,6 @@ public class BoardController extends ControllerGUI {
      * @param dragEvent the dragging of a resource from the pending resources
      */
     public void discardResources(DragEvent dragEvent) {
-        //has to update the pending res, but i think it doesn't work properly
         gui.send(new DiscardResourceCommand(movedRes));
     }
 
@@ -1121,8 +1188,6 @@ public class BoardController extends ControllerGUI {
         }
     }
 
-
-
     /**
      *
      * @param mouseEvent
@@ -1131,5 +1196,12 @@ public class BoardController extends ControllerGUI {
 
     }
 
-
+    /**
+     * this should separate white to (only if the player has 2 white to cards) and discount
+     * the only 2 LCards that could be "deactivated" (only discount technically)
+     * @param mouseEvent
+     */
+    public void toggleLeader(MouseEvent mouseEvent) {
+        System.out.println("premuto");
+    }
 }
