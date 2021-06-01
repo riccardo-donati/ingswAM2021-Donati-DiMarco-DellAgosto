@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.effect.*?>
 <?import javafx.scene.image.*?>
@@ -34,7 +35,10 @@
          </font>
          <effect>
             <Bloom />
-         </effect></Label>
+         </effect>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets></Label>
       <Button fx:id="quit" layoutX="298.0" layoutY="545.0" mnemonicParsing="false" onAction="#quit" prefHeight="26.0" prefWidth="218.0" style="-fx-border-color: black; -fx-background-color: E7D2AB;" text="QUIT">
          <font>
             <Font name="Gabriola" size="18.0" />

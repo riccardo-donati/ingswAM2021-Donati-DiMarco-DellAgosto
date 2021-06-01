@@ -86,6 +86,7 @@ public class GUI extends Application implements Client {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
+                Platform.runLater(new Thread(()->changeScene(LOGIN)));
                 break;
             }
             ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
@@ -207,7 +208,7 @@ public class GUI extends Application implements Client {
             else Platform.runLater(new Thread(()->changeScene(WAITING)));
         }else if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
             if(clientModel.getCurrentNickname().equals(clientModel.getNickname())){
-                ComunicationController.showInfo(currentScene,"It's your turn sir    1");
+                ComunicationController.showInfo(currentScene,"It's your turn sir");
             }
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
@@ -376,7 +377,7 @@ public class GUI extends Application implements Client {
         l.updateCardMatrix();
         l.updateResMarket();
         l.updateWarehouse();
-        //l.updateLCards();
+        l.updateLCards();
         l.setIcons();
         l.updatePopeFavor();
         l.updateStrongbox();
