@@ -289,7 +289,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeToggleProductionUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateToggledProduction();
     }
 
     @Override

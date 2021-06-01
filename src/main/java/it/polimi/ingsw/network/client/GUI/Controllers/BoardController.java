@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -609,6 +610,10 @@ public class BoardController extends ControllerGUI {
 
     }
 
+    /**
+     * pickUp command based on where the resource clicked
+     * @param mouseEvent left mouse click on a warehouse shelf
+     */
     public void clickedWarehouseRes(MouseEvent mouseEvent) {
         int slot;
         if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
@@ -623,7 +628,10 @@ public class BoardController extends ControllerGUI {
         gui.send(new WarehousePickUpCommand(slot));
     }
 
-    //update the pickedresources and the warehouse
+    /**
+     * reverts the list of picked Resources putting the back where they're from
+     * @param event left mouse click on the revert button
+     */
     public void revert(ActionEvent event) {
         gui.send(new RevertPickUpCommand());
     }
@@ -692,7 +700,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * this method allows the warehouse to accept an image dropped in
+     * this method allows the target slot to accept an image dropped in
      * @param dragEvent detect the drop event
      */
     public void acceptDrag(DragEvent dragEvent) {
@@ -726,7 +734,6 @@ public class BoardController extends ControllerGUI {
      * and assigns to a global variable, useful to the deposit message, the kind of resource i'm try to deposit
      * @param mouseEvent detects the drag event
      */
-    //based on how we would like to structure the updateWarehouse i don't have to save the Resource(?)
     public void movePendingRes(MouseEvent mouseEvent){
         moving = false;
         ImageView source;
@@ -783,6 +790,11 @@ public class BoardController extends ControllerGUI {
         }
     }
 
+    /**
+     * side function to check which resource is in a slot (index), just a graphic utility for drag & drop
+     * @param index slot of the warehouse
+     * @return the imageview if there is one of the relative resource
+     */
     public ImageView resType(int index){
         try {
             if (warehouse.get(index).get(0).getImage().getUrl().contains("coin.png"))
@@ -806,7 +818,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * function that based on the source of the dragging event assigns from which row and column the card is taken from
+     * function that, based on the source of the dragging event, assigns from which row and column the card is taken from
      * @param mouseEvent drag the card from the card matrix
      */
     //don't think the drag e drop works
@@ -870,8 +882,9 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     *
-     * @param dragEvent
+     * buy command that sends the row and column, saved previously in the beginning of the drag Event, and the cardSlot where
+     * the card is dropped
+     * @param dragEvent the release of the card at the and of the drag & drop
      */
     public void placeSlot(DragEvent dragEvent) {
         Integer dCardSlot;
@@ -895,6 +908,10 @@ public class BoardController extends ControllerGUI {
         else updateBoard(player3Name.getText());
     }
 
+    /**
+     * based on which arrow is selected by the mouseEvent the function sands a message with row/column and position
+     * @param mouseEvent the left mouse click on a specific arrow near the market
+     */
     public void getResources(MouseEvent mouseEvent) {
         if(mouseEvent.getSource().toString().equals("ImageView[id=colonna1, styleClass=image-view]")){
             line = 'c';
@@ -928,7 +945,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * in the drag event Moveres i save the resourceType of what i'm dragging, i also can use it to discard a resource
+     * in the drag event MoveRes is saved the resourceType of what is been dragged, can also be used to discard a resource
      * @param dragEvent the dragging of a resource from the pending resources
      */
     public void discardResources(DragEvent dragEvent) {
@@ -1004,7 +1021,6 @@ public class BoardController extends ControllerGUI {
      * toggles the production based on which anchorpane is selected
      * @param mouseEvent left click mouse in the slot(Anchorpane)
      */
-    //TODO: I TURN GREEN THE SLOT BEFORE I SEND THE MASSAGE, SHOULD BE THE OPPOSITE BASED ON THE MESSAGE
     public void toggleProduction(MouseEvent mouseEvent) {
         int toggled;
         if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot1]") ||
@@ -1031,43 +1047,41 @@ public class BoardController extends ControllerGUI {
         gui.send(new ToggleProductionCommand(toggled));
     }
 
+    /**
+     * checks if in the list of active productions there's one of the production in the board's slots
+     */
     public void updateToggledProduction(){
-        //gui.getClientModel().getMyBoard().getActiveProductions();
-        //gui.getClientModel().getMyBoard().getBaseProduction();
-        if(!slot1Selected){
-            slot1Selected = true;
+        List<Production> active = gui.getClientModel().getMyBoard().getActiveProductions();
+        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(0))){
             toggledSlot1.setOpacity(100);
         }
         else{
-            slot1Selected = false;
             toggledSlot1.setOpacity(0);
         }
-        if(!slot2Selected){
-            slot2Selected = true;
+        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(1))){
             toggledSlot2.setOpacity(100);
         }
         else{
-            slot2Selected = false;
             toggledSlot2.setOpacity(0);
         }
-        if(!slot3Selected){
-            slot3Selected = true;
+        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(2))){
             toggledSlot3.setOpacity(100);
         }
         else{
-            slot3Selected = false;
             toggledSlot3.setOpacity(0);
         }
-        if(!baseSelected){
-            baseSelected = true;
+        if(active.contains(gui.getClientModel().getMyBoard().getBaseProduction())){
             toggledBaseProd.setOpacity(100);
         }
         else{
-            baseSelected = false;
             toggledBaseProd.setOpacity(0);
         }
     }
 
+    /**
+     *
+     * @param mouseEvent
+     */
     public void substituteUnknown(MouseEvent mouseEvent) {
 
     }
