@@ -146,22 +146,22 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
-            <ImageView fx:id = "pickedCoin" fitHeight="50.0" fitWidth="50.0" layoutX="220.0" layoutY="547.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedCoin" fitHeight="50.0" fitWidth="50.0" layoutX="220.0" layoutY="547.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/coin.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedServant" fitHeight="50.0" fitWidth="50.0" layoutX="310.0" layoutY="545.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedServant" fitHeight="50.0" fitWidth="50.0" layoutX="310.0" layoutY="545.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/servant.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedShield" fitHeight="50.0" fitWidth="50.0" layoutX="400.0" layoutY="544.0" opacity="0.0" pickOnBounds="true">
+            <ImageView fx:id="pickedShield" fitHeight="50.0" fitWidth="50.0" layoutX="400.0" layoutY="544.0" opacity="0.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/resources/shield.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedStone" fitHeight="50.0" fitWidth="50.0" layoutX="490.0" layoutY="544.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedStone" fitHeight="50.0" fitWidth="50.0" layoutX="490.0" layoutY="544.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/stone.png" />
                </image>
@@ -198,57 +198,57 @@
             <ImageView fx:id="resSlot31" fitHeight="30.0" fitWidth="27.0" layoutX="125.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot32" fitHeight="30.0" fitWidth="27.0" layoutX="156.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
-            <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
+            <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="110.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="80.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </ImageView>
+                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="50.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                     <cursor>
+                        <Cursor fx:constant="DEFAULT" />
+                     </cursor>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
+               <children>
+                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="110.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="67.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="80.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="39.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="50.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
+            <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="110.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="67.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="80.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="39.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
-                     <cursor>
-                        <Cursor fx:constant="CLOSED_HAND" />
-                     </cursor>
-                  </ImageView>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" onMouseClicked="#toggleProduction" prefHeight="310.0" prefWidth="158.0">
-               <children>
-                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="102.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
-                     <cursor>
-                        <Cursor fx:constant="CLOSED_HAND" />
-                     </cursor>
-                  </ImageView>
-                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="67.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
-                     <cursor>
-                        <Cursor fx:constant="CLOSED_HAND" />
-                     </cursor>
-                  </ImageView>
-                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="39.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="50.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
@@ -509,17 +509,17 @@
                         <Image url="@../images/red cross.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="pope1" fitHeight="54.0" fitWidth="54.0" layoutX="190.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pope1" fitHeight="54.0" fitWidth="54.0" layoutX="188.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/faithpath/pope_favor1_back.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="pope2" fitHeight="54.0" fitWidth="54.0" layoutX="402.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pope2" fitHeight="54.0" fitWidth="54.0" layoutX="400.0" layoutY="15.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/faithpath/pope_favor2_back.png" />
                      </image>
                   </ImageView>
-                  <ImageView fx:id="pope3" fitHeight="54.0" fitWidth="54.0" layoutX="655.0" layoutY="54.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="pope3" fitHeight="54.0" fitWidth="54.0" layoutX="653.0" layoutY="52.0" pickOnBounds="true" preserveRatio="true">
                      <image>
                         <Image url="@../images/faithpath/pope_favor3_back.png" />
                      </image>
@@ -562,14 +562,14 @@
          <children>
             <Rectangle fx:id="leader2" arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="218.0" layoutX="18.0" layoutY="304.0" stroke="BLACK" strokeType="INSIDE" width="149.0" />
             <ImageView fx:id="leaderCard2" fitHeight="204.0" fitWidth="138.0" layoutX="25.0" layoutY="311.0" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" layoutX="33.0" layoutY="528.0" prefHeight="34.0" prefWidth="130.0" text="Leader slot 2" textFill="WHITE">
+            <Label alignment="CENTER" layoutX="25.0" layoutY="522.0" prefHeight="34.0" prefWidth="130.0" text="Leader slot 2" textFill="WHITE">
                <font>
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
             <Rectangle fx:id="leader1" arcHeight="5.0" arcWidth="5.0" fill="LIGHTGRAY" height="218.0" layoutX="16.0" layoutY="-10.0" stroke="BLACK" strokeType="INSIDE" width="149.0" />
             <ImageView fx:id="leaderCard1" fitHeight="204.0" fitWidth="138.0" layoutX="23.0" layoutY="-3.0" pickOnBounds="true" preserveRatio="true" />
-            <Label alignment="CENTER" layoutX="33.0" layoutY="214.0" prefHeight="34.0" prefWidth="130.0" style="-fx-font-weight: bold;" text="Leader slot 1" textFill="WHITE">
+            <Label alignment="CENTER" layoutX="25.0" layoutY="208.0" prefHeight="34.0" prefWidth="130.0" style="-fx-font-weight: bold;" text="Leader slot 1" textFill="WHITE">
                <font>
                   <Font name="Gabriola" size="28.0" />
                </font>
@@ -594,6 +594,10 @@
                   <Font size="14.0" />
                </font>
             </Button>
+            <ImageView fx:id="resSlot42" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="163.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot41" fitHeight="24.0" fitWidth="28.0" layoutX="52.0" layoutY="163.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot51" fitHeight="24.0" fitWidth="28.0" layoutX="54.0" layoutY="476.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot52" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="476.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="807.0" prefWidth="265.0">

@@ -8,10 +8,7 @@ import it.polimi.ingsw.model.exceptions.UnknownFoundException;
 import it.polimi.ingsw.model.exceptions.UnknownNotFoundException;
 
 import java.lang.reflect.Array;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Production {
     @Expose
@@ -24,6 +21,22 @@ public class Production {
     private List<ResourceType> outputHistory;
     @Expose
     private boolean selected;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Production that = (Production) o;
+        return Objects.equals(input, that.input) &&
+                Objects.equals(output, that.output) &&
+                Objects.equals(inputHistory, that.inputHistory) &&
+                Objects.equals(outputHistory, that.outputHistory);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(input, output, inputHistory, outputHistory);
+    }
 
     /**
      * constructor that creates an empty production

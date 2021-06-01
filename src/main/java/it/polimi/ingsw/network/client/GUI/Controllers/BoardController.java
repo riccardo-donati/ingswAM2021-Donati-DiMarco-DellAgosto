@@ -1090,23 +1090,28 @@ public class BoardController extends ControllerGUI {
      */
     public void updateToggledProduction(){
         List<Production> active = gui.getClientModel().getMyBoard().getActiveProductions();
-        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(0))){
-            toggledSlot1.setOpacity(100);
+        if(!gui.getClientModel().getMyBoard().getSlots().get(1).isEmpty()){
+            if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(1).peek().getProd())){
+                toggledSlot1.setOpacity(100);
+            }
+            else{
+                toggledSlot1.setOpacity(0);
+            }
         }
-        else{
-            toggledSlot1.setOpacity(0);
+        if(!gui.getClientModel().getMyBoard().getSlots().get(2).isEmpty()){
+            if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(2).peek().getProd())){
+                toggledSlot2.setOpacity(100);
+            }
+            else{
+                toggledSlot2.setOpacity(0);
+            }
         }
-        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(1))){
-            toggledSlot2.setOpacity(100);
-        }
-        else{
-            toggledSlot2.setOpacity(0);
-        }
-        if(active.contains(gui.getClientModel().getMyBoard().getSlots().get(2))){
-            toggledSlot3.setOpacity(100);
-        }
-        else{
-            toggledSlot3.setOpacity(0);
+        if(!gui.getClientModel().getMyBoard().getSlots().get(3).isEmpty()) {
+            if (active.contains(gui.getClientModel().getMyBoard().getSlots().get(3).peek().getProd())) {
+                toggledSlot3.setOpacity(100);
+            } else {
+                toggledSlot3.setOpacity(0);
+            }
         }
         if(active.contains(gui.getClientModel().getMyBoard().getBaseProduction())){
             toggledBaseProd.setOpacity(100);
@@ -1115,6 +1120,8 @@ public class BoardController extends ControllerGUI {
             toggledBaseProd.setOpacity(0);
         }
     }
+
+
 
     /**
      *

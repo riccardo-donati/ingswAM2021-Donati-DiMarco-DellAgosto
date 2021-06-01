@@ -560,6 +560,10 @@ public class Controller implements GameObserver {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
                 game.activateProductions();
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) {
+                    vc.send(new RevertUpdate());
+                }
                 notifyLobby(new FaithUpdate(getCurrentFaithPath()));
                 notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));
             } else throw new NotYourTurnException();
