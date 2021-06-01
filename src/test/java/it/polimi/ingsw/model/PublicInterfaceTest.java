@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Token;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -1604,6 +1605,60 @@ public class PublicInterfaceTest {
         game.depositResource(1,ResourceType.BLUE);
         game.discardResource(ResourceType.BLUE);
         assertEquals(pos+1,game.getBlackCrossFaithPath().getPosition());
+    }
+    @Test
+    public void TestPickUpFromExtra() throws IllegalResourceException, IOException, IllegalActionException, FullSpaceException, ResourcesNotAvailableException, DepositNotExistingException, NonEmptyException, UnknownNotFoundException, UnknownFoundException, TooManyResourcesException {
+        game=Utilities.loadGame("setUpsingle",'s');
+        game.setMarket(new Market());
+
+        game.getCurrPlayer().getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
+        game.buyAtMarketInterface('r',2);//YELLOW YELLOW VIOLET VIOLET
+        game.depositResource(4,ResourceType.YELLOW);
+        game.depositResource(1,ResourceType.YELLOW);
+        game.depositResource(3,ResourceType.VIOLET);
+        game.depositResource(3,ResourceType.VIOLET);
+        game.passTurn();
+
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInInputBaseProduction(ResourceType.YELLOW);
+        game.substituteUnknownInOutputBaseProduction(ResourceType.VIOLET);
+        game.toggleBaseProd();
+
+        game.pickUpResourceFromWarehouse(4);
+        game.pickUpResourceFromWarehouse(1);
+
+        game.activateProductions();
+        assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(0).getType());
+
+
+
+    }
+    @Test
+    public void TestMoveBetweenExtraDeposit() throws IOException, IllegalActionException, IllegalResourceException, FullSpaceException, NonEmptyException {
+        game=Utilities.loadGame("setUpsingle",'s');
+        game.setMarket(new Market());
+
+        game.getCurrPlayer().getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getWarehouse().addExtraDepot(ResourceType.YELLOW);
+
+        game.buyAtMarketInterface('r',2);//YELLOW YELLOW VIOLET VIOLET
+
+        game.depositResource(5,ResourceType.YELLOW);
+        game.depositResource(5,ResourceType.YELLOW);
+
+        game.moveResource(5,4);
+        assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(1).getSpace()[0]);
+
+        game.moveResource(5,4);
+        assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(0).getSpace()[0]);
+        assertEquals(ResourceType.EMPTY,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(1).getSpace()[0]);
+
+        game.getCurrPlayer().getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
+        assertThrows(IllegalResourceException.class,
+                ()->game.depositResource(5,ResourceType.VIOLET));
+
+
     }
 }
 
