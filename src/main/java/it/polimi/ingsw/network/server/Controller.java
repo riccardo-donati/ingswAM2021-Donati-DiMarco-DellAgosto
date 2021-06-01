@@ -442,12 +442,11 @@ public class Controller implements GameObserver {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
                 game.discardResource(res);
-                notifyLobby(new DiscardResourceUpdate());
                 List<ResourceType> list = getCurrentPlayerPending();
-                if (list.size() > 0) {
-                    VirtualClient vc = getVirtualClient(nickname);
-                    if (vc != null) vc.send(new PendingResourcesUpdate(list));
-                }
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null)
+                    vc.send(new PendingResourcesUpdate(list));
+                notifyLobby(new DiscardResourceUpdate());
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }

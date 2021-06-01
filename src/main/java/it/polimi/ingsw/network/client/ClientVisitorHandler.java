@@ -73,7 +73,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(PendingResourcesUpdate message, Client client) {
         message.update(client.getClientModel());
 
-        client.visualizePendingResourceUpdate(message);
+        client.visualizePendingResourceUpdate();
     }
 
     @Override

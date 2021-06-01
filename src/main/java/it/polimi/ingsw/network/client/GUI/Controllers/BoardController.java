@@ -156,10 +156,10 @@ public class BoardController extends ControllerGUI {
     ImageView[][] imageViewMatrix=new ImageView[3][4];
 
     @FXML private AnchorPane hiddenPanel;
-    @FXML private Label pickedCoins;
-    @FXML private Label pickedServants;
-    @FXML private Label pickedShields;
-    @FXML private Label pickedStones;
+    @FXML private Label numberPickedCoins;
+    @FXML private Label numberPickedServants;
+    @FXML private Label numberPickedShields;
+    @FXML private Label numberPickedStones;
     @FXML private Label strongboxCoins;
     @FXML private Label strongboxServants;
     @FXML private Label strongboxShields;
@@ -281,7 +281,10 @@ public class BoardController extends ControllerGUI {
     @FXML private Label numberPendingServant;
     @FXML private Label numberPendingShield;
     @FXML private Label numberPendingStone;
-
+    @FXML private ImageView pickedCoin;
+    @FXML private ImageView pickedServant;
+    @FXML private ImageView pickedShield;
+    @FXML private ImageView pickedStone;
 
     /**
      * hides and shows the strongbox Panel
@@ -369,10 +372,44 @@ public class BoardController extends ControllerGUI {
      * function that updates the value of the resource currently picked
      */
     public void updatePickedRes(){
-        pickedCoins.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.COIN).toString());
-        pickedServants.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SERVANT).toString());
-        pickedShields.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.SHIELD).toString());
-        pickedStones.setText(gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().get(Resource.STONE).toString());
+        for (Map.Entry<Resource, Integer> entry : gui.getClientModel().getCurrentBoard().getDeposits().getHandResources().entrySet()) {
+            if(entry.getKey().equals(Resource.COIN)){
+                if(entry.getValue() > 0){
+                    numberPickedCoins.setText(entry.getValue().toString());
+                    pickedCoin.setOpacity(100);
+                }
+                else {
+                    numberPickedCoins.setText(null);
+                    pickedCoin.setOpacity(0);
+                }
+            }
+            else if(entry.getKey().equals(Resource.SHIELD)) {
+                if (entry.getValue() > 0) {
+                    numberPickedShields.setText(entry.getValue().toString());
+                    pickedShield.setOpacity(100);
+                } else {
+                    numberPickedShields.setText(null);
+                    pickedShield.setOpacity(0);
+                }
+            }
+            else if(entry.getKey().equals(Resource.SERVANT)) {
+                if (entry.getValue() > 0) {
+                    numberPickedServants.setText(entry.getValue().toString());
+                    pickedServant.setOpacity(100);
+                } else {
+                    numberPickedServants.setText(null);
+                    pickedServant.setOpacity(0);
+                }
+            }else{
+                if (entry.getValue() > 0) {
+                    numberPickedStones.setText(entry.getValue().toString());
+                    pickedStone.setOpacity(100);
+                } else {
+                    numberPickedStones.setText(null);
+                    pickedStone.setOpacity(0);
+                }
+            }
+        }
     }
     /**
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
@@ -432,19 +469,58 @@ public class BoardController extends ControllerGUI {
     /**
      * shows which resources you got from the resource market
      */
-    //TODO: SET THE VALUE OF THE PENDING LABELS TO THEIR VALUE, I THINK I HAVE TO ADD A FUNCTION THAT RETURNS ALSO THE NUMBER OF
-    // A RELATIVE REOURCE IN THE PENDING
-    public void updatePending(List<ResourceType> pending){
-        if(pending.contains(ResourceType.YELLOW))  {
+    public void updatePending(){
+        List<Resource> pending = gui.getClientModel().getCurrentBoard().getPendingResources();
+        String nCoin = countPending(pending, Resource.COIN);
+        String nServant = countPending(pending, Resource.SERVANT);
+        String nShield = countPending(pending, Resource.SHIELD);
+        String nStone = countPending(pending, Resource.STONE);
+        if(nCoin != null ){
+            pendingCoin.setCursor(Cursor.CLOSED_HAND);
             pendingCoin.setOpacity(100);
         }
-        else pendingCoin.setOpacity(0);
-        if(pending.contains(ResourceType.BLUE))   pendingShield.setOpacity(100);
-        else pendingShield.setOpacity(0);
-        if(pending.contains(ResourceType.VIOLET))   pendingServant.setOpacity(100);
-        else pendingServant.setOpacity(0);
-        if(pending.contains(ResourceType.GREY)) pendingStone.setOpacity(100);
-        else pendingStone.setOpacity(0);
+        else {
+            pendingCoin.setCursor(Cursor.DEFAULT);
+            pendingCoin.setOpacity(0);
+        }
+        if(nShield != null) {
+            pendingShield.setCursor(Cursor.CLOSED_HAND);
+            pendingShield.setOpacity(100);
+        }
+        else {
+            pendingShield.setCursor(Cursor.DEFAULT);
+            pendingShield.setOpacity(0);
+        }
+        if(nServant != null) {
+            pendingServant.setCursor(Cursor.CLOSED_HAND);
+            pendingServant.setOpacity(100);
+        }
+        else {
+            pendingServant.setCursor(Cursor.DEFAULT);
+            pendingServant.setOpacity(0);
+        }
+        if(nStone != null) {
+            pendingStone.setCursor(Cursor.CLOSED_HAND);
+            pendingStone.setOpacity(100);
+        }
+        else {
+            pendingStone.setCursor(Cursor.DEFAULT);
+            pendingStone.setOpacity(0);
+        }
+
+        numberPendingCoin.setText(nCoin);
+        numberPendingServant.setText(nServant);
+        numberPendingShield.setText(nShield);
+        numberPendingStone.setText(nStone);
+    }
+
+    public String countPending(List<Resource> pending, Resource check){
+        Integer count=0;
+        for(Resource res : pending){
+            if(res.equals(check)) count++;
+        }
+        if(count == 0) return null;
+        else return count.toString();
     }
 
     /**
@@ -936,55 +1012,60 @@ public class BoardController extends ControllerGUI {
                 mouseEvent.getSource().toString().equals("ImageView[id=slot12, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot13, styleClass=image-view]")) {
             toggled = 1;
-            if(!slot1Selected){
-                slot1Selected = true;
-                toggledSlot1.setOpacity(100);
-            }
-            else{
-                slot1Selected = false;
-                toggledSlot1.setOpacity(0);
-            }
         }
         else if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot2]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot21, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot22, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot23, styleClass=image-view]")) {
             toggled = 2;
-            if(!slot2Selected){
-                slot2Selected = true;
-                toggledSlot2.setOpacity(100);
-            }
-            else{
-                slot2Selected = false;
-                toggledSlot2.setOpacity(0);
-            }
         }
         else if(mouseEvent.getSource().toString().equals("AnchorPane[id=slot3]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot31, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot32, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=slot33, styleClass=image-view]")) {
             toggled = 3;
-            if(!slot3Selected){
-                slot3Selected = true;
-                toggledSlot3.setOpacity(100);
-            }
-            else{
-                slot3Selected = false;
-                toggledSlot3.setOpacity(0);
-            }
         }
         else {
             toggled = 0;
-            if(!baseSelected){
-                baseSelected = true;
-                toggledBaseProd.setOpacity(100);
-            }
-            else{
-                baseSelected = false;
-                toggledBaseProd.setOpacity(0);
-            }
         }
         gui.send(new ToggleProductionCommand(toggled));
+    }
+
+    public void updateToggledProduction(){
+        //gui.getClientModel().getMyBoard().getActiveProductions();
+        //gui.getClientModel().getMyBoard().getBaseProduction();
+        if(!slot1Selected){
+            slot1Selected = true;
+            toggledSlot1.setOpacity(100);
+        }
+        else{
+            slot1Selected = false;
+            toggledSlot1.setOpacity(0);
+        }
+        if(!slot2Selected){
+            slot2Selected = true;
+            toggledSlot2.setOpacity(100);
+        }
+        else{
+            slot2Selected = false;
+            toggledSlot2.setOpacity(0);
+        }
+        if(!slot3Selected){
+            slot3Selected = true;
+            toggledSlot3.setOpacity(100);
+        }
+        else{
+            slot3Selected = false;
+            toggledSlot3.setOpacity(0);
+        }
+        if(!baseSelected){
+            baseSelected = true;
+            toggledBaseProd.setOpacity(100);
+        }
+        else{
+            baseSelected = false;
+            toggledBaseProd.setOpacity(0);
+        }
     }
 
     public void substituteUnknown(MouseEvent mouseEvent) {

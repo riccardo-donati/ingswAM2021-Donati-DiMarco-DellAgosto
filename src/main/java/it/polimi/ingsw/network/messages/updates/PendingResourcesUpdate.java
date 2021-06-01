@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
@@ -27,22 +28,16 @@ public class PendingResourcesUpdate implements Update {
 
     @Override
     public String getMessage() {
-        StringBuilder mex = new StringBuilder();
-        if(pending.size() > 0) {
-            mex.append("Deposit this pending resources:\n[");
-            for (ResourceType resourceType : pending) {
-                Resource resource = Resource.valueOf(resourceType.label.toUpperCase());
-                mex.append(resourceType.label).append("(").append(resource.label).append("),");
-                //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
-            }
-            if (pending.size() > 0) mex.deleteCharAt(mex.toString().length() - 1);
-            mex.append("]");
-        }
-        return mex.toString();
+        return null;
     }
 
     @Override
     public void update(ClientModel clientModel) {
+        List<Resource> clientPending = clientModel.getCurrentBoard().getPendingResources();
+        clientPending.clear();
+        for(ResourceType res : pending){
+            clientPending.add(Utilities.resourceTypeToResource(res));
+        }
         if(pending.size() > 0) clientModel.setTurnPhase(TurnPhase.DEPOSITPHASE);
         else
             clientModel.setTurnPhase(TurnPhase.ENDTURN);

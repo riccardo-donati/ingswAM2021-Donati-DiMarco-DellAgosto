@@ -27,7 +27,7 @@ public class ClientModel {
     private List<String> playersInOrder;
     private String myNickname;
     private String currentNickname;
-    private List<String> disconnectedPlayers=new ArrayList<>();
+    private List<String> disconnectedPlayers = new ArrayList<>();
 
     // phases
     private TurnPhase turnPhase;

@@ -197,8 +197,8 @@ public class CLI implements Client {
     }
 
     @Override
-    public void visualizePendingResourceUpdate(PendingResourcesUpdate message) {
-        System.out.println(message.getMessage());
+    public void visualizePendingResourceUpdate() {
+        System.out.println(clientModel.getCurrentBoard().stringifyPending());
     }
 
     @Override

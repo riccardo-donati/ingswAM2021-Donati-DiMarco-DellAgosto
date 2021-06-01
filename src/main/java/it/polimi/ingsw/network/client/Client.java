@@ -26,7 +26,7 @@ public interface Client {
     void visualizeStartGameUpdate();
     void visualizeNewTurnUpdate(GamePhase previousGamePhase);
     void visualizeBonusResourceMessage(BonusResourceMessage message);
-    void visualizePendingResourceUpdate(PendingResourcesUpdate message);
+    void visualizePendingResourceUpdate();
     void visualizeDepositUpdate(DepositUpdate message);
     void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase);
     void visualizePopeFavorUpdate();
