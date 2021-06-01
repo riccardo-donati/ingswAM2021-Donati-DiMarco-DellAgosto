@@ -146,22 +146,22 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
-            <ImageView fx:id = "pickedCoin" fitHeight="50.0" fitWidth="50.0" layoutX="220.0" layoutY="547.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedCoin" fitHeight="50.0" fitWidth="50.0" layoutX="220.0" layoutY="547.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/coin.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedServant" fitHeight="50.0" fitWidth="50.0" layoutX="310.0" layoutY="545.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedServant" fitHeight="50.0" fitWidth="50.0" layoutX="310.0" layoutY="545.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/servant.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedShield" fitHeight="50.0" fitWidth="50.0" layoutX="400.0" layoutY="544.0" opacity="0.0" pickOnBounds="true">
+            <ImageView fx:id="pickedShield" fitHeight="50.0" fitWidth="50.0" layoutX="400.0" layoutY="544.0" opacity="0.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/resources/shield.png" />
                </image>
             </ImageView>
-            <ImageView fx:id = "pickedStone" fitHeight="50.0" fitWidth="50.0" layoutX="490.0" layoutY="544.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickedStone" fitHeight="50.0" fitWidth="50.0" layoutX="490.0" layoutY="544.0" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/stone.png" />
                </image>
@@ -757,6 +757,11 @@
                <effect>
                   <DropShadow height="10.0" radius="4.5" spread="0.8" width="10.0" />
                </effect></ImageView>
+            <ImageView fitHeight="327.0" fitWidth="426.0" layoutX="-4.0" layoutY="14.0" pickOnBounds="true">
+               <image>
+                  <Image url="@../images/market.png" />
+               </image>
+            </ImageView>
             <ImageView fx:id="pendingCoin" fitHeight="50.0" fitWidth="50.0" layoutX="180.0" layoutY="390.0" onDragDetected="#movePendingRes" opacity="0.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/coin.png" />
@@ -807,76 +812,136 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <ImageView fx:id="marble00" fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES" />
-                  <ImageView fx:id="marble01" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="marble02" fitHeight="65.0" fitWidth="65.0" layoutX="90.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="marble03" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="marble10" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="marble11" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER" />
-                  <ImageView fx:id="marble12" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <ImageView fx:id="marble13" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
-                  <ImageView fx:id="marble20" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <ImageView fx:id="marble21" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <ImageView fx:id="marble22" fitHeight="65.0" fitWidth="65.0" layoutX="85.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
-                  <ImageView fx:id="marble23" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2" />
+                  <ImageView fx:id="marble00" fitHeight="65.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.hgrow="SOMETIMES" GridPane.valignment="CENTER" GridPane.vgrow="SOMETIMES">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble01" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble02" fitHeight="65.0" fitWidth="65.0" layoutX="90.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble03" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble10" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble11" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble12" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble13" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="91.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble20" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble21" fitHeight="65.0" fitWidth="65.0" layoutX="15.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble22" fitHeight="65.0" fitWidth="65.0" layoutX="85.0" layoutY="166.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="2" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
+                  <ImageView fx:id="marble23" fitHeight="65.0" fitWidth="65.0" layoutX="10.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="2">
+                     <effect>
+                        <DropShadow />
+                     </effect></ImageView>
                </children>
             </GridPane>
-            <ImageView fx:id="pendingMarble" fitHeight="65.0" fitWidth="65.0" layoutX="358.0" layoutY="280.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="colonna1" fitHeight="54.0" fitWidth="66.0" layoutX="36.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+            <ImageView fx:id="pendingMarble" fitHeight="65.0" fitWidth="65.0" layoutX="340.0" layoutY="256.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <DropShadow />
+               </effect></ImageView>
+            <ImageView fx:id="colonna1" fitHeight="54.0" fitWidth="66.0" layoutX="42.0" layoutY="267.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="180.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="colonna2" fitHeight="54.0" fitWidth="66.0" layoutX="111.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+            <ImageView fx:id="colonna2" fitHeight="54.0" fitWidth="66.0" layoutX="118.0" layoutY="267.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="180.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="colonna3" fitHeight="54.0" fitWidth="66.0" layoutX="186.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+            <ImageView fx:id="colonna3" fitHeight="54.0" fitWidth="66.0" layoutX="192.0" layoutY="267.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="180.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="colonna4" fitHeight="54.0" fitWidth="66.0" layoutX="261.0" layoutY="280.0" onMouseClicked="#getResources" pickOnBounds="true">
+            <ImageView fx:id="colonna4" fitHeight="54.0" fitWidth="66.0" layoutX="268.0" layoutY="267.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="180.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="riga3" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="192.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+            <ImageView fx:id="riga3" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="192.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="riga2" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="116.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+            <ImageView fx:id="riga2" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="116.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
-            <ImageView fx:id="riga1" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="40.0" onMouseClicked="#getResources" pickOnBounds="true" rotate="-90.0">
+            <ImageView fx:id="riga1" fitHeight="54.0" fitWidth="66.0" layoutX="352.0" layoutY="40.0" onMouseClicked="#getResources" pickOnBounds="true" preserveRatio="true" rotate="90.0">
                <image>
                   <Image url="@../images/freccia.png" />
                </image>
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
+               <effect>
+                  <DropShadow />
+               </effect>
             </ImageView>
             <ImageView fitHeight="102.0" fitWidth="80.0" layoutX="549.0" layoutY="373.0" onDragDropped="#discardResources" onDragOver="#acceptDrag" pickOnBounds="true" preserveRatio="true">
                <image>
