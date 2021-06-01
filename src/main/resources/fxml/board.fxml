@@ -128,7 +128,7 @@
       </AnchorPane>
       <AnchorPane fx:id="main_board" layoutX="216.0" layoutY="176.0" prefHeight="632.0" prefWidth="970.0">
          <children>
-            <Button id="record-sales" fx:id="production1" layoutX="844.0" layoutY="560.0" mnemonicParsing="false" onAction="#pass" prefHeight="36.0" prefWidth="97.0" stylesheets="@../css/style.css" text="PASS" textFill="#464646">
+            <Button fx:id="production1" layoutX="844.0" layoutY="560.0" mnemonicParsing="false" onAction="#pass" prefHeight="36.0" prefWidth="97.0" styleClass="record-sales" stylesheets="@../css/style.css" text="PASS">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
@@ -181,7 +181,7 @@
                   <Font size="18.0" />
                </font>
             </Label>
-            <Button fx:id="production" layoutX="712.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" text="PRODUCE">
+            <Button fx:id="production" layoutX="712.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" styleClass="record-sales" stylesheets="@../css/style.css" text="PRODUCE">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
@@ -551,7 +551,7 @@
                   <Image url="@../images/toggled.png" />
                </image>
             </ImageView>
-            <Button fx:id="revert" layoutX="584.0" layoutY="559.0" mnemonicParsing="false" onAction="#revert" prefHeight="36.0" prefWidth="97.0" text="REVERT">
+            <Button fx:id="revert" layoutX="584.0" layoutY="559.0" mnemonicParsing="false" onAction="#revert" prefHeight="36.0" prefWidth="97.0" styleClass="record-sales" stylesheets="@../css/style.css" text="REVERT">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
@@ -574,22 +574,22 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
-            <Button fx:id="playL1" layoutY="251.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="40.0" prefWidth="73.0" text="Play">
+            <Button fx:id="playL1" layoutY="251.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Play">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="discardL1" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="40.0" prefWidth="73.0" text="Discard">
+            <Button fx:id="discardL1" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Discard">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="playL2" layoutX="2.0" layoutY="566.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="40.0" prefWidth="73.0" text="Play">
+            <Button fx:id="playL2" layoutY="563.0" mnemonicParsing="false" onAction="#playLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Play">
                <font>
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="discardL2" layoutX="105.0" layoutY="563.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="40.0" prefWidth="73.0" text="Discard">
+            <Button fx:id="discardL2" layoutX="105.0" layoutY="563.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Discard">
                <font>
                   <Font size="14.0" />
                </font>

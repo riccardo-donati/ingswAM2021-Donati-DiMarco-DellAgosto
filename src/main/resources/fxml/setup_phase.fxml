@@ -64,7 +64,7 @@
             <ImageView fx:id="res32" fitHeight="27.0" fitWidth="31.0" layoutX="162.0" layoutY="425.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="res21" fitHeight="27.0" fitWidth="31.0" layoutX="143.0" layoutY="362.0" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="res22" fitHeight="27.0" fitWidth="31.0" layoutX="180.0" layoutY="362.0" pickOnBounds="true" preserveRatio="true" />
-            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="44.0" prefWidth="99.0" text="PASS">
+            <Button layoutX="250.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#passTurn" prefHeight="44.0" prefWidth="99.0" styleClass="record-sales" stylesheets="@../css/style.css" text="PASS">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
@@ -133,7 +133,7 @@
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <Button layoutX="21.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#chooseLeaders" prefHeight="44.0" prefWidth="133.0" text="CHOOSE LEADER">
+            <Button layoutX="21.0" layoutY="514.0" mnemonicParsing="false" onMouseClicked="#chooseLeaders" prefHeight="46.0" prefWidth="146.0" styleClass="record-sales" stylesheets="@../css/style.css" text="CHOOSE LEADER">
                <font>
                   <Font name="Gabriola" size="18.0" />
                </font>
