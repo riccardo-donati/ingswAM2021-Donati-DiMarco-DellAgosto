@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.IllegalResourceException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.CLI.enums.Color;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 
 import java.util.*;
 
@@ -14,6 +15,7 @@ public class ClientBoard {
     private final Map<Integer, Stack<DevelopmentCard>> slots = new HashMap<>();
     private Integer totalSlotPoints;
     private Integer totalCardsBought;
+    private List<Resource> pendingResources = new ArrayList<>();
     private List<LeaderCard> leadersInHand = new ArrayList<>();
     private final List<LeaderCard> leadersInBoard = new ArrayList<>();
     private Map<Integer,String> discardedCards=new HashMap<>();
@@ -240,5 +242,23 @@ public class ClientBoard {
                 Color.ANSI_PURPLE.escape()+"TOTAL CARDS BOUGHT: "+Color.RESET+totalCardsBought+"\n");
         sb.append(Color.ANSI_PURPLE.escape()+"RECAP: "+Color.RESET+recapSlots());
         return sb.toString();
+    }
+
+    public String stringifyPending(){
+        StringBuilder mex = new StringBuilder();
+        if(pendingResources.size() > 0) {
+            mex.append("Deposit these pending resources:\n[");
+            for (Resource resource : pendingResources) {
+                mex.append(resource).append("(").append(resource.label).append("),");
+                //mex.append(ResourceType.valueOfLabel(res.toString())+"("+Resource.valueOf()+")");
+            }
+            mex.deleteCharAt(mex.toString().length() - 1);
+            mex.append("]");
+        }
+        return mex.toString();
+    }
+
+    public List<Resource> getPendingResources() {
+        return pendingResources;
     }
 }

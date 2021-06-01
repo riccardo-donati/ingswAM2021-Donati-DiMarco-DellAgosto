@@ -221,9 +221,9 @@ public class GUI extends Application implements Client {
     }
 
     @Override
-    public void visualizePendingResourceUpdate(PendingResourcesUpdate message) {
+    public void visualizePendingResourceUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updatePending(message.getPending());
+        bc.updatePending();
     }
 
     @Override
@@ -298,17 +298,22 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizePickUpWarehouseUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateWarehouse();
+        bc.updatePickedRes();
     }
 
     @Override
     public void visualizePickUpStrongboxUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateStrongbox();
+        bc.updatePickedRes();
     }
 
     @Override
     public void visualizePlayLeaderUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateLCards();
     }
 
     @Override
