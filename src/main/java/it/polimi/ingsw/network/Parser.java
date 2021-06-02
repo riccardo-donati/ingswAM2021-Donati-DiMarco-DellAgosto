@@ -316,7 +316,7 @@ public class Parser {
                         if (tokenizer.nextToken().equals("to")) {
                             String resource = tokenizer.nextToken();
                             if (resources.contains(resource) && !tokenizer.hasMoreTokens())
-                                return new ProductionUnknownCommand(option, ResourceType.valueOfLabel(resource), 0);
+                                return new ProductionUnknownCommand(option, ResourceType.valueOfLabel(resource), -1);
                         }
                     }
                 }
@@ -354,7 +354,7 @@ public class Parser {
                         if (tokenizer.nextToken().equals("to")) {
                             String resource = tokenizer.nextToken();
                             if (resources.contains(resource) && !tokenizer.hasMoreTokens())
-                                return new ExtraProductionUnknownCommand(option, ResourceType.valueOfLabel(resource), position);
+                                return new ProductionUnknownCommand(option, ResourceType.valueOfLabel(resource), position-1);
                         }
                     }
                 }

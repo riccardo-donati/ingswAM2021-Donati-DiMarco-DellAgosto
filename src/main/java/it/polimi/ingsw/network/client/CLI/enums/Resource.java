@@ -9,7 +9,8 @@ public enum Resource {
     STONE("▨"),
     FAITH(Color.ANSI_RED.escape()+"♰"+Color.RESET),
     QUESTIONMARK("?"),
-    EMPTY(" ");
+    EMPTY(" "),
+    WHITE("?");
 
     public String label;
 

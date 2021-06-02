@@ -250,16 +250,6 @@ public class ServerVisitorHandler implements ServerVisitor {
     }
 
     @Override
-    public void visit(ExtraProductionUnknownCommand command, ClientHandler clientHandler) {
-        Controller l=clientHandler.getLobby();
-        try {
-            command.doAction(l,nickname);
-        } catch (IllegalCommandException | UnknownNotFoundException | IllegalResourceException | IllegalActionException | NotYourTurnException | WaitingReconnectionsException e) {
-            clientHandler.send(new ErrorMessage(e.getMessage()));
-        }
-    }
-
-    @Override
     public void visit(PlayLeaderCommand command, ClientHandler clientHandler) {
         Controller l=clientHandler.getLobby();
         try {

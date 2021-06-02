@@ -6,7 +6,7 @@ public enum ResourceType {
     VIOLET("servant"),
     BLUE("shield"),
     RED("faith"),
-    WHITE(""),
+    WHITE("white"),
     UNKNOWN("questionmark"),
     EMPTY("");
 

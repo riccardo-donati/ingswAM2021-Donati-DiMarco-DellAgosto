@@ -331,6 +331,9 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView extraProd2;
     @FXML private ImageView toggledLeader1;
     @FXML private ImageView toggledLeader2;
+    @FXML private ImageView pendingWhite;
+    @FXML private Label numberPendingWhite;
+    @FXML private AnchorPane baseProduction;
 
     /**
      * hides and shows the strongbox Panel
@@ -581,6 +584,7 @@ public class BoardController extends ControllerGUI {
         String nServant = countPending(pending, Resource.SERVANT);
         String nShield = countPending(pending, Resource.SHIELD);
         String nStone = countPending(pending, Resource.STONE);
+        String nUnknown=countPending(pending,Resource.WHITE);
         if(nCoin != null ){
             pendingCoin.setCursor(Cursor.CLOSED_HAND);
             pendingCoin.setOpacity(100);
@@ -613,11 +617,22 @@ public class BoardController extends ControllerGUI {
             pendingStone.setCursor(Cursor.DEFAULT);
             pendingStone.setOpacity(0);
         }
+        if(nUnknown != null) {
+            pendingWhite.setCursor(Cursor.CLOSED_HAND);
+            pendingWhite.setOpacity(100);
+        }
+        else {
+            pendingWhite.setCursor(Cursor.DEFAULT);
+            pendingWhite.setOpacity(0);
+        }
+
 
         numberPendingCoin.setText(nCoin);
         numberPendingServant.setText(nServant);
         numberPendingShield.setText(nShield);
         numberPendingStone.setText(nStone);
+
+        numberPendingWhite.setText(nUnknown);
     }
 
     public String countPending(List<Resource> pending, Resource check){
@@ -894,9 +909,13 @@ public class BoardController extends ControllerGUI {
             movedRes = ResourceType.BLUE;
             source = pendingShield;
         }
-        else {
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingStone, styleClass=image-view]")){
             movedRes = ResourceType.GREY;
             source = pendingStone;
+        }
+        else {
+            movedRes = ResourceType.WHITE;
+            source = pendingWhite;
         }
         Dragboard db = source.startDragAndDrop(TransferMode.COPY);
         cb.putImage(source.getImage());
@@ -1300,4 +1319,32 @@ public class BoardController extends ControllerGUI {
             }
         }
     }
+    public void whiteTo(DragEvent event){
+        if(movedRes==ResourceType.WHITE){
+            Node node=(Node)event.getSource();
+            String id=node.getId();
+            Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+            ResourceType res=null;
+            if(id.equals("leaderCard1")){
+                String name=played.get(0);
+                if(name!=null){
+                    SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+                    if(sa instanceof WhiteTo) {
+                        res = sa.getResourceType();
+                    }
+                }
+            }else if(id.equals("leaderCard2")){
+                String name=played.get(1);
+                if(name!=null){
+                    SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+                    if(sa instanceof WhiteTo) {
+                        res = sa.getResourceType();
+                    }
+                }
+            }
+            if(res!=null) gui.send(new TransformWhiteCommand(res));
+        }
+    }
+
 }
+
