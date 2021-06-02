@@ -1357,13 +1357,6 @@ public class BoardController extends ControllerGUI {
         }
     }
 
-    /**
-     *
-     * @param mouseEvent
-     */
-    public void substituteUnknown(MouseEvent mouseEvent) {
-
-    }
     public void updateDiscounts(){
         //leader1
         String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
