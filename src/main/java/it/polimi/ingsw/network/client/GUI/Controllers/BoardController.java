@@ -5,6 +5,7 @@ import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
@@ -32,20 +33,17 @@ public class BoardController extends ControllerGUI {
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
-    Boolean baseSelected = false;
-    Boolean slot1Selected = false;
-    Boolean slot2Selected = false;
-    Boolean slot3Selected = false;
+    Boolean isUp = false;
     ResourceType movedRes;
     Integer row;
     Integer column;
+    Integer index;
     Character line;
     Integer pos;
-    Boolean setup = true;
-    Integer lCard;
+    String clickedUnknown;
     int from;
     Boolean moving;
-    Boolean fromStrongbox;
+    Integer countSubstitute;
 
     public BoardController(){
 
@@ -73,6 +71,10 @@ public class BoardController extends ControllerGUI {
         warehouse.add(slot3);
         warehouse.add(slot4);
         warehouse.add(slot5);
+        List<ImageView> unknownRes = new ArrayList<>();
+        unknownRes.add(unknownInput1);
+        unknownRes.add(unknownInput2);
+        unknownRes.add(unknownOutput);
 
         faithPath.add(faithPath0);
         faithPath.add(faithPath1);
@@ -196,6 +198,7 @@ public class BoardController extends ControllerGUI {
     @FXML private Rectangle leader2;
     @FXML private ImageView leaderCard1;
     @FXML private ImageView leaderCard2;
+    @FXML private AnchorPane hiddenUnknown;
     @FXML private AnchorPane hiddenCardMatrix;
     @FXML private AnchorPane hiddenResMarket;
     @FXML private ImageView resSlot1;
@@ -328,6 +331,12 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView slot33;
     @FXML private ImageView extraProd1;
     @FXML private ImageView extraProd2;
+    @FXML private ImageView unknownCoin;
+    @FXML private ImageView unknownShield;
+    @FXML private ImageView unknownServant;
+    @FXML private ImageView unknownStone;
+    @FXML private ImageView baseProduction;
+
 
     /**
      * hides and shows the strongbox Panel
@@ -345,6 +354,92 @@ public class BoardController extends ControllerGUI {
             clickedBox = false;
         }
         tt.play();
+    }
+
+    public void substituteUnknown(MouseEvent mouseEvent) {
+        ResourceType unknownRes;
+        if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;
+        else if(mouseEvent.getSource().toString().contains("Servant")) unknownRes = ResourceType.VIOLET;
+        else if(mouseEvent.getSource().toString().contains("Shield")) unknownRes = ResourceType.BLUE;
+        else unknownRes = ResourceType.GREY;
+        moveUnknown(425, "i");
+        gui.send(new ProductionUnknownCommand(clickedUnknown, unknownRes, index));
+    }
+
+    /**
+     *
+     * @param mouseEvent
+     */
+    public void showUnknownRes(MouseEvent mouseEvent) {
+        if(mouseEvent.getSource().toString().contains("unknownInput1")){
+            moveUnknown(325, "i");
+            clickedUnknown = "input";
+            index = -1;
+            unknownInput1.setDisable(true);
+        }
+        else if(mouseEvent.getSource().toString().contains("unknownInput2")){
+            clickedUnknown = "input";
+            index = -1;
+            moveUnknown(425, "i");
+            unknownInput2.setDisable(true);
+        }
+        else{
+            clickedUnknown = "output";
+            index = -1;
+            moveUnknown(375, "o");
+            unknownOutput.setDisable(true);
+        }
+        hiddenUnknown.setDisable(false);
+        hiddenUnknown.setOpacity(100);
+    }
+
+    /**
+     * shows and hides the Unknown panel, sets it unclickable and invisible
+     */
+    public void moveUnknown(int place, String io){
+        hiddenUnknown.setLayoutY(place);
+        hiddenUnknown.setLayoutX(243);
+        if(io.equals("o")){
+            hiddenUnknown.setLayoutX(315);
+            hiddenUnknown.setRotate(90);
+            unknownCoin.setRotate(-90);
+            unknownServant.setRotate(-90);
+            unknownShield.setRotate(-90);
+            unknownStone.setRotate(-90);
+        }
+        if(io.equals("i") && unknownCoin.getRotate() != 0){
+            hiddenUnknown.setRotate(0);
+            unknownCoin.setRotate(0);
+            unknownShield.setRotate(0);
+            unknownServant.setRotate(0);
+            unknownStone.setRotate(0);
+        }
+        hiddenUnknown.setDisable(true);
+        hiddenUnknown.setOpacity(0);
+    }
+
+    public void updateUnknown(){
+        for (Map.Entry<ResourceType, Integer> entry : gui.getClientModel().getMyBoard().getBaseProduction().getInput().entrySet()) {
+            if(entry.getValue()==1 && !entry.getKey().equals(ResourceType.UNKNOWN)){
+                unknownInput1.setImage(new Image("/images/resources/"+ checkType(entry.getKey())+ ".png"));
+            }
+            if(entry.getValue()==2 && !entry.getKey().equals(ResourceType.UNKNOWN)){
+                unknownInput2.setImage(new Image("/images/resources/"+ checkType(entry.getKey())+ ".png"));
+            }
+        }
+        for (Map.Entry<ResourceType, Integer> entry : gui.getClientModel().getMyBoard().getBaseProduction().getOutput().entrySet()) {
+            if (!entry.getKey().equals(ResourceType.UNKNOWN)) {
+                unknownOutput.setImage(new Image("/images/resources/"+ checkType(entry.getKey()) + ".png"));
+            }
+        }
+        if(gui.getClientModel().getMyBoard().getBaseProduction().checkValidity())    toggledBaseProd.setDisable(false);
+    }
+
+    public String checkType(ResourceType res){
+            if(res.equals(ResourceType.YELLOW))  return "coin";
+            else if(res.equals(ResourceType.VIOLET))  return "servant";
+            else if(res.equals(ResourceType.BLUE))  return "shield";
+            else return "stone";
     }
 
     /**
@@ -491,7 +586,7 @@ public class BoardController extends ControllerGUI {
         }
     }
 
-    public void setupLeader(){
+    public void setupClickable(){
         //metto inutilizabili gli extraDeposit 4 e 5 a meno che le LCard siano di questo tipo
         resSlot41.setDisable(true);
         resSlot42.setDisable(true);
@@ -503,6 +598,7 @@ public class BoardController extends ControllerGUI {
         //disabilito i pulsanti per le produzioni extra che sta facendo riccardo
         extraProd1.setDisable(true);
         extraProd2.setDisable(true);
+        hiddenUnknown.setDisable(true);
     }
 
     /**
@@ -1147,6 +1243,7 @@ public class BoardController extends ControllerGUI {
             toggled = 3;
         }
         else {
+            //clicking on the substitute toggles the production
             toggled = 0;
         }
         gui.send(new ToggleProductionCommand(toggled));
@@ -1189,19 +1286,23 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     *
-     * @param mouseEvent
-     */
-    public void substituteUnknown(MouseEvent mouseEvent) {
-
-    }
-
-    /**
      * this should separate white to (only if the player has 2 white to cards) and discount
      * the only 2 LCards that could be "deactivated" (only discount technically)
      * @param mouseEvent
      */
     public void toggleLeader(MouseEvent mouseEvent) {
         System.out.println("premuto");
+    }
+
+    public void extraSubstituteUnknown(MouseEvent mouseEvent) {
+    }
+
+
+    public void unclickableBProd(MouseEvent mouseEvent) {
+        baseProduction.setDisable(true);
+    }
+
+    public void clickableBProd(MouseEvent mouseEvent) {
+        baseProduction.setDisable(false);
     }
 }

@@ -283,7 +283,7 @@ public class GUI extends Application implements Client {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
         //togli
-        bc.setupLeader();
+        bc.setupClickable();
         bc.setLeaderPower();
     }
 
@@ -303,7 +303,8 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeUnknownProductionUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateUnknown();
     }
 
     @Override
