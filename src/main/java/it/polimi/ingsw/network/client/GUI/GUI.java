@@ -324,6 +324,7 @@ public class GUI extends Application implements Client {
     public void visualizePlayLeaderUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
+        bc.updateExtraDeposit();
     }
 
     @Override

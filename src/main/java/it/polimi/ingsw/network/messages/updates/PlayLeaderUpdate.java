@@ -33,6 +33,10 @@ public class PlayLeaderUpdate implements Update {
         }
     }
 
+    public int getIndex() {
+        return index;
+    }
+
     @Override
     public String getMessage() {
         return null;

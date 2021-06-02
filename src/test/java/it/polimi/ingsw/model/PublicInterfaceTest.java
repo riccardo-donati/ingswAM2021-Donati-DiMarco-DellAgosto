@@ -1634,7 +1634,7 @@ public class PublicInterfaceTest {
 
     }
     @Test
-    public void TestMoveBetweenExtraDeposit() throws IOException, IllegalActionException, IllegalResourceException, FullSpaceException, NonEmptyException {
+    public void TestMoveBetweenExtraDeposit() throws IOException, IllegalActionException, IllegalResourceException, FullSpaceException, NonEmptyException, DepositNotExistingException, ResourcesNotAvailableException {
         game=Utilities.loadGame("setUpsingle",'s');
         game.setMarket(new Market());
 
@@ -1645,6 +1645,8 @@ public class PublicInterfaceTest {
 
         game.depositResource(5,ResourceType.YELLOW);
         game.depositResource(5,ResourceType.YELLOW);
+        game.depositResource(3,ResourceType.VIOLET);
+
 
         game.moveResource(5,4);
         assertEquals(ResourceType.YELLOW,game.getCurrPlayer().getBoard().getWarehouse().getExtradepots().get(0).getSpace()[0]);
@@ -1657,7 +1659,10 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getBoard().getWarehouse().addExtraDepot(ResourceType.VIOLET);
         assertThrows(IllegalResourceException.class,
                 ()->game.depositResource(5,ResourceType.VIOLET));
-
+        game.depositResource(6,ResourceType.VIOLET);
+        game.moveResource(6,2);//non dovrebbe
+        game.moveResource(4,1);//dovrebbe
+        game.getCurrPlayer().getBoard().getWarehouse().visualize();
 
     }
 }

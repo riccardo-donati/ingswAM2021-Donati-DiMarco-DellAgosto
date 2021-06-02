@@ -594,11 +594,11 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <ImageView fx:id="resSlot42" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="163.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
-            <ImageView fx:id="resSlot41" fitHeight="24.0" fitWidth="28.0" layoutX="52.0" layoutY="163.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
-            <ImageView fx:id="resSlot51" fitHeight="24.0" fitWidth="28.0" layoutX="54.0" layoutY="476.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
-            <ImageView fx:id="resSlot52" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="476.0" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
-            <ImageView fx:id="extraProd1" fitHeight="24.0" fitWidth="20.0" layoutX="92.0" layoutY="160.0" pickOnBounds="true" />
+            <ImageView fx:id="resSlot42" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="163.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot41" fitHeight="24.0" fitWidth="28.0" layoutX="52.0" layoutY="163.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot51" fitHeight="24.0" fitWidth="28.0" layoutX="54.0" layoutY="476.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="resSlot52" fitHeight="24.0" fitWidth="28.0" layoutX="104.0" layoutY="476.0" onDragDetected="#moveRes"  onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" />
+            <ImageView fx:id="extraProd1" fitHeight="24.0" fitWidth="20.0" layoutX="92.0" layoutY="160.0" onDragDetected="#moveRes" pickOnBounds="true" />
             <ImageView fx:id="extraProd2" fitHeight="24.0" fitWidth="20.0" layoutX="94.0" layoutY="475.0" pickOnBounds="true" />
          </children>
       </AnchorPane>

@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.ExtraDeposit;
 import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -62,17 +63,17 @@ public class BoardController extends ControllerGUI {
         slot3.add(resSlot31);
         slot3.add(resSlot32);
         slot3.add(resSlot33);
-        List<ImageView> slot4=new ArrayList<>();
+        slot4=new ArrayList<>();
         slot4.add(resSlot41);
         slot4.add(resSlot42);
-        List<ImageView> slot5=new ArrayList<>();
+        slot5=new ArrayList<>();
         slot5.add(resSlot51);
         slot5.add(resSlot52);
         warehouse.add(slot1);
         warehouse.add(slot2);
         warehouse.add(slot3);
-        warehouse.add(slot4);
-        warehouse.add(slot5);
+        //warehouse.add(slot4);
+        //warehouse.add(slot5);
 
         faithPath.add(faithPath0);
         faithPath.add(faithPath1);
@@ -176,6 +177,9 @@ public class BoardController extends ControllerGUI {
 
     }
     List<List<ImageView>> warehouse=new ArrayList<>();
+    List<ImageView> slot4=new ArrayList<>();
+    List<ImageView> slot5=new ArrayList<>();
+
     List<ImageView> faithPath=new ArrayList<>();
     List<ImageView> blackCross=new ArrayList<>();
     List<ImageView> marbles=new ArrayList<>();
@@ -347,6 +351,15 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
+    public void updateExtraDeposit(){
+        Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+        if(played.get(0)!=null && gui.getClientModel().getLeaderCard(played.get(0)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot4)){
+            warehouse.add(slot4);
+        }
+        if(played.get(1)!=null && gui.getClientModel().getLeaderCard(played.get(1)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot5)){
+            warehouse.add(slot5);
+        }
+    }
     /**
      * update the slots from the client model
      */
@@ -704,16 +717,30 @@ public class BoardController extends ControllerGUI {
      * @param mouseEvent left mouse click on a warehouse shelf
      */
     public void clickedWarehouseRes(MouseEvent mouseEvent) {
-        int slot;
+        int slot=-1;
         if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
                 || mouseEvent.getSource().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
             slot = 2;
-        else
-//        if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
-//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
-//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
             slot = 3;
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")) {
+            if(warehouse.indexOf(slot4)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot4)==4)
+                slot=5;
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
+            if(warehouse.indexOf(slot5)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot5)==4)
+                slot=5;
+        }
+
         gui.send(new WarehousePickUpCommand(slot));
     }
 
@@ -804,28 +831,36 @@ public class BoardController extends ControllerGUI {
      * @param dragEvent this event identifies the end of a drag & drop event
      */
     public void placeWarehouse(DragEvent dragEvent){
-        Integer slot;
+        Integer slot=-1;
         //la prima carta è extraslot, è attiva e il drop è su 4
         if(!resSlot41.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(0) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot42, styleClass=image-view]"))){
-            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
-            else slot =5;
+            if(warehouse.indexOf(slot4)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot4)==4)
+                slot=5;
         }
         //la seconda carta è extraslot, è attiva e il drop è su 5
         else if(!resSlot51.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(1) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot52, styleClass=image-view]"))){
-            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
-            else slot = 5;
+            if(warehouse.indexOf(slot5)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot5)==4)
+                slot=5;
         }
         //tutti altri casi
         else {
-            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]"))
+                slot = 1;
             else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
                     || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
                 slot = 2;
-            else slot = 3;
+            else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
+                slot = 3;
         }
         //update based on LCards, il moving su 4o/5o slot è ammesso?
         if(moving){
@@ -873,7 +908,7 @@ public class BoardController extends ControllerGUI {
      */
     public void moveRes(MouseEvent mouseEvent) {
         moving = true;
-        ImageView source;
+        ImageView source=null;
         ClipboardContent cb = new ClipboardContent();
         if(mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")){
 //            source.setImage(warehouse.get(0).get(0).getImage());
@@ -885,9 +920,32 @@ public class BoardController extends ControllerGUI {
             source = resType(1);
             from = 2;
         }
-        else {
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]")){
             source = resType(2);
             from = 3;
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")){
+            if(warehouse.indexOf(slot4)==3){
+                source = resType(3);
+                from = 4;
+            }else if(warehouse.indexOf(slot4)==4) {
+                source = resType(4);
+                from = 5;
+            }
+
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
+            if(warehouse.indexOf(slot5)==3){
+                source = resType(3);
+                from = 4;
+            }else if(warehouse.indexOf(slot5)==4) {
+                source = resType(4);
+                from = 5;
+            }
         }
         if(source!=null) {
             Dragboard db = source.startDragAndDrop(TransferMode.COPY);
