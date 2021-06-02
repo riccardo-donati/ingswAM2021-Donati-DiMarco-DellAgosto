@@ -166,19 +166,19 @@
                   <Image url="@../images/resources/stone.png" />
                </image>
             </ImageView>
-            <Label fx:id="numberPickedCoins" alignment="CENTER" layoutX="214.0" layoutY="578.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPickedCoins" alignment="CENTER" layoutX="214.0" layoutY="578.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="numberPickedServants" alignment="CENTER" layoutX="303.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPickedServants" alignment="CENTER" layoutX="303.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
-            <Label fx:id="numberPickedShields" alignment="CENTER" layoutX="393.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPickedShields" alignment="CENTER" layoutX="393.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
             <Button fx:id="production" layoutX="712.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" styleClass="record-sales" stylesheets="@../css/style.css" text="PRODUCE">
@@ -188,9 +188,9 @@
             </Button>
             <ImageView fitHeight="129.0" fitWidth="173.0" layoutX="76.0" layoutY="371.0" onMouseClicked="#openStrongbox" pickOnBounds="true" preserveRatio="true" />
             <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
-            <Label fx:id="numberPickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0">
+            <Label fx:id="numberPickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
             <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />

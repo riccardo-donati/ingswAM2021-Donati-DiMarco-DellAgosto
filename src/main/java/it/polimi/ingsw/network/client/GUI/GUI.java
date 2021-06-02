@@ -392,6 +392,9 @@ public class GUI extends Application implements Client {
         l.setIcons();
         l.updatePopeFavor();
         l.updateStrongbox();
+        l.updateSlots();
+        l.updatePickedRes();
+        l.updatePending();
         SetupController s=(SetupController)buildedControllers.get(SETUP);
         s.updateLeader();
         s.updateWarehouse();
