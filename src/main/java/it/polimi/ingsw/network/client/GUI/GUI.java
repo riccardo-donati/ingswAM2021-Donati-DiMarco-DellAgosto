@@ -325,11 +325,13 @@ public class GUI extends Application implements Client {
     public void visualizePlayLeaderUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
+        bc.updatePlayLeader();
     }
 
     @Override
     public void visualizeToggleDiscountUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateDiscounts();
     }
 
     @Override
@@ -391,6 +393,9 @@ public class GUI extends Application implements Client {
         l.setIcons();
         l.updatePopeFavor();
         l.updateStrongbox();
+        l.updateSlots();
+        l.updatePickedRes();
+        l.updatePending();
         SetupController s=(SetupController)buildedControllers.get(SETUP);
         s.updateLeader();
         s.updateWarehouse();

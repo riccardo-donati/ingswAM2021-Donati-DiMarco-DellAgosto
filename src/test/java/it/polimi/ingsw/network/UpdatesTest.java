@@ -152,15 +152,15 @@ public class UpdatesTest {
         ToggleDiscountUpdate tdu1=new ToggleDiscountUpdate(ResourceType.YELLOW);
         tdu1.update(cm);
         System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
-        assertEquals(ResourceType.YELLOW,cm.getCurrentBoard().getActiveDiscounts().get(0).getRes());
+        assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.YELLOW));
 
         ToggleDiscountUpdate tdu2=new ToggleDiscountUpdate(ResourceType.GREY);
         tdu2.update(cm);
-        assertEquals(ResourceType.GREY,cm.getCurrentBoard().getActiveDiscounts().get(1).getRes());
+        assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.GREY));
         System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
 
         tdu1.update(cm);
-        assertEquals(ResourceType.GREY,cm.getCurrentBoard().getActiveDiscounts().get(0).getRes());
+        assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.GREY));
         System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
     }
 

@@ -275,7 +275,7 @@ class WarehouseTest {
     }
 
     @Test
-    public void TestMoveToEmptyExtra() throws IllegalResourceException, FullSpaceException {
+    public void TestMoveToEmptyExtra() throws IllegalResourceException, FullSpaceException, NonEmptyException {
         wh.addResourceInPending(ResourceType.VIOLET);
         wh.addResourceInDeposit(1,ResourceType.VIOLET);
 
@@ -284,8 +284,7 @@ class WarehouseTest {
 
         assertDoesNotThrow(
                 ()->wh.moveResource(1,2));
-        assertThrows(IllegalResourceException.class,
-                ()->wh.moveResource(2,5));
+        wh.moveResource(2,5);
         assertDoesNotThrow(
                 ()->wh.moveResource(2,4));
         assertEquals(ResourceType.VIOLET,wh.getExtradepots().get(0).getSpace()[0]);

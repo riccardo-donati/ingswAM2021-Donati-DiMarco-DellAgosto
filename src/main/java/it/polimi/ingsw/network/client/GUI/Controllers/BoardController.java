@@ -1,8 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
-import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.Utilities;
@@ -60,21 +58,17 @@ public class BoardController extends ControllerGUI {
         slot3.add(resSlot31);
         slot3.add(resSlot32);
         slot3.add(resSlot33);
-        List<ImageView> slot4=new ArrayList<>();
+        slot4=new ArrayList<>();
         slot4.add(resSlot41);
         slot4.add(resSlot42);
-        List<ImageView> slot5=new ArrayList<>();
+        slot5=new ArrayList<>();
         slot5.add(resSlot51);
         slot5.add(resSlot52);
         warehouse.add(slot1);
         warehouse.add(slot2);
         warehouse.add(slot3);
-        warehouse.add(slot4);
-        warehouse.add(slot5);
-        List<ImageView> unknownRes = new ArrayList<>();
-        unknownRes.add(unknownInput1);
-        unknownRes.add(unknownInput2);
-        unknownRes.add(unknownOutput);
+        //warehouse.add(slot4);
+        //warehouse.add(slot5);
 
         faithPath.add(faithPath0);
         faithPath.add(faithPath1);
@@ -178,6 +172,9 @@ public class BoardController extends ControllerGUI {
 
     }
     List<List<ImageView>> warehouse=new ArrayList<>();
+    List<ImageView> slot4=new ArrayList<>();
+    List<ImageView> slot5=new ArrayList<>();
+
     List<ImageView> faithPath=new ArrayList<>();
     List<ImageView> blackCross=new ArrayList<>();
     List<ImageView> marbles=new ArrayList<>();
@@ -336,7 +333,10 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView unknownServant;
     @FXML private ImageView unknownStone;
     @FXML private ImageView baseProduction;
-
+    @FXML private ImageView toggledLeader1;
+    @FXML private ImageView toggledLeader2;
+    @FXML private ImageView pendingWhite;
+    @FXML private Label numberPendingWhite;
 
     /**
      * hides and shows the strongbox Panel
@@ -356,6 +356,18 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
+
+    public void updatePlayLeader(){
+        Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+        //extradeposit
+        if(played.get(0)!=null && gui.getClientModel().getLeaderCard(played.get(0)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot4)){
+            warehouse.add(slot4);
+        }
+        if(played.get(1)!=null && gui.getClientModel().getLeaderCard(played.get(1)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot5)){
+            warehouse.add(slot5);
+        }
+
+    }
     public void substituteUnknown(MouseEvent mouseEvent) {
         ResourceType unknownRes;
         if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;
@@ -602,7 +614,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * has to be called at the start of the gaem to activate a leader card specific power
+     * has to be called at the start of the game to activate a leader card specific power
      */
     public void setLeaderPower(){
         String l = gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName();
@@ -662,6 +674,7 @@ public class BoardController extends ControllerGUI {
         String nServant = countPending(pending, Resource.SERVANT);
         String nShield = countPending(pending, Resource.SHIELD);
         String nStone = countPending(pending, Resource.STONE);
+        String nUnknown=countPending(pending,Resource.WHITE);
         if(nCoin != null ){
             pendingCoin.setCursor(Cursor.CLOSED_HAND);
             pendingCoin.setOpacity(100);
@@ -694,11 +707,22 @@ public class BoardController extends ControllerGUI {
             pendingStone.setCursor(Cursor.DEFAULT);
             pendingStone.setOpacity(0);
         }
+        if(nUnknown != null) {
+            pendingWhite.setCursor(Cursor.CLOSED_HAND);
+            pendingWhite.setOpacity(100);
+        }
+        else {
+            pendingWhite.setCursor(Cursor.DEFAULT);
+            pendingWhite.setOpacity(0);
+        }
+
 
         numberPendingCoin.setText(nCoin);
         numberPendingServant.setText(nServant);
         numberPendingShield.setText(nShield);
         numberPendingStone.setText(nStone);
+
+        numberPendingWhite.setText(nUnknown);
     }
 
     public String countPending(List<Resource> pending, Resource check){
@@ -800,16 +824,30 @@ public class BoardController extends ControllerGUI {
      * @param mouseEvent left mouse click on a warehouse shelf
      */
     public void clickedWarehouseRes(MouseEvent mouseEvent) {
-        int slot;
+        int slot=-1;
         if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
                 || mouseEvent.getSource().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
             slot = 2;
-        else
-//        if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
-//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
-//                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
             slot = 3;
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")) {
+            if(warehouse.indexOf(slot4)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot4)==4)
+                slot=5;
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]")
+                || mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
+            if(warehouse.indexOf(slot5)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot5)==4)
+                slot=5;
+        }
+
         gui.send(new WarehousePickUpCommand(slot));
     }
 
@@ -900,28 +938,36 @@ public class BoardController extends ControllerGUI {
      * @param dragEvent this event identifies the end of a drag & drop event
      */
     public void placeWarehouse(DragEvent dragEvent){
-        Integer slot;
+        Integer slot=-1;
         //la prima carta è extraslot, è attiva e il drop è su 4
         if(!resSlot41.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(0) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot42, styleClass=image-view]"))){
-            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
-            else slot =5;
+            if(warehouse.indexOf(slot4)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot4)==4)
+                slot=5;
         }
         //la seconda carta è extraslot, è attiva e il drop è su 5
         else if(!resSlot51.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(1) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot52, styleClass=image-view]"))){
-            if(gui.getClientModel().getMyBoard().getDeposits().getShelves().size() == 4) slot = 4;
-            else slot = 5;
+            if(warehouse.indexOf(slot5)==3){
+                slot=4;
+            }else if(warehouse.indexOf(slot5)==4)
+                slot=5;
         }
         //tutti altri casi
         else {
-            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")) slot = 1;
+            if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot1, styleClass=image-view]"))
+                slot = 1;
             else if (dragEvent.getTarget().toString().equals("ImageView[id=resSlot21, styleClass=image-view]")
                     || dragEvent.getTarget().toString().equals("ImageView[id=resSlot22, styleClass=image-view]"))
                 slot = 2;
-            else slot = 3;
+            else if(dragEvent.getTarget().toString().equals("ImageView[id=resSlot31, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot32, styleClass=image-view]")
+                    || dragEvent.getTarget().toString().equals("ImageView[id=resSlot33, styleClass=image-view]"))
+                slot = 3;
         }
         //update based on LCards, il moving su 4o/5o slot è ammesso?
         if(moving){
@@ -953,9 +999,13 @@ public class BoardController extends ControllerGUI {
             movedRes = ResourceType.BLUE;
             source = pendingShield;
         }
-        else {
+        else if(mouseEvent.getSource().toString().equals("ImageView[id=pendingStone, styleClass=image-view]")){
             movedRes = ResourceType.GREY;
             source = pendingStone;
+        }
+        else {
+            movedRes = ResourceType.WHITE;
+            source = pendingWhite;
         }
         Dragboard db = source.startDragAndDrop(TransferMode.COPY);
         cb.putImage(source.getImage());
@@ -969,7 +1019,7 @@ public class BoardController extends ControllerGUI {
      */
     public void moveRes(MouseEvent mouseEvent) {
         moving = true;
-        ImageView source;
+        ImageView source=null;
         ClipboardContent cb = new ClipboardContent();
         if(mouseEvent.getSource().toString().equals("ImageView[id=resSlot1, styleClass=image-view]")){
 //            source.setImage(warehouse.get(0).get(0).getImage());
@@ -981,9 +1031,32 @@ public class BoardController extends ControllerGUI {
             source = resType(1);
             from = 2;
         }
-        else {
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot31, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot32, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot33, styleClass=image-view]")){
             source = resType(2);
             from = 3;
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")){
+            if(warehouse.indexOf(slot4)==3){
+                source = resType(3);
+                from = 4;
+            }else if(warehouse.indexOf(slot4)==4) {
+                source = resType(4);
+                from = 5;
+            }
+
+        }
+        else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
+                mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
+            if(warehouse.indexOf(slot5)==3){
+                source = resType(3);
+                from = 4;
+            }else if(warehouse.indexOf(slot5)==4) {
+                source = resType(4);
+                from = 5;
+            }
         }
         if(source!=null) {
             Dragboard db = source.startDragAndDrop(TransferMode.COPY);
@@ -1243,7 +1316,6 @@ public class BoardController extends ControllerGUI {
             toggled = 3;
         }
         else {
-            //clicking on the substitute toggles the production
             toggled = 0;
         }
         gui.send(new ToggleProductionCommand(toggled));
@@ -1286,12 +1358,56 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
+     *
+     * @param mouseEvent
+     */
+    public void substituteUnknown(MouseEvent mouseEvent) {
+
+    }
+    public void updateDiscounts(){
+        //leader1
+        String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+        if(name!=null){
+            SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+            if(sa instanceof Discount) {
+                Map<ResourceType, Integer> activeDiscounts = gui.getClientModel().getMyBoard().getActiveDiscounts();
+                if (activeDiscounts.get(sa.getResourceType()) != null) {
+                    toggledLeader1.setOpacity(100);
+                } else toggledLeader1.setOpacity(0);
+            }
+        }
+        //leader2
+        String name2=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+        if(name2!=null){
+            SpecialAbility sa2=gui.getClientModel().getLeaderCard(name2).getSpecialAbilities().get(0);
+            if(sa2 instanceof Discount) {
+                Map<ResourceType, Integer> activeDiscounts = gui.getClientModel().getMyBoard().getActiveDiscounts();
+                if (activeDiscounts.get(sa2.getResourceType()) != null) {
+                    toggledLeader2.setOpacity(100);
+                } else toggledLeader2.setOpacity(0);
+            }
+        }
+    }
+
+    /**
      * this should separate white to (only if the player has 2 white to cards) and discount
      * the only 2 LCards that could be "deactivated" (only discount technically)
      * @param mouseEvent
      */
     public void toggleLeader(MouseEvent mouseEvent) {
-        System.out.println("premuto");
+        Node node=(Node)mouseEvent.getSource();
+        String id=node.getId();
+        if(id.equals("leaderCard1")){
+            String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+            if(name!=null){
+                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+            }
+        }else if(id.equals("leaderCard2")){
+            String name=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+            if(name!=null){
+                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+            }
+        }
     }
 
     public void extraSubstituteUnknown(MouseEvent mouseEvent) {
@@ -1305,4 +1421,33 @@ public class BoardController extends ControllerGUI {
     public void clickableBProd(MouseEvent mouseEvent) {
         baseProduction.setDisable(false);
     }
+
+    public void whiteTo(DragEvent event){
+        if(movedRes==ResourceType.WHITE){
+            Node node=(Node)event.getSource();
+            String id=node.getId();
+            Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+            ResourceType res=null;
+            if(id.equals("leaderCard1")){
+                String name=played.get(0);
+                if(name!=null){
+                    SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+                    if(sa instanceof WhiteTo) {
+                        res = sa.getResourceType();
+                    }
+                }
+            }else if(id.equals("leaderCard2")){
+                String name=played.get(1);
+                if(name!=null){
+                    SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+                    if(sa instanceof WhiteTo) {
+                        res = sa.getResourceType();
+                    }
+                }
+            }
+            if(res!=null) gui.send(new TransformWhiteCommand(res));
+        }
+    }
+
 }
+

@@ -12,9 +12,9 @@ import it.polimi.ingsw.network.server.Controller;
 import it.polimi.ingsw.network.server.ServerVisitor;
 
 public class ProductionUnknownCommand implements Command{
-    String target;
+    String target; //input or output
     ResourceType resourceType;
-    int index;
+    int index; //-1 for base prod 0,1,2... for extra
 
     public ProductionUnknownCommand(String target, ResourceType resourceType, int index) {
         this.target = target;
@@ -25,14 +25,19 @@ public class ProductionUnknownCommand implements Command{
     @Override
     public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalResourceException, UnknownNotFoundException, IllegalActionException, WaitingReconnectionsException {
         if(check()){
-            if(target.equals("input")) c.substituteUnknownInInputBaseProduction(resourceType,nickname);
-            else c.substituteUnknownInOutputBaseProduction(resourceType,nickname);
+            if(index==-1) {
+                if (target.equals("input")) c.substituteUnknownInInputBaseProduction(resourceType, nickname);
+                else if(target.equals("output")) c.substituteUnknownInOutputBaseProduction(resourceType, nickname);
+            }else if(index>=0){
+                if (target.equals("input")) c.substituteUnknownInInputExtraProduction(index,resourceType, nickname);
+                else if(target.equals("output")) c.substituteUnknownInOutputExtraProduction(index,resourceType, nickname);
+            }
         }else throw new IllegalCommandException();
     }
 
     @Override
     public boolean check() {
-        return (target.equals("input") || target.equals("output")) && index >= 0;
+        return (target.equals("input") || target.equals("output")) && index >= -1;
     }
 
     @Override

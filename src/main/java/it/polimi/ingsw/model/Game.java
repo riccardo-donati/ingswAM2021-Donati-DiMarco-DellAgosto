@@ -399,9 +399,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Map<String,Map<Integer, Stack<String>>> getAllSlots(){
         Map<String,Map<Integer, Stack<String>>> allSlotsMap=new HashMap<>();
         for(Player p : players){
-            Stack<String> devS=new Stack<>();
             Map<Integer,Stack<String>> stackMap=new HashMap<>();
             for (Map.Entry<Integer, Stack<DevelopmentCard>> entry : p.getBoard().getSlots().entrySet()) {
+                Stack<String> devS=new Stack<>();
                for(int i=0;i<entry.getValue().size();i++){
                    devS.add(entry.getValue().get(i).getName());
                }

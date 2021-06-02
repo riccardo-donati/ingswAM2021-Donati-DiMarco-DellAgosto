@@ -33,6 +33,5 @@ public interface ServerVisitor {
     void visit(ToggleDiscountCommand command, ClientHandler clientHandler);
 
     void visit(ProductionUnknownCommand command, ClientHandler clientHandler);
-    void visit(ExtraProductionUnknownCommand command, ClientHandler clientHandler);
 
 }

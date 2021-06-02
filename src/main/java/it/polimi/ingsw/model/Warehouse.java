@@ -244,7 +244,7 @@ public class Warehouse {
             }
         }
         //if the second deposit has 0 resource or the second is the same type of the first --> move
-        if(cont1==1 && cont2==0 || cont1>0 && d2.freeSpaces()>=cont1 && d1.getType()==d2.getType()){
+        if(cont1==1 && cont2==0 && d2.getType()==ResourceType.EMPTY && id1<=3 && id2<=3 || cont1>0 && d2.freeSpaces()>0 && id1>3 && !checkResourceInWarehouse(d1.getType()) || cont1>0 && d2.freeSpaces()>0 && d1.getType()==d2.getType()){
             ResourceType r1=d1.getType();
             d2.addResource(r1);
             try {
@@ -255,6 +255,19 @@ public class Warehouse {
             //d1.removeResource();
         }
 
+
+    }
+
+    /**
+     * function for checking if a resource type is in the maindepot
+     * @param res is the ResourceType
+     * @return true if found, false if not
+     */
+    protected boolean checkResourceInWarehouse(ResourceType res){
+        for(Deposit d : maindepot) {
+            if (d.getType() == res) return true;
+        }
+        return false;
 
     }
 
