@@ -1,9 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
-import it.polimi.ingsw.model.DevelopmentCard;
-import it.polimi.ingsw.model.ExtraDeposit;
-import it.polimi.ingsw.model.LeaderCard;
-import it.polimi.ingsw.model.Production;
+import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -332,6 +329,8 @@ public class BoardController extends ControllerGUI {
     @FXML private ImageView slot33;
     @FXML private ImageView extraProd1;
     @FXML private ImageView extraProd2;
+    @FXML private ImageView toggledLeader1;
+    @FXML private ImageView toggledLeader2;
 
     /**
      * hides and shows the strongbox Panel
@@ -351,14 +350,17 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
-    public void updateExtraDeposit(){
+
+    public void updatePlayLeader(){
         Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
+        //extradeposit
         if(played.get(0)!=null && gui.getClientModel().getLeaderCard(played.get(0)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot4)){
             warehouse.add(slot4);
         }
         if(played.get(1)!=null && gui.getClientModel().getLeaderCard(played.get(1)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot5)){
             warehouse.add(slot5);
         }
+
     }
     /**
      * update the slots from the client model
@@ -519,7 +521,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * has to be called at the start of the gaem to activate a leader card specific power
+     * has to be called at the start of the game to activate a leader card specific power
      */
     public void setLeaderPower(){
         String l = gui.getClientModel().getMyBoard().getLeadersInHand().get(0).getName();
@@ -1253,6 +1255,30 @@ public class BoardController extends ControllerGUI {
     public void substituteUnknown(MouseEvent mouseEvent) {
 
     }
+    public void updateDiscounts(){
+        //leader1
+        String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+        if(name!=null){
+            SpecialAbility sa=gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0);
+            if(sa instanceof Discount) {
+                Map<ResourceType, Integer> activeDiscounts = gui.getClientModel().getMyBoard().getActiveDiscounts();
+                if (activeDiscounts.get(sa.getResourceType()) != null) {
+                    toggledLeader1.setOpacity(100);
+                } else toggledLeader1.setOpacity(0);
+            }
+        }
+        //leader2
+        String name2=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+        if(name2!=null){
+            SpecialAbility sa2=gui.getClientModel().getLeaderCard(name2).getSpecialAbilities().get(0);
+            if(sa2 instanceof Discount) {
+                Map<ResourceType, Integer> activeDiscounts = gui.getClientModel().getMyBoard().getActiveDiscounts();
+                if (activeDiscounts.get(sa2.getResourceType()) != null) {
+                    toggledLeader2.setOpacity(100);
+                } else toggledLeader2.setOpacity(0);
+            }
+        }
+    }
 
     /**
      * this should separate white to (only if the player has 2 white to cards) and discount
@@ -1260,6 +1286,18 @@ public class BoardController extends ControllerGUI {
      * @param mouseEvent
      */
     public void toggleLeader(MouseEvent mouseEvent) {
-        System.out.println("premuto");
+        Node node=(Node)mouseEvent.getSource();
+        String id=node.getId();
+        if(id.equals("leaderCard1")){
+            String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+            if(name!=null){
+                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+            }
+        }else if(id.equals("leaderCard2")){
+            String name=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+            if(name!=null){
+                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+            }
+        }
     }
 }

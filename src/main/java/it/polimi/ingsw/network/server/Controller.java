@@ -16,6 +16,7 @@ import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.ToggleDiscountCommand;
 import it.polimi.ingsw.network.messages.updates.*;
 
 import java.util.*;
@@ -339,7 +340,7 @@ public class Controller implements GameObserver {
         }
         return allClientDeposits;
     }
-    public Map<Resource,Integer> getCurrentStrongbox(){
+    public synchronized Map<Resource,Integer> getCurrentStrongbox(){
         Map<ResourceType,Integer> s=game.getCurrentStrongbox();
         Map<Resource,Integer> strongbox=new HashMap<>();
         for (Map.Entry<ResourceType, Integer> entry : s.entrySet()) {
@@ -347,7 +348,7 @@ public class Controller implements GameObserver {
         }
         return strongbox;
     }
-    public Map<String,Map<Resource,Integer>> getAllStrongboxes(){
+    public synchronized Map<String,Map<Resource,Integer>> getAllStrongboxes(){
         Map<String,Map<ResourceType,Integer>> strongboxesMap=game.getAllStrongboxes();
         Map<String,Map<Resource,Integer>> clientStrongboxesMap=new HashMap<>();
         for (Map.Entry<String,Map<ResourceType,Integer>> entry : strongboxesMap.entrySet()) {
@@ -604,6 +605,10 @@ public class Controller implements GameObserver {
             if (getCurrentNickname().equals(nickname)) {
                 game.toggleDiscount(res);
 
+                VirtualClient vc = getVirtualClient(nickname);
+                if (vc != null) {
+                    vc.send(new ToggleDiscountUpdate(res));
+                }
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }

@@ -324,12 +324,13 @@ public class GUI extends Application implements Client {
     public void visualizePlayLeaderUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
-        bc.updateExtraDeposit();
+        bc.updatePlayLeader();
     }
 
     @Override
     public void visualizeToggleDiscountUpdate() {
-
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateDiscounts();
     }
 
     @Override

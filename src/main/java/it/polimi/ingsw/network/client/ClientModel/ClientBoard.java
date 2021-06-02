@@ -54,7 +54,7 @@ public class ClientBoard {
     }
 
     public void putPlayedCard(Integer index,String ld){
-        if(playedCards.get(index)!=null)
+        if(playedCards.get(index)!=null || discardedCards.get(index)!=null)
             playedCards.put(index+1,ld);
         else playedCards.put(index,ld);
     }
@@ -62,7 +62,7 @@ public class ClientBoard {
     public Map<Integer,String> getPlayedCards() { return playedCards; }
 
     public void putDiscardedCard(Integer index,String ld){
-        if(discardedCards.get(index)!=null)
+        if(discardedCards.get(index)!=null || playedCards.get(index)!=null)
             discardedCards.put(index+1,ld);
         else discardedCards.put(index,ld);
     }
@@ -97,12 +97,13 @@ public class ClientBoard {
         return totalCardsBought;
     }
 
-    public List<ResourceDiscount> getActiveDiscounts() {
-        List<ResourceDiscount> list = new ArrayList<>();
+    public Map<ResourceType,Integer> getActiveDiscounts() {
+        Map<ResourceType,Integer> map = new HashMap<>();
         for (ResourceDiscount rd : discounts) {
-            if (rd.isActivated()) list.add(rd);
+            if(rd.isActivated())
+                map.put(rd.getRes(),rd.getQuantity());
         }
-        return list;
+        return map;
     }
 
     public void setActiveProductions(List<Production> activeProductions) {
