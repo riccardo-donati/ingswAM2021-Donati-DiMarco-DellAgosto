@@ -1,6 +1,8 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
 import it.polimi.ingsw.model.DevelopmentCard;
+import it.polimi.ingsw.model.ExtraDeposit;
+import it.polimi.ingsw.model.LeaderCard;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -105,6 +107,8 @@ public class OtherBoardController extends ControllerGUI{
         warehouse.add(slot1);
         warehouse.add(slot2);
         warehouse.add(slot3);
+        warehouse.add(slot4);
+        warehouse.add(slot5);
 
         faithPath.add(faithPath0);
         faithPath.add(faithPath1);
@@ -156,10 +160,23 @@ public class OtherBoardController extends ControllerGUI{
         gui.changeScene(GUI.BOARD);
     }
 
-    public void updateWarehouse(ClientDeposits clientDeposits){
-        List<Shelf> shelves=clientDeposits.getShelves();
+    public void updateWarehouse(ClientBoard clientBoard){
+        List<Shelf> shelves=clientBoard.getDeposits().getShelves();
         for(int i=0;i<shelves.size();i++){
-            List<ImageView> slotImageViews=warehouse.get(i);
+            int indexExtra=i;
+            if(i>2){
+                indexExtra=-1;
+                for (Map.Entry<Integer, String> entry : clientBoard.getPlayedCards().entrySet()) {
+                    if(entry.getValue().equals("5L") ||entry.getValue().equals("6L") ||entry.getValue().equals("7L") ||entry.getValue().equals("8L")){
+                        if(indexExtra!=-1){
+                            indexExtra=i; //2 if both are extradeposits
+                        }
+                        else indexExtra=entry.getKey()+3;
+                    }
+                }
+                if(indexExtra==-1) return;//no extra deposits
+            }
+            List<ImageView> slotImageViews=warehouse.get(indexExtra);
             for(int j=0;j<slotImageViews.size();j++){
                 if(shelves.get(i).getSpaces()[j]== Resource.EMPTY)
                     slotImageViews.get(j).setImage(null);
@@ -197,11 +214,11 @@ public class OtherBoardController extends ControllerGUI{
             leader2.setFill(Color.RED);
         }
         if(played.get(0)!=null){
-            leaderCard1.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(0).getName() + ".png"));
+            leaderCard1.setImage(new Image("/images/leader_cards/" + played.get(0) + ".png"));
             leader1.setFill(Color.GREEN);
         }
         if(played.get(1)!=null){
-            leaderCard2.setImage(new Image("/images/leader_cards/" + clientBoard.getLeadersInBoard().get(1).getName() + ".png"));
+            leaderCard2.setImage(new Image("/images/leader_cards/" + played.get(1) + ".png"));
             leader2.setFill(Color.GREEN);
         }
 
@@ -215,7 +232,7 @@ public class OtherBoardController extends ControllerGUI{
     public void visualizeBoard(String nickname){
         ClientBoard cb=gui.getClientModel().getBoards().get(nickname);
         if(cb!=null){
-            updateWarehouse(cb.getDeposits());
+            updateWarehouse(cb);
             updateFaithPath(cb.getFaithPath());
             updateLCards(cb);
             updatePopeFavor(cb.getFaithPath());

@@ -9,6 +9,7 @@ import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.ClientBoard;
 import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
+import it.polimi.ingsw.network.client.ClientModel.Shelf;
 import it.polimi.ingsw.network.client.ClientVisitor;
 
 import java.util.List;
@@ -32,8 +33,11 @@ public class ReconnectUpdate implements Update{
     private final List<String> fourLeaderCards;
     private final List<ResourceType> pendingResources;
     private final List<String> activePlayers;
+    private final Map<String,Map<Integer,String>> allPlayedCards;
+    private final Map<String,Map<Integer,String>> allDiscardedCards;
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers) {
+
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -50,6 +54,8 @@ public class ReconnectUpdate implements Update{
         this.fourLeaderCards=fourLeaderCards;
         this.pendingResources=pendingResources;
         this.activePlayers=activePlayers;
+        this.allPlayedCards=allPlayedCards;
+        this.allDiscardedCards=allDiscardedCards;
     }
 
     @Override
@@ -78,6 +84,8 @@ public class ReconnectUpdate implements Update{
         //update the warehouses
         for (Map.Entry<String, List<ClientDeposit>> entry : warehouses.entrySet()) {
             for(ClientDeposit cd : entry.getValue()) {
+                if(cd.getId()>3)
+                    clientModel.getBoards().get(entry.getKey()).getDeposits().addShelf(new Shelf(2,cd.getId()));
                 clientModel.getBoards().get(entry.getKey()).getDeposits().deposit(cd.getResources(), cd.getId());
             }
         }
@@ -119,9 +127,20 @@ public class ReconnectUpdate implements Update{
             clientModel.addSetupPhaseLeaderCard(leaderCard);
 
         //update disconnected players
-        for(String nick : playerOrder)
-            if(!activePlayers.contains(nick))
+        for(String nick : playerOrder) {
+            if (!activePlayers.contains(nick))
                 clientModel.addDisconnected(nick);
+        }
+
+        //update played and discarded cards
+        for (Map.Entry<String, ClientBoard> entry : clientModel.getBoards().entrySet()) {
+            Map<Integer,String> played=allPlayedCards.get(entry.getKey());
+            Map<Integer,String> discarded=allDiscardedCards.get(entry.getKey());
+            entry.getValue().setDiscardedCards(discarded);
+            entry.getValue().setPlayedCards(played);
+        }
+
+
     }
 
     public List<ResourceType> getPendingResources() {

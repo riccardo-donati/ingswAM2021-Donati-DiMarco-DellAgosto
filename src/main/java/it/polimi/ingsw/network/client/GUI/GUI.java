@@ -284,7 +284,6 @@ public class GUI extends Application implements Client {
         bc.updateLCards();
         //togli
         bc.setupClickable();
-        bc.setLeaderPower();
     }
 
     @Override
@@ -326,6 +325,7 @@ public class GUI extends Application implements Client {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
         bc.updatePlayLeader();
+        bc.setLeaderPower();
     }
 
     @Override
@@ -396,6 +396,7 @@ public class GUI extends Application implements Client {
         l.updateSlots();
         l.updatePickedRes();
         l.updatePending();
+        l.setLeaderPower();
         SetupController s=(SetupController)buildedControllers.get(SETUP);
         s.updateLeader();
         s.updateWarehouse();

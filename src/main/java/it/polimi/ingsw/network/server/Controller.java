@@ -232,11 +232,14 @@ public class Controller implements GameObserver {
     public synchronized List<String> getLeadersInHand(String nickname){
         return game.getLeadersInHand(nickname);
     }
+    public synchronized Map<String,Map<Integer,String>> getAllDiscardedCards(){ return game.getAllDiscardedCards(); }
+    public synchronized Map<String,Map<Integer,String>> getAllPlayedCards(){ return game.getAllPlayedCards(); }
+
     public synchronized void reconnectPlayer(String nickname){
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
             setActive(nickname,true);
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers());
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards());
             vc.send(reconnectUpdate);
         }
     }

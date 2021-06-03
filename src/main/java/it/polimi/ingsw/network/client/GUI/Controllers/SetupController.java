@@ -143,12 +143,14 @@ public class SetupController extends ControllerGUI{
         ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
         List<Shelf> shelves=clientDeposits.getShelves();
         for(int i=0;i<shelves.size();i++){
-            List<ImageView> slotImageViews=warehouse.get(i);
-            for(int j=0;j<slotImageViews.size();j++){
-                if(shelves.get(i).getSpaces()[j]== Resource.EMPTY)
-                    slotImageViews.get(j).setImage(null);
-                else{
-                    slotImageViews.get(j).setImage(new Image("/images/resources/" +shelves.get(i).getSpaces()[j].toString().toLowerCase()+ ".png"));
+            if(i<3) {
+                List<ImageView> slotImageViews = warehouse.get(i);
+                for (int j = 0; j < slotImageViews.size(); j++) {
+                    if (shelves.get(i).getSpaces()[j] == Resource.EMPTY)
+                        slotImageViews.get(j).setImage(null);
+                    else {
+                        slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(i).getSpaces()[j].toString().toLowerCase() + ".png"));
+                    }
                 }
             }
         }

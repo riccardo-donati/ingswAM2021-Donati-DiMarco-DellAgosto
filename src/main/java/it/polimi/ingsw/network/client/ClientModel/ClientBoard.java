@@ -67,6 +67,14 @@ public class ClientBoard {
         else discardedCards.put(index,ld);
     }
 
+    public void setDiscardedCards(Map<Integer, String> discardedCards) {
+        this.discardedCards = discardedCards;
+    }
+
+    public void setPlayedCards(Map<Integer, String> playedCards) {
+        this.playedCards = playedCards;
+    }
+
     public Map<Integer,String> getDiscardedCards() { return discardedCards; }
 
     public Production getBaseProduction() {
