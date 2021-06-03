@@ -31,7 +31,6 @@ public class BoardController extends ControllerGUI {
     Boolean clickedBox = false;
     Boolean clickedMatrix = false;
     Boolean clickedMarket = false;
-    Boolean isUp = false;
     ResourceType movedRes;
     Integer row;
     Integer column;
@@ -41,7 +40,7 @@ public class BoardController extends ControllerGUI {
     String clickedUnknown;
     int from;
     Boolean moving;
-    Integer countSubstitute;
+    Integer clickedMark;
 
     public BoardController(){
 
@@ -368,14 +367,31 @@ public class BoardController extends ControllerGUI {
         }
 
     }
+
     public void substituteUnknown(MouseEvent mouseEvent) {
         ResourceType unknownRes;
         if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;
         else if(mouseEvent.getSource().toString().contains("Servant")) unknownRes = ResourceType.VIOLET;
         else if(mouseEvent.getSource().toString().contains("Shield")) unknownRes = ResourceType.BLUE;
         else unknownRes = ResourceType.GREY;
-        moveUnknown(425, "i");
+        moveUnknown(243, 325, "i");
         gui.send(new ProductionUnknownCommand(clickedUnknown, unknownRes, index));
+    }
+
+    /**
+     * resets the chosen resources
+     */
+    private void resetProductions() {
+        unknownInput1.setImage(null);
+        unknownOutput.setImage(null);
+        unknownInput2.setImage(null);
+        unknownInput1.setDisable(false);
+        unknownInput2.setDisable(false);
+        unknownOutput.setDisable(false);
+        toggledBaseProd.setOpacity(0);
+        toggledSlot1.setOpacity(0);
+        toggledSlot2.setOpacity(0);
+        toggledSlot3.setOpacity(0);
     }
 
     /**
@@ -384,22 +400,33 @@ public class BoardController extends ControllerGUI {
      */
     public void showUnknownRes(MouseEvent mouseEvent) {
         if(mouseEvent.getSource().toString().contains("unknownInput1")){
-            moveUnknown(325, "i");
+            moveUnknown(243, 325, "i");
+            clickedMark = 1;
             clickedUnknown = "input";
             index = -1;
-            unknownInput1.setDisable(true);
         }
         else if(mouseEvent.getSource().toString().contains("unknownInput2")){
+            moveUnknown(243, 425,  "i");
             clickedUnknown = "input";
+            clickedMark = 2;
             index = -1;
-            moveUnknown(425, "i");
-            unknownInput2.setDisable(true);
+        }
+        else if(mouseEvent.getSource().toString().contains("extraProd1")){
+            moveUnknown(-175, 118, "i");
+            clickedUnknown = "input";
+            index = 0;  //chiedi a riccardo
+            clickedMark = 3;
+        }
+        else if(mouseEvent.getSource().toString().contains("extraProd2")){
+            moveUnknown(-175, 431, "i");
+            clickedUnknown = "input";
+            index = 1;  //chiedi a riccardo
+            clickedMark = 4;
         }
         else{
+            moveUnknown(315, 375, "o");
             clickedUnknown = "output";
             index = -1;
-            moveUnknown(375, "o");
-            unknownOutput.setDisable(true);
         }
         hiddenUnknown.setDisable(false);
         hiddenUnknown.setOpacity(100);
@@ -408,11 +435,10 @@ public class BoardController extends ControllerGUI {
     /**
      * shows and hides the Unknown panel, sets it unclickable and invisible
      */
-    public void moveUnknown(int place, String io){
-        hiddenUnknown.setLayoutY(place);
-        hiddenUnknown.setLayoutX(243);
+    public void moveUnknown(int placeX, int placeY, String io){
+        hiddenUnknown.setLayoutY(placeY);
+        hiddenUnknown.setLayoutX(placeX);
         if(io.equals("o")){
-            hiddenUnknown.setLayoutX(315);
             hiddenUnknown.setRotate(90);
             unknownCoin.setRotate(-90);
             unknownServant.setRotate(-90);
@@ -430,21 +456,55 @@ public class BoardController extends ControllerGUI {
         hiddenUnknown.setOpacity(0);
     }
 
+    /**
+     * graphic update of the unknown resource based
+     */
     public void updateUnknown(){
-        for (Map.Entry<ResourceType, Integer> entry : gui.getClientModel().getMyBoard().getBaseProduction().getInput().entrySet()) {
-            if(entry.getValue()==1 && !entry.getKey().equals(ResourceType.UNKNOWN)){
-                unknownInput1.setImage(new Image("/images/resources/"+ checkType(entry.getKey())+ ".png"));
-            }
-            if(entry.getValue()==2 && !entry.getKey().equals(ResourceType.UNKNOWN)){
-                unknownInput2.setImage(new Image("/images/resources/"+ checkType(entry.getKey())+ ".png"));
+        for(ResourceType r : gui.getClientModel().getMyBoard().getBaseProduction().getInput().keySet()){
+            if(!r.equals(ResourceType.UNKNOWN)){
+                if(clickedMark == 1){
+                    unknownInput1.setImage(new Image("/images/resources/" + checkType(r) + ".png"));
+                    unknownInput1.setDisable(true);
+                }
+                else{
+                    unknownInput2.setImage(new Image("/images/resources/" + checkType(r) + ".png"));
+                    unknownInput2.setDisable(true);
+                }
             }
         }
         for (Map.Entry<ResourceType, Integer> entry : gui.getClientModel().getMyBoard().getBaseProduction().getOutput().entrySet()) {
             if (!entry.getKey().equals(ResourceType.UNKNOWN)) {
                 unknownOutput.setImage(new Image("/images/resources/"+ checkType(entry.getKey()) + ".png"));
+                unknownOutput.setDisable(true);
             }
         }
-        if(gui.getClientModel().getMyBoard().getBaseProduction().checkValidity())    toggledBaseProd.setDisable(false);
+        //non va bene perché questa è SOLO la prima production
+        if(gui.getClientModel().getMyBoard().getExtraProductions().get(0) !=  null) {
+            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(0).getOutput().keySet()) {
+                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
+                    if (clickedMark == 3) {
+                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+                        extraProd1.setDisable(true);
+                    } else if (clickedMark == 4) {
+                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+                        extraProd2.setDisable(true);
+                    }
+                }
+            }
+        }
+        if(gui.getClientModel().getMyBoard().getExtraProductions().get(1) !=  null) {
+            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(1).getOutput().keySet()) {
+                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
+                    if (clickedMark == 3) {
+                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+                        extraProd1.setDisable(true);
+                    } else if (clickedMark == 4) {
+                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+                        extraProd2.setDisable(true);
+                    }
+                }
+            }
+        }
     }
 
     public String checkType(ResourceType res){
@@ -864,10 +924,7 @@ public class BoardController extends ControllerGUI {
      * @param event left mouse click on the button
      */
     public void produce(ActionEvent event) {
-        toggledBaseProd.setOpacity(0);
-        toggledSlot1.setOpacity(0);
-        toggledSlot2.setOpacity(0);
-        toggledSlot3.setOpacity(0);
+        resetProductions();
         gui.send(new ActivateProductionsCommand());
     }
 
@@ -1405,7 +1462,6 @@ public class BoardController extends ControllerGUI {
 
     public void extraSubstituteUnknown(MouseEvent mouseEvent) {
     }
-
 
     public void unclickableBProd(MouseEvent mouseEvent) {
         baseProduction.setDisable(true);
