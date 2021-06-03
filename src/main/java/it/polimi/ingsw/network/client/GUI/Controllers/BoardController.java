@@ -653,29 +653,55 @@ public class BoardController extends ControllerGUI {
     public void updateWarehouse(){
         ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
         List<Shelf> shelves=clientDeposits.getShelves();
-        for(int i=0;i<shelves.size();i++){
-            int indexExtra=i;
-            if(i>2){
-                indexExtra=-1;
+        for(int i=0;i<shelves.size();i++) {
+            int indexExtra = i;
+            if (i > 2) {
+                indexExtra = -1;
+                boolean doubleExtraDepo = false;
                 for (Map.Entry<Integer, String> entry : gui.getClientModel().getMyBoard().getPlayedCards().entrySet()) {
-                    if(entry.getValue().equals("5L") ||entry.getValue().equals("6L") ||entry.getValue().equals("7L") ||entry.getValue().equals("8L")){
-                        if(indexExtra!=-1){
-                            indexExtra=i; //2 if both are extradeposits
-                        }
-                        else indexExtra=entry.getKey()+3;
+                    if (entry.getValue().equals("5L") || entry.getValue().equals("6L") || entry.getValue().equals("7L") || entry.getValue().equals("8L")) {
+                        if (indexExtra != -1) {
+                            doubleExtraDepo = true;
+                        } else indexExtra = entry.getKey() + 3;
                     }
                 }
-                if(indexExtra==-1) return;//no extra deposits
-            }
-            List<ImageView> slotImageViews=warehouse.get(indexExtra);
-            for(int j=0;j<slotImageViews.size();j++){
-                if(shelves.get(i).getSpaces()[j]==Resource.EMPTY)
-                    slotImageViews.get(j).setImage(null);
-                else{
-                    slotImageViews.get(j).setImage(new Image("/images/resources/" +shelves.get(i).getSpaces()[j].toString().toLowerCase()+ ".png"));
+                if (indexExtra == -1) return;//no extra deposits
+                if (doubleExtraDepo) {
+                    String firstPlayed = gui.getClientModel().getMyBoard().getLeadersInBoard().get(i - 3).getName();
+                    if (gui.getClientModel().getMyBoard().getPlayedCards().get(0).equals(firstPlayed))
+                        indexExtra = 3;
+                    else if (gui.getClientModel().getMyBoard().getPlayedCards().get(1).equals(firstPlayed))
+                        indexExtra = 4;
+                    List<ImageView> slotImageViews = warehouse.get(i);
+                    for (int j = 0; j < slotImageViews.size(); j++) {
+                        if (shelves.get(indexExtra).getSpaces()[j] == Resource.EMPTY)
+                            slotImageViews.get(j).setImage(null);
+                        else {
+                            slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(indexExtra).getSpaces()[j].toString().toLowerCase() + ".png"));
+                        }
+                    }
+                } else {
+                    List<ImageView> slotImageViews = warehouse.get(indexExtra);
+                    for (int j = 0; j < slotImageViews.size(); j++) {
+                        if (shelves.get(i).getSpaces()[j] == Resource.EMPTY)
+                            slotImageViews.get(j).setImage(null);
+                        else {
+                            slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(i).getSpaces()[j].toString().toLowerCase() + ".png"));
+                        }
+                    }
+                }
+            } else {
+                List<ImageView> slotImageViews = warehouse.get(i);
+                for (int j = 0; j < slotImageViews.size(); j++) {
+                    if (shelves.get(i).getSpaces()[j] == Resource.EMPTY)
+                        slotImageViews.get(j).setImage(null);
+                    else {
+                        slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(i).getSpaces()[j].toString().toLowerCase() + ".png"));
+                    }
                 }
             }
         }
+
     }
 
     /**
@@ -858,14 +884,24 @@ public class BoardController extends ControllerGUI {
             slot = 3;
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]")
                 || mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")) {
-            slot=4;
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+            if(nameCard==null){
+                slot=4;
+            }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard) && (nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L"))) {
+                slot = 5;
+            }else if(!gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)){
+                slot=4;
+            }
         }
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]")
                 || mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
             String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
-            if(nameCard==null) slot=4;
-            else if(nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L")){
-                slot=5;
+            if(nameCard==null){
+                slot=4;
+            }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard) && (nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L"))) {
+                slot = 5;
+            }else if(!gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)){
+                slot=4;
             }
         }
 
@@ -964,15 +1000,22 @@ public class BoardController extends ControllerGUI {
         if(!resSlot41.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(0) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot42, styleClass=image-view]"))){
-            slot=4;
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+            List<LeaderCard> inBoard=gui.getClientModel().getMyBoard().getLeadersInBoard();
+            if(inBoard.size() > 0 && inBoard.get(0).getName().equals(nameCard) && inBoard.get(0).getSpecialAbilities().get(0) instanceof ExtraDeposit){
+                slot=5;
+            }else slot=4;
+
         }
         //la seconda carta è extraslot, è attiva e il drop è su 5
         else if(!resSlot51.isDisabled() && gui.getClientModel().getMyBoard().getPlayedCards().get(1) != null &&
                 (dragEvent.getTarget().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
                         dragEvent.getTarget().toString().equals("ImageView[id=resSlot52, styleClass=image-view]"))){
-            if(gui.getClientModel().getMyBoard().getPlayedCards().get(0)==null)
-                slot=4;
-            else slot=5;
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+            List<LeaderCard> inBoard=gui.getClientModel().getMyBoard().getLeadersInBoard();
+            if(inBoard.size() > 0 && inBoard.get(0).getName().equals(nameCard) && inBoard.get(0).getSpecialAbilities().get(0) instanceof ExtraDeposit){
+                slot=5;
+            }else slot=4;
         }
         //tutti altri casi
         else {
@@ -1056,18 +1099,32 @@ public class BoardController extends ControllerGUI {
         }
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot41, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=resSlot42, styleClass=image-view]")){
-            source = resType(3);
-            from = 4;
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+
+            if(nameCard==null){
+                source = resType(3);
+                from = 4;
+            }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard) && (nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L"))) {
+                source = resType(3);
+                from = 5;
+            }else if(!gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)){
+                source = resType(3);
+                from = 4;
+            }
         }
         else if (mouseEvent.getSource().toString().equals("ImageView[id=resSlot51, styleClass=image-view]") ||
                 mouseEvent.getSource().toString().equals("ImageView[id=resSlot52, styleClass=image-view]")){
             String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+
             if(nameCard==null){
-                source = resType(3);
+                source = resType(4);
                 from = 4;
-            }else if(nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L")) {
+            }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard) && (nameCard.equals("5L")||nameCard.equals("6L")||nameCard.equals("7L")||nameCard.equals("8L"))) {
                 source = resType(4);
                 from = 5;
+            }else if(!gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)){
+                source = resType(4);
+                from = 4;
             }
         }
         if(source!=null) {

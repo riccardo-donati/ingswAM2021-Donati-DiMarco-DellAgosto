@@ -401,7 +401,7 @@ public class Controller implements GameObserver {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
                 String name=null;
-                if(game.getLeadersInHand(game.getCurrentNickname()).size()>index+1)
+                if(game.getLeadersInHand(game.getCurrentNickname()).size()>index)
                     name=game.getLeadersInHand(game.getCurrentNickname()).get(index);
                 game.playLeader(index);
                 //update

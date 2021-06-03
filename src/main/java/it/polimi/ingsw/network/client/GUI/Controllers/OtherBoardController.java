@@ -160,6 +160,63 @@ public class OtherBoardController extends ControllerGUI{
         gui.changeScene(GUI.BOARD);
     }
 
+    /**
+     * function that will update the result of the drag & drop event in the warehouse
+     */
+    public void updateWarehouse(ClientBoard clientBoard){
+        ClientDeposits clientDeposits=clientBoard.getDeposits();
+        List<Shelf> shelves=clientDeposits.getShelves();
+        for(int i=0;i<shelves.size();i++) {
+            int indexExtra = i;
+            if (i > 2) {
+                indexExtra = -1;
+                boolean doubleExtraDepo = false;
+                for (Map.Entry<Integer, String> entry : clientBoard.getPlayedCards().entrySet()) {
+                    if (entry.getValue().equals("5L") || entry.getValue().equals("6L") || entry.getValue().equals("7L") || entry.getValue().equals("8L")) {
+                        if (indexExtra != -1) {
+                            doubleExtraDepo = true;
+                        } else indexExtra = entry.getKey() + 3;
+                    }
+                }
+                if (indexExtra == -1) return;//no extra deposits
+                if (doubleExtraDepo) {
+                    String firstPlayed = clientBoard.getLeadersInBoard().get(i - 3).getName();
+                    if (clientBoard.getPlayedCards().get(0).equals(firstPlayed))
+                        indexExtra = 3;
+                    else if (clientBoard.getPlayedCards().get(1).equals(firstPlayed))
+                        indexExtra = 4;
+                    List<ImageView> slotImageViews = warehouse.get(i);
+                    for (int j = 0; j < slotImageViews.size(); j++) {
+                        if (shelves.get(indexExtra).getSpaces()[j] == Resource.EMPTY)
+                            slotImageViews.get(j).setImage(null);
+                        else {
+                            slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(indexExtra).getSpaces()[j].toString().toLowerCase() + ".png"));
+                        }
+                    }
+                } else {
+                    List<ImageView> slotImageViews = warehouse.get(indexExtra);
+                    for (int j = 0; j < slotImageViews.size(); j++) {
+                        if (shelves.get(i).getSpaces()[j] == Resource.EMPTY)
+                            slotImageViews.get(j).setImage(null);
+                        else {
+                            slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(i).getSpaces()[j].toString().toLowerCase() + ".png"));
+                        }
+                    }
+                }
+            } else {
+                List<ImageView> slotImageViews = warehouse.get(i);
+                for (int j = 0; j < slotImageViews.size(); j++) {
+                    if (shelves.get(i).getSpaces()[j] == Resource.EMPTY)
+                        slotImageViews.get(j).setImage(null);
+                    else {
+                        slotImageViews.get(j).setImage(new Image("/images/resources/" + shelves.get(i).getSpaces()[j].toString().toLowerCase() + ".png"));
+                    }
+                }
+            }
+        }
+
+    }
+    /*
     public void updateWarehouse(ClientBoard clientBoard){
         List<Shelf> shelves=clientBoard.getDeposits().getShelves();
         for(int i=0;i<shelves.size();i++){
@@ -186,6 +243,8 @@ public class OtherBoardController extends ControllerGUI{
             }
         }
     }
+
+     */
     public void updatePopeFavor(ClientFaithPath cfp){
         for(int i=0;i<popes.size();i++) {
             if (cfp.getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
