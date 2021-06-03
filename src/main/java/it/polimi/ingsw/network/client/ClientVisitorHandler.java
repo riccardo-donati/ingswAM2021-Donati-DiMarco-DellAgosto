@@ -94,6 +94,12 @@ public class ClientVisitorHandler implements ClientVisitor{
     }
 
     @Override
+    public void visit(ResetProductionsUpdate message, Client client) {
+        message.update(client.getClientModel());
+        client.visualizeResetProductions();
+    }
+
+    @Override
     public void visit(ReconnectMessage message, Client client) {
         message.update(client.getClientModel());
         client.visualizeReconnectMessage(message);

@@ -397,4 +397,9 @@ public class CLI implements Client {
         //do nothing
     }
 
+    @Override
+    public void visualizeResetProductions() {
+        System.out.println("Productions resetted!");
+    }
+
 }

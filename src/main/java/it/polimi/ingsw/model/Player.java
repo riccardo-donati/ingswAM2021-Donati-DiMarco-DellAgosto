@@ -338,6 +338,7 @@ public class Player {
                 Utilities.mergeResourceTypeMaps(input, production.getInput());
                 Utilities.mergeResourceTypeMaps(output, production.getOutput());
                 production.toggleSelected();
+                production.resetProduction();
             }
         }
         for (Stack<DevelopmentCard> stack : board.getSlots().values()) {
@@ -347,6 +348,7 @@ public class Player {
                     Utilities.mergeResourceTypeMaps(input, production.getInput());
                     Utilities.mergeResourceTypeMaps(output, production.getOutput());
                     production.toggleSelected();
+                    production.resetProduction();
                 }
             }
         }
@@ -355,6 +357,7 @@ public class Player {
             Utilities.mergeResourceTypeMaps(input, production.getInput());
             Utilities.mergeResourceTypeMaps(output, production.getOutput());
             production.toggleSelected();
+            production.resetProduction();
         }
         Production bigProd=new Production(input,output);
         checkPickedResourcesForProduction(bigProd);

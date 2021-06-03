@@ -215,6 +215,7 @@ public class GUI extends Application implements Client {
             }
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
+            bc.updateUnknown();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
     }
@@ -250,6 +251,7 @@ public class GUI extends Application implements Client {
 
             bc.updateBlackCross();
             bc.updateCardMatrix();
+            bc.updateUnknown();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
         if(previousGamePhase==GamePhase.SETUP && clientModel.getGamePhase()==GamePhase.ONGOING){
@@ -292,6 +294,7 @@ public class GUI extends Application implements Client {
         bc.updatePickedRes();
         bc.updateWarehouse();
         bc.updateStrongbox();
+        bc.updateUnknown();
     }
 
     @Override
@@ -451,5 +454,11 @@ public class GUI extends Application implements Client {
     public void visualizeRevert() {
         BoardController l = (BoardController) buildedControllers.get(BOARD);
         l.updatePickedRes();
+    }
+
+    @Override
+    public void visualizeResetProductions() {
+        BoardController bc = (BoardController) buildedControllers.get(BOARD);
+        bc.updateUnknown();
     }
 }

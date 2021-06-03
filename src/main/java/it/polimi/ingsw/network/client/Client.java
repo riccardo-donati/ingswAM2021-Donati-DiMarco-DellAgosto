@@ -53,5 +53,5 @@ public interface Client {
     void visualizeReconnectMessage(ReconnectMessage message);
     void visualizeDiscardResource();
     void visualizeRevert();
-
+    void visualizeResetProductions();
 }

@@ -379,12 +379,9 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * resets the chosen resources
+     * resets the chosen resources and slot arrows
      */
     private void resetProductions() {
-        unknownInput1.setImage(null);
-        unknownOutput.setImage(null);
-        unknownInput2.setImage(null);
         unknownInput1.setDisable(false);
         unknownInput2.setDisable(false);
         unknownOutput.setDisable(false);
@@ -460,51 +457,65 @@ public class BoardController extends ControllerGUI {
      * graphic update of the unknown resource based
      */
     public void updateUnknown(){
-        for(ResourceType r : gui.getClientModel().getMyBoard().getBaseProduction().getInput().keySet()){
-            if(!r.equals(ResourceType.UNKNOWN)){
-                if(clickedMark == 1){
-                    unknownInput1.setImage(new Image("/images/resources/" + checkType(r) + ".png"));
-                    unknownInput1.setDisable(true);
-                }
-                else{
-                    unknownInput2.setImage(new Image("/images/resources/" + checkType(r) + ".png"));
-                    unknownInput2.setDisable(true);
-                }
-            }
+        List<ResourceType> list = new ArrayList<>(gui.getClientModel().getMyBoard().getBaseProduction().getInput().keySet());
+        if(list.get(0).equals(ResourceType.UNKNOWN) && list.size() == 1) {
+            unknownInput1.setImage(null);
+            unknownInput2.setImage(null);
+        }
+        else if(!list.get(0).equals(ResourceType.UNKNOWN) && list.size() == 1 ){
+            unknownInput1.setImage(new Image("/images/resources/" + checkType(list.get(0)) + ".png"));
+            unknownInput1.setDisable(true);
+            unknownInput2.setImage(new Image("/images/resources/" + checkType(list.get(0)) + ".png"));
+            unknownInput2.setDisable(true);
+        }
+        else if(!list.get(0).equals(ResourceType.UNKNOWN) && list.get(1).equals(ResourceType.UNKNOWN)){
+            unknownInput1.setImage(new Image("/images/resources/" + checkType(list.get(0)) + ".png"));
+            unknownInput1.setDisable(true);
+        }
+        else if(list.get(0).equals(ResourceType.UNKNOWN) && !list.get(1).equals(ResourceType.UNKNOWN)){
+            unknownInput1.setImage(new Image("/images/resources/" + checkType(list.get(1)) + ".png"));
+            unknownInput1.setDisable(true);
+        }
+        else{
+            unknownInput1.setImage(new Image("/images/resources/" + checkType(list.get(0)) + ".png"));
+            unknownInput1.setDisable(true);
+            unknownInput2.setImage(new Image("/images/resources/" + checkType(list.get(1)) + ".png"));
+            unknownInput2.setDisable(true);
         }
         for (Map.Entry<ResourceType, Integer> entry : gui.getClientModel().getMyBoard().getBaseProduction().getOutput().entrySet()) {
             if (!entry.getKey().equals(ResourceType.UNKNOWN)) {
                 unknownOutput.setImage(new Image("/images/resources/"+ checkType(entry.getKey()) + ".png"));
                 unknownOutput.setDisable(true);
             }
+            else unknownOutput.setImage(null);
         }
-        //non va bene perché questa è SOLO la prima production
-        if(gui.getClientModel().getMyBoard().getExtraProductions().get(0) !=  null) {
-            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(0).getOutput().keySet()) {
-                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
-                    if (clickedMark == 3) {
-                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-                        extraProd1.setDisable(true);
-                    } else if (clickedMark == 4) {
-                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-                        extraProd2.setDisable(true);
-                    }
-                }
-            }
-        }
-        if(gui.getClientModel().getMyBoard().getExtraProductions().get(1) !=  null) {
-            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(1).getOutput().keySet()) {
-                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
-                    if (clickedMark == 3) {
-                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-                        extraProd1.setDisable(true);
-                    } else if (clickedMark == 4) {
-                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-                        extraProd2.setDisable(true);
-                    }
-                }
-            }
-        }
+
+//        if(gui.getClientModel().getMyBoard().getExtraProductions().get(0) !=  null) {
+//            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(0).getOutput().keySet()) {
+//                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
+//                    if (clickedMark == 3) {
+//                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+//                        extraProd1.setDisable(true);
+//                    } else if (clickedMark == 4) {
+//                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+//                        extraProd2.setDisable(true);
+//                    }
+//                }
+//            }
+//        }
+//        if(gui.getClientModel().getMyBoard().getExtraProductions().get(1) !=  null) {
+//            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(1).getOutput().keySet()) {
+//                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
+//                    if (clickedMark == 3) {
+//                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+//                        extraProd1.setDisable(true);
+//                    } else if (clickedMark == 4) {
+//                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
+//                        extraProd2.setDisable(true);
+//                    }
+//                }
+//            }
+//        }
     }
 
     public String checkType(ResourceType res){

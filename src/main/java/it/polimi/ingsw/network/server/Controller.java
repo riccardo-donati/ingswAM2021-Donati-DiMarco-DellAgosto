@@ -16,6 +16,7 @@ import it.polimi.ingsw.network.client.ClientModel.ClientDeposit;
 import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.messages.*;
+import it.polimi.ingsw.network.messages.commands.RevertPickUpCommand;
 import it.polimi.ingsw.network.messages.commands.ToggleDiscountCommand;
 import it.polimi.ingsw.network.messages.updates.*;
 
@@ -562,12 +563,30 @@ public class Controller implements GameObserver {
         }else throw new WaitingReconnectionsException();
     }
 
+    //we're doing the same thing inside and outside the try catch
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
-                game.activateProductions();
                 VirtualClient vc = getVirtualClient(nickname);
-                if (vc != null) {
+                //this try catch, cathces the various exceptions that were thrown by the base Production command
+                //if the activate button finds an exception we reset the production toggled and the picked reesources
+                try {
+                    game.activateProductions();
+                }
+                catch (ResourcesNotAvailableException | TooManyResourcesException | UnknownFoundException | IllegalActionException e) {
+                    if (vc != null){
+                        vc.send(new ResetProductionsUpdate());
+                        vc.send(new RevertUpdate());
+                    }
+                    try {
+                        game.revertPickUp();
+                    } catch (FullSpaceException fullSpaceException) {
+                        fullSpaceException.printStackTrace();
+                    }
+                    throw e;
+                }
+                if (vc != null){
+                    vc.send(new ResetProductionsUpdate());
                     vc.send(new RevertUpdate());
                 }
                 notifyLobby(new FaithUpdate(getCurrentFaithPath()));
@@ -575,6 +594,9 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
+
+
+
     public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {

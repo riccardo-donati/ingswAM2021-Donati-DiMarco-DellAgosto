@@ -42,4 +42,6 @@ public interface ClientVisitor {
     void visit(DisconnectedMessage message, Client client);
 
     void visit(RevertUpdate message, Client client);
+
+    void visit(ResetProductionsUpdate message, Client client);
 }

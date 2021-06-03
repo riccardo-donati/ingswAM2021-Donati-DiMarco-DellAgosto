@@ -147,7 +147,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button fx:id="discardL1" layoutX="100.0" layoutY="249.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Discard">
+            <Button fx:id="discardL1" layoutX="100.0" layoutY="251.0" mnemonicParsing="false" onAction="#discardLeader" prefHeight="43.0" prefWidth="80.0" styleClass="record-sales" stylesheets="@../css/style.css" text="Discard">
                <font>
                   <Font size="14.0" />
                </font>
@@ -316,17 +316,17 @@
                </children>
             </AnchorPane>
             <ImageView fx:id="baseProduction" fitHeight="98.0" fitWidth="115.0" layoutX="262.0" layoutY="343.0" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true" />
-            <ImageView fx:id="unknownInput1" fitHeight="24.0" fitWidth="27.0" layoutX="287.0" layoutY="369.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="unknownInput1" fitHeight="24.0" fitWidth="27.0" layoutX="287.0" layoutY="369.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="unknownInput2" fitHeight="24.0" fitWidth="27.0" layoutX="287.0" layoutY="394.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="unknownInput2" fitHeight="24.0" fitWidth="27.0" layoutX="287.0" layoutY="394.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
             </ImageView>
-            <ImageView fx:id="unknownOutput" fitHeight="24.0" fitWidth="27.0" layoutX="339.0" layoutY="381.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="unknownOutput" fitHeight="24.0" fitWidth="27.0" layoutX="339.0" layoutY="381.0" onMouseClicked="#showUnknownRes" onMouseEntered="#unclickableBProd" onMouseExited="#clickableBProd" pickOnBounds="true">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor>
