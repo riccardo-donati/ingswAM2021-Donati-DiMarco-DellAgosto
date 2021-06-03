@@ -39,6 +39,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
     private Map<String,LeaderCard> nameLeaderCardMap;
     @Expose
     private Map<String,DevelopmentCard> nameDevelopmentCardMap;
+
+    @Expose
+    private Map<String,Map<Integer,String>> playedCards=new HashMap<>();
+    @Expose
+    private Map<String,Map<Integer,String>> discardedCards=new HashMap<>();
     //-------------------------
     GameObserver externalObserver;
 
@@ -55,7 +60,24 @@ public abstract class Game implements BoardObserver, PublicInterface {
         if(externalObserver!=null) externalObserver.updateEndGameResult(result);
     }
     //-------------------------
-
+    protected void putPlayedCard(String nickname,Integer index,String nameCard){
+        Map<Integer,String> playedPlayer=playedCards.get(nickname);
+        Map<Integer,String> discardedPlayer=discardedCards.get(nickname);
+        if(playedPlayer!=null && discardedPlayer!=null) {
+            if (playedPlayer.get(index) != null || discardedPlayer.get(index) != null)
+                playedPlayer.put(index + 1, nameCard);
+            else playedPlayer.put(index, nameCard);
+        }
+    }
+    protected void putDiscardedCard(String nickname,Integer index,String nameCard){
+        Map<Integer,String> playedPlayer=playedCards.get(nickname);
+        Map<Integer,String> discardedPlayer=discardedCards.get(nickname);
+        if(playedPlayer!=null && discardedPlayer!=null) {
+            if (playedPlayer.get(index) != null || discardedPlayer.get(index) != null)
+                discardedPlayer.put(index + 1, nameCard);
+            else discardedPlayer.put(index, nameCard);
+        }
+    }
 
     protected boolean isEndGameTrigger() { return endGameTrigger; }
     protected List<DevelopmentCard> getDevelopmentCards() {
@@ -284,6 +306,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
             warehouseMap.put(p.getNickname(),p.getBoard().getWarehouse());
         }
         return warehouseMap;
+    }
+    public Map<String,Map<Integer,String>> getAllPlayedCards(){
+        return playedCards;
+    }
+    public Map<String,Map<Integer,String>> getAllDiscardedCards(){
+        return discardedCards;
     }
     public Map<String,Map<ResourceType,Integer>> getAllStrongboxes(){
         Map<String,Map<ResourceType,Integer>> strongboxMap=new HashMap<>();
@@ -570,6 +598,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
         newPlayer.getBoard().addObserver(this);
         newPlayer.getBoard().getWarehouse().addObserver(this);
         players.add(newPlayer);
+        //--
+        playedCards.put(nickname,new HashMap<>());
+        discardedCards.put(nickname,new HashMap<>());
     }
 
     public List<ResourceType> getCurrentPlayerPending() {
@@ -593,14 +624,25 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     //NormalTurn
     public void playLeader(int index) throws CardNotAvailableException, RequirementNotMetException, IllegalActionException, IllegalResourceException {
-        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN)) {
+            String nameCard=null;
+            if(currPlayer.getLeadersInHand().size()>index-1){
+                nameCard=currPlayer.getLeadersInHand().get(index).getName();
+            }
             currPlayer.playLeader(currPlayer.getLeadersInHand().get(index));
+            putPlayedCard(currPlayer.getNickname(),index,nameCard);
+        }
         else throw new IllegalActionException();
     }
 
     public void discardLeader(int index) throws CardNotAvailableException, IllegalActionException, IndexOutOfBoundsException {
-        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN))
+        if(gamePhase==GamePhase.ONGOING && (turnPhase==TurnPhase.STARTTURN || turnPhase==TurnPhase.ENDTURN)) {
+            String nameCard=null;
+            if(currPlayer.getLeadersInHand().size()>index-1)
+                nameCard=currPlayer.getLeadersInHand().get(index).getName();
             currPlayer.discardLeader(currPlayer.getLeadersInHand().get(index));
+            putDiscardedCard(currPlayer.getNickname(),index,nameCard);
+        }
         else throw new IllegalActionException();
     }
 

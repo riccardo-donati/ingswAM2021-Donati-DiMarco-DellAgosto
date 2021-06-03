@@ -50,6 +50,8 @@ public interface PublicInterface {
      List<String> getLeadersInHand(String nickname);
      List<String> getActivePlayers();
      List<ResourceType> getPlayerPending(String nickname);
+     Map<String,Map<Integer,String>> getAllDiscardedCards();
+     Map<String,Map<Integer,String>> getAllPlayedCards();
      void setGameObservers();
 
           void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;

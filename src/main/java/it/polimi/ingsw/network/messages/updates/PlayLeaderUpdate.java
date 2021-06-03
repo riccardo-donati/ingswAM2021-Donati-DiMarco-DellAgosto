@@ -9,14 +9,21 @@ import it.polimi.ingsw.network.client.ClientVisitor;
 
 public class PlayLeaderUpdate implements Update {
     private final int index;
+    private final String name;
 
-    public PlayLeaderUpdate(int index){
+    public PlayLeaderUpdate(int index,String name){
         this.index = index;
+        this.name=name;
     }
 
     @Override
     public void update(ClientModel clientModel) {
-        LeaderCard leaderCard = clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+        LeaderCard leaderCard=null;
+        if(clientModel.getCurrentNickname().equals(clientModel.getNickname())) {
+            leaderCard = clientModel.getCurrentBoard().getLeadersInHand().remove(index);
+        }else{
+            leaderCard=clientModel.getLeaderCard(name);
+        }
         if (leaderCard != null) {
             clientModel.getCurrentBoard().getLeadersInBoard().add(leaderCard);
             for (SpecialAbility sp : leaderCard.getSpecialAbilities()) {

@@ -35,7 +35,7 @@
             </ImageView>
          </children>
       </AnchorPane>
-      <AnchorPane fx:id="main_board" layoutX="216.0" layoutY="176.0" prefHeight="632.0" prefWidth="970.0">
+      <AnchorPane fx:id="main_board" layoutX="216.0" layoutY="168.0" prefHeight="632.0" prefWidth="970.0">
          <children>
             <ImageView fitHeight="557.0" fitWidth="862.0" layoutX="58.0" layoutY="-28.0" pickOnBounds="true">
                <image>
@@ -271,6 +271,10 @@
                   <Font name="Gabriola" size="24.0" />
                </font>
             </Label>
+            <ImageView fx:id="resSlot51" fitHeight="24.0" fitWidth="28.0" layoutX="53.0" layoutY="528.0"  pickOnBounds="true" />
+            <ImageView fx:id="resSlot52" fitHeight="24.0" fitWidth="28.0" layoutX="103.0" layoutY="528.0"  pickOnBounds="true" />
+            <ImageView fx:id="resSlot42" fitHeight="24.0" fitWidth="28.0" layoutX="100.0" layoutY="209.0"  pickOnBounds="true" />
+            <ImageView fx:id="resSlot41" fitHeight="24.0" fitWidth="28.0" layoutX="48.0" layoutY="209.0" pickOnBounds="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="807.0" prefWidth="265.0">
