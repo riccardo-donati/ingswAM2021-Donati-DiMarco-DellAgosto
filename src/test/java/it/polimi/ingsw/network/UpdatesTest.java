@@ -104,7 +104,7 @@ public class UpdatesTest {
     public void TestPlayLeader(){
         cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("5L"));
         System.out.println(cm);
-        PlayLeaderUpdate plu=new PlayLeaderUpdate(0);
+        PlayLeaderUpdate plu=new PlayLeaderUpdate(0,"5L");
         assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInHand().get(0));
         plu.update(cm);
         System.out.println(cm.getCurrentBoard().stringifyLeaders());

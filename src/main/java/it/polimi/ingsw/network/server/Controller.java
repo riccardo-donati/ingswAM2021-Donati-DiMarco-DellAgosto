@@ -397,10 +397,12 @@ public class Controller implements GameObserver {
     public synchronized void playLeader(int index,String nickname) throws NotYourTurnException, IllegalResourceException, IllegalActionException, RequirementNotMetException, CardNotAvailableException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
+                String name=null;
+                if(game.getLeadersInHand(game.getCurrentNickname()).size()>index+1)
+                    name=game.getLeadersInHand(game.getCurrentNickname()).get(index);
                 game.playLeader(index);
                 //update
-                VirtualClient vc = getVirtualClient(nickname);
-                if (vc != null) vc.send(new PlayLeaderUpdate(index));
+                notifyLobby(new PlayLeaderUpdate(index,name));
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
