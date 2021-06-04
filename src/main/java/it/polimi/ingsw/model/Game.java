@@ -756,7 +756,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     public void activateProductions() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, IllegalActionException {
         if(gamePhase==GamePhase.ONGOING && turnPhase==TurnPhase.PICKUPPHASE){
-            currPlayer.activateProductions();
+            try {
+                currPlayer.activateProductions();
+            } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | UnknownFoundException  |IllegalActionException e) {
+                turnPhase = TurnPhase.STARTTURN;
+                throw e;
+            }
             turnPhase=TurnPhase.ENDTURN;
         }else throw new IllegalActionException();
     }

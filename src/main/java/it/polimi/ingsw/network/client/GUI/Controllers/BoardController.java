@@ -381,7 +381,7 @@ public class BoardController extends ControllerGUI {
     /**
      * resets the chosen resources and slot arrows
      */
-    private void resetProductions() {
+    public void resetProductions() {
         unknownInput1.setDisable(false);
         unknownInput2.setDisable(false);
         unknownOutput.setDisable(false);

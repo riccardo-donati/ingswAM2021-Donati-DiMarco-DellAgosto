@@ -567,27 +567,11 @@ public class Controller implements GameObserver {
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
+                game.activateProductions();
                 VirtualClient vc = getVirtualClient(nickname);
-                //this try catch, cathces the various exceptions that were thrown by the base Production command
-                //if the activate button finds an exception we reset the production toggled and the picked reesources
-                try {
-                    game.activateProductions();
-                }
-                catch (ResourcesNotAvailableException | TooManyResourcesException | UnknownFoundException | IllegalActionException e) {
-                    if (vc != null){
-                        vc.send(new ResetProductionsUpdate());
-                        vc.send(new RevertUpdate());
-                    }
-                    try {
-                        game.revertPickUp();
-                    } catch (FullSpaceException fullSpaceException) {
-                        fullSpaceException.printStackTrace();
-                    }
-                    throw e;
-                }
-                if (vc != null){
-                    vc.send(new ResetProductionsUpdate());
+                if (vc != null) {
                     vc.send(new RevertUpdate());
+                    vc.send(new ResetProductionsUpdate());
                 }
                 notifyLobby(new FaithUpdate(getCurrentFaithPath()));
                 notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));

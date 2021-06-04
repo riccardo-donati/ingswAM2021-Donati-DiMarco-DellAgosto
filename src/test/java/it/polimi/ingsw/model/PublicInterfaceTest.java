@@ -656,6 +656,7 @@ public class PublicInterfaceTest {
         game.passTurn();
     }
 
+    @Disabled
     @Test       //works only if setUpMulti is not modified
     public void TestWholeGame() throws IllegalResourceException, IllegalActionException, NonEmptyException, UnknownNotFoundException, FullSpaceException, IOException, ResourcesNotAvailableException, UnknownFoundException, TooManyResourcesException, DepositNotExistingException, CardNotAvailableException, RequirementNotMetException, DepositableResourceException, IllegalSlotException{
         //------ SetUp------------
@@ -1594,13 +1595,13 @@ public class PublicInterfaceTest {
     public void TestSingleDiscard() throws IOException, IllegalActionException, FullSpaceException, IllegalResourceException, DepositableResourceException {
         game=Utilities.loadGame("setUpSingle",'s');
         game.setMarket(new Market());
-        int pos=game.getBlackCrossFaithPath().getPosition();
         game.buyAtMarketInterface('r',2); //YELLOW YELLOW VIOLET VIOLET
         game.depositResource(3,ResourceType.YELLOW);
         game.depositResource(3,ResourceType.YELLOW);
         game.depositResource(2,ResourceType.VIOLET);
         game.depositResource(2,ResourceType.VIOLET);
         game.passTurn();
+        int pos=game.getBlackCrossFaithPath().getPosition();
         game.buyAtMarketInterface('r',1);//GREY GREY BLUE BLUE
         game.depositResource(1,ResourceType.BLUE);
         game.discardResource(ResourceType.BLUE);

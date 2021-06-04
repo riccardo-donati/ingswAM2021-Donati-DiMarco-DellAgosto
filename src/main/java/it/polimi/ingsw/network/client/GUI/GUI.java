@@ -216,6 +216,7 @@ public class GUI extends Application implements Client {
             BoardController bc = (BoardController) buildedControllers.get(BOARD);
             bc.setIcons();
             bc.updateUnknown();
+            bc.resetProductions();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
     }
@@ -252,6 +253,7 @@ public class GUI extends Application implements Client {
             bc.updateBlackCross();
             bc.updateCardMatrix();
             bc.updateUnknown();
+            bc.resetProductions();
             Platform.runLater(new Thread(() -> changeScene(BOARD)));
         }
         if(previousGamePhase==GamePhase.SETUP && clientModel.getGamePhase()==GamePhase.ONGOING){

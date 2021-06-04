@@ -144,7 +144,10 @@ public class ServerVisitorHandler implements ServerVisitor {
         Controller l=clientHandler.getLobby();
         try {
             command.doAction(l,nickname);
-        } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | IllegalActionException | NotYourTurnException | UnknownFoundException | WaitingReconnectionsException e) {
+        } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | NotYourTurnException | UnknownFoundException | WaitingReconnectionsException e) {
+            clientHandler.send(new ErrorMessage(e.getMessage()));
+            clientHandler.send(new ResetProductionsUpdate());
+        }catch (IllegalActionException e){
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }
     }

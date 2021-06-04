@@ -4,6 +4,7 @@ import com.google.gson.annotations.Expose;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Requirement;
+import it.polimi.ingsw.network.exceptions.IllegalCommandException;
 
 import java.util.*;
 
@@ -330,7 +331,7 @@ public class Player {
      * @throws IllegalResourceException if the output contains illegal resources
      * @throws TooManyResourcesException if the resources in pickedResources are too many for the input of the big production
      */
-    protected void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFoundException {
+    protected void activateProductions() throws ResourcesNotAvailableException, IllegalResourceException, TooManyResourcesException, UnknownFoundException, IllegalActionException {
         Map<ResourceType, Integer> input = new HashMap<>();
         Map<ResourceType, Integer> output = new HashMap<>();
         for (Production production : extraProductions) {
@@ -360,6 +361,7 @@ public class Player {
             production.resetProduction();
         }
         Production bigProd=new Production(input,output);
+        if(bigProd.getInput().size()==0 && bigProd.getOutput().size()==0) throw new IllegalActionException();
         checkPickedResourcesForProduction(bigProd);
 
         clearPickedUp();

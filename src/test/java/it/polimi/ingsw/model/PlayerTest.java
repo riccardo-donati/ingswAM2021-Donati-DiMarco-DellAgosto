@@ -694,7 +694,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivate1CardProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownFoundException {
+    public void TestActivate1CardProduction() throws IllegalResourceException, ResourcesNotAvailableException, IllegalSlotException, TooManyResourcesException, UnknownFoundException, IllegalActionException {
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
         Production p=new Production();
@@ -726,7 +726,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException {
+    public void TestActivateBaseProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException, IllegalActionException {
         assertThrows(UnknownFoundException.class,
                 ()->player.getBoard().getBaseProduction().toggleSelected());
         player.getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
@@ -749,7 +749,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException {
+    public void TestActivateExtraProduction() throws IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownNotFoundException, UnknownFoundException, IllegalActionException {
         Production p=new Production();
         p.addInput(ResourceType.YELLOW,1);
         p.addOutput(ResourceType.RED,1);
@@ -773,7 +773,7 @@ class PlayerTest {
     }
 
     @Test
-    public void TestActivateBaseAndCardAndExtraProd() throws ResourcesNotAvailableException, IllegalResourceException, UnknownFoundException, TooManyResourcesException, IllegalSlotException, UnknownNotFoundException {
+    public void TestActivateBaseAndCardAndExtraProd() throws ResourcesNotAvailableException, IllegalResourceException, UnknownFoundException, TooManyResourcesException, IllegalSlotException, UnknownNotFoundException, IllegalActionException {
         //----Card----
         List<ResourceRequirement> cost=new ArrayList<>();
         cost.add(new ResourceRequirement(ResourceType.GREY,1));
