@@ -18,13 +18,13 @@ public class ToggleExtraProductionCommand implements Command {
 
     @Override
     public void doAction(Controller c, String nickname) throws IllegalCommandException, NotYourTurnException, IllegalActionException, UnknownFoundException, WaitingReconnectionsException {
-        if(check())c.toggleExtraProd(index-1,nickname);
+        if(check())c.toggleExtraProd(index,nickname);
         else throw new IllegalCommandException();
     }
 
     @Override
     public boolean check() {
-        return index >= 1;
+        return index >= 0;
     }
 
     @Override

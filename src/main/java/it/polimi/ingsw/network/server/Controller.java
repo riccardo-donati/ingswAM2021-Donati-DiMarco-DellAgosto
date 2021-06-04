@@ -240,7 +240,7 @@ public class Controller implements GameObserver {
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
             setActive(nickname,true);
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards());
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards(),getPlayerUnknownProductions(nickname));
             vc.send(reconnectUpdate);
         }
     }
@@ -329,6 +329,9 @@ public class Controller implements GameObserver {
     }
     public synchronized void clearPlayer(String nickname){
         game.clearPlayer(nickname);
+    }
+    public synchronized Map<Integer,Production> getPlayerUnknownProductions(String name){
+        return game.getPlayerUnknownProductions(name);
     }
     public synchronized List<String> getCurrentLeadersInHand(){
         return game.getCurrentLeadersInHand();
@@ -567,11 +570,12 @@ public class Controller implements GameObserver {
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
+                List<Production> before= it.polimi.ingsw.model.Utilities.copyProductionsList(game.getCurrentActiveProductions());
                 game.activateProductions();
                 VirtualClient vc = getVirtualClient(nickname);
                 if (vc != null) {
                     vc.send(new RevertUpdate());
-                    vc.send(new ResetProductionsUpdate());
+                    vc.send(new ResetProductionsUpdate(before));
                 }
                 notifyLobby(new FaithUpdate(getCurrentFaithPath()));
                 notifyLobby(new DepositsUpdate(getCurrentWarehouse(), getCurrentStrongbox(), getTurnPhase()));

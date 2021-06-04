@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.server;
 
+import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.Utilities;
@@ -11,9 +12,12 @@ import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.commands.*;
 import it.polimi.ingsw.network.messages.updates.*;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.concurrent.locks.Lock;
+import java.util.stream.Collectors;
 
 public class ServerVisitorHandler implements ServerVisitor {
     private String nickname;
@@ -142,11 +146,14 @@ public class ServerVisitorHandler implements ServerVisitor {
     @Override
     public void visit(ActivateProductionsCommand command, ClientHandler clientHandler) {
         Controller l=clientHandler.getLobby();
+        List<Production> before= it.polimi.ingsw.model.Utilities.copyProductionsList(l.getCurrentActiveProductions());
         try {
             command.doAction(l,nickname);
         } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | NotYourTurnException | UnknownFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
-            clientHandler.send(new ResetProductionsUpdate());
+            clientHandler.send(new ResetProductionsUpdate(before));
+            clientHandler.send(new RevertUpdate());
+            clientHandler.send(new DepositsUpdate(l.getCurrentWarehouse(),l.getCurrentStrongbox(),l.getTurnPhase()));
         }catch (IllegalActionException e){
             clientHandler.send(new ErrorMessage(e.getMessage()));
         }

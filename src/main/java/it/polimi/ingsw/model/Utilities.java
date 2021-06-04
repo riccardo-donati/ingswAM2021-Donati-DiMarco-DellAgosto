@@ -14,6 +14,7 @@ import it.polimi.ingsw.model.interfaces.Token;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,6 +102,14 @@ public  class Utilities {
         }
 
         return g;
+    }
+    public static List<Production> copyProductionsList(List<Production> list){
+        List<Production>copied=new ArrayList<>();
+        for(Production p : list){
+            Production copyP=new Production(p);
+            copied.add(copyP);
+        }
+        return copied;
     }
     public static void fillDeposits(Player p,boolean warehouse,boolean extradepots) throws IllegalResourceException, FullSpaceException {
         Map<ResourceType, Integer> resMap=new HashMap<>();

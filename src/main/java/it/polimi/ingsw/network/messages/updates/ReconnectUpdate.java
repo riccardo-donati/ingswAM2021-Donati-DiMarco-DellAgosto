@@ -35,9 +35,10 @@ public class ReconnectUpdate implements Update{
     private final List<String> activePlayers;
     private final Map<String,Map<Integer,String>> allPlayedCards;
     private final Map<String,Map<Integer,String>> allDiscardedCards;
+    private final Map<Integer,Production> unknownProductions;
 
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards, Map<Integer,Production> unknownProductions) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -56,6 +57,7 @@ public class ReconnectUpdate implements Update{
         this.activePlayers=activePlayers;
         this.allPlayedCards=allPlayedCards;
         this.allDiscardedCards=allDiscardedCards;
+        this.unknownProductions=unknownProductions;
     }
 
     @Override
@@ -140,6 +142,10 @@ public class ReconnectUpdate implements Update{
             entry.getValue().setPlayedCards(played);
         }
 
+        //update productions with unknown
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
+            clientModel.getCurrentBoard().setUnknownProductions(unknownProductions);
+        }
 
     }
 

@@ -147,7 +147,7 @@ public class Parser {
                     if (tokenizer.nextToken().equals("production")) {
                         int position = Integer.parseInt(tokenizer.nextToken());
                         if (position > 0 && !tokenizer.hasMoreTokens())
-                            return new ToggleExtraProductionCommand(position);
+                            return new ToggleExtraProductionCommand(position-1);
                     }
                 }
                 if (production.equals("production")) {

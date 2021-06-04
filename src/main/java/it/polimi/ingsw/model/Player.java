@@ -300,6 +300,7 @@ public class Player {
             if (production.checkSelected()) {
                 try {
                     production.toggleSelected();
+                    production.resetProduction();
                 } catch (UnknownFoundException ignored) {
                 }
             }
@@ -310,6 +311,7 @@ public class Player {
                 if (production.checkSelected()) {
                     try {
                         production.toggleSelected();
+                        production.resetProduction();
                     } catch (UnknownFoundException ignored) {
                     }
                 }

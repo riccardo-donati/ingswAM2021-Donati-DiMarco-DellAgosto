@@ -33,10 +33,20 @@ public class Production {
                 Objects.equals(outputHistory, that.outputHistory);
     }
 
+
     @Override
     public int hashCode() {
         return Objects.hash(input, output, inputHistory, outputHistory);
     }
+
+    public Production(Production copy){
+        input=new HashMap<>(copy.input);
+        output=new HashMap<>(copy.output);
+        inputHistory=new ArrayList<>(copy.inputHistory);
+        outputHistory=new ArrayList<>(copy.outputHistory);
+        selected=copy.selected;
+    }
+
 
     /**
      * constructor that creates an empty production

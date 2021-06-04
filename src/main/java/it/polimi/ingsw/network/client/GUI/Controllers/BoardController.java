@@ -410,15 +410,25 @@ public class BoardController extends ControllerGUI {
         }
         else if(mouseEvent.getSource().toString().contains("extraProd1")){
             moveUnknown(-175, 118, "i");
-            clickedUnknown = "input";
-            index = 0;  //chiedi a riccardo
+            clickedUnknown = "output";
             clickedMark = 3;
+
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+            if(nameCard!=null && gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)
+                    && gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getSpecialAbilities().get(0) instanceof ExtraProduction ){
+                index=1;
+            }else index=0;
         }
         else if(mouseEvent.getSource().toString().contains("extraProd2")){
             moveUnknown(-175, 431, "i");
-            clickedUnknown = "input";
-            index = 1;  //chiedi a riccardo
+            clickedUnknown = "output";
             clickedMark = 4;
+
+            String nameCard=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+            if(nameCard!=null && gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(nameCard)
+                    && gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getSpecialAbilities().get(0) instanceof ExtraProduction ){
+                index=1;
+            }else index=0;
         }
         else{
             moveUnknown(315, 375, "o");
@@ -490,32 +500,90 @@ public class BoardController extends ControllerGUI {
             else unknownOutput.setImage(null);
         }
 
-//        if(gui.getClientModel().getMyBoard().getExtraProductions().get(0) !=  null) {
-//            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(0).getOutput().keySet()) {
-//                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
-//                    if (clickedMark == 3) {
-//                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-//                        extraProd1.setDisable(true);
-//                    } else if (clickedMark == 4) {
-//                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-//                        extraProd2.setDisable(true);
-//                    }
-//                }
-//            }
-//        }
-//        if(gui.getClientModel().getMyBoard().getExtraProductions().get(1) !=  null) {
-//            for (ResourceType res : gui.getClientModel().getMyBoard().getExtraProductions().get(1).getOutput().keySet()) {
-//                if (!res.equals(ResourceType.UNKNOWN) && !res.equals(ResourceType.RED)) {
-//                    if (clickedMark == 3) {
-//                        extraProd1.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-//                        extraProd1.setDisable(true);
-//                    } else if (clickedMark == 4) {
-//                        extraProd2.setImage(new Image("/images/resources/" + checkType(res) + ".png"));
-//                        extraProd2.setDisable(true);
-//                    }
-//                }
-//            }
-//        }
+        //Extraprod
+        List<Production> extraProds=gui.getClientModel().getMyBoard().getExtraProductions();
+        Production lp1 = null;
+        Production lp2 = null;
+        String played1 = gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+        String played2 = gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+        Integer slot=-1;
+        if (extraProds.size() > 0)
+            lp1 = extraProds.get(0);
+        if (extraProds.size() == 2)
+            lp2 = extraProds.get(1);
+        if (lp1 != null && lp2==null) {
+            //1 extra
+            if (gui.getClientModel().getMyBoard().getPlayedCards().size() == 1) {
+                if (played1 != null) {
+                    //slot1
+                    slot = 1;
+                } else if (played2 != null) {
+                    //slot2
+                    slot = 2;
+                }
+            } else if (gui.getClientModel().getMyBoard().getPlayedCards().size() == 2) {
+                if (played1.equals("16L") || played1.equals("15L") || played1.equals("14L") || played1.equals("13L")) {
+                    //slot1
+                    slot = 1;
+                } else if (played2.equals("16L") || played2.equals("15L") || played2.equals("14L") || played2.equals("13L")) {
+
+                    slot = 2;
+                }
+            }
+        }if(lp1!=null && lp2!=null){
+            //2 extra
+            ResourceType r1 = gui.getClientModel().getLeaderCard(played1).getSpecialAbilities().get(0).getResourceType();
+            ResourceType r2 = gui.getClientModel().getLeaderCard(played2).getSpecialAbilities().get(0).getResourceType();
+            if (lp1.getInput().get(r1) != null && lp1.getInput().get(r1) > 0){
+                slot=1;
+            }else slot=2;
+            if(lp1.getInput().get(r2) != null && lp1.getInput().get(r2) > 0){
+                slot=2;
+            }else slot=1;
+        }
+        if(slot==1){
+            for (Map.Entry<ResourceType, Integer> entry : lp1.getOutput().entrySet()) {
+                if(!entry.getKey().equals(ResourceType.RED) && !entry.getKey().equals(ResourceType.UNKNOWN) ) {
+                    extraProd1.setImage(new Image("/images/resources/" + checkType(entry.getKey()) + ".png"));
+                    extraProd1.setDisable(true);
+                }else if(entry.getKey().equals(ResourceType.UNKNOWN)){
+                    extraProd1.setImage(null);
+                    extraProd1.setDisable(false);
+                }
+            }
+            if(lp2!=null) {
+                for (Map.Entry<ResourceType, Integer> entry : lp2.getOutput().entrySet()) {
+                    if (!entry.getKey().equals(ResourceType.RED) && !entry.getKey().equals(ResourceType.UNKNOWN)) {
+                        extraProd2.setImage(new Image("/images/resources/" + checkType(entry.getKey()) + ".png"));
+                        extraProd2.setDisable(true);
+                    }else if(entry.getKey().equals(ResourceType.UNKNOWN)){
+                        extraProd2.setImage(null);
+                        extraProd2.setDisable(false);
+                    }
+                }
+            }
+        }else if(slot==2){
+            for (Map.Entry<ResourceType, Integer> entry : lp1.getOutput().entrySet()) {
+                if(!entry.getKey().equals(ResourceType.RED) && !entry.getKey().equals(ResourceType.UNKNOWN) ) {
+                    extraProd2.setImage(new Image("/images/resources/" + checkType(entry.getKey()) + ".png"));
+                    extraProd2.setDisable(true);
+                }else if(entry.getKey().equals(ResourceType.UNKNOWN)){
+                    extraProd2.setImage(null);
+                    extraProd2.setDisable(false);
+                }
+            }
+            if(lp2!=null) {
+                for (Map.Entry<ResourceType, Integer> entry : lp2.getOutput().entrySet()) {
+                    if (!entry.getKey().equals(ResourceType.RED) && !entry.getKey().equals(ResourceType.UNKNOWN)) {
+                        extraProd1.setImage(new Image("/images/resources/" + checkType(entry.getKey()) + ".png"));
+                        extraProd1.setDisable(true);
+                    }else if(entry.getKey().equals(ResourceType.UNKNOWN)){
+                        extraProd1.setImage(null);
+                        extraProd1.setDisable(false);
+                    }
+                }
+            }
+        }
     }
 
     public String checkType(ResourceType res){
@@ -705,7 +773,8 @@ public class BoardController extends ControllerGUI {
         }
         else if(l1!=null && (l1.equals("13L") || l1.equals("14L") || l1.equals("15L") || l1.equals("16L")))
             extraProd1.setDisable(false);
-        else    leaderCard1.setDisable(false);
+
+        leaderCard1.setDisable(false);
 
         String l2 = gui.getClientModel().getMyBoard().getPlayedCards().get(1);
         if(l2!=null && (l2.equals("5L") || l2.equals("6L") || l2.equals("7L") || l2.equals("8L"))) {
@@ -715,7 +784,7 @@ public class BoardController extends ControllerGUI {
         else if(l2!=null && (l2.equals("13L") || l2.equals("14L") || l2.equals("15L") || l2.equals("16L"))) {
             extraProd2.setDisable(false);
         }
-        else    leaderCard2.setDisable(false);
+        leaderCard2.setDisable(false);
     }
 
     /**
@@ -1494,7 +1563,7 @@ public class BoardController extends ControllerGUI {
         }
     }
 
-    public void updateDiscounts(){
+    public void updateDiscountsExtraProd(){
         //leader1
         String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
         if(name!=null){
@@ -1504,6 +1573,18 @@ public class BoardController extends ControllerGUI {
                 if (activeDiscounts.get(sa.getResourceType()) != null) {
                     toggledLeader1.setOpacity(100);
                 } else toggledLeader1.setOpacity(0);
+            }
+            else if(sa instanceof ExtraProduction){
+                List<Production> list=gui.getClientModel().getMyBoard().getActiveProductions();
+                List<Production> extraProd=gui.getClientModel().getMyBoard().getExtraProductions();
+                boolean found=false;
+                for(Production p : extraProd){
+                    if(p.getInput().get(sa.getResourceType())!=null && list.contains(p)){
+                        found=true;
+                    }
+                }
+                if(found) toggledLeader1.setOpacity(100);
+                else  toggledLeader1.setOpacity(0);
             }
         }
         //leader2
@@ -1515,6 +1596,18 @@ public class BoardController extends ControllerGUI {
                 if (activeDiscounts.get(sa2.getResourceType()) != null) {
                     toggledLeader2.setOpacity(100);
                 } else toggledLeader2.setOpacity(0);
+            }
+            else if(sa2 instanceof ExtraProduction){
+                List<Production> list=gui.getClientModel().getMyBoard().getActiveProductions();
+                List<Production> extraProd=gui.getClientModel().getMyBoard().getExtraProductions();
+                boolean found=false;
+                for(Production p : extraProd){
+                    if(p.getInput().get(sa2.getResourceType())!=null && list.contains(p)){
+                        found=true;
+                    }
+                }
+                if(found) toggledLeader2.setOpacity(100);
+                else  toggledLeader2.setOpacity(0);
             }
         }
     }
@@ -1530,12 +1623,32 @@ public class BoardController extends ControllerGUI {
         if(id.equals("leaderCard1")){
             String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
             if(name!=null){
-                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+                if(name.equals("1L") ||name.equals("2L") ||name.equals("3L") ||name.equals("4L") )
+                    gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+                else if(name.equals("16L") ||name.equals("15L") ||name.equals("14L") ||name.equals("13L")) {
+                    String name2=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
+                    if(name2!=null && (name2.equals("16L") ||name2.equals("15L") ||name2.equals("14L") ||name2.equals("13L"))){
+                        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(name2)){
+                            gui.send(new ToggleExtraProductionCommand(1));
+                        }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(name))
+                            gui.send(new ToggleExtraProductionCommand(0));
+                    }else gui.send(new ToggleExtraProductionCommand(0));
+                }
             }
         }else if(id.equals("leaderCard2")){
             String name=gui.getClientModel().getMyBoard().getPlayedCards().get(1);
             if(name!=null){
-                gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+                if(name.equals("1L") ||name.equals("2L") ||name.equals("3L") ||name.equals("4L") )
+                    gui.send(new ToggleDiscountCommand(gui.getClientModel().getLeaderCard(name).getSpecialAbilities().get(0).getResourceType()));
+                else if(name.equals("16L") ||name.equals("15L") ||name.equals("14L") ||name.equals("13L")) {
+                    String name2=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
+                    if(name2!=null && (name2.equals("16L") ||name2.equals("15L") ||name2.equals("14L") ||name2.equals("13L"))){
+                        if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(name2)){
+                            gui.send(new ToggleExtraProductionCommand(1));
+                        }else if(gui.getClientModel().getMyBoard().getLeadersInBoard().get(0).getName().equals(name))
+                            gui.send(new ToggleExtraProductionCommand(0));
+                    }else gui.send(new ToggleExtraProductionCommand(0));
+                }
             }
         }
     }

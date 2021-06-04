@@ -559,6 +559,18 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return result;
     }
+    public Map<Integer,Production> getPlayerUnknownProductions(String name){
+        Map<Integer,Production> map=new HashMap<>();
+        for(Player p : players){
+            if(p.getNickname().equals(name)){
+                map.put(-1,p.getBoard().getBaseProduction());
+                for(Production ep : p.getExtraProductions()){
+                    map.put(map.size()-1,ep);
+                }
+            }
+        }
+        return map;
+    }
     public void disconnectAllPlayers(){
         for(Player p : players){
             p.setActive(false);
@@ -760,6 +772,9 @@ public abstract class Game implements BoardObserver, PublicInterface {
                 currPlayer.activateProductions();
             } catch (ResourcesNotAvailableException | IllegalResourceException | TooManyResourcesException | UnknownFoundException  |IllegalActionException e) {
                 turnPhase = TurnPhase.STARTTURN;
+                try {
+                    currPlayer.revertPickUp();
+                } catch (FullSpaceException ignored) { }
                 throw e;
             }
             turnPhase=TurnPhase.ENDTURN;

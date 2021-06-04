@@ -22,7 +22,7 @@ public class ClientBoard {
     private Map<Integer,String> playedCards=new HashMap<>();
 
     private List<Production> activeProductions = new ArrayList<>();
-    private final Production baseProduction;
+    private Production baseProduction;
     private List<Production> extraProductions = new ArrayList<>();
     private List<ResourceDiscount> discounts = new ArrayList<>();
 
@@ -45,6 +45,22 @@ public class ClientBoard {
 
     }
 
+    public void setUnknownProductions(Map<Integer,Production> unknownProductions){
+        for (Map.Entry<Integer, Production> entry : unknownProductions.entrySet()) {
+            if(entry.getKey()==-1)
+                baseProduction=entry.getValue();
+            else{
+                try {
+                    int index=entry.getKey();
+                    extraProductions.remove(index);
+                    extraProductions.add(entry.getKey(),entry.getValue());
+                }catch (NullPointerException e){
+                    e.printStackTrace();
+                    return;
+                }
+            }
+        }
+    }
     public ClientDeposits getDeposits() {
         return deposits;
     }
@@ -96,6 +112,7 @@ public class ClientBoard {
     public List<Production> getExtraProductions() {
         return extraProductions;
     }
+
 
     public Map<Integer, Stack<DevelopmentCard>> getSlots() {
         return slots;

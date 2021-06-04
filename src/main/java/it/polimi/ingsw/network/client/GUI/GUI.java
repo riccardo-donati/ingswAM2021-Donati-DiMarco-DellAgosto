@@ -297,12 +297,14 @@ public class GUI extends Application implements Client {
         bc.updateWarehouse();
         bc.updateStrongbox();
         bc.updateUnknown();
+        bc.updateDiscountsExtraProd();
     }
 
     @Override
     public void visualizeToggleProductionUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateToggledProduction();
+        bc.updateDiscountsExtraProd();
     }
 
     @Override
@@ -336,7 +338,7 @@ public class GUI extends Application implements Client {
     @Override
     public void visualizeToggleDiscountUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
-        bc.updateDiscounts();
+        bc.updateDiscountsExtraProd();
     }
 
     @Override
@@ -399,7 +401,9 @@ public class GUI extends Application implements Client {
         l.updatePopeFavor();
         l.updateStrongbox();
         l.updateSlots();
+        l.updateUnknown();
         l.updatePickedRes();
+        l.updateDiscountsExtraProd();
         l.updatePending();
         l.setLeaderPower();
         SetupController s=(SetupController)buildedControllers.get(SETUP);
@@ -462,5 +466,6 @@ public class GUI extends Application implements Client {
     public void visualizeResetProductions() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateUnknown();
+        bc.updateDiscountsExtraProd();
     }
 }
