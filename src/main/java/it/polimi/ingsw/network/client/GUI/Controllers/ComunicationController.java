@@ -41,4 +41,14 @@ public class ComunicationController {
         alert.getDialogPane().setGraphic(icon);
         alert.showAndWait();
     }
+
+    public static void endGameNotify(Scene scene){
+        Stage stg = (Stage) scene.getWindow();
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("EndGame notify!");
+        alert.initOwner(stg);
+        alert.initModality(Modality.APPLICATION_MODAL);
+        alert.getDialogPane().setHeaderText("The end phase has begun! This is the last round!");
+        alert.showAndWait();
+    }
 }

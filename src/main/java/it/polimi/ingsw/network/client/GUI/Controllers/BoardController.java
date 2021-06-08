@@ -983,7 +983,7 @@ public class BoardController extends ControllerGUI {
     public void updatePopeFavor(){
         for(int i=0;i<popes.size();i++) {
             if (gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
-                popes.get(i).setImage(new Image("/images/faithpath/pope_favor1_front.png"));
+                popes.get(i).setImage(new Image("/images/faithpath/pope_favor"+(i+1)+"_front.png"));
             else if (gui.getClientModel().getMyBoard().getFaithPath().getPopeFavor().get(i+1).equals(ClientPopeFavorState.DISCARDED))
                 popes.get(i).setOpacity(0);
         }

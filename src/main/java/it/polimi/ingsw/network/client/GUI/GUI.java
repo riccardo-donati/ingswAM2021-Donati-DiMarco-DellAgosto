@@ -37,6 +37,7 @@ public class GUI extends Application implements Client {
     public static final String LOBBY = "lobby.fxml";
     public static final String SETUP = "setup_phase.fxml";
     public static final String OTHERBOARD = "otherPlayersBoard.fxml";
+    public static final String RESULTS = "winning_scene.fxml";
 
 
     private String serverIP;
@@ -113,7 +114,7 @@ public class GUI extends Application implements Client {
     }
 
     private void setup() {
-        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP,OTHERBOARD));
+        List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP,OTHERBOARD,RESULTS));
         try{
             for(String path : listFxml){
                 FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/" + path));
@@ -343,12 +344,14 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeEndGameMessage() {
-
+        ComunicationController.endGameNotify(currentScene);
     }
 
     @Override
     public void visualizeEndGameResultUpdate(Result gameResult) {
-
+        EndGameController ec = (EndGameController) buildedControllers.get(RESULTS);
+        ec.setValues(gameResult);
+        Platform.runLater(new Thread(()->changeScene(RESULTS)));
     }
 
     @Override
