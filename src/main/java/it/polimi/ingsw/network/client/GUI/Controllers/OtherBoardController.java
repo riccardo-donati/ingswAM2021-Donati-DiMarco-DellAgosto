@@ -8,12 +8,16 @@ import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.client.ClientModel.*;
 import it.polimi.ingsw.network.client.GUI.GUI;
+import javafx.animation.TranslateTransition;
 import javafx.fxml.FXML;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.util.Duration;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -33,7 +37,10 @@ public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView resSlot42;
     @FXML private ImageView resSlot51;
     @FXML private ImageView resSlot52;
-
+    @FXML private Label strongboxCoins;
+    @FXML private Label strongboxShields;
+    @FXML private Label strongboxServants;
+    @FXML private Label strongboxStones;
     @FXML private ImageView faithPath1;
     @FXML private ImageView faithPath2;
     @FXML private ImageView faithPath3;
@@ -67,7 +74,7 @@ public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView pope1;
     @FXML private ImageView pope2;
     @FXML private ImageView pope3;
-
+    @FXML private AnchorPane hiddenPanel;
     @FXML private ImageView slot11;
     @FXML private ImageView slot12;
     @FXML private ImageView slot13;
@@ -78,14 +85,14 @@ public class OtherBoardController extends ControllerGUI{
     @FXML private ImageView slot32;
     @FXML private ImageView slot33;
 
-
-
     List<ImageView> popes=new ArrayList<>();
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
     List<List<ImageView>> slotsDC=new ArrayList<>();
     List<ImageView> slot4;
     List<ImageView> slot5;
+    Boolean clickedBox = false;
+
     @Override
     public void initializeElements(){
         List<ImageView> slot1=new ArrayList<>();
@@ -156,6 +163,7 @@ public class OtherBoardController extends ControllerGUI{
         slotsDC.add(slotDC2);
         slotsDC.add(slotDC3);
     }
+
     public void goBack(MouseEvent mouseEvent) {
         gui.changeScene(GUI.BOARD);
     }
@@ -248,7 +256,7 @@ public class OtherBoardController extends ControllerGUI{
     public void updatePopeFavor(ClientFaithPath cfp){
         for(int i=0;i<popes.size();i++) {
             if (cfp.getPopeFavor().get(i+1).equals(ClientPopeFavorState.ACTIVE))
-                popes.get(i).setImage(new Image("/images/faithpath/pope_favor1_front.png"));
+                popes.get(i).setImage(new Image("/images/faithpath/pope_favor"+(i+1)+"_front.png"));
             else if (cfp.getPopeFavor().get(i+1).equals(ClientPopeFavorState.DISCARDED))
                 popes.get(i).setOpacity(0);
         }
@@ -292,6 +300,7 @@ public class OtherBoardController extends ControllerGUI{
         ClientBoard cb=gui.getClientModel().getBoards().get(nickname);
         if(cb!=null){
             updateWarehouse(cb);
+            updateStrongbox(cb);
             updateFaithPath(cb.getFaithPath());
             updateLCards(cb);
             updatePopeFavor(cb.getFaithPath());
@@ -299,5 +308,26 @@ public class OtherBoardController extends ControllerGUI{
         }
     }
 
+    public void openStrongBox(MouseEvent mouseEvent) {
+        TranslateTransition tt = new TranslateTransition(Duration.seconds(0.7), hiddenPanel);
+        if(!clickedBox){
+            tt.setFromX(0);
+            tt.setToX(273);
+            clickedBox = true;
+        }
+        else{
+            tt.setFromX(273);
+            tt.setToX(0);
+            clickedBox = false;
+        }
+        tt.play();
+    }
 
+    public void updateStrongbox(ClientBoard cb) {
+        Map<Resource, Integer> strongbox = cb.getDeposits().getStrongbox();
+        strongboxCoins.setText(strongbox.get(Resource.COIN).toString());
+        strongboxServants.setText(strongbox.get(Resource.SERVANT).toString());
+        strongboxShields.setText(strongbox.get(Resource.SHIELD).toString());
+        strongboxStones.setText(strongbox.get(Resource.STONE).toString());
+    }
 }
