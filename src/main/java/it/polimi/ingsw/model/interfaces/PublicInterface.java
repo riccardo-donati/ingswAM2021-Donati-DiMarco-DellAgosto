@@ -53,6 +53,7 @@ public interface PublicInterface {
      Map<String,Map<Integer,String>> getAllDiscardedCards();
      Map<String,Map<Integer,String>> getAllPlayedCards();
      Map<Integer,Production> getPlayerUnknownProductions(String name);
+     void resetCurrentPlayerRef();
      void setGameObservers();
 
           void chooseLeader(List<LeaderCard> l) throws NonEmptyException, IllegalLeaderCardsException, IllegalActionException;

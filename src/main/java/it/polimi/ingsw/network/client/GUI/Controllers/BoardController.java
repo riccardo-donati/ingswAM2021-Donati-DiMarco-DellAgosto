@@ -356,18 +356,6 @@ public class BoardController extends ControllerGUI {
     }
 
 
-    public void updatePlayLeader(){
-        /*Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
-        //extradeposit
-        if(played.get(0)!=null && gui.getClientModel().getLeaderCard(played.get(0)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot4)){
-            warehouse.add(slot4);
-        }
-        if(played.get(1)!=null && gui.getClientModel().getLeaderCard(played.get(1)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot5)){
-            warehouse.add(slot5);
-        }*/
-
-    }
-
     public void substituteUnknown(MouseEvent mouseEvent) {
         ResourceType unknownRes;
         if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;

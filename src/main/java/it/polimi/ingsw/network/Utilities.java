@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.*;
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.interfaces.*;
 import it.polimi.ingsw.network.client.CLI.enums.Color;
@@ -326,14 +327,27 @@ public abstract class Utilities {
             System.out.println("leaderCard.json not found");
         }
         Server s=gsonLoad.fromJson(reader,Server.class);
-
+        List<Integer> idsToRemove=new ArrayList<>();
         for(Controller l : s.getLobbies()){
-            l.getPlayersInLobby().clear();
-            l.setGson(Utilities.initializeGsonMessage());
-            l.setDisconnected(true);
+            if(l.getGameState()== GamePhase.NOTSTARTED){
+                Integer idLobby=l.getIdLobby();
+                idsToRemove.add(idLobby);
+            }else {
+                l.getPlayersInLobby().clear();
+                l.setGson(Utilities.initializeGsonMessage());
+                l.setDisconnected(true);
+            }
+        }
+        //remove the not started lobbies
+        for(Integer id : idsToRemove){
+            Controller lobby=s.searchLobby(id);
+            s.removeLobby(lobby);
+            for(VirtualClient vc : lobby.getPlayersInLobby()){
+                s.unregisterClient(vc);
+            }
         }
         for (Map.Entry<String, Integer> entry : s.getNickLobbyMap().entrySet()) {
-            if(entry.getValue()> Controller.getGlobalID()) Controller.setGlobalID(entry.getValue());
+            if(entry.getValue()>= Controller.getGlobalID()) Controller.setGlobalID(entry.getValue()+1);
             VirtualClient vc=s.searchVirtualClient(entry.getKey());
             Controller l= s.searchLobby(entry.getValue());
             l.addPlayerInLobby(vc);
@@ -347,8 +361,8 @@ public abstract class Utilities {
             c.setServer(s);
             c.setGameObservers();
             c.disconnectAllPlayers();
+            c.resetCurrentPlayerRef();
         }
-
         return s;
     }
 }

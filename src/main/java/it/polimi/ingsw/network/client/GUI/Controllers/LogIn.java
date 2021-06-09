@@ -46,6 +46,11 @@ public class LogIn extends ControllerGUI{
             }
         }else register();
     }
+
+    public void setConnected(boolean connected) {
+        this.connected = connected;
+    }
+
     public void unlock(){
         ipAddress.setDisable(false);
         portNumber.setDisable(false);

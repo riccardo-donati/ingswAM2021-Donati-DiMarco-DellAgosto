@@ -3,6 +3,7 @@ package it.polimi.ingsw.network.messages.updates;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -145,6 +146,13 @@ public class ReconnectUpdate implements Update{
         //update productions with unknown
         if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
             clientModel.getCurrentBoard().setUnknownProductions(unknownProductions);
+        }
+
+        //update pending resources
+        List<Resource> clientPending = clientModel.getCurrentBoard().getPendingResources();
+        clientPending.clear();
+        for(ResourceType res : pendingResources){
+            clientPending.add(Utilities.resourceTypeToResource(res));
         }
 
     }

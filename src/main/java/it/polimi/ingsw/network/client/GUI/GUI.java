@@ -88,7 +88,13 @@ public class GUI extends Application implements Client {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
-                Platform.runLater(new Thread(()->changeScene(LOGIN)));
+                if(clientModel.getGamePhase()!=null && clientModel.getGamePhase().equals(GamePhase.ENDGAME))
+                    Platform.runLater(new Thread(()->changeScene(RESULTS)));
+                else {
+                    Platform.runLater(new Thread(() -> changeScene(LOGIN)));
+                    LogIn log = (LogIn) buildedControllers.get(LOGIN);
+                    log.setConnected(false);
+                }
                 break;
             }
             ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
@@ -332,7 +338,6 @@ public class GUI extends Application implements Client {
     public void visualizePlayLeaderUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
-        bc.updatePlayLeader();
         bc.setLeaderPower();
     }
 
@@ -409,11 +414,11 @@ public class GUI extends Application implements Client {
         l.updateDiscountsExtraProd();
         l.updatePending();
         l.setLeaderPower();
-        SetupController s=(SetupController)buildedControllers.get(SETUP);
-        s.updateLeader();
-        s.updateWarehouse();
-
-
+        if(clientModel.getGamePhase()==GamePhase.SETUP) {
+            SetupController s = (SetupController) buildedControllers.get(SETUP);
+            s.updateLeader();
+            s.updateWarehouse();
+        }
     }
 
     @Override

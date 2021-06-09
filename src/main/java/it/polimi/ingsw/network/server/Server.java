@@ -145,7 +145,6 @@ public class Server {
         }
         return null;
     }
-
     public synchronized void removeLobby(Controller c){
         if(c!=null && lobbies.contains(c)) lobbies.remove(c);
     }
@@ -153,8 +152,10 @@ public class Server {
     public synchronized void unregisterClient(VirtualClient vc){
         if(virtualClientList.contains(vc))
             virtualClientList.remove(vc);
-        if(clientHandlerNickMap.get(vc.getClientHandler().getId())!=null)
-            clientHandlerNickMap.remove(vc.getClientHandler().getId());
+        try {
+            if (clientHandlerNickMap.get(vc.getClientHandler().getId()) != null)
+                clientHandlerNickMap.remove(vc.getClientHandler().getId());
+        }catch (NullPointerException ignored){}
         if(nickLobbyMap.get(vc.getNickname())!=null)
             nickLobbyMap.remove(vc.getNickname());
         System.out.println("Unregister client "+vc.getNickname());

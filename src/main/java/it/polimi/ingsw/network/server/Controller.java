@@ -80,6 +80,7 @@ public class Controller implements GameObserver {
     }
 
     public synchronized void setGameObservers(){
+        game.addExternalObserver(this);
         game.setGameObservers();
     }
 
@@ -104,7 +105,9 @@ public class Controller implements GameObserver {
     public synchronized void setGson(Gson gson) {
         this.gson = gson;
     }
-
+    public synchronized  void resetCurrentPlayerRef(){
+        game.resetCurrentPlayerRef();
+    }
     public synchronized void notifyLobby(Message message){
         for(VirtualClient virtualClient : players){
             if(virtualClient.getClientHandler() != null) {
