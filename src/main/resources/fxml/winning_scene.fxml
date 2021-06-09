@@ -23,6 +23,7 @@
             <Image url="@../images/trumpets _banner.png" />
          </image>
       </ImageView>
+      <ImageView fx:id="playerResult" fitHeight="246.0" fitWidth="395.0" layoutX="249.0" layoutY="156.0" pickOnBounds="true" preserveRatio="true" />
       <Label layoutX="66.0" layoutY="425.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
@@ -33,66 +34,65 @@
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="pointsP1" alignment="CENTER" layoutX="200.0" layoutY="425.0" text="Points:">
+      <Label fx:id="pointsP1" alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="423.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="pointsP2" alignment="CENTER" layoutX="344.0" layoutY="425.0" opacity="0.0" text="Points:">
+      <Label fx:id="pointsP2" alignment="CENTER" contentDisplay="CENTER" layoutX="344.0" layoutY="423.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="pointsP3" alignment="CENTER" layoutX="492.0" layoutY="425.0" opacity="0.0" text="Points:">
+      <Label fx:id="pointsP3" alignment="CENTER" contentDisplay="CENTER" layoutX="492.0" layoutY="423.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="resourcesP1" alignment="CENTER" layoutX="200.0" layoutY="485.0" text="Points:">
+      <Label fx:id="resourcesP1" alignment="CENTER" contentDisplay="CENTER" layoutX="200.0" layoutY="483.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="resourcesP2" alignment="CENTER" layoutX="344.0" layoutY="485.0" opacity="0.0" text="Points:">
+      <Label fx:id="resourcesP2" alignment="CENTER" contentDisplay="CENTER" layoutX="344.0" layoutY="483.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="resourcesP3" alignment="CENTER" layoutX="492.0" layoutY="485.0" opacity="0.0" text="Points:">
+      <Label fx:id="resourcesP3" alignment="CENTER" contentDisplay="CENTER" layoutX="492.0" layoutY="483.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="pointsP4" alignment="CENTER" layoutX="642.0" layoutY="425.0" opacity="0.0" text="Points:">
+      <Label fx:id="pointsP4" alignment="CENTER" contentDisplay="CENTER" layoutX="642.0" layoutY="423.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="resourcesP4" alignment="CENTER" layoutX="642.0" layoutY="485.0" opacity="0.0" text="Points:">
+      <Label fx:id="resourcesP4" alignment="CENTER" contentDisplay="CENTER" layoutX="642.0" layoutY="483.0" opacity="0.0" text="Points:">
          <font>
             <Font name="Gabriola" size="24.0" />
          </font>
       </Label>
-      <Label fx:id="p1" alignment="CENTER" layoutX="164.0" layoutY="363.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
+      <Label fx:id="p1" alignment="CENTER" contentDisplay="CENTER" layoutX="164.0" layoutY="363.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
          <font>
             <Font name="Gabriola" size="28.0" />
          </font>
       </Label>
-      <Label fx:id="p2" alignment="CENTER" layoutX="308.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
+      <Label fx:id="p2" alignment="CENTER" contentDisplay="CENTER" layoutX="308.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
          <font>
             <Font name="Gabriola" size="28.0" />
          </font>
       </Label>
-      <Label fx:id="p3" alignment="CENTER" layoutX="456.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
+      <Label fx:id="p3" alignment="CENTER" contentDisplay="CENTER" layoutX="456.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
          <font>
             <Font name="Gabriola" size="28.0" />
          </font>
       </Label>
-      <Label fx:id="p4" alignment="CENTER" layoutX="606.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
+      <Label fx:id="p4" alignment="CENTER" contentDisplay="CENTER" layoutX="606.0" layoutY="363.0" opacity="0.0" prefHeight="45.0" prefWidth="122.0" text="RIKI001">
          <font>
             <Font name="Gabriola" size="28.0" />
          </font>
       </Label>
-      <ImageView fx:id="playerResult" fitHeight="190.0" fitWidth="311.0" layoutX="295.0" layoutY="178.0" pickOnBounds="true" preserveRatio="true" />
    </children>
 </AnchorPane>

@@ -287,7 +287,6 @@ public class GUI extends Application implements Client {
     public void visualizeLeadersInHandUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateLCards();
-        //togli
         bc.setupClickable();
     }
 
@@ -356,7 +355,7 @@ public class GUI extends Application implements Client {
 
     @Override
     public void visualizeNumberOfPlayer(PlayerNumberRequest message) {
-       Platform.runLater(new Thread(()->changeScene(NPLAYERS)));
+        Platform.runLater(new Thread(()->changeScene(NPLAYERS)));
     }
 
     @Override

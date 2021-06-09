@@ -7,6 +7,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="AM35" />
+        <module name="ingswAM2021-Donati-DiMarco-DellAgosto" />
       </profile>
     </annotationProcessing>
   </component>
