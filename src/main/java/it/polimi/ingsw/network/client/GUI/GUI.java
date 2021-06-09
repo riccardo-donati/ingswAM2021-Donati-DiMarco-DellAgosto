@@ -461,6 +461,7 @@ public class GUI extends Application implements Client {
         BoardController l = (BoardController) buildedControllers.get(BOARD);
         l.updateBlackCross();
         l.updatePending();
+        l.updateFaithPath();
     }
 
     @Override
