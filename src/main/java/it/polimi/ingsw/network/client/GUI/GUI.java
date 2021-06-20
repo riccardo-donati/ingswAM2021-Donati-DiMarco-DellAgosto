@@ -441,10 +441,16 @@ public class GUI extends Application implements Client {
     }
 
     @Override
-    public void visualizeDisconnectedMessage() {
-        ComunicationController.showInfo(currentScene,"A player disconnected: "+clientModel.getDisconnectedPlayers());
-        BoardController l=(BoardController)buildedControllers.get(BOARD);
-        l.setIcons();
+    public void visualizeDisconnectedMessage(String nickname) {
+        if(currentScene!=buildedScenes.get(LOBBY)) {
+            BoardController l=(BoardController)buildedControllers.get(BOARD);
+            ComunicationController.showInfo(currentScene, "A player disconnected: " + clientModel.getDisconnectedPlayers());
+            l.setIcons();
+        }
+        else{
+            Lobby lo=(Lobby) buildedControllers.get(LOBBY);
+            lo.disconnectPlayer(nickname);
+        }
     }
 
     @Override
