@@ -57,14 +57,17 @@ public class ServerVisitorHandler implements ServerVisitor {
             synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     clientHandler.send(new PlayerNumberRequest());
-                    clientHandler.startTimer(50000);
+                    clientHandler.startTimer(6000);
+                    ServerMessage message;
                     try {
                         String jsonString = clientHandler.getIn().nextLine();
-                        ServerMessage message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
-                        message.accept(clientHandler.getServerVisitorHandler(),clientHandler);
+                        message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
+                        message.accept(clientHandler.getServerVisitorHandler(), clientHandler);
                         System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
 
                     }catch (NoSuchElementException ignored){ }
+
+
                 } else {
                    clientHandler.getPinger().start();
                 }

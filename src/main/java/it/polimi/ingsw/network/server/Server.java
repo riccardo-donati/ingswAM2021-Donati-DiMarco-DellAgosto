@@ -104,7 +104,8 @@ public class Server {
         String nick=clientHandlerNickMap.get(chId);
         if (nick != null){
             Controller lobby = searchLobby(nickLobbyMap.get(nick));
-            lobby.notifyLobby(new DisconnectedMessage(nick));
+            if(lobby.getGameState()!=GamePhase.NOTSTARTED)
+                lobby.notifyLobby(new DisconnectedMessage(nick));
             if(lobby.getGameState()== GamePhase.NOTSTARTED){
                 try {
                     searchVirtualClient(nick).getClientHandler().closeConnection();

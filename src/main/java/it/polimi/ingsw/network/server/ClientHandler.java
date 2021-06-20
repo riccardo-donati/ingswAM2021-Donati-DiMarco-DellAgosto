@@ -89,6 +89,27 @@ public class ClientHandler implements Runnable {
             timer = null;
         }
     }
+    public void startPinger(){
+        if(pinger==null){
+            this.pinger = new Thread(() -> {
+                ping = true;
+                while (ping) {
+                    try {
+                        ping = false;
+                        send(new PingRequest());
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
+                System.out.println("Player disconnected");
+                server.handleDisconnection(id);
+                isConnected = false;
+            });
+
+        }
+        this.pinger.start();
+    }
     public void stopPinger(){
         if(pinger!=null){
             pinger.interrupt();
@@ -100,6 +121,7 @@ public class ClientHandler implements Runnable {
             try {
                 Thread.sleep(ms);
                 timeout = true;
+                endConnection();
             } catch (InterruptedException e) {
                 //e.printStackTrace();
             }

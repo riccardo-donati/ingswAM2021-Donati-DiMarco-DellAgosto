@@ -630,6 +630,16 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
+    public void stopLobbyPingers(){
+        for(VirtualClient vc : players){
+            vc.getClientHandler().stopPinger();
+        }
+    }
+    public void startLobbyPingers(){
+        for(VirtualClient vc : players){
+            vc.getClientHandler().startPinger();
+        }
+    }
     public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
@@ -637,7 +647,10 @@ public class Controller implements GameObserver {
                 if (!game.getCurrentActive()) game.passTurn();
                 gameState = game.getGamePhase();
                 //locally saving server
+                //im stopping the pingers because the server could be lock (choice of number of players)
+                stopLobbyPingers();
                 server.saveServerStatus();
+                startLobbyPingers();
                 //update
                 if (getnPlayers() == 1) {
                     notifyLobby(new LorenzoUpdate(getLorenzoPosition(), getLastUsedToken(), getGamePhase()));
@@ -664,10 +677,14 @@ public class Controller implements GameObserver {
             if(vc.getClientHandler()!=null) {
                 try {
                     vc.getClientHandler().endConnection();
+                    vc.getClientHandler().endConnection();
                 } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
                 }
+                //stopping the pingers whenever i use a method of server because it could be locked
+                stopLobbyPingers();
                 server.unregisterClient(vc);
+                startLobbyPingers();
             }
         }
         server.removeLobby(this);
