@@ -118,19 +118,54 @@ public class CLI implements Client {
     public static void main(String[] args) throws IOException {
         String serverIP;
         Integer serverPortNumber;
-        System.out.println("Loading connection settings from file . . .");
-
-        try {
-            serverIP = Utilities.loadServerIP();
-            serverPortNumber = Utilities.loadServerPortNumber();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.err.println("serverSettings.json file not found");
-            System.err.println("Closing . . .");
-            return;
+        System.out.println("Select an option:");
+        System.out.println("1)Connect from file");
+        System.out.println("2)Connect manually");
+        BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
+        Integer n=null;
+        while(true) {
+            try {
+                String choice=input.readLine();
+                n = Integer.parseInt(choice);
+                if(n==1 || n==2) break;
+                System.out.println("Invalid choice, try again . . .");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid number, try again . . .");
+            }
         }
-
+        switch (n) {
+            case 1 -> {
+                System.out.println("Loading connection settings from file . . .");
+                try {
+                    serverIP = Utilities.loadServerIP();
+                    serverPortNumber = Utilities.loadServerPortNumber();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                    System.err.println("serverSettings.json file not found");
+                    System.err.println("Closing . . .");
+                    return;
+                }
+            }
+            case 2 -> {
+                System.out.println("Insert the Ip address:");
+                serverIP = input.readLine();
+                while (true) {
+                    System.out.println("Insert the port:");
+                    try {
+                        serverPortNumber = Integer.parseInt(input.readLine());
+                        break;
+                    } catch (NumberFormatException e) {
+                        System.out.println("Incorrect port format, try again . . .");
+                    }
+                }
+            }
+            default -> {
+                System.out.println("Error, closing . . .");
+                return;
+            }
+        }
         new CLI(serverIP, serverPortNumber).run();
+
     }
 
     // Client interface implementation
