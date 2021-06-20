@@ -84,7 +84,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     @Override
     public void visit(DisconnectedMessage message, Client client) {
         message.update(client.getClientModel());
-        client.visualizeDisconnectedMessage();
+        client.visualizeDisconnectedMessage(message.getNickname());
     }
 
     @Override

@@ -49,7 +49,7 @@ public interface Client {
     void visualizeDiscardLeaderUpdate();
     void visualizeFaithUpdate();
     void visualizeMarketUpdate();
-    void visualizeDisconnectedMessage();
+    void visualizeDisconnectedMessage(String nickname);
     void visualizeReconnectMessage(ReconnectMessage message);
     void visualizeDiscardResource();
     void visualizeRevert();
