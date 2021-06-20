@@ -3,6 +3,8 @@ package it.polimi.ingsw.network.messages.updates;
 import it.polimi.ingsw.model.*;
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.enums.ResourceType;
+import it.polimi.ingsw.model.enums.TurnPhase;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
@@ -30,6 +32,7 @@ public class ReconnectUpdate implements Update{
     private final Map<String,List<String>> allLeadersInBoard;
     private final List<String> myLeadersInHand;
     private final GamePhase gamePhase;
+    private final TurnPhase turnPhase;
     private final List<String> fourLeaderCards;
     private final List<ResourceType> pendingResources;
     private final List<String> activePlayers;
@@ -38,7 +41,7 @@ public class ReconnectUpdate implements Update{
     private final Map<Integer,Production> unknownProductions;
 
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards, Map<Integer,Production> unknownProductions) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards, Map<Integer,Production> unknownProductions,TurnPhase turnPhase) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -58,6 +61,7 @@ public class ReconnectUpdate implements Update{
         this.allPlayedCards=allPlayedCards;
         this.allDiscardedCards=allDiscardedCards;
         this.unknownProductions=unknownProductions;
+        this.turnPhase=turnPhase;
     }
 
     @Override
@@ -122,8 +126,9 @@ public class ReconnectUpdate implements Update{
             if(ld != null) clientModel.getBoards().get(clientModel.getNickname()).getLeadersInHand().add(ld);
 
         }
-        //update gamePhase
+        //update gamePhase and turnPhase
         clientModel.setGamePhase(gamePhase);
+        clientModel.setTurnPhase(turnPhase);
         //update 4 leaders
         for (String leaderCard : fourLeaderCards)
             clientModel.addSetupPhaseLeaderCard(leaderCard);
@@ -145,6 +150,13 @@ public class ReconnectUpdate implements Update{
         //update productions with unknown
         if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
             clientModel.getCurrentBoard().setUnknownProductions(unknownProductions);
+        }
+
+        //update pending resources
+        List<Resource> clientPending = clientModel.getCurrentBoard().getPendingResources();
+        clientPending.clear();
+        for(ResourceType res : pendingResources){
+            clientPending.add(Utilities.resourceTypeToResource(res));
         }
 
     }

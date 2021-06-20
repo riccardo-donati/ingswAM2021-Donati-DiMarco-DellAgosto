@@ -356,18 +356,6 @@ public class BoardController extends ControllerGUI {
     }
 
 
-    public void updatePlayLeader(){
-        /*Map<Integer,String> played=gui.getClientModel().getMyBoard().getPlayedCards();
-        //extradeposit
-        if(played.get(0)!=null && gui.getClientModel().getLeaderCard(played.get(0)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot4)){
-            warehouse.add(slot4);
-        }
-        if(played.get(1)!=null && gui.getClientModel().getLeaderCard(played.get(1)).getSpecialAbilities().get(0) instanceof ExtraDeposit && !warehouse.contains(slot5)){
-            warehouse.add(slot5);
-        }*/
-
-    }
-
     public void substituteUnknown(MouseEvent mouseEvent) {
         ResourceType unknownRes;
         if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;
@@ -964,8 +952,8 @@ public class BoardController extends ControllerGUI {
      */
     public void updateFaithPath(){
         for(ImageView i : faithPath) i.setOpacity(0);
-        int position=gui.getClientModel().getMyBoard().getFaithPath().getPosition();
-        faithPath.get(position).setOpacity(100);
+        Integer position=gui.getClientModel().getMyBoard().getFaithPath().getPosition();
+        if(position!=null && position<=24) faithPath.get(position).setOpacity(100);
     }
 
     /**
@@ -974,7 +962,7 @@ public class BoardController extends ControllerGUI {
     public void updateBlackCross(){
         for(ImageView i : blackCross)i.setOpacity(0);
         Integer position=gui.getClientModel().getMyBoard().getFaithPath().getLorenzoPosition();
-        if(position!=null) blackCross.get(position).setOpacity(100);
+        if(position!=null && position<=24) blackCross.get(position).setOpacity(100);
     }
 
     /**

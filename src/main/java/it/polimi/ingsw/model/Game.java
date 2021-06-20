@@ -45,7 +45,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     @Expose
     private Map<String,Map<Integer,String>> discardedCards=new HashMap<>();
     //-------------------------
-    GameObserver externalObserver;
+    private GameObserver externalObserver;
 
     public void addExternalObserver(GameObserver go){
        externalObserver=go;
@@ -287,6 +287,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
+    public void resetCurrentPlayerRef(){
+        for(Player p : players){
+            if(p.getNickname().equals(currPlayer.getNickname()))
+                currPlayer=p;
+        }
+    }
     public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
     public Map<String,DevelopmentCard> getNameDevelopmentCardMap(){return nameDevelopmentCardMap;}
     /**
