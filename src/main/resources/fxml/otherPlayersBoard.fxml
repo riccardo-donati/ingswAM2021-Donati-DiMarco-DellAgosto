@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.OtherBoardController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.OtherBoardController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true">
          <image>
@@ -21,14 +21,14 @@
             <GaussianBlur radius="0.0" />
          </effect>
       </ImageView>
-      <AnchorPane fx:id="playerStatus" layoutY="-6.0" prefHeight="116.0" prefWidth="807.0">
+      <AnchorPane fx:id="playerStatus" prefHeight="116.0" prefWidth="807.0">
          <children>
             <ImageView fitHeight="121.0" fitWidth="130.0" layoutX="14.0" layoutY="-10.0" onMouseClicked="#goBack" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/goBackArrow.png" />
                </image>
             </ImageView>
-            <ImageView fitHeight="144.0" fitWidth="357.0" layoutX="458.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="144.0" fitWidth="335.0" layoutX="458.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/logo.png" />
                </image>
