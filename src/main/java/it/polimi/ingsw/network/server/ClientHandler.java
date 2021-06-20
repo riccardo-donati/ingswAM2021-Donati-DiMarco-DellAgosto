@@ -90,30 +90,34 @@ public class ClientHandler implements Runnable {
         }
     }
     public void startPinger(){
-        if(pinger==null){
-            this.pinger = new Thread(() -> {
-                ping = true;
-                while (ping) {
-                    try {
-                        ping = false;
-                        send(new PingRequest());
-                        Thread.sleep(1500);
-                    } catch (InterruptedException e) {
-                        return;
+        if(isConnected) {
+            if (pinger == null) {
+                this.pinger = new Thread(() -> {
+                    ping = true;
+                    while (ping) {
+                        try {
+                            ping = false;
+                            send(new PingRequest());
+                            Thread.sleep(1500);
+                        } catch (InterruptedException e) {
+                            return;
+                        }
                     }
-                }
-                System.out.println("Player disconnected");
-                server.handleDisconnection(id);
-                isConnected = false;
-            });
+                    System.out.println(id+" Player disconnected");
+                    isConnected = false;
+                    server.handleDisconnection(id);
+                });
 
+            }
+            this.pinger.start();
         }
-        this.pinger.start();
     }
     public void stopPinger(){
-        if(pinger!=null){
-            pinger.interrupt();
-            pinger=null;
+        if(isConnected) {
+            if (pinger != null) {
+                pinger.interrupt();
+                pinger = null;
+            }
         }
     }
     public void startTimer(int ms){
@@ -137,7 +141,7 @@ public class ClientHandler implements Runnable {
         globalCounter++;
         this.id = globalCounter;
         this.timeout = false;
-        this.pinger = new Thread(() -> {
+       /* this.pinger = new Thread(() -> {
             ping = true;
             while (ping) {
                 try {
@@ -152,6 +156,8 @@ public class ClientHandler implements Runnable {
             server.handleDisconnection(id);
             isConnected = false;
         });
+
+        */
     }
 
     public void run() {
