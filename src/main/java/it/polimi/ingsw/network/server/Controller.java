@@ -243,7 +243,7 @@ public class Controller implements GameObserver {
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
             setActive(nickname,true);
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards(),getPlayerUnknownProductions(nickname));
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards(),getPlayerUnknownProductions(nickname),getTurnPhase());
             vc.send(reconnectUpdate);
         }
     }
