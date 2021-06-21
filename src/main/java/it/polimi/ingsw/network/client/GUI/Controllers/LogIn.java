@@ -26,6 +26,17 @@ public class LogIn extends ControllerGUI{
     @FXML private TextField portNumber;
     @FXML private Label emptyInfo;
 
+    @Override
+    public void reset(){
+        /*username.setText("");
+        ipAddress.setText("");
+        portNumber.setText("");
+        ipAddress.setDisable(false);
+        portNumber.setDisable(false);
+
+         */
+        connected=false;
+    }
     public void userLogIn(ActionEvent event)throws Exception{
         if(!connected) {
             if (username.getText().isEmpty() || ipAddress.getText().isEmpty() || portNumber.getText().isEmpty()) {

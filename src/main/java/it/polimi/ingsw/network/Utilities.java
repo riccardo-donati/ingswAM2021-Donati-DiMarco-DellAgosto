@@ -323,8 +323,8 @@ public abstract class Utilities {
         try {
             reader = new JsonReader(new FileReader("serverStatus.json"));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            System.out.println("leaderCard.json not found");
+            System.out.println("Previous server status not found, creating a new server . . .");
+            return new Server(1337);
         }
         Server s=gsonLoad.fromJson(reader,Server.class);
         List<Integer> idsToRemove=new ArrayList<>();

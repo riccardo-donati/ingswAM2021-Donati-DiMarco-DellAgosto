@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.client.ClientVisitorHandler;
 import it.polimi.ingsw.network.client.GUI.Controllers.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
+import it.polimi.ingsw.network.server.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -79,6 +80,11 @@ public class GUI extends Application implements Client {
         stage.show();
     }
 
+    private void resetScenes(){
+        for (Map.Entry<String, ControllerGUI> entry : buildedControllers.entrySet()) {
+            entry.getValue().reset();
+        }
+    }
     private void handleMessages(){
         String jsonString="";
         while (!socket.isClosed()) {
@@ -91,9 +97,9 @@ public class GUI extends Application implements Client {
                 if(clientModel.getGamePhase()!=null && clientModel.getGamePhase().equals(GamePhase.ENDGAME))
                     Platform.runLater(new Thread(()->changeScene(RESULTS)));
                 else {
+                    Platform.runLater(new Thread(this::resetScenes));
                     Platform.runLater(new Thread(() -> changeScene(LOGIN)));
-                    LogIn log = (LogIn) buildedControllers.get(LOGIN);
-                    log.setConnected(false);
+
                 }
                 break;
             }
