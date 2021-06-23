@@ -15,6 +15,7 @@ public class MastersOfRenaissance {
         int userChoice;
         int counter = 0;
         final int maxAttempts = 3;
+        boolean chosen=true;
         System.out.println(Utilities.MORTitle());
         System.out.println("Welcome to Masters of Renaissance!\n");
         System.out.println("What application would you like to launch?");
@@ -41,14 +42,16 @@ public class MastersOfRenaissance {
                 System.err.println("Error, closing . . .");
                 return;
             } catch (NumberFormatException e) {
+                chosen=false;
                 System.err.println("Please insert a number");
                 counter++;
             } catch (IllegalArgumentException e) {
+                chosen=false;
                 counter++;
                 if (counter < maxAttempts)
                     System.err.println("Please Insert a valid option");
                 else System.err.println("Exceeded maximum number of attempts, closing . . .");
             }
-        } while (counter < maxAttempts);
+        } while (!chosen && counter < maxAttempts);
     }
 }

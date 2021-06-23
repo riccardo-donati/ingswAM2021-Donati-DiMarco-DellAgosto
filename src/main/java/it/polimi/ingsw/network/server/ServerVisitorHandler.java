@@ -59,7 +59,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                 //synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     clientHandler.send(new PlayerNumberRequest());
-                    clientHandler.startTimer(5000);
+                    clientHandler.startTimer(50000);
                     ServerMessage message;
                     try {
                         String jsonString = clientHandler.getIn().nextLine();

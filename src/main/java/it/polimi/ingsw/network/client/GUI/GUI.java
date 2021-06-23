@@ -452,6 +452,10 @@ public class GUI extends Application implements Client {
             BoardController l=(BoardController)buildedControllers.get(BOARD);
             ComunicationController.showInfo(currentScene, "A player disconnected: " + clientModel.getDisconnectedPlayers());
             l.setIcons();
+            if(currentScene!=buildedScenes.get(LOGIN) && clientModel.getDisconnectedPlayers().contains(clientModel.getNickname())){
+                Platform.runLater(new Thread(this::resetScenes));
+                Platform.runLater(new Thread(()->changeScene(LOGIN)));
+            }
         }
         else{
             Lobby lo=(Lobby) buildedControllers.get(LOBBY);

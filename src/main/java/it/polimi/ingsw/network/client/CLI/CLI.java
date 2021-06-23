@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.client.CLI;
 
 import com.google.gson.Gson;
 
+import it.polimi.ingsw.MastersOfRenaissance;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -108,6 +109,11 @@ public class CLI implements Client {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
+                try {
+                    MastersOfRenaissance.main(null);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 break;
             }
             ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
