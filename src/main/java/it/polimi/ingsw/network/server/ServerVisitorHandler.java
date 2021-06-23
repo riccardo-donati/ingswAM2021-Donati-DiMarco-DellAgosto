@@ -51,6 +51,7 @@ public class ServerVisitorHandler implements ServerVisitor {
                     return;
                 } catch (ReconnectionException e) {
                     //clientHandler.getPinger().start();
+                    clientHandler.stopPinger();
                     clientHandler.startPinger();
                     return;
                 }

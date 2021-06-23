@@ -91,24 +91,21 @@ public class ClientHandler implements Runnable {
     }
     public void startPinger(){
         if(isConnected) {
-            if (pinger == null) {
-                this.pinger = new Thread(() -> {
-                    ping = true;
-                    while (ping) {
-                        try {
-                            ping = false;
-                            send(new PingRequest());
-                            Thread.sleep(1500);
-                        } catch (InterruptedException e) {
-                            return;
-                        }
+            this.pinger = new Thread(() -> {
+                ping = true;
+                while (ping) {
+                    try {
+                        ping = false;
+                        send(new PingRequest());
+                        Thread.sleep(1000000);
+                    } catch (InterruptedException e) {
+                        return;
                     }
-                    System.out.println(id+" Player disconnected");
-                    isConnected = false;
-                    server.handleDisconnection(id);
-                });
-
-            }
+                }
+                System.out.println(id+" Player disconnected");
+                isConnected = false;
+                server.handleDisconnection(id);
+            });
             this.pinger.start();
         }
     }

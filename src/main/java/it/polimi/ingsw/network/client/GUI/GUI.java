@@ -48,7 +48,7 @@ public class GUI extends Application implements Client {
     private Scanner in;
     private Gson gson;
     private final ClientVisitorHandler clientVisitorHandler;
-    private final ClientModel clientModel;
+    private ClientModel clientModel;
 
     public Map<String, ControllerGUI> getBuildedControllers() {
         return buildedControllers;
@@ -166,6 +166,11 @@ public class GUI extends Application implements Client {
     @Override
     public ClientModel getClientModel() {
         return clientModel;
+    }
+
+    @Override
+    public void setClientModel(ClientModel clientModel) {
+        this.clientModel = clientModel;
     }
 
     @Override
@@ -455,6 +460,15 @@ public class GUI extends Application implements Client {
             if(currentScene!=buildedScenes.get(LOGIN) && clientModel.getDisconnectedPlayers().contains(clientModel.getNickname())){
                 Platform.runLater(new Thread(this::resetScenes));
                 Platform.runLater(new Thread(()->changeScene(LOGIN)));
+                Platform.runLater(new Thread(()->{
+                    out.close();
+                    in.close();
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }));
             }
         }
         else{

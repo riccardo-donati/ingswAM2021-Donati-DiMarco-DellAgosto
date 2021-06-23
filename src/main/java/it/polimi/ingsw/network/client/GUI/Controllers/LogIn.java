@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.messages.Message;
 import it.polimi.ingsw.network.messages.RegisterResponse;
 import javafx.event.ActionEvent;
@@ -68,6 +70,7 @@ public class LogIn extends ControllerGUI{
     }
 
     public void register(){
+        gui.setClientModel(new ClientModel());
         gui.send(new RegisterResponse(username.getText()));
         gui.getClientModel().setNickname(username.getText());
     }

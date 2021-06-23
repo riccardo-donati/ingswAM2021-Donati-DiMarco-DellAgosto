@@ -34,7 +34,7 @@ public class CLI implements Client {
     private Gson gson;
 
     private final ClientVisitorHandler clientVisitorHandler;
-    private final ClientModel clientModel;
+    private ClientModel clientModel;
     private String currCommand = "";
 
     public CLI(String serverIP, Integer serverPortNumber){
@@ -441,6 +441,11 @@ public class CLI implements Client {
     @Override
     public void visualizeResetProductions() {
         System.out.println("Productions resetted!");
+    }
+
+    @Override
+    public void setClientModel(ClientModel clientModel) {
+        this.clientModel = clientModel;
     }
 
 }

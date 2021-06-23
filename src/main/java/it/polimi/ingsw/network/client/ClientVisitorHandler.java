@@ -244,8 +244,7 @@ public class ClientVisitorHandler implements ClientVisitor{
     public void visit(ReconnectUpdate message, Client client) {
         message.update(client.getClientModel());
 
-       client.visualizeReconnection(message);
-
+        client.visualizeReconnection(message);
     }
 }
 
