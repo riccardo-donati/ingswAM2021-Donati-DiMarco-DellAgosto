@@ -423,7 +423,9 @@ public class GUI extends Application implements Client {
         l.updatePickedRes();
         l.updateDiscountsExtraProd();
         l.updatePending();
+        l.setupClickable();
         l.setLeaderPower();
+        l.updateToggledProduction();
         if(clientModel.getGamePhase()==GamePhase.SETUP) {
             SetupController s = (SetupController) buildedControllers.get(SETUP);
             s.updateLeader();

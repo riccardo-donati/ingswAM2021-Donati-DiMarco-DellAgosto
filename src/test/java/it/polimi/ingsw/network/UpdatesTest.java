@@ -387,7 +387,7 @@ public class UpdatesTest {
         List<String> myLeadersInHand=new ArrayList<>();
         myLeadersInHand.add("10L");
         //--------------------------------------------
-        ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand,GamePhase.ONGOING,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),TurnPhase.STARTTURN);
+        ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand,GamePhase.ONGOING,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),TurnPhase.STARTTURN,new HashMap<>(),new ArrayList<>(),new ArrayList<>());
         ru.update(cmnew);
 
         System.out.println(cmnew);

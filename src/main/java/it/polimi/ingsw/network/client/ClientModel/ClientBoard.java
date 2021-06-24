@@ -45,6 +45,10 @@ public class ClientBoard {
 
     }
 
+    public void setDiscounts(List<ResourceDiscount> discounts) {
+        this.discounts = discounts;
+    }
+
     public void setUnknownProductions(Map<Integer,Production> unknownProductions){
         for (Map.Entry<Integer, Production> entry : unknownProductions.entrySet()) {
             if(entry.getKey()==-1)

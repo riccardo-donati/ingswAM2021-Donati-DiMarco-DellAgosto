@@ -7,7 +7,9 @@ import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.*;
+import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.server.GameObserver;
 import java.io.*;
 import java.lang.reflect.Type;
@@ -430,6 +432,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return  map;
     }
+
     public Map<String,Map<Integer, Stack<String>>> getAllSlots(){
         Map<String,Map<Integer, Stack<String>>> allSlotsMap=new HashMap<>();
         for(Player p : players){
@@ -488,6 +491,32 @@ public abstract class Game implements BoardObserver, PublicInterface {
             list.add(p.getNickname());
         }
         return list;
+    }
+    public List<ResourceDiscount> getPlayerDiscounts(String nickname){
+        for(Player p : players){
+            if(p.getNickname().equals(nickname)){
+                return p.getDiscounts();
+            }
+        }
+        return new ArrayList<>();
+    }
+    public Map<Resource,Integer> getPlayerPickedResources(String nickname){
+        Map<Resource,Integer> map=new HashMap<>();
+        for(Player p : players){
+            if(p.getNickname().equals(nickname)){
+               Map<Integer,Map<ResourceType,Integer>> picked=p.getPickedResource();
+                for (Map.Entry<Integer, Map<ResourceType,Integer>> entry1 : picked.entrySet()) {
+                    for (Map.Entry<ResourceType, Integer> entry2 : entry1.getValue().entrySet()) {
+                        if(map.get(Utilities.resourceTypeToResource(entry2.getKey()))==null)
+                            map.put(Utilities.resourceTypeToResource(entry2.getKey()),entry2.getValue());
+                        else{
+                            map.replace(Utilities.resourceTypeToResource(entry2.getKey()),entry2.getValue()+map.get(Utilities.resourceTypeToResource(entry2.getKey())));
+                        }
+                    }
+                }
+            }
+        }
+        return map;
     }
     public List<ResourceType> getPlayerPending(String nickname){
         for(Player p : players){

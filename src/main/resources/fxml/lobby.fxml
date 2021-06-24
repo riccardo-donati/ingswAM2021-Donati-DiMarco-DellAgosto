@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<SplitPane dividerPositions="0.9091174751607247" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="686.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.Lobby">
+<SplitPane dividerPositions="0.9091174751607247" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="686.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.Lobby">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
@@ -60,7 +60,7 @@
                   </ImageView>
                   <Label fx:id="player3Name" alignment="CENTER" layoutX="2.0" layoutY="201.0" prefHeight="40.0" prefWidth="203.0" textAlignment="CENTER">
                      <font>
-                        <Font name="Footlight MT Light" size="38.0" />
+                        <Font name="Gabriola" size="38.0" />
                      </font>
                   </Label>
                </children>

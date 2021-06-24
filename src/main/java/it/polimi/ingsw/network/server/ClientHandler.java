@@ -97,7 +97,7 @@ public class ClientHandler implements Runnable {
                     try {
                         ping = false;
                         send(new PingRequest());
-                        Thread.sleep(1000000);
+                        Thread.sleep(1500);
                     } catch (InterruptedException e) {
                         return;
                     }
@@ -193,7 +193,6 @@ public class ClientHandler implements Runnable {
     public void endConnection() throws InterruptedException {
         stopPinger();
         send(new DisconnectionMessage());
-        Thread.sleep(3000);
         out.close();
         in.close();
         try {

@@ -6,6 +6,7 @@ import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
+import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import it.polimi.ingsw.network.server.GameObserver;
 
 import java.util.List;
@@ -52,6 +53,8 @@ public interface PublicInterface {
      List<ResourceType> getPlayerPending(String nickname);
      Map<String,Map<Integer,String>> getAllDiscardedCards();
      Map<String,Map<Integer,String>> getAllPlayedCards();
+     Map<Resource,Integer> getPlayerPickedResources(String nickname);
+     List<ResourceDiscount> getPlayerDiscounts(String nickname);
      Map<Integer,Production> getPlayerUnknownProductions(String name);
      void resetCurrentPlayerRef();
      void setGameObservers();
