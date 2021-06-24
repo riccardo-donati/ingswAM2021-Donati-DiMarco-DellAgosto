@@ -416,6 +416,22 @@ public class CLI implements Client {
     public void visualizeDisconnectedMessage(String nickname) {
         System.out.println("Disconnected Players: ");
         System.out.println(clientModel.getDisconnectedPlayers());
+        if(clientModel.getDisconnectedPlayers().contains(clientModel.getNickname())){
+            System.out.println("You are being disconnected . . .");
+            System.out.println("Press any key to continue");
+            out.close();
+            in.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                MastersOfRenaissance.main(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
