@@ -20,12 +20,17 @@ public class LogIn extends ControllerGUI{
         connected=false;
     }
 
-    List<TextField> campi=new ArrayList<>();
+    List<TextField> campi =new ArrayList<>();
     @FXML private TextField username;
     @FXML private TextField ipAddress;
     @FXML private TextField portNumber;
     @FXML private Label emptyInfo;
 
+    /**
+     * the click on the login button sends a register request
+     * @param event the mouse click on the login button
+     * @throws Exception
+     */
     public void userLogIn(ActionEvent event)throws Exception{
         if(!connected) {
             if (username.getText().isEmpty() || ipAddress.getText().isEmpty() || portNumber.getText().isEmpty()) {
@@ -47,20 +52,34 @@ public class LogIn extends ControllerGUI{
         }else register();
     }
 
+    /**
+     * sets the variable connect true once is called by the handleMessage method in the GUI
+     * @param connected
+     */
     public void setConnected(boolean connected) {
         this.connected = connected;
     }
 
+    /**
+     * sets ipAddress and PortNumber clickable
+     */
     public void unlock(){
         ipAddress.setDisable(false);
         portNumber.setDisable(false);
     }
 
+    /**
+     * the log in button sends a request with the nickname and sets the relative current nickname
+     */
     public void register(){
         gui.send(new RegisterResponse(username.getText()));
         gui.getClientModel().setNickname(username.getText());
     }
 
+    /**
+     * the quit button closes the application
+     * @param event click on the quit button
+     */
     public void quit(ActionEvent event){
         System.exit(0);
     }

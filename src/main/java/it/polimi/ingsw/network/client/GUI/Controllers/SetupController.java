@@ -49,6 +49,7 @@ public class SetupController extends ControllerGUI{
         warehouse.add(slot2);
         warehouse.add(slot3);
     }
+
     public SetupController(){
     }
     List<ImageView> leadersImageViews=new ArrayList<>();
@@ -73,12 +74,19 @@ public class SetupController extends ControllerGUI{
     @FXML private ImageView res32;
     @FXML private ImageView res33;
 
+    /**
+     * shows the 4 random leader that the player has to choose from
+     */
     public void updateLeader(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(int i=0;i<leaderCards.size();i++)
             leadersImageViews.get(i).setImage(new Image("/images/leader_cards/"+leaderCards.get(i)+".png"));
     }
 
+    /**
+     * based on the clicked card, sets it to green and notes to a list which is clicked
+     * @param mouseEvent click on the leader card
+     */
     public void colorLeader(MouseEvent mouseEvent) {
         if (selected.size()==2) replace = true;
         else replace = false;
@@ -97,6 +105,10 @@ public class SetupController extends ControllerGUI{
         colorSelected();
     }
 
+    /**
+     * adds the colored card to the list of the 2 chosen card
+     * @param r the shape on scene builder that is under the Leader card
+     */
     public void checkList(Rectangle r){
         if(selected.contains(r)) selected.remove(r);
         else if(replace && !selected.contains(r)){
@@ -106,6 +118,9 @@ public class SetupController extends ControllerGUI{
         else selected.add(r);
     }
 
+    /**
+     * sets the rectangle to the relative color, chosen = green else grey
+     */
     public void colorSelected(){
         if(selected.contains(l1Cover)) l1Cover.setFill(Color.GREEN);
         else l1Cover.setFill(Color.valueOf("#b0b3b5"));
@@ -117,17 +132,30 @@ public class SetupController extends ControllerGUI{
         else l4Cover.setFill(Color.valueOf("#b0b3b5"));
     }
 
-
+    /**
+     * the click on the chose leader button checks if the requirement are met and sends the command with the relative
+     * chosen cards
+     * @param mouseEvent click on the chose leader button
+     * @throws IOException
+     */
     public void chooseLeaders(MouseEvent mouseEvent) throws IOException {
         if(selected.size()<2)
             ComunicationController.showError(gui.getCurrentScene(), "You have to choose 2 leader cards!");
         else gui.send(new ChooseLeadersCommand(leaderList()));
     }
 
+    /**
+     * the click on pass ends the setup phase
+     * @param mouseEvent click on the pass button
+     */
     public void passTurn(MouseEvent mouseEvent) {
         gui.send(new PassCommand());
     }
 
+    /**
+     * function that returns the List of chosen leaders
+     * @return
+     */
     public List leaderList(){
         leaderCards = gui.getClientModel().getSetupPhaseLeaderCards();
         for(Rectangle r : selected){
@@ -139,6 +167,10 @@ public class SetupController extends ControllerGUI{
         return chosenL;
     }
 
+    /**
+     * some players have to choose a bonus resource that has to be placed in the warehouse, this function updates
+     * the warehouse with the chosen resource
+     */
     public void updateWarehouse(){
         ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
         List<Shelf> shelves=clientDeposits.getShelves();
@@ -155,6 +187,11 @@ public class SetupController extends ControllerGUI{
             }
         }
     }
+
+    /**
+     * the click on a warehouse shelf sends a command containing where to place that resource
+     * @param mouseEvent click on the shelf
+     */
     public void placeResource(MouseEvent mouseEvent) {
         Node node=(Node)mouseEvent.getSource();
         if(node.getId().equals("warehouse1")) id = 1;
@@ -167,6 +204,10 @@ public class SetupController extends ControllerGUI{
         gui.send(new ChooseBonusResourceCommand(res, id));
     }
 
+    /**
+     * a click on a resource sets it to green, indicating that it has been selected
+     * @param mouseEvent click on a resource
+     */
     public void selectedRes(MouseEvent mouseEvent) {
         if(mouseEvent.getSource().toString().equals("ImageView[id=selectedCoin, styleClass=image-view]")) {
             res = ResourceType.YELLOW;
@@ -210,4 +251,5 @@ public class SetupController extends ControllerGUI{
         }
         mouseEvent.consume();
     }
+
 }

@@ -64,12 +64,19 @@ public class GUI extends Application implements Client {
         setup();
         this.stage = stage;
         run();
-
     }
+
+    /**
+     * a command is sent out using gson and json
+     * @param m message passed
+     */
     public void send(Message m){
         out.println(gson.toJson(m,Message.class));
     }
 
+    /**
+     * first scene of the game that sets the current scene, the size and the game icon
+     */
     private void run() {
         stage.setScene(currentScene);
         stage.setResizable(false);
@@ -79,6 +86,9 @@ public class GUI extends Application implements Client {
         stage.show();
     }
 
+    /**
+     * as long as the client is connected, it handles the commands from the client to the server
+     */
     private void handleMessages(){
         String jsonString="";
         while (!socket.isClosed()) {
@@ -101,6 +111,13 @@ public class GUI extends Application implements Client {
             Platform.runLater(new Thread(()->message.accept(clientVisitorHandler, this)));
         }
     }
+
+    /**
+     * when a player hits the login button it sets a connection based on the ip and port
+     * @param serverIP ip setted in the login scene
+     * @param serverPortNumber port number setted in the login scene
+     * @return
+     */
     public boolean connect(String serverIP,Integer serverPortNumber){
         try {
             socket = new Socket(serverIP, serverPortNumber);
@@ -119,6 +136,10 @@ public class GUI extends Application implements Client {
 
     }
 
+    /**
+     * GUI setup where a map that contains all the scenes and all the controller is created, so it's easier to switch
+     * among them, also sets the first scene as the login scene
+     * */
     private void setup() {
         List<String> listFxml = new ArrayList<>(Arrays.asList(LOGIN,NPLAYERS,BOARD,LOBBY,WAITING,SETUP,OTHERBOARD,RESULTS));
         try{
@@ -137,8 +158,13 @@ public class GUI extends Application implements Client {
         currentScene = buildedScenes.get(LOGIN);
     }
 
+    /**
+     * this function change the scene based on the passed String
+     */
     public void changeScene(String newScene) {
         currentScene = buildedScenes.get(newScene);
+        //stage.setWidth(currentScene.getWidth());
+        //stage.setHeight(currentScene.getHeight());
         stage.setScene(currentScene);
         stage.setResizable(false);
         stage.sizeToScene();
@@ -146,6 +172,10 @@ public class GUI extends Application implements Client {
         stage.show();
     }
 
+    /**
+     * useful to the pop-ups
+     * @return the current scene
+     */
     public Scene getCurrentScene() {
         return currentScene;
     }

@@ -1,26 +1,30 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.SplitPane?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
 
-<SplitPane dividerPositions="0.9091174751607247" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="686.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.Lobby">
+<SplitPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="686.0" prefWidth="1021.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.Lobby">
   <items>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
          <children>
-            <ImageView fitHeight="619.0" fitWidth="1023.0" pickOnBounds="true">
+            <ImageView fitHeight="686.0" fitWidth="1023.0" pickOnBounds="true">
                <image>
                   <Image url="@../images/codex.jpg" />
                </image>
                <effect>
-                  <GaussianBlur radius="0.0" />
+                  <GaussianBlur radius="3.0" />
                </effect>
             </ImageView>
-            <Label layoutX="12.0" layoutY="5.0" prefHeight="52.0" prefWidth="154.0" text="LOBBY">
+            <Label layoutX="14.0" prefHeight="52.0" prefWidth="154.0" text="LOBBY">
                <font>
-                  <Font name="Gabriola" size="48.0" />
+                  <Font name="Gabriola" size="55.0" />
                </font>
             </Label>
             <AnchorPane fx:id="anchor1" layoutX="170.0" layoutY="69.0" prefHeight="255.0" prefWidth="190.0">
@@ -51,7 +55,7 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anchor3" layoutX="170.0" layoutY="328.0" opacity="0.32" prefHeight="255.0" prefWidth="203.0">
+            <AnchorPane fx:id="anchor3" layoutX="170.0" layoutY="357.0" opacity="0.32" prefHeight="255.0" prefWidth="203.0">
                <children>
                   <ImageView fitHeight="211.0" fitWidth="206.0" layoutX="4.0" layoutY="2.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -60,12 +64,12 @@
                   </ImageView>
                   <Label fx:id="player3Name" alignment="CENTER" layoutX="2.0" layoutY="201.0" prefHeight="40.0" prefWidth="203.0" textAlignment="CENTER">
                      <font>
-                        <Font name="Footlight MT Light" size="38.0" />
+                        <Font name="Gabriola" size="38.0" />
                      </font>
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="anchor4" layoutX="589.0" layoutY="328.0" opacity="0.32" prefHeight="255.0" prefWidth="203.0">
+            <AnchorPane fx:id="anchor4" layoutX="589.0" layoutY="357.0" opacity="0.32" prefHeight="255.0" prefWidth="203.0">
                <children>
                   <ImageView fitHeight="210.0" fitWidth="206.0" layoutY="3.0" pickOnBounds="true" preserveRatio="true">
                      <image>
@@ -79,25 +83,14 @@
                   </Label>
                </children>
             </AnchorPane>
-            <Label layoutX="285.0" layoutY="570.0" prefHeight="50.0" prefWidth="518.0" text="WAITING FOR OTHER PLAYERS">
+            <Label layoutX="295.0" layoutY="621.0" prefHeight="50.0" prefWidth="399.0" text="WAITING FOR OTHER PLAYERS">
                <font>
                   <Font name="Gabriola" size="38.0" />
                </font>
             </Label>
-         </children></AnchorPane>
-    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="44.0" prefWidth="1021.0">
-         <children>
-            <ImageView fitHeight="755.0" fitWidth="1032.0" layoutY="-659.0" pickOnBounds="true" preserveRatio="true">
-               <image>
-                  <Image url="@../images/codex.jpg" />
-               </image>
-               <effect>
-                  <GaussianBlur radius="0.0" />
-               </effect>
-            </ImageView>
-            <Label layoutX="14.0" layoutY="14.0" prefHeight="40.0" prefWidth="48.0" text="Rules:">
+            <Label fx:id="link" alignment="CENTER" layoutX="907.0" layoutY="619.0" onMouseClicked="#showRules" prefHeight="40.0" prefWidth="99.0" text="Rules">
                <font>
-                  <Font size="18.0" />
+                  <Font name="Gabriola" size="43.0" />
                </font>
                <effect>
                   <Lighting>
@@ -107,7 +100,6 @@
                   </Lighting>
                </effect>
             </Label>
-            <Hyperlink layoutX="82.0" layoutY="22.0" text="http://boardgame.bg/masters%20of%20renaissance%20rules.pdf" />
          </children></AnchorPane>
   </items>
 </SplitPane>

@@ -355,7 +355,11 @@ public class BoardController extends ControllerGUI {
         tt.play();
     }
 
-
+    /**
+     * sends the substitute command based on the resource clicked, the ? place (if input or output) and the index, useful
+     * to the model to identify if it's a base or extra
+     * @param mouseEvent
+     */
     public void substituteUnknown(MouseEvent mouseEvent) {
         ResourceType unknownRes;
         if(mouseEvent.getSource().toString().contains("Coin")) unknownRes = ResourceType.YELLOW;
@@ -380,7 +384,8 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     *
+     * based on which element ? is clicked this function saves if it's an input or an output and sets the coordinates of
+     * where the replaceable resources should be ( base input, output or extra)
      * @param mouseEvent
      */
     public void showUnknownRes(MouseEvent mouseEvent) {
@@ -428,7 +433,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * shows and hides the Unknown panel, sets it unclickable and invisible
+     * shows and hides the Unknown panel, also sets it unclickable and invisible
      */
     public void moveUnknown(int placeX, int placeY, String io){
         hiddenUnknown.setLayoutY(placeY);
@@ -452,7 +457,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * graphic update of the unknown resource based
+     * graphic update of the unknown resource based on which resource is clicked
      */
     public void updateUnknown(){
         List<ResourceType> list = new ArrayList<>(gui.getClientModel().getMyBoard().getBaseProduction().getInput().keySet());
@@ -488,7 +493,10 @@ public class BoardController extends ControllerGUI {
             else unknownOutput.setImage(null);
         }
 
-        //Extraprod
+        /**
+         * extra production's check. Assures that when the conditions are met, the player can substitute the ? into a resource
+         * and also can toggle (shown as a green arrow) the production if he wants to use it
+         */
         List<Production> extraProds=gui.getClientModel().getMyBoard().getExtraProductions();
         Production lp1 = null;
         Production lp2 = null;
@@ -645,6 +653,7 @@ public class BoardController extends ControllerGUI {
     public void manageCardMarket(MouseEvent mouseEvent){
         showCardMarket();
     }
+
     /**
      * function that updates every resource in the strongbox with it's value
      */
@@ -699,6 +708,7 @@ public class BoardController extends ControllerGUI {
             }
         }
     }
+
     /**
      *updates the LCard zone, filling the rectangle with green if active, setting the back if discarded
      */
@@ -735,6 +745,9 @@ public class BoardController extends ControllerGUI {
         }
     }
 
+    /**
+     * a setup command useful to hide and make unclickable all the things that shouldn't be clickable due to not active cards
+     */
     public void setupClickable(){
         //metto inutilizabili gli extraDeposit 4 e 5 a meno che le LCard siano di questo tipo
         resSlot41.setDisable(true);
@@ -902,6 +915,12 @@ public class BoardController extends ControllerGUI {
         numberPendingWhite.setText(nUnknown);
     }
 
+    /**
+     * function that counts the current pending resources
+     * @param pending a list of resources
+     * @param check a Resource useful to iterate through the pending list
+     * @return the number of pending resources as a string, that will be set in a specific Label
+     */
     public String countPending(List<Resource> pending, Resource check){
         Integer count=0;
         for(Resource res : pending){
@@ -912,7 +931,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * based on the client card this function shows the top card of each pile, obscures the card if pile's empty
+     * based on the client cards this function shows the top card of each pile, obscures the card if pile's empty
      */
     public void updateCardMatrix(){
         Stack<DevelopmentCard>[][] cards = gui.getClientModel().getCardMatrix().getCards();
@@ -1551,6 +1570,10 @@ public class BoardController extends ControllerGUI {
         }
     }
 
+    /**
+     * checks if the discount leader card is clicked and if it is shows a green arrow that tell's the player that the discount
+     * pointed is active, due to the fact that it could also be deactivated
+     */
     public void updateDiscountsExtraProd(){
         //leader1
         String name=gui.getClientModel().getMyBoard().getPlayedCards().get(0);
@@ -1641,17 +1664,27 @@ public class BoardController extends ControllerGUI {
         }
     }
 
-    public void extraSubstituteUnknown(MouseEvent mouseEvent) {
-    }
-
+    /**
+     * sets the base production unclicable
+     * @param mouseEvent the click on the base production
+     */
     public void unclickableBProd(MouseEvent mouseEvent) {
         baseProduction.setDisable(true);
     }
 
+    /**
+     * sets the base production clickable
+     * @param mouseEvent  the click on base production
+     */
     public void clickableBProd(MouseEvent mouseEvent) {
         baseProduction.setDisable(false);
     }
 
+    /**
+     * the drag of a white marble into the card transforms that marble into a specific resource, this function is needed
+     * when there are 2 whiteTo active so there must be a choice between them
+     * @param event drop the white marble on a card
+     */
     public void whiteTo(DragEvent event){
         if(movedRes==ResourceType.WHITE){
             Node node=(Node)event.getSource();

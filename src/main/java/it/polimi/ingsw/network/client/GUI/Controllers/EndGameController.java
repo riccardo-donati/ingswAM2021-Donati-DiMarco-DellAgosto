@@ -5,7 +5,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.paint.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +25,9 @@ public class EndGameController extends ControllerGUI{
     @FXML private Label p3;
     @FXML private Label p4;
 
+    /**
+     * generates a list of Labels, useful to assign later
+     */
     public EndGameController(){
         List<Label> playersResources = new ArrayList<>();
         playersResources.add(resourcesP1);
@@ -39,6 +41,10 @@ public class EndGameController extends ControllerGUI{
         playersPoints.add(pointsP4);
     }
 
+    /**
+     * Shows the final game's results, each player's name their score and number of resources
+     * @param result A class that contains each player's score
+     */
     public void setValues(Result result) {
         if(gui.getClientModel().getPlayersInOrder().size() == 0){
             p1.setText(gui.getClientModel().getCurrentNickname());

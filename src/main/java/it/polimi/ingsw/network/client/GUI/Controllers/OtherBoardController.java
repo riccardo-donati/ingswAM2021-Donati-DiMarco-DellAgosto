@@ -164,12 +164,16 @@ public class OtherBoardController extends ControllerGUI{
         slotsDC.add(slotDC3);
     }
 
+    /**
+     * the click on the up-left arrow takes the player back to his board
+     * @param mouseEvent
+     */
     public void goBack(MouseEvent mouseEvent) {
         gui.changeScene(GUI.BOARD);
     }
 
     /**
-     * function that will update the result of the drag & drop event in the warehouse
+     * shows the resource inside the player's warehouse
      */
     public void updateWarehouse(ClientBoard clientBoard){
         ClientDeposits clientDeposits=clientBoard.getDeposits();
@@ -224,34 +228,10 @@ public class OtherBoardController extends ControllerGUI{
         }
 
     }
-    /*
-    public void updateWarehouse(ClientBoard clientBoard){
-        List<Shelf> shelves=clientBoard.getDeposits().getShelves();
-        for(int i=0;i<shelves.size();i++){
-            int indexExtra=i;
-            if(i>2){
-                indexExtra=-1;
-                for (Map.Entry<Integer, String> entry : clientBoard.getPlayedCards().entrySet()) {
-                    if(entry.getValue().equals("5L") ||entry.getValue().equals("6L") ||entry.getValue().equals("7L") ||entry.getValue().equals("8L")){
-                        if(indexExtra!=-1){
-                            indexExtra=i; //2 if both are extradeposits
-                        }
-                        else indexExtra=entry.getKey()+3;
-                    }
-                }
-                if(indexExtra==-1) return;//no extra deposits
-            }
-            List<ImageView> slotImageViews=warehouse.get(indexExtra);
-            for(int j=0;j<slotImageViews.size();j++){
-                if(shelves.get(i).getSpaces()[j]== Resource.EMPTY)
-                    slotImageViews.get(j).setImage(null);
-                else{
-                    slotImageViews.get(j).setImage(new Image("/images/resources/" +shelves.get(i).getSpaces()[j].toString().toLowerCase()+ ".png"));
-                }
-            }
-        }
-    }
 
+    /**
+     * shows the unactive, active or discarded pope favor cards
+     * @param cfp the clicked player's faithpath
      */
     public void updatePopeFavor(ClientFaithPath cfp){
         for(int i=0;i<popes.size();i++) {
@@ -261,6 +241,11 @@ public class OtherBoardController extends ControllerGUI{
                 popes.get(i).setOpacity(0);
         }
     }
+
+    /**
+     * sets the player's bought card
+     * @param clientBoard the clicked player's board
+     */
     public void updateSlots(ClientBoard clientBoard){
         Map<Integer, Stack<DevelopmentCard>> slots=clientBoard.getSlots();
         for(int i=1;i<=slots.size();i++) {
@@ -269,6 +254,11 @@ public class OtherBoardController extends ControllerGUI{
             }
         }
     }
+
+    /**
+     * shows actives, discarded or unactive player's leader cards
+     * @param clientBoard the clicked player's board
+     */
     public void updateLCards(ClientBoard clientBoard){
         leaderCard1.setImage(new Image("/images/back LCard.png"));
         leaderCard2.setImage(new Image("/images/back LCard.png"));
@@ -288,14 +278,22 @@ public class OtherBoardController extends ControllerGUI{
             leaderCard2.setImage(new Image("/images/leader_cards/" + played.get(1) + ".png"));
             leader2.setFill(Color.GREEN);
         }
-
     }
+
+    /**
+     * updates the player's faithpath
+     * @param clientFaithPath
+     */
     public void updateFaithPath(ClientFaithPath clientFaithPath){
         for(ImageView i : faithPath) i.setOpacity(0);
         Integer position=clientFaithPath.getPosition();
         faithPath.get(position).setOpacity(100);
     }
 
+    /**
+     * as soon as a player's icon is clicked the model updates a new board based on the player's infos
+     * @param nickname
+     */
     public void visualizeBoard(String nickname){
         ClientBoard cb=gui.getClientModel().getBoards().get(nickname);
         if(cb!=null){
@@ -308,6 +306,10 @@ public class OtherBoardController extends ControllerGUI{
         }
     }
 
+    /**
+     * the click on an other player's strongbox open it's resource container
+     * @param mouseEvent mouse click on the box
+     */
     public void openStrongBox(MouseEvent mouseEvent) {
         TranslateTransition tt = new TranslateTransition(Duration.seconds(0.7), hiddenPanel);
         if(!clickedBox){
@@ -323,6 +325,10 @@ public class OtherBoardController extends ControllerGUI{
         tt.play();
     }
 
+    /**
+     * udates the clicked player strongbox
+     * @param cb
+     */
     public void updateStrongbox(ClientBoard cb) {
         Map<Resource, Integer> strongbox = cb.getDeposits().getStrongbox();
         strongboxCoins.setText(strongbox.get(Resource.COIN).toString());

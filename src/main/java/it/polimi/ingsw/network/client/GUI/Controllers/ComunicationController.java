@@ -8,6 +8,11 @@ import javafx.stage.Stage;
 
 public class ComunicationController {
 
+    /**
+     * when an error due to an illegal action is found, the GUI shows a warning pop-up with the relative illegal action of warn
+     * @param scene to show the pop up the alert needs the current scene
+     * @param error the string with the error's type
+     */
     public static void showError(Scene scene, String error){
         Stage stg = (Stage) scene.getWindow();
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -18,6 +23,11 @@ public class ComunicationController {
         alert.showAndWait();
     }
 
+    /**
+     * when a player needs to know what to do a Info pop-up is shown
+     * @param scene to show the pop up the alert needs the current scene
+     * @param info the string with what the player's need to know
+     */
     public static void showInfo(Scene scene, String info){
         Stage stg = (Stage) scene.getWindow();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -28,6 +38,11 @@ public class ComunicationController {
         alert.showAndWait();
     }
 
+    /**
+     * when the player passes the turn, a pop-up shows Lorenzo's actions
+     * @param scene to show the pop up the alert needs the current scene
+     * @param lorenzoActions a string with what Lorenzo did during his turn
+     */
     public static void showLorenzo(Scene scene, String lorenzoActions){
         Stage stg = (Stage) scene.getWindow();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -42,6 +57,10 @@ public class ComunicationController {
         alert.showAndWait();
     }
 
+    /**
+     * when a player reaches 7 Cards or 24 on the FaithPath the Endgame is triggered and every player is notified
+     * @param scene to show the pop up the alert needs the current scene
+     */
     public static void endGameNotify(Scene scene){
         Stage stg = (Stage) scene.getWindow();
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
