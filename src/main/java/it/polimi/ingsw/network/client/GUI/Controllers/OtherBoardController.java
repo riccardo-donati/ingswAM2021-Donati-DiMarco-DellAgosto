@@ -89,9 +89,22 @@ public class OtherBoardController extends ControllerGUI{
     List<List<ImageView>> warehouse=new ArrayList<>();
     List<ImageView> faithPath=new ArrayList<>();
     List<List<ImageView>> slotsDC=new ArrayList<>();
-    List<ImageView> slot4;
-    List<ImageView> slot5;
     Boolean clickedBox = false;
+
+    @Override
+    public void reset(){
+        resSlot41.setImage(null);
+        resSlot42.setImage(null);
+        resSlot51.setImage(null);
+        resSlot52.setImage(null);
+
+        popes=new ArrayList<>();
+        warehouse=new ArrayList<>();
+        faithPath=new ArrayList<>();
+        slotsDC=new ArrayList<>();
+        clickedBox=false;
+        initializeElements();
+    }
 
     @Override
     public void initializeElements(){
@@ -104,10 +117,10 @@ public class OtherBoardController extends ControllerGUI{
         slot3.add(resSlot31);
         slot3.add(resSlot32);
         slot3.add(resSlot33);
-        slot4=new ArrayList<>();
+        List<ImageView> slot4=new ArrayList<>();
         slot4.add(resSlot41);
         slot4.add(resSlot42);
-        slot5=new ArrayList<>();
+        List<ImageView> slot5=new ArrayList<>();
         slot5.add(resSlot51);
         slot5.add(resSlot52);
 
@@ -295,6 +308,7 @@ public class OtherBoardController extends ControllerGUI{
      * @param nickname
      */
     public void visualizeBoard(String nickname){
+        reset();
         ClientBoard cb=gui.getClientModel().getBoards().get(nickname);
         if(cb!=null){
             updateWarehouse(cb);

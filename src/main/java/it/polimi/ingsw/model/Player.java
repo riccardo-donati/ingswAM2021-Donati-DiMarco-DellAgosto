@@ -299,6 +299,38 @@ public class Player {
         extraProductions.add(production);
     }
 
+    protected void resetPlayerProductions(){
+        for (Production production : extraProductions) {
+            if (production.checkSelected()) {
+                try {
+                    production.toggleSelected();
+                } catch (UnknownFoundException ignored) {
+                }
+            }
+            production.resetProduction();
+        }
+        for (Stack<DevelopmentCard> stack : board.getSlots().values()) {
+            for (DevelopmentCard developmentCard : stack) {
+                Production production = developmentCard.getProd();
+                if (production.checkSelected()) {
+                    try {
+                        production.toggleSelected();
+                    } catch (UnknownFoundException ignored) {
+                    }
+                }
+                production.resetProduction();
+            }
+        }
+        Production production = board.getBaseProduction();
+        if (production.checkSelected()) {
+            try {
+                production.toggleSelected();
+            } catch (UnknownFoundException ignored) {
+            }
+        }
+        production.resetProduction();
+    }
+
     protected void deSelectAllProductions(){
         for (Production production : extraProductions) {
             if (production.checkSelected()) {
@@ -325,6 +357,7 @@ public class Player {
         if (production.checkSelected()) {
             try {
                 production.toggleSelected();
+                production.resetProduction();
             } catch (UnknownFoundException ignored) {
             }
         }

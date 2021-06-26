@@ -57,6 +57,11 @@ public class BoardController extends ControllerGUI {
 
     @Override
     public void reset(){
+        resSlot41.setImage(null);
+        resSlot42.setImage(null);
+        resSlot51.setImage(null);
+        resSlot52.setImage(null);
+
         warehouse=new ArrayList<>();
         slot4=new ArrayList<>();
         slot5=new ArrayList<>();
@@ -67,6 +72,8 @@ public class BoardController extends ControllerGUI {
         imageViewMatrix=new ImageView[3][4];
         slotsDC=new ArrayList<>();
         initializeElements();
+
+
     }
     @Override
     public void initializeElements(){
