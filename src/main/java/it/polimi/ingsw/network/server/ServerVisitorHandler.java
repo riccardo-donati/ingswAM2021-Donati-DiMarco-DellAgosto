@@ -44,29 +44,37 @@ public class ServerVisitorHandler implements ServerVisitor {
             VirtualClient virtualClient = new VirtualClient(nickname, clientHandler);
             this.nickname=nickname;
             clientHandler.send(new WaitMessage());
-            try {
-                clientHandler.getServer().addVirtualClient(virtualClient);
-            } catch (IllegalArgumentException e){
-                return;
-            } catch (ReconnectionException e) {
-                clientHandler.getPinger().start();
-                return;
-            }
-            System.out.println("Created virtual client for " + nickname);
-
             synchronized (clientHandler.getServer()) {
+                try {
+                    clientHandler.getServer().addVirtualClient(virtualClient);
+                } catch (IllegalArgumentException e) {
+                    return;
+                } catch (ReconnectionException e) {
+                    //clientHandler.getPinger().start();
+                    clientHandler.stopPinger();
+                    clientHandler.startPinger();
+                    return;
+                }
+                System.out.println("Created virtual client for " + nickname);
+
+                //synchronized (clientHandler.getServer()) {
                 if (clientHandler.getServer().getNickLobbyMap().get(virtualClient.getNickname()) == null) {
                     clientHandler.send(new PlayerNumberRequest());
                     clientHandler.startTimer(50000);
+                    ServerMessage message;
                     try {
                         String jsonString = clientHandler.getIn().nextLine();
-                        ServerMessage message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
-                        message.accept(clientHandler.getServerVisitorHandler(),clientHandler);
+                        message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
+                        message.accept(clientHandler.getServerVisitorHandler(), clientHandler);
                         System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
 
-                    }catch (NoSuchElementException ignored){ }
+                    } catch (NoSuchElementException ignored) {
+                    }
+
+
                 } else {
-                   clientHandler.getPinger().start();
+                    //clientHandler.getPinger().start();
+                    clientHandler.startPinger();
                 }
             }
 
@@ -85,7 +93,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             }
         } else {
             clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
-            clientHandler.getPinger().start();
+            //clientHandler.getPinger().start();
+            clientHandler.startPinger();
         }
     }
 

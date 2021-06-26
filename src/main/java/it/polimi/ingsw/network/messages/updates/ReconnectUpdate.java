@@ -39,9 +39,12 @@ public class ReconnectUpdate implements Update{
     private final Map<String,Map<Integer,String>> allPlayedCards;
     private final Map<String,Map<Integer,String>> allDiscardedCards;
     private final Map<Integer,Production> unknownProductions;
+    private final Map<Resource,Integer> handResource;
+    private final List<ResourceDiscount> discounts;
+    private final List<Production> activeProd;
 
 
-    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards, Map<Integer,Production> unknownProductions,TurnPhase turnPhase) {
+    public ReconnectUpdate(Map<String, Integer> positions, Map<String, Map<Integer, ClientPopeFavorState>> popeFavors, Integer lorenzoPos, Map<String, Map<Resource, Integer>> strongboxes, Map<String, List<ClientDeposit>> warehouses, List<ResourceType> marbles, Stack<String>[][] cardMatrix, List<String> playerOrder, String currentNickname, Map<String, Map<Integer, Stack<String>>> slots, Map<String, List<String>> allLeadersInBoard, List<String> myLeadersInHand,GamePhase gamePhase,List<String> fourLeaderCards,List<ResourceType> pendingResources,List<String> activePlayers,Map<String,Map<Integer,String>> allPlayedCards,Map<String,Map<Integer,String>> allDiscardedCards, Map<Integer,Production> unknownProductions,TurnPhase turnPhase,Map<Resource,Integer> handResource,List<ResourceDiscount> discounts,List<Production> activeProd) {
         this.positions = positions;
         this.popeFavors = popeFavors;
         this.lorenzoPos = lorenzoPos;
@@ -62,6 +65,9 @@ public class ReconnectUpdate implements Update{
         this.allDiscardedCards=allDiscardedCards;
         this.unknownProductions=unknownProductions;
         this.turnPhase=turnPhase;
+        this.handResource=handResource;
+        this.discounts=discounts;
+        this.activeProd=activeProd;
     }
 
     @Override
@@ -159,6 +165,20 @@ public class ReconnectUpdate implements Update{
             clientPending.add(Utilities.resourceTypeToResource(res));
         }
 
+        //update hand resources
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
+            clientModel.getCurrentBoard().getDeposits().setHandResources(handResource);
+        }
+
+        //discounts
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
+            clientModel.getCurrentBoard().setDiscounts(discounts);
+        }
+
+        //active prod
+        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
+            clientModel.getCurrentBoard().setActiveProductions(activeProd);
+        }
     }
 
     public List<ResourceType> getPendingResources() {

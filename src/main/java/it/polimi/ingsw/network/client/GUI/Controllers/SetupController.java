@@ -30,6 +30,30 @@ public class SetupController extends ControllerGUI{
     List<String> leaderCards;
 
     @Override
+    public void reset(){
+        chosenL=new ArrayList<>();
+        selected=new ArrayList<>();
+        replace=false;
+        id=null;
+        res=null;
+        leaderCards=new ArrayList<>();
+        res11.setImage(null);
+        res21.setImage(null);
+        res22.setImage(null);
+        res31.setImage(null);
+        res32.setImage(null);
+        res33.setImage(null);
+        l1Cover.setFill(Color.valueOf("#b0b3b5"));
+        l2Cover.setFill(Color.valueOf("#b0b3b5"));
+        l3Cover.setFill(Color.valueOf("#b0b3b5"));
+        l4Cover.setFill(Color.valueOf("#b0b3b5"));
+        selectedCoin.setOpacity(0);
+        selectedServant.setOpacity(0);
+        selectedShield.setOpacity(0);
+        selectedStone.setOpacity(0);
+        initializeElements();
+    }
+    @Override
     public void initializeElements(){
         leadersImageViews.add(leaderCard1);
         leadersImageViews.add(leaderCard2);

@@ -1,5 +1,7 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import it.polimi.ingsw.network.client.Client;
+import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.messages.Message;
 import it.polimi.ingsw.network.messages.RegisterResponse;
 import javafx.event.ActionEvent;
@@ -25,6 +27,18 @@ public class LogIn extends ControllerGUI{
     @FXML private TextField ipAddress;
     @FXML private TextField portNumber;
     @FXML private Label emptyInfo;
+
+    @Override
+    public void reset(){
+        /*username.setText("");
+        ipAddress.setText("");
+        portNumber.setText("");
+        ipAddress.setDisable(false);
+        portNumber.setDisable(false);
+
+         */
+        connected=false;
+    }
 
     /**
      * the click on the login button sends a register request
@@ -72,6 +86,7 @@ public class LogIn extends ControllerGUI{
      * the log in button sends a request with the nickname and sets the relative current nickname
      */
     public void register(){
+        gui.setClientModel(new ClientModel());
         gui.send(new RegisterResponse(username.getText()));
         gui.getClientModel().setNickname(username.getText());
     }

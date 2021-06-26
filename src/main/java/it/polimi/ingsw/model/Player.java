@@ -38,6 +38,10 @@ public class Player {
         this.order=order;
     }
 
+    protected Map<Integer, Map<ResourceType, Integer>> getPickedResource() {
+        return pickedResource;
+    }
+
     protected boolean checkPickedEmpty(){
         for (Map.Entry<Integer,Map<ResourceType, Integer>> entry : pickedResource.entrySet()) {
             for (Map.Entry<ResourceType, Integer> entry2 : entry.getValue().entrySet()) {

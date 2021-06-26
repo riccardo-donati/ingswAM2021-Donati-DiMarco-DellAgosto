@@ -42,10 +42,32 @@ public class BoardController extends ControllerGUI {
     Boolean moving;
     Integer clickedMark;
 
+    List<List<ImageView>> warehouse=new ArrayList<>();
+    List<ImageView> slot4=new ArrayList<>();
+    List<ImageView> slot5=new ArrayList<>();
+    List<ImageView> faithPath=new ArrayList<>();
+    List<ImageView> blackCross=new ArrayList<>();
+    List<ImageView> marbles=new ArrayList<>();
+    List<ImageView> popes=new ArrayList<>();
+    ImageView[][] imageViewMatrix=new ImageView[3][4];
+    List<List<ImageView>> slotsDC=new ArrayList<>();;
     public BoardController(){
 
     }
 
+    @Override
+    public void reset(){
+        warehouse=new ArrayList<>();
+        slot4=new ArrayList<>();
+        slot5=new ArrayList<>();
+        faithPath=new ArrayList<>();
+        blackCross=new ArrayList<>();
+        marbles=new ArrayList<>();
+        popes=new ArrayList<>();
+        imageViewMatrix=new ImageView[3][4];
+        slotsDC=new ArrayList<>();
+        initializeElements();
+    }
     @Override
     public void initializeElements(){
         List<ImageView> slot1=new ArrayList<>();
@@ -170,16 +192,7 @@ public class BoardController extends ControllerGUI {
         slotsDC.add(slotDC3);
 
     }
-    List<List<ImageView>> warehouse=new ArrayList<>();
-    List<ImageView> slot4=new ArrayList<>();
-    List<ImageView> slot5=new ArrayList<>();
 
-    List<ImageView> faithPath=new ArrayList<>();
-    List<ImageView> blackCross=new ArrayList<>();
-    List<ImageView> marbles=new ArrayList<>();
-    List<ImageView> popes=new ArrayList<>();
-    ImageView[][] imageViewMatrix=new ImageView[3][4];
-    List<List<ImageView>> slotsDC=new ArrayList<>();;
 
     @FXML private AnchorPane hiddenPanel;
     @FXML private Label numberPickedCoins;

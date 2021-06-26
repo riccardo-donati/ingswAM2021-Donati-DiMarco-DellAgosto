@@ -9,4 +9,5 @@ public abstract class ControllerGUI {
         this.gui = gui;
     }
     public void initializeElements(){}
+    public void reset(){}
 }

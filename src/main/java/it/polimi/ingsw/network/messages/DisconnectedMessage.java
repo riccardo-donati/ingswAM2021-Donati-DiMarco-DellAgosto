@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.messages;
 
+import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;

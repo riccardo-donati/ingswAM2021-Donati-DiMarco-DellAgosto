@@ -238,12 +238,15 @@ public class Controller implements GameObserver {
     }
     public synchronized Map<String,Map<Integer,String>> getAllDiscardedCards(){ return game.getAllDiscardedCards(); }
     public synchronized Map<String,Map<Integer,String>> getAllPlayedCards(){ return game.getAllPlayedCards(); }
+    public synchronized Map<Resource,Integer> getPlayerPickedResources(String nickname){
+        return game.getPlayerPickedResources(nickname);
+    }
 
     public synchronized void reconnectPlayer(String nickname){
         VirtualClient vc = getVirtualClient(nickname);
         if(vc!=null){
             setActive(nickname,true);
-            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards(),getPlayerUnknownProductions(nickname),getTurnPhase());
+            ReconnectUpdate reconnectUpdate=new ReconnectUpdate(getFaithPathsMap(),getPopeFavors(),getLorenzoPosition(),getAllStrongboxes(),getAllWarehouses(),getMarblesInList(),getCardMatrix(),getOrderPlayerList(),getCurrentNickname(),getAllSlots(),getAllLeadersInBoard(),getLeadersInHand(nickname),getGamePhase(),getPlayerLeaderCardList(nickname),getPlayerPending(nickname),getActivePlayers(),getAllPlayedCards(),getAllDiscardedCards(),getPlayerUnknownProductions(nickname),getTurnPhase(),getPlayerPickedResources(nickname),getPlayerDiscounts(nickname),getCurrentActiveProductions());
             vc.send(reconnectUpdate);
         }
     }
@@ -326,6 +329,9 @@ public class Controller implements GameObserver {
         } catch (FullGameException e) {
             e.printStackTrace();
         }
+    }
+    public synchronized List<ResourceDiscount> getPlayerDiscounts(String nickname){
+        return game.getPlayerDiscounts(nickname);
     }
     public synchronized void disconnectAllPlayers(){
         game.disconnectAllPlayers();
@@ -630,14 +636,27 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
+    public void stopLobbyPingers(){
+        for(VirtualClient vc : players){
+            vc.getClientHandler().stopPinger();
+        }
+    }
+    public void startLobbyPingers(){
+        for(VirtualClient vc : players){
+            vc.getClientHandler().startPinger();
+        }
+    }
     public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
                 game.passTurn();
-                if (!game.getCurrentActive()) game.passTurn();
+                while (!game.getCurrentActive()) game.passTurn();
                 gameState = game.getGamePhase();
                 //locally saving server
+                //im stopping the pingers because the server could be lock (choice of number of players)
+                stopLobbyPingers();
                 server.saveServerStatus();
+                startLobbyPingers();
                 //update
                 if (getnPlayers() == 1) {
                     notifyLobby(new LorenzoUpdate(getLorenzoPosition(), getLastUsedToken(), getGamePhase()));
@@ -667,6 +686,8 @@ public class Controller implements GameObserver {
                 } catch (InterruptedException | NullPointerException e) {
                     e.printStackTrace();
                 }
+                //stopping the pingers whenever i use a method of server because it could be locked
+                stopLobbyPingers();
                 server.unregisterClient(vc);
             }
         }

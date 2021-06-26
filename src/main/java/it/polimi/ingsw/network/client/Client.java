@@ -54,4 +54,5 @@ public interface Client {
     void visualizeDiscardResource();
     void visualizeRevert();
     void visualizeResetProductions();
+    void setClientModel(ClientModel clientModel);
 }

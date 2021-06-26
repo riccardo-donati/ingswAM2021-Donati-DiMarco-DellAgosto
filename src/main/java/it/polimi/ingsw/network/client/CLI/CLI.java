@@ -2,6 +2,7 @@ package it.polimi.ingsw.network.client.CLI;
 
 import com.google.gson.Gson;
 
+import it.polimi.ingsw.MastersOfRenaissance;
 import it.polimi.ingsw.model.Production;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -33,7 +34,7 @@ public class CLI implements Client {
     private Gson gson;
 
     private final ClientVisitorHandler clientVisitorHandler;
-    private final ClientModel clientModel;
+    private ClientModel clientModel;
     private String currCommand = "";
 
     public CLI(String serverIP, Integer serverPortNumber){
@@ -108,6 +109,11 @@ public class CLI implements Client {
                 System.out.println("Error, disconnecting . . .");
                 in.close();
                 out.close();
+                try {
+                    MastersOfRenaissance.main(null);
+                } catch (IOException ioException) {
+                    ioException.printStackTrace();
+                }
                 break;
             }
             ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
@@ -410,6 +416,22 @@ public class CLI implements Client {
     public void visualizeDisconnectedMessage(String nickname) {
         System.out.println("Disconnected Players: ");
         System.out.println(clientModel.getDisconnectedPlayers());
+        if(clientModel.getDisconnectedPlayers().contains(clientModel.getNickname())){
+            System.out.println("You are being disconnected . . .");
+            System.out.println("Press any key to continue");
+            out.close();
+            in.close();
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                MastersOfRenaissance.main(null);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -435,6 +457,11 @@ public class CLI implements Client {
     @Override
     public void visualizeResetProductions() {
         System.out.println("Productions resetted!");
+    }
+
+    @Override
+    public void setClientModel(ClientModel clientModel) {
+        this.clientModel = clientModel;
     }
 
 }

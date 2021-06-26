@@ -11,6 +11,7 @@ import it.polimi.ingsw.network.client.ClientVisitorHandler;
 import it.polimi.ingsw.network.client.GUI.Controllers.*;
 import it.polimi.ingsw.network.messages.*;
 import it.polimi.ingsw.network.messages.updates.*;
+import it.polimi.ingsw.network.server.Controller;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
@@ -47,7 +48,7 @@ public class GUI extends Application implements Client {
     private Scanner in;
     private Gson gson;
     private final ClientVisitorHandler clientVisitorHandler;
-    private final ClientModel clientModel;
+    private ClientModel clientModel;
 
     public Map<String, ControllerGUI> getBuildedControllers() {
         return buildedControllers;
@@ -64,6 +65,7 @@ public class GUI extends Application implements Client {
         setup();
         this.stage = stage;
         run();
+
     }
 
     /**
@@ -86,6 +88,12 @@ public class GUI extends Application implements Client {
         stage.show();
     }
 
+    private void resetScenes(){
+        for (Map.Entry<String, ControllerGUI> entry : buildedControllers.entrySet()) {
+            entry.getValue().reset();
+        }
+    }
+
     /**
      * as long as the client is connected, it handles the commands from the client to the server
      */
@@ -101,9 +109,9 @@ public class GUI extends Application implements Client {
                 if(clientModel.getGamePhase()!=null && clientModel.getGamePhase().equals(GamePhase.ENDGAME))
                     Platform.runLater(new Thread(()->changeScene(RESULTS)));
                 else {
+                    Platform.runLater(new Thread(this::resetScenes));
                     Platform.runLater(new Thread(() -> changeScene(LOGIN)));
-                    LogIn log = (LogIn) buildedControllers.get(LOGIN);
-                    log.setConnected(false);
+
                 }
                 break;
             }
@@ -190,6 +198,11 @@ public class GUI extends Application implements Client {
     @Override
     public ClientModel getClientModel() {
         return clientModel;
+    }
+
+    @Override
+    public void setClientModel(ClientModel clientModel) {
+        this.clientModel = clientModel;
     }
 
     @Override
@@ -442,7 +455,9 @@ public class GUI extends Application implements Client {
         l.updatePickedRes();
         l.updateDiscountsExtraProd();
         l.updatePending();
+        l.setupClickable();
         l.setLeaderPower();
+        l.updateToggledProduction();
         if(clientModel.getGamePhase()==GamePhase.SETUP) {
             SetupController s = (SetupController) buildedControllers.get(SETUP);
             s.updateLeader();
@@ -476,6 +491,19 @@ public class GUI extends Application implements Client {
             BoardController l=(BoardController)buildedControllers.get(BOARD);
             ComunicationController.showInfo(currentScene, "A player disconnected: " + clientModel.getDisconnectedPlayers());
             l.setIcons();
+            if(currentScene!=buildedScenes.get(LOGIN) && clientModel.getDisconnectedPlayers().contains(clientModel.getNickname())){
+                Platform.runLater(new Thread(this::resetScenes));
+                Platform.runLater(new Thread(()->changeScene(LOGIN)));
+                Platform.runLater(new Thread(()->{
+                    out.close();
+                    in.close();
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }));
+            }
         }
         else{
             Lobby lo=(Lobby) buildedControllers.get(LOBBY);

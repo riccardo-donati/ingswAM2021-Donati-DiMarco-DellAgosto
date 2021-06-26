@@ -11,7 +11,7 @@ import java.util.Map;
 public class ClientDeposits {
     private final List<Shelf> shelves = new ArrayList<>();
     private Map<Resource, Integer> strongbox = new HashMap<>();
-    private final Map<Resource, Integer> handResources = new HashMap<>();
+    private Map<Resource, Integer> handResources = new HashMap<>();
 
     /**
      * constructor - sets up empty strongbox and warehouse shelves
@@ -24,6 +24,10 @@ public class ClientDeposits {
         shelves.add(new Shelf(1,1));
         shelves.add(new Shelf(2,2));
         shelves.add(new Shelf(3,3));
+    }
+
+    public void setHandResources(Map<Resource, Integer> handResources) {
+        this.handResources = handResources;
     }
 
     public void clearHandResources(){

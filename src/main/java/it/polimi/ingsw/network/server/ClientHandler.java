@@ -89,10 +89,32 @@ public class ClientHandler implements Runnable {
             timer = null;
         }
     }
+    public void startPinger(){
+        if(isConnected) {
+            this.pinger = new Thread(() -> {
+                ping = true;
+                while (ping) {
+                    try {
+                        ping = false;
+                        send(new PingRequest());
+                        Thread.sleep(1500);
+                    } catch (InterruptedException e) {
+                        return;
+                    }
+                }
+                System.out.println(id+" Player disconnected");
+                isConnected = false;
+                server.handleDisconnection(id);
+            });
+            this.pinger.start();
+        }
+    }
     public void stopPinger(){
-        if(pinger!=null){
-            pinger.interrupt();
-            pinger=null;
+        if(isConnected) {
+            if (pinger != null) {
+                pinger.interrupt();
+                pinger = null;
+            }
         }
     }
     public void startTimer(int ms){
@@ -100,6 +122,7 @@ public class ClientHandler implements Runnable {
             try {
                 Thread.sleep(ms);
                 timeout = true;
+                endConnection();
             } catch (InterruptedException e) {
                 //e.printStackTrace();
             }
@@ -115,7 +138,7 @@ public class ClientHandler implements Runnable {
         globalCounter++;
         this.id = globalCounter;
         this.timeout = false;
-        this.pinger = new Thread(() -> {
+       /* this.pinger = new Thread(() -> {
             ping = true;
             while (ping) {
                 try {
@@ -130,6 +153,8 @@ public class ClientHandler implements Runnable {
             server.handleDisconnection(id);
             isConnected = false;
         });
+
+        */
     }
 
     public void run() {
@@ -168,7 +193,6 @@ public class ClientHandler implements Runnable {
     public void endConnection() throws InterruptedException {
         stopPinger();
         send(new DisconnectionMessage());
-        Thread.sleep(3000);
         out.close();
         in.close();
         try {
