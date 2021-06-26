@@ -61,6 +61,18 @@ public class BoardController extends ControllerGUI {
         resSlot42.setImage(null);
         resSlot51.setImage(null);
         resSlot52.setImage(null);
+        slot11.setImage(null);
+        slot12.setImage(null);
+        slot13.setImage(null);
+        slot21.setImage(null);
+        slot22.setImage(null);
+        slot23.setImage(null);
+        slot31.setImage(null);
+        slot32.setImage(null);
+        slot33.setImage(null);
+        toggledLeader1.setOpacity(0);
+        toggledLeader2.setOpacity(0);
+        hiddenUnknown.setOpacity(0);
 
         warehouse=new ArrayList<>();
         slot4=new ArrayList<>();

@@ -97,6 +97,15 @@ public class OtherBoardController extends ControllerGUI{
         resSlot42.setImage(null);
         resSlot51.setImage(null);
         resSlot52.setImage(null);
+        slot11.setImage(null);
+        slot12.setImage(null);
+        slot13.setImage(null);
+        slot21.setImage(null);
+        slot22.setImage(null);
+        slot23.setImage(null);
+        slot31.setImage(null);
+        slot32.setImage(null);
+        slot33.setImage(null);
 
         popes=new ArrayList<>();
         warehouse=new ArrayList<>();
