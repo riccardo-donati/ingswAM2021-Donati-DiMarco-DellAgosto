@@ -109,10 +109,7 @@ public class Lobby extends ControllerGUI {
      * @param mouseEvent
      */
     public void showRules(MouseEvent mouseEvent) {
-        gui.getHostServices().showDocument(
-                "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
-                //"http://boardgame.bg/masters%20of%20renaissance%20rules.pdf"
-                );
+        gui.getHostServices().showDocument("http://boardgame.bg/masters%20of%20renaissance%20rules.pdf");
     }
 
 }

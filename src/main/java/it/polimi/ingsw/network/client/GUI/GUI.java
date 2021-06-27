@@ -230,14 +230,21 @@ public class GUI extends Application implements Client {
 
     }
 
+    /**
+     * function that tells the player what to do in the lobby scene
+     * @param message update message
+     */
     @Override
     public void visualizeLobbyInfoMessage(LobbyInfoMessage message) {
-        Lobby lc=(Lobby)buildedControllers.get(LOBBY);
+        Lobby lc = (Lobby)buildedControllers.get(LOBBY);
         Platform.runLater(new Thread(()->lc.setPlayers(message.getNickList(),message.getNum())));
         if(currentScene!=buildedScenes.get(LOBBY))
              Platform.runLater(new Thread(()->changeScene(LOBBY)));
     }
 
+    /**
+     * shows any update in the board slots
+     */
     @Override
     public void visualizeSlotUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
@@ -245,6 +252,9 @@ public class GUI extends Application implements Client {
         bc.updateSlots();
     }
 
+    /**
+     * if it's the current player turn to do the setup is sent to that scene else is shown a waiting scene
+     */
     @Override
     public void visualizeStartGameUpdate() {
         refreshBoard();
@@ -253,6 +263,10 @@ public class GUI extends Application implements Client {
         else Platform.runLater(new Thread(()->changeScene(WAITING)));
     }
 
+    /**
+     * when a player clicks on the pass button everything that has to be resetted is resetted and the game phase changes
+     * @param previousGamePhase current game phase
+     */
     @Override
     public void visualizeNewTurnUpdate(GamePhase previousGamePhase) {
         if(clientModel.getGamePhase().equals(GamePhase.SETUP)){
@@ -271,17 +285,28 @@ public class GUI extends Application implements Client {
         }
     }
 
+    /**
+     * if the player has to choose a bonus resource the massage is shown
+     * @param message number of bonus resources based on the player
+     */
     @Override
     public void visualizeBonusResourceMessage(BonusResourceMessage message) {
         ComunicationController.showInfo(currentScene, message.getMessage());
     }
 
+    /**
+     * graphic update of the player's pending resources
+     */
     @Override
     public void visualizePendingResourceUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updatePending();
     }
 
+    /**
+     * graphic update of the resources in the deposit
+     * @param message with the content of the player's board
+     */
     @Override
     public void visualizeDepositUpdate(DepositUpdate message) {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
@@ -295,6 +320,11 @@ public class GUI extends Application implements Client {
         }
     }
 
+    /**
+     * shows what Lozenzo did in his turn
+     * @param message contains lorenzo's action (discard/advance in faith path...)
+     * @param previousGamePhase current game phase
+     */
     @Override
     public void visualizeLorenzoUpdate(LorenzoUpdate message, GamePhase previousGamePhase) {
         if(clientModel.getGamePhase().equals(GamePhase.ONGOING)) {
@@ -311,22 +341,30 @@ public class GUI extends Application implements Client {
         }else {
             ComunicationController.showLorenzo(currentScene, message.getMessage());
         }
-
-
     }
 
+    /**
+     * graphic update of the pope favor cards
+     */
     @Override
     public void visualizePopeFavorUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updatePopeFavor();
     }
 
+    /**
+     * graphic update of the moved resources in the warehouse
+     */
     @Override
     public void visualizeMoveResourceUpdate() {
         BoardController bc = (BoardController) buildedControllers.get(BOARD);
         bc.updateWarehouse();
     }
 
+    /**
+     * shows a pop up that contains an error
+     * @param message the error encountered
+     */
     @Override
     public void visualizeErrorMessage(ErrorMessage message) {
         ComunicationController.showError(currentScene, message.getMessage());
