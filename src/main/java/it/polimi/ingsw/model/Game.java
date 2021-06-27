@@ -857,7 +857,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
                     Result result=endGame();
                     notifyEndGameResult(result);
                 }
-                currPlayer.resetProductions();
+                currPlayer.resetPlayerProductions();
                 turnPhase=TurnPhase.STARTTURN;
                 nextTurn();
             }else throw new IllegalActionException();
@@ -882,9 +882,10 @@ public abstract class Game implements BoardObserver, PublicInterface {
                     } catch (FullSpaceException | IllegalResourceException ignored) {
                     }
                 }
-                if(p.countSelectedProductions()>0){
+                /*if(p.countSelectedProductions()>0){
                     p.deSelectAllProductions();
-                }
+                }*/
+                p.resetPlayerProductions();
             }
         }
 

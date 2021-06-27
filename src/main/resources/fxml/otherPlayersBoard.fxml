@@ -11,7 +11,7 @@
 <?import javafx.scene.shape.Rectangle?>
 <?import javafx.scene.text.Font?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.OtherBoardController">
+<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1200.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.network.client.GUI.Controllers.OtherBoardController">
    <children>
       <ImageView fitHeight="800.0" fitWidth="1200.0" pickOnBounds="true">
          <image>
@@ -271,6 +271,10 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
+            <ImageView id="res41" fx:id="resSlot41" fitHeight="34.0" fitWidth="34.0" layoutX="48.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res42" fx:id="resSlot42" fitHeight="34.0" fitWidth="34.0" layoutX="98.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res41" fx:id="resSlot51" fitHeight="34.0" fitWidth="34.0" layoutX="48.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res42" fx:id="resSlot52" fitHeight="34.0" fitWidth="34.0" layoutX="98.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="807.0" prefWidth="265.0">
@@ -301,7 +305,7 @@
                   <Font name="Gabriola" size="48.0" />
                </font>
             </Label>
-            <ImageView fx:id="pickServant" fitHeight="50.0" fitWidth="50.0" layoutX="40.0" layoutY="330.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="pickServant" fitHeight="50.0" fitWidth="50.0" layoutX="95.0" layoutY="329.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/resources/servant.png" />
                </image>

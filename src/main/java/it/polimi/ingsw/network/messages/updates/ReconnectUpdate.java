@@ -154,9 +154,7 @@ public class ReconnectUpdate implements Update{
         }
 
         //update productions with unknown
-        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
-            clientModel.getCurrentBoard().setUnknownProductions(unknownProductions);
-        }
+        clientModel.getMyBoard().setUnknownProductions(unknownProductions);
 
         //update pending resources
         List<Resource> clientPending = clientModel.getCurrentBoard().getPendingResources();
@@ -166,19 +164,13 @@ public class ReconnectUpdate implements Update{
         }
 
         //update hand resources
-        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
-            clientModel.getCurrentBoard().getDeposits().setHandResources(handResource);
-        }
+        clientModel.getMyBoard().getDeposits().setHandResources(handResource);
 
         //discounts
-        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
-            clientModel.getCurrentBoard().setDiscounts(discounts);
-        }
+        clientModel.getMyBoard().setDiscounts(discounts);
 
         //active prod
-        if(clientModel.getNickname().equals(clientModel.getCurrentNickname())){
-            clientModel.getCurrentBoard().setActiveProductions(activeProd);
-        }
+        clientModel.getMyBoard().setActiveProductions(activeProd);
     }
 
     public List<ResourceType> getPendingResources() {
