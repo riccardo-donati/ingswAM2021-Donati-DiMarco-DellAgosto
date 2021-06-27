@@ -72,7 +72,10 @@ public class BoardController extends ControllerGUI {
         slot33.setImage(null);
         toggledLeader1.setOpacity(0);
         toggledLeader2.setOpacity(0);
-        hiddenUnknown.setOpacity(0);
+        extraProd1.setImage(null);
+        extraProd2.setImage(null);
+        leader1.setFill(Color.valueOf("#b0b3b5"));
+        leader2.setFill(Color.valueOf("#b0b3b5"));
 
         warehouse=new ArrayList<>();
         slot4=new ArrayList<>();

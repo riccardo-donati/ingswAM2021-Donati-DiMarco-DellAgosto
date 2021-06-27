@@ -106,7 +106,8 @@ public class OtherBoardController extends ControllerGUI{
         slot31.setImage(null);
         slot32.setImage(null);
         slot33.setImage(null);
-
+        leader1.setFill(Color.valueOf("#b0b3b5"));
+        leader2.setFill(Color.valueOf("#b0b3b5"));
         popes=new ArrayList<>();
         warehouse=new ArrayList<>();
         faithPath=new ArrayList<>();
