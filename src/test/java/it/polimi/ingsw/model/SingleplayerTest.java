@@ -22,6 +22,11 @@ class SingleplayerTest {
     }
 
     @Test
+    public void TestTokenShuffle(){
+        s=new Singleplayer();
+        assertDoesNotThrow(()->s.tokenShuffle());
+    }
+    @Test
     public void TestPath() throws FullGameException, IllegalResourceException {
         s = new Singleplayer();
         s.addPlayer("Riccardo Ricevuti");

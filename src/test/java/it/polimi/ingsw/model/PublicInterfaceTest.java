@@ -3,6 +3,7 @@ package it.polimi.ingsw.model;
 import it.polimi.ingsw.model.enums.*;
 import it.polimi.ingsw.model.exceptions.*;
 import it.polimi.ingsw.model.interfaces.Token;
+import it.polimi.ingsw.network.client.CLI.enums.ClientPopeFavorState;
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -140,6 +141,14 @@ public class PublicInterfaceTest {
         game.substituteUnknownInOutputBaseProduction(ResourceType.GREY);
         assertDoesNotThrow(()->game.toggleBaseProd());
 
+        //test substitute input extra
+        Production p=new Production();
+        p.addInput(ResourceType.UNKNOWN,1);
+        p.addOutput(ResourceType.UNKNOWN,1);
+        game.getCurrPlayer().getExtraProductions().add(p);
+        game.substituteUnknownInInputExtraProduction(0,ResourceType.VIOLET);
+        assertEquals(1,game.getCurrPlayer().getExtraProductions().get(0).getInput().get(ResourceType.VIOLET));
+
         game.pickUpResourceFromWarehouse(2);
         game.pickUpResourceFromWarehouse(2);
 
@@ -179,6 +188,7 @@ public class PublicInterfaceTest {
         Map<ResourceType, Integer> depositInStrongbox = new HashMap<>();
         depositInStrongbox.put(ResourceType.GREY, 3);
         game.getCurrPlayer().getBoard().depositInStrongbox(depositInStrongbox);
+        assertEquals(3,game.getCurrentStrongbox().get(ResourceType.GREY));
 
         //artificially adding development card
         List<ResourceRequirement> requirements = new ArrayList<>();
@@ -192,7 +202,7 @@ public class PublicInterfaceTest {
         assertThrows(ResourcesNotAvailableException.class, ()->game.pickUpResourceFromStrongbox(ResourceType.YELLOW));
         assertDoesNotThrow(()->game.pickUpResourceFromStrongbox(ResourceType.GREY));
         assertDoesNotThrow(()->game.activateProductions());
-        assertEquals(4, game.getCurrPlayer().getBoard().getFaithPath().getPosition());
+        assertEquals(4, game.getCurrentFaithPath());
         assertDoesNotThrow(()->game.passTurn());
     }
 
@@ -554,6 +564,7 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().addDiscount(ResourceType.YELLOW);
         game.getCurrPlayer().addDiscount(ResourceType.YELLOW);
         game.getCurrPlayer().addDiscount(ResourceType.BLUE);
+        assertEquals(2,game.getPlayerDiscounts(game.getCurrentNickname()).size());
         Utilities.fillDeposits(game.getCurrPlayer(),false,true);
         game.pickUpResourceFromStrongbox(ResourceType.VIOLET);
         game.toggleDiscount(ResourceType.YELLOW);
@@ -1665,6 +1676,168 @@ public class PublicInterfaceTest {
         game.moveResource(4,1);//dovrebbe
         game.getCurrPlayer().getBoard().getWarehouse().visualize();
 
+    }
+
+    @Test
+    public void TestSpecialGetters1() throws IOException, UnknownFoundException, UnknownNotFoundException, IllegalResourceException {
+        game = Utilities.loadGame("setUpMulti", 'm');
+        game.resetCurrentPlayerRef();
+        //get pope favor
+        Map<String, Map<Integer, ClientPopeFavorState>> map = game.getPopeFavors();
+        assertEquals(3, map.keySet().size());
+
+        //get faith paths
+        Map<String, Integer> faithPaths = game.getFaithPathsMap();
+        assertEquals(1, faithPaths.get("AAA"));
+        assertEquals(0, faithPaths.get("BBB"));
+        assertEquals(0, faithPaths.get("CCC"));
+
+        //get warehouses
+        Map<String, Warehouse> warehouses = game.getAllWarehouses();
+        assertEquals(warehouses.get("AAA").getMaindepot().get(0).getType(), ResourceType.BLUE);
+        assertEquals(warehouses.get("BBB").getMaindepot().get(0).getType(), ResourceType.EMPTY);
+        assertEquals(warehouses.get("CCC").getMaindepot().get(0).getType(), ResourceType.YELLOW);
+
+        //get all strongboxes
+        Map<String, Map<ResourceType, Integer>> strongboxes = game.getAllStrongboxes();
+        assertEquals(0, strongboxes.get("AAA").get(ResourceType.VIOLET));
+        assertEquals(0, strongboxes.get("AAA").get(ResourceType.YELLOW));
+        assertEquals(0, strongboxes.get("AAA").get(ResourceType.BLUE));
+        assertEquals(0, strongboxes.get("AAA").get(ResourceType.GREY));
+
+        //get current active productions
+        game.getCurrPlayer().getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getBaseProduction().replaceUnknownInput(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getBaseProduction().replaceUnknownOutput(ResourceType.YELLOW);
+        game.getCurrPlayer().getBoard().getBaseProduction().toggleSelected();
+        List<Production> activeProd = game.getCurrentActiveProductions();
+        assertEquals(1, activeProd.size());
+
+    }
+    @Test
+    public void TestSpecialGetters2() throws IOException {
+        game = Utilities.loadGame("setUpMulti", 'm');
+
+        //get marbles
+        game.setMarket(new Market());
+        Market m=game.getMarket();
+        List<ResourceType> marb = game.getMarblesInList();
+        assertEquals(ResourceType.RED, marb.get(marb.size() - 1));
+
+        //get deposit resource
+        ResourceType[] depo = game.getDepositResources(1);
+        assertEquals(ResourceType.EMPTY, depo[0]);
+
+        //get lorenzo pos
+        assertNull(game.getLorenzoPosition());
+
+        //get nickOrderMap
+        Map<String, Integer> nickordermap = game.getNickOrderMap();
+        assertEquals(2, nickordermap.get("CCC"));
+
+        //get all slots
+        Map<String, Map<Integer, Stack<String>>> slots = game.getAllSlots();
+        assertEquals(0, slots.get("BBB").get(1).size());
+        DevelopmentCard dc=game.getDevelopmentCards().get(0);
+        assertEquals(dc.getName(),game.getNameDevelopmentCardMap().get(dc.getName()).getName());
+
+        game.getCurrPlayer().getBoard().getSlots().get(1).push(game.getDevelopmentCards().get(0));
+        slots = game.getAllSlots();
+        assertEquals(1, slots.get("BBB").get(1).size());
+
+        //get all leaders in board
+        Map<String, List<String>> leaders = game.getAllLeadersInBoard();
+        assertEquals(0, leaders.get("AAA").size());
+        assertEquals(0, leaders.get("BBB").size());
+        assertEquals(0, leaders.get("CCC").size());
+
+        //get leaders in hand
+        List<String> lih=game.getLeadersInHand("BBB");
+        assertEquals(2,lih.size());
+        assertEquals(game.getCurrentLeadersInHand().size(),lih.size());
+    }
+
+    @Test
+    public void TestSpecialGetters3() throws IOException, IllegalResourceException {
+        game = Utilities.loadGame("setUpMulti", 'm');
+
+        //get list nicknames
+        List<String> nicknames=game.getListNickname();
+        assertTrue(nicknames.contains("CCC"));
+        assertTrue(nicknames.contains("AAA"));
+        assertTrue(nicknames.contains("BBB"));
+
+        //get players picked
+        Map<ResourceType,Integer> res1=new HashMap<>();
+        res1.put(ResourceType.YELLOW,2);
+        Map<ResourceType,Integer> res2=new HashMap<>();
+        res2.put(ResourceType.YELLOW,1);
+
+        game.getCurrPlayer().getPickedResource().put(0,res1);
+        game.getCurrPlayer().getPickedResource().put(1,res2);
+
+        Map<Resource,Integer> picked=game.getPlayerPickedResources("BBB");
+        assertEquals(3,picked.get(Resource.COIN));
+
+        //get player pending
+        assertEquals(0,game.getPlayerPending("AAA").size());
+
+        //get player unknown prod
+        SpecialAbility ep=new ExtraProduction(ResourceType.YELLOW);
+        ep.activate(game.getCurrPlayer());
+        Map<Integer,Production> unkProd=game.getPlayerUnknownProductions("BBB");
+        assertFalse(unkProd.get(-1).checkSelected());//-1=base prdo
+        assertEquals(1,unkProd.get(0).getInput().get(ResourceType.YELLOW));//1=extra
+    }
+    @Test
+    public void CheckTest() throws IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
+        assertNull(game.getLastUsedToken());
+        assertNull(game.getLorenzoPosition());
+        assertDoesNotThrow(()->game.orderTokenStack());
+        assertDoesNotThrow(()->game.nextTurn());
+
+    }
+    @Test
+    public void TestDisconnection() throws IOException, IllegalActionException {
+        game=Utilities.loadGame("setUpMulti",'m');
+        game.setActive("BBB",false);
+        game.passTurn();
+        assertEquals(game.getCurrPlayer().getNickname(),"CCC");
+        assertFalse(game.getActivePlayers().contains("BBB"));
+        game.disconnectAllPlayers();
+        assertEquals(0,game.getActivePlayers().size());
+    }
+    @Test
+    public void TestSaveGame() throws IOException {
+        game=Utilities.loadGame("setUpMulti",'m');
+        assertDoesNotThrow(()->game.saveGameStateOnJson("testSave"));
+    }
+    @Test
+    public void TestClearPlayer() throws IOException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        game.getCurrPlayer().getBoard().getWarehouse().getPendingList().add(ResourceType.YELLOW);
+        Map<ResourceType,Integer> res=new HashMap<>();
+        res.put(ResourceType.YELLOW,1);
+        game.getCurrPlayer().getPickedResource().put(0,res);
+        game.clearPlayer("Mario");
+        game.setGameObservers();
+        assertEquals(1,game.getCurrentStrongbox().get(ResourceType.YELLOW));
+        assertEquals(0,game.getCurrentWarehouse().getPendingList().size());
+        assertEquals(0,game.getCurrentPlayerPending().size());
+
+    }
+
+    @Test
+    public void TestPlayedDiscarded() throws IOException, IllegalActionException, CardNotAvailableException {
+        game=Utilities.loadGame("setUpSingle",'s');
+        LeaderCard ld=game.getLeaderCards().get(0);
+        game.discardLeader(0);
+        Map<String, LeaderCard> lcm=game.getNameLeaderCardMap();
+        assertEquals(ld.getName(),lcm.get(ld.getName()).getName());
+
+        assertEquals(1,game.getAllDiscardedCards().get("Mario").keySet().size());
+        assertEquals(0,game.getAllPlayedCards().get("Mario").keySet().size());
     }
 }
 

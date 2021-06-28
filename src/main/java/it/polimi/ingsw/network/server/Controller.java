@@ -88,6 +88,20 @@ public class Controller implements GameObserver {
         this.disconnected = disconnected;
     }
 
+    /**
+     * for test purposes
+     * @param nPlayers number of players
+     * @param firstPlayer the creator of the lobby
+     */
+    public Controller(int nPlayers, VirtualClient firstPlayer){
+        this.idLobby = globalID;
+        globalID++;
+        this.nPlayers=nPlayers;
+        this.players.add(firstPlayer);
+        gson= Utilities.initializeGsonMessage();
+        gameState=GamePhase.NOTSTARTED;
+        disconnected=false;
+    }
     public Controller(int nPlayers, VirtualClient firstPlayer, Server server){
         this.idLobby = globalID;
         globalID++;

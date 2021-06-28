@@ -166,6 +166,8 @@ class WarehouseTest {
         wh.addResourceInDeposit(5,ResourceType.VIOLET);
         wh.addResourceInDeposit(6,ResourceType.BLUE);
 
+        assertThrows(DepositNotExistingException.class,
+                ()->wh.removeResourceFromDeposit(22));
         wh.removeResourceFromDeposit(5);
         wh.removeResourceFromDeposit(4);
         wh.removeResourceFromDeposit(1);
