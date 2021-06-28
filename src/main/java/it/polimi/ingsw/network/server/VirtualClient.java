@@ -16,8 +16,10 @@ public class VirtualClient {
     }
 
     public void send(Message m){
-        clientHandler.getOut().println(clientHandler.getGson().toJson(m,Message.class));
-        clientHandler.getOut().flush();
+        if(clientHandler!=null) {
+            clientHandler.getOut().println(clientHandler.getGson().toJson(m, Message.class));
+            clientHandler.getOut().flush();
+        }
     }
 
     public String getNickname() {
