@@ -295,7 +295,6 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getLeadersInHand().add(ld);
         game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
         game.moveResource(1,8);
-        game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.pickUpResourceFromWarehouse(8);
         game.pickUpResourceFromStrongbox(ResourceType.BLUE);
         game.revertPickUp();
@@ -320,7 +319,6 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getLeadersInHand().add(ld);
         game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
         game.moveResource(1,8);
-        game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.pickUpResourceFromWarehouse(8);
         game.pickUpResourceFromStrongbox(ResourceType.BLUE);
         game.revertPickUp();
@@ -346,7 +344,6 @@ public class PublicInterfaceTest {
         game.getCurrPlayer().getLeadersInHand().add(ld);
         game.getCurrPlayer().playLeader(game.getCurrPlayer().getLeadersInHand().get(1));
         game.moveResource(1,8);
-        game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.pickUpResourceFromWarehouse(8);
         game.pickUpResourceFromStrongbox(ResourceType.BLUE);
         game.revertPickUp();
@@ -368,7 +365,6 @@ public class PublicInterfaceTest {
         game.depositResource(3,ResourceType.VIOLET);
         game.moveResource(3,1);
         game.moveResource(1,2);
-        game.getCurrPlayer().getBoard().getWarehouse().visualize();
         game.passTurn();
         assertEquals(2,game.getCurrPlayer().getOrder());
         assertEquals(TurnPhase.STARTTURN,game.getTurnPhase());
@@ -1674,7 +1670,6 @@ public class PublicInterfaceTest {
         game.depositResource(6,ResourceType.VIOLET);
         game.moveResource(6,2);//non dovrebbe
         game.moveResource(4,1);//dovrebbe
-        game.getCurrPlayer().getBoard().getWarehouse().visualize();
 
     }
 

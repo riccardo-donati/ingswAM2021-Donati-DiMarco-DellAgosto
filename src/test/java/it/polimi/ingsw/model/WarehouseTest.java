@@ -55,7 +55,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(6,ResourceType.VIOLET);
 
         assertEquals(6,wh.countWarehouseResource());
-        wh.visualize();
 
     }
 
@@ -78,7 +77,6 @@ class WarehouseTest {
         assertEquals(ResourceType.VIOLET ,wh.getMaindepot().get(1).getSpace()[0]);
         assertEquals(ResourceType.VIOLET ,wh.getMaindepot().get(1).getSpace()[1]);
         assertEquals(ResourceType.YELLOW ,wh.getMaindepot().get(2).getSpace()[0]);
-        wh.visualize();
 
 
     }
@@ -100,7 +98,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(2,ResourceType.VIOLET);
 
         assertEquals(6,wh.countWarehouseResource());
-        wh.visualize();
 
     }
 
@@ -134,7 +131,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(6,ResourceType.BLUE);
 
         assertEquals(10,wh.countWarehouseResource());
-        wh.visualize();
     }
 
     @Test
@@ -175,7 +171,6 @@ class WarehouseTest {
         assertEquals(ResourceType.VIOLET,wh.getExtradepots().get(1).getType());
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getType());
         assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(0).getType());
-        wh.visualize();
     }
 
     @Test
@@ -189,7 +184,6 @@ class WarehouseTest {
 
         assertThrows(FullSpaceException.class,
                 ()->wh.addResourceInDeposit(1,ResourceType.YELLOW));
-        wh.visualize();
     }
 
     @Test
@@ -206,7 +200,6 @@ class WarehouseTest {
         assertEquals(ResourceType.GREY,wh.getMaindepot().get(0).getSpace()[0]);
         assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(1).getSpace()[0]);
         assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(1).getSpace()[1]);
-        wh.visualize();
 
     }
 
@@ -222,7 +215,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(1,ResourceType.YELLOW);
         assertThrows(IllegalResourceException.class,
                 ()->wh.addResourceInDeposit(1,ResourceType.YELLOW));
-        wh.visualize();
     }
 
     @Test
@@ -239,7 +231,6 @@ class WarehouseTest {
                 ()->wh.addResourceInDeposit(5,ResourceType.GREY));
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
         assertEquals(ResourceType.GREY,wh.getExtradepots().get(1).getSpace()[0]);
-        wh.visualize();
     }
 
     @Test
@@ -255,7 +246,6 @@ class WarehouseTest {
                 ()->wh.addResourceInDeposit(4,ResourceType.YELLOW));
         assertThrows(FullSpaceException.class,
                 ()->wh.addResourceInDeposit(4,ResourceType.YELLOW));
-        wh.visualize();
     }
 
     @Test
@@ -273,7 +263,6 @@ class WarehouseTest {
                 ()->wh.moveResource(1,4));
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
         assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(0).getSpace()[0]);
-        wh.visualize();
     }
 
     @Test
@@ -292,7 +281,6 @@ class WarehouseTest {
         assertEquals(ResourceType.VIOLET,wh.getExtradepots().get(0).getSpace()[0]);
         assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(0).getSpace()[0]);
         assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[0]);
-        wh.visualize();
     }
 
     @Test
@@ -306,7 +294,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(1,ResourceType.YELLOW);
         assertEquals(ResourceType.YELLOW,wh.getMaindepot().get(0).getSpace()[0]);
         assertEquals(ResourceType.VIOLET,wh.getMaindepot().get(1).getSpace()[0]);
-        wh.visualize();
 
     }
     @Test
@@ -344,7 +331,6 @@ class WarehouseTest {
         assertEquals(ResourceType.EMPTY,wh.getMaindepot().get(1).getSpace()[1]);
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[0]);
         assertEquals(ResourceType.YELLOW,wh.getExtradepots().get(0).getSpace()[1]);
-        wh.visualize();
     }
 
     @Test
@@ -390,7 +376,6 @@ class WarehouseTest {
                 ()->wh.discardResource(ResourceType.VIOLET));
         assertThrows(IllegalResourceException.class,
                 ()->wh.discardResource(ResourceType.VIOLET));
-        wh.visualize();
     }
 
     @Test
@@ -403,7 +388,6 @@ class WarehouseTest {
         wh.removeResourceFromDeposit(4);
         assertThrows(IllegalResourceException.class,
                 ()-> wh.addResourceInDeposit(4,ResourceType.YELLOW));
-        wh.visualize();
 
     }
 
@@ -414,7 +398,6 @@ class WarehouseTest {
         wh.addResourceInDeposit(1,ResourceType.YELLOW);
         assertThrows(IllegalResourceException.class,
                 ()->wh.addResourceInDeposit(2,ResourceType.YELLOW));
-        wh.visualize();
 
     }
 

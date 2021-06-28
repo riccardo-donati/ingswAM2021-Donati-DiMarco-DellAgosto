@@ -27,7 +27,7 @@ public class ClientModel {
     private List<String> playersInOrder;
     private String myNickname;
     private String currentNickname;
-    private List<String> disconnectedPlayers = new ArrayList<>();
+    private final List<String> disconnectedPlayers = new ArrayList<>();
 
     // phases
     private TurnPhase turnPhase;
@@ -36,14 +36,18 @@ public class ClientModel {
     private final ClientMarket market;
     private final ClientCardMatrix cardMatrix;
 
-
+    /**
+     * loading of the leader and development cards and generic initialization
+     */
     public ClientModel() {
         leaderCards = Utilities.loadLeaderCardsFromJSON();
         developmentCards = Utilities.loadDevelopmentCardsFromJSON();
 
+        assert developmentCards != null;
         for (DevelopmentCard card : developmentCards)
             nameDevelopmentMap.put(card.getName(), card);
 
+        assert leaderCards != null;
         for (LeaderCard card : leaderCards)
             nameLeaderMap.put(card.getName(), card);
 
@@ -125,6 +129,10 @@ public class ClientModel {
         setupPhaseLeaderCards.add(name);
     }
 
+    /**
+     * load the cardMatrix from a matrix of cards name
+     * @param stringCards is a matrix of Stack of cards name
+     */
     public void loadCardMatrixFromNames(Stack<String>[][] stringCards) {
         Stack<DevelopmentCard>[][] cards = new Stack[3][4];
         for(int r=0;r<3;r++){
@@ -152,15 +160,19 @@ public class ClientModel {
         else return "";
     }
 
+    /**
+     *
+     * @return a readable string of the players
+     */
     public String stringifyPlayers() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape() + "PLAYERS: " + Color.RESET);
+        sb.append(Color.ANSI_PURPLE.escape()).append("PLAYERS: ").append(Color.RESET);
         for (String nick : playersInOrder) {
-            sb.append("[ " +Color.ANSI_GREEN.escape()+ nick +Color.RESET+ " | " + boards.get(nick).getFaithPath().getPosition() + Color.ANSI_RED.escape() + "♰" + Color.RESET +" Cards:"+boards.get(nick).getTotalCardsBought() +" ],");
+            sb.append("[ ").append(Color.ANSI_GREEN.escape()).append(nick).append(Color.RESET).append(" | ").append(boards.get(nick).getFaithPath().getPosition()).append(Color.ANSI_RED.escape()).append("♰").append(Color.RESET).append(" Cards:").append(boards.get(nick).getTotalCardsBought()).append(" ],");
         }
         sb.deleteCharAt(sb.toString().length()-1);
         if(getCurrentBoard().getFaithPath().getLorenzoPosition() != null){
-            sb.append("[ "+Color.ANSI_GREEN.escape()+"LORENZO"+Color.RESET+" | "+getCurrentBoard().getFaithPath().getLorenzoPosition()+ Color.ANSI_RED.escape() + "♰" + Color.RESET+" Discarded Cards:"+getCardMatrix().getDiscardedCards()+" ]");
+            sb.append("[ ").append(Color.ANSI_GREEN.escape()).append("LORENZO").append(Color.RESET).append(" | ").append(getCurrentBoard().getFaithPath().getLorenzoPosition()).append(Color.ANSI_RED.escape()).append("♰").append(Color.RESET).append(" Discarded Cards:").append(getCardMatrix().getDiscardedCards()).append(" ]");
         }
         sb.append("\n");
         return sb.toString();
@@ -172,35 +184,27 @@ public class ClientModel {
 
     public String toString() {
         if (myNickname != null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append(stringifyPlayers());
-            sb.append("════"+myNickname+" Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            sb.append(boards.get(myNickname));
-            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            sb.append(market);
-            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            sb.append(cardMatrix);
-            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            return sb.toString();
+            return stringifyPlayers() +
+                    "════" + myNickname + " Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n" +
+                    boards.get(myNickname) +
+                    "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n" +
+                    market +
+                    "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n" +
+                    cardMatrix +
+                    "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n";
         }
         return "";
     }
 
-    public void visualizeBoard(String nick) {
-        if(boards.get(nick)!=null) {
-            StringBuilder sb = new StringBuilder();
-            sb.append("════" + nick + " Board═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            sb.append(boards.get(nick));
-            System.out.println(sb.toString());
-        }
-    }
-
+    /**
+     * print an ASCII ART per i depositi
+     * @param nick
+     */
     public void visualizeDeposits(String nick) {
         if(boards.get(nick)!=null){
-            StringBuilder sb = new StringBuilder();
-            sb.append("═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n");
-            sb.append(boards.get(nick).getDeposits());
-            System.out.println(sb.toString());
+            String sb = "═════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════════\n" +
+                    boards.get(nick).getDeposits();
+            System.out.println(sb);
         }
     }
 
@@ -219,60 +223,5 @@ public class ClientModel {
     public ClientBoard getMyBoard() {
         return boards.get(myNickname);
     }
-
-    /*
-    public static void main(String[] args) {
-        ClientModel cm=new ClientModel();
-
-        List<String> listInOrder=new ArrayList<>();
-        listInOrder.add("Da");
-        listInOrder.add("giec");
-        listInOrder.add("Riki");
-        cm.setPlayersOrder(listInOrder);
-
-        cm.putBoard("Riki",new ClientBoard());
-        cm.putBoard("Da",new ClientBoard());
-        cm.putBoard("giec",new ClientBoard());
-        cm.setNickname("Riki");
-        cm.boards.get("Da").getFaithPath().addToFaithPath(10);
-        cm.boards.get("Riki").getFaithPath().addToFaithPath(2);
-        //System.out.println(cm);
-        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(1));
-        cm.getBoards().get(cm.getNickname()).push(2,cm.developmentCards.get(10));
-        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(12));
-        cm.getBoards().get(cm.getNickname()).push(3,cm.developmentCards.get(2));
-        cm.getBoards().get(cm.getNickname()).push(1,cm.developmentCards.get(40));
-
-        cm.getMarket().initializeMarbles();
-        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(12));
-        cm.getBoards().get(cm.getNickname()).getLeadersInHand().add(cm.leaderCards.get(0));
-        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(8));
-        cm.getBoards().get(cm.getNickname()).getLeadersInBoard().add(cm.leaderCards.get(15));
-
-        System.out.println(cm);
-
-        ClientCardMatrix ccm = new ClientCardMatrix();
-        ccm.pushCard(0, 3, cm.developmentCards.get(1));
-        ccm.pushCard(1, 1, cm.developmentCards.get(10));
-        ccm.pushCard(1, 2, cm.developmentCards.get(12));
-        ccm.pushCard(0, 1, cm.developmentCards.get(2));
-        ccm.pushCard(2, 3, cm.developmentCards.get(40));
-        ccm.pushCard(2, 1, cm.developmentCards.get(41));
-        ccm.pushCard(2, 1, cm.developmentCards.get(32));
-        ccm.pushCard(1, 1, cm.developmentCards.get(24));
-        ccm.pushCard(2, 3, cm.developmentCards.get(27));
-        ccm.pushCard(2, 1, cm.developmentCards.get(28));
-        ccm.pushCard(2, 0, cm.developmentCards.get(30));
-        ccm.pushCard(0, 2, cm.developmentCards.get(33));
-        ccm.pushCard(1, 1, cm.developmentCards.get(15));
-        System.out.println(ccm.toString());
-/*
-        System.out.println(Utilities.stringify(cm.leaderCards.get(12)));
-        System.out.println(Utilities.stringify(cm.leaderCards.get(1)));
-        System.out.println(Utilities.stringify(cm.leaderCards.get(4)));
-        System.out.println(Utilities.stringify(cm.leaderCards.get(8)));
-
-    }
-    */
 
 }

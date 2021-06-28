@@ -7,8 +7,8 @@ import it.polimi.ingsw.network.client.CLI.enums.Resource;
 import java.util.List;
 
 public class ClientDeposit {
-    private List<Resource> resources;
-    private Integer id;
+    private final List<Resource> resources;
+    private final Integer id;
 
     public ClientDeposit(Integer id,List<Resource> resources){
         this.id=id;

@@ -31,10 +31,14 @@ public class ClientMarket {
         return marbles;
     }
 
+    /**
+     *
+     * @return a readable (ASCII ART) string of the ClientMarket
+     */
     @Override
     public String toString(){
         StringBuilder sb = new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape() + "MARKET:\n" + Color.RESET);
+        sb.append(Color.ANSI_PURPLE.escape()).append("MARKET:\n").append(Color.RESET);
         int n=0;
 
         sb.append("     1   2   3   4\n");
@@ -82,7 +86,7 @@ public class ClientMarket {
         }
         sb.append("\n   ╚═══╩═══╩═══╩═══╝\n");
         sb.append("     ↑   ↑   ↑   ↑   "/* + getMarbleType(marbles, n)*/); //
-        sb.append("\n   Pending Marble: " + getMarbleType(n));
+        sb.append("\n   Pending Marble: ").append(getMarbleType(n));
         sb.append("\n");
         return sb.toString();
     }
@@ -102,12 +106,4 @@ public class ClientMarket {
         marbles.add(ResourceType.EMPTY);
         marbles.add(ResourceType.EMPTY);
     }
-/*
-    public static void main(String[] args) {
-        ClientMarket cm = new ClientMarket();
-        cm.initializeMarbles();
-        System.out.println(cm.toString());
-    }
-
- */
 }

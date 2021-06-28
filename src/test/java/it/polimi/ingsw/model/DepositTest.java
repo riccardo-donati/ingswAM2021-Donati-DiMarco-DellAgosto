@@ -40,11 +40,9 @@ class DepositTest {
                 ()->depo.addResource(ResourceType.WHITE));
         assertThrows(IllegalResourceException.class,
                 ()->depo.addResource(ResourceType.RED));
-        depo.visualize();
         assertDoesNotThrow(()->depo.addResource(ResourceType.YELLOW));
         assertThrows(IllegalResourceException.class,
                 ()->depo.addResource(ResourceType.GREY));
-        depo.visualize();
     }
     @Test
     public void TestRemoveType() throws IllegalResourceException, FullSpaceException {

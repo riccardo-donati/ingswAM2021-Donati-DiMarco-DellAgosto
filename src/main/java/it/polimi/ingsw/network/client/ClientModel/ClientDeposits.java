@@ -30,6 +30,9 @@ public class ClientDeposits {
         this.handResources = handResources;
     }
 
+    /**
+     * reset the handResources value to 0
+     */
     public void clearHandResources(){
         for (Map.Entry<Resource, Integer> entry : handResources.entrySet()) {
             entry.setValue(0);
@@ -57,11 +60,15 @@ public class ClientDeposits {
         return handResources;
     }
 
+    /**
+     *
+     * @return a readable string for the handResources
+     */
     public String stringifyHandResources(){
         StringBuilder sb = new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape()+"RESOURCES IN HAND: "+Color.RESET+"[ ");
+        sb.append(Color.ANSI_PURPLE.escape()).append("RESOURCES IN HAND: ").append(Color.RESET).append("[ ");
         for (Map.Entry<Resource, Integer> entry : handResources.entrySet())
-            sb.append(entry.getValue()+entry.getKey().label).append(" ");
+            sb.append(entry.getValue()).append(entry.getKey().label).append(" ");
         sb.append("]");
         return sb.toString();
     }
@@ -150,7 +157,7 @@ public class ClientDeposits {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(Color.ANSI_PURPLE.escape()+"WAREHOUSE:                      STRONGBOX:"+Color.RESET+"\n");
+        sb.append(Color.ANSI_PURPLE.escape()).append("WAREHOUSE:                      STRONGBOX:").append(Color.RESET).append("\n");
         int spacesbonus=0;
         for(Shelf s : shelves){
             if(s.getId()==4) sb.append("-----------------------------║\n");
@@ -158,7 +165,7 @@ public class ClientDeposits {
             if(s.getId()==2)spacesbonus=2;
             if(s.getId()==3)spacesbonus=0;
             sb.append("           ");
-            for(int j=0;j<spacesbonus;j++)sb.append(" ");
+            sb.append(" ".repeat(spacesbonus));
             for(int i=0;i<s.getSpaces().length;i++){
                 if(s.getId()==2)
                     sb.append("╔═══╗ ");
@@ -167,11 +174,11 @@ public class ClientDeposits {
             //strongbox
             if(s.getId()==1) {
                 sb.append("        ║");
-                sb.append("   "+Resource.SHIELD.label+" : "+strongbox.get(Resource.SHIELD));
+                sb.append("   ").append(Resource.SHIELD.label).append(" : ").append(strongbox.get(Resource.SHIELD));
             }
             else if(s.getId()==2) {
                 sb.append("    ║");
-                sb.append("   "+Resource.STONE.label+" : "+strongbox.get(Resource.STONE));
+                sb.append("   ").append(Resource.STONE.label).append(" : ").append(strongbox.get(Resource.STONE));
             }
             else if(s.getId()==3) {
                 sb.append("   ║");
@@ -180,20 +187,18 @@ public class ClientDeposits {
             }
 
             sb.append("\n");
-            sb.append("Deposit "+s.getId()+": ");
-            for(int j=0;j<spacesbonus;j++) {
-                sb.append(" ");
-            }
+            sb.append("Deposit ").append(s.getId()).append(": ");
+            sb.append(" ".repeat(spacesbonus));
             for(int i=0;i< s.getSpaces().length;i++){
-                if(s.getId()==2)sb.append("║ "+s.getSpaces()[i].label+" ║ ");
-                else sb.append("║ "+s.getSpaces()[i].label+" ║");
+                if(s.getId()==2) sb.append("║ ").append(s.getSpaces()[i].label).append(" ║ ");
+                else sb.append("║ ").append(s.getSpaces()[i].label).append(" ║");
 
             }
 
             //strongbox
             if(s.getId()==1) {
                 sb.append("        ║");
-                sb.append("   "+Resource.COIN.label+" : "+strongbox.get(Resource.COIN));
+                sb.append("   ").append(Resource.COIN.label).append(" : ").append(strongbox.get(Resource.COIN));
             }
             else if(s.getId()==2){
                 sb.append("    ║");
@@ -204,7 +209,7 @@ public class ClientDeposits {
             }
             sb.append("\n");
             sb.append("           ");
-            for(int j=0;j<spacesbonus;j++)sb.append(" ");
+            sb.append(" ".repeat(spacesbonus));
             for(int i=0;i<s.getSpaces().length;i++){
                 if(s.getId()==2)
                     sb.append("╚═══╝ ");
@@ -214,7 +219,7 @@ public class ClientDeposits {
             //strongbox
             if(s.getId()==1) {
                 sb.append("        ║");
-                sb.append("   "+Resource.SERVANT.label+" : "+strongbox.get(Resource.SERVANT));
+                sb.append("   ").append(Resource.SERVANT.label).append(" : ").append(strongbox.get(Resource.SERVANT));
             }
             else if(s.getId()==2){
                 sb.append("    ║");

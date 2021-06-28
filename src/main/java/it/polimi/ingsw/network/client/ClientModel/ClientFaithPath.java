@@ -12,6 +12,9 @@ public class ClientFaithPath  {
     private Integer lorenzoPosition;
     private Map<Integer, ClientPopeFavorState> popeFavor=new HashMap<>();
 
+    /**
+     * initialize pope favor to UNACTIVE and position to 0
+     */
     public ClientFaithPath(){
      position=0;
      popeFavor.put(1,ClientPopeFavorState.UNACTIVE);
@@ -57,106 +60,117 @@ public class ClientFaithPath  {
             lorenzoPosition+=n;
     }
 
+    /**
+     *
+     * @return a readable faith path string
+     */
     @Override
     public String toString() {
         StringBuilder b=new StringBuilder();
-        b.append(Color.ANSI_PURPLE.escape()+"FAITH PATH:\n"+Color.RESET);
+        b.append(Color.ANSI_PURPLE.escape()).append("FAITH PATH:\n").append(Color.RESET);
         for(int i=0;i<25;i++){
             if(i==5 || i==9 || i==12 || i==16|| i==19)b.append(" ");
-            if(i<10) b.append("  "+i+"  ");
-            else b.append(" "+i+"  ");
+            if(i<10) b.append("  ").append(i).append("  ");
+            else b.append(" ").append(i).append("  ");
         }
         b.append("\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"┌─────");
+            if(i==5 || i==12 || i==19) b.append(Color.ANSI_BLUE.escape()).append("┌─────");
             else if(i>5 && i<8)b.append("─────");
             else if(i==8 || i==16 ||i==24)b.append("─────┐");
             else if(i>12 && i<16)b.append("─────");
-            else if(i>19 && i<24)b.append("─────");
+            else if(i>19)b.append("─────");
             else b.append("     ");
         }
         b.append(Color.RESET+"\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==17 || i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17 || i==19)
+                b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
             if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╔═══╗");
             b.append(Color.RESET);
         }
-        b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+        b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
         b.append("\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==17||i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17||i==19)
+                b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
             if(i%3==0 && i!=0) {
                 b.append(Color.ANSI_YELLOW.escape());
                 if (position == i) {
-                    if(lorenzoPosition!=null && lorenzoPosition==position)b.append("║" + Color.ANSI_RED.escape() + "♰" +Color.RESET+" ♰"+ Color.ANSI_YELLOW.escape() + "║");
-                    else b.append("║ " + Color.ANSI_RED.escape() + "♰" + Color.ANSI_YELLOW.escape() + " ║");
-                }else if(lorenzoPosition!=null && lorenzoPosition==i)b.append("║ "  +Color.RESET+ "♰" + Color.ANSI_YELLOW.escape() + " ║");
+                    if(lorenzoPosition!=null && lorenzoPosition.equals(position))
+                        b.append("║").append(Color.ANSI_RED.escape()).append("♰").append(Color.RESET).append(" ♰").append(Color.ANSI_YELLOW.escape()).append("║");
+                    else b.append("║ ").append(Color.ANSI_RED.escape()).append("♰").append(Color.ANSI_YELLOW.escape()).append(" ║");
+                }else if(lorenzoPosition!=null && lorenzoPosition==i)
+                    b.append("║ " + Color.RESET + "♰").append(Color.ANSI_YELLOW.escape()).append(" ║");
                 else b.append("║   ║"+Color.RESET);
                 b.append(Color.RESET);
             }else{
                 if (position == i) {
-                    if(lorenzoPosition!=null && lorenzoPosition==position)b.append("║" + Color.ANSI_RED.escape() + "♰" +Color.RESET+" ♰"+ "║");
-                    else b.append("║ " + Color.ANSI_RED.escape() + "♰" + Color.RESET + " ║");
+                    if(lorenzoPosition!=null && lorenzoPosition.equals(position))
+                        b.append("║").append(Color.ANSI_RED.escape()).append("♰").append(Color.RESET).append(" ♰").append("║");
+                    else b.append("║ ").append(Color.ANSI_RED.escape()).append("♰").append(Color.RESET).append(" ║");
                 }else if(lorenzoPosition!=null && lorenzoPosition==i)b.append("║ "  + "♰" + Color.RESET + " ║");
                 else b.append("║   ║");//
             }
         }
-        b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+        b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
         b.append("\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==17|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+            if(i==5 || i==9 || i==12 || i==17|| i==19)
+                b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
             if(i%3==0 && i!=0) b.append(Color.ANSI_YELLOW.escape());
             b.append("╚═══╝"+Color.RESET);
         }
-        b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+        b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
         b.append("\n");
         b.append(Color.ANSI_YELLOW.escape());
         for(int i=0;i<25;i++){
-            if(i==5 || i==9 || i==12 || i==17|| i==19)b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
-            if(i==3) b.append(Color.ANSI_YELLOW.escape()+"  1  ");
-            else if(i==6)b.append(Color.ANSI_YELLOW.escape()+"  2  ");
-            else if(i==9)b.append(Color.ANSI_YELLOW.escape()+"  4  ");
-            else if(i==12)b.append(Color.ANSI_YELLOW.escape()+"  6  ");
-            else if(i==15)b.append(Color.ANSI_YELLOW.escape()+"  9  ");
-            else if(i==18)b.append(Color.ANSI_YELLOW.escape()+" 12  ");
-            else if(i==21)b.append(Color.ANSI_YELLOW.escape()+" 16  ");
-            else if(i==24)b.append(Color.ANSI_YELLOW.escape()+" 20  ");
+            if(i==5 || i==9 || i==12 || i==17|| i==19)
+                b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
+            if(i==3) b.append(Color.ANSI_YELLOW.escape()).append("  1  ");
+            else if(i==6) b.append(Color.ANSI_YELLOW.escape()).append("  2  ");
+            else if(i==9) b.append(Color.ANSI_YELLOW.escape()).append("  4  ");
+            else if(i==12) b.append(Color.ANSI_YELLOW.escape()).append("  6  ");
+            else if(i==15) b.append(Color.ANSI_YELLOW.escape()).append("  9  ");
+            else if(i==18) b.append(Color.ANSI_YELLOW.escape()).append(" 12  ");
+            else if(i==21) b.append(Color.ANSI_YELLOW.escape()).append(" 16  ");
+            else if(i==24) b.append(Color.ANSI_YELLOW.escape()).append(" 20  ");
             else b.append("     ");
         }
-        b.append(Color.ANSI_BLUE.escape()+"│"+Color.RESET);
+        b.append(Color.ANSI_BLUE.escape()).append("│").append(Color.RESET);
         b.append(Color.RESET+"\n");
         for(int i=0;i<25;i++){
-            if(i==5 || i==12 || i==19)b.append(Color.ANSI_BLUE.escape()+"└─────");
+            if(i==5 || i==12 || i==19) b.append(Color.ANSI_BLUE.escape()).append("└─────");
             else if(i>5 && i<8)b.append("─────");
             else if(i==8 || i==16|| i==24)b.append("─────┘");
             else if(i>12 && i<16)b.append("─────");
-            else if(i>19 && i<24)b.append("─────");
+            else if(i>19)b.append("─────");
             else b.append("     ");
         }
         b.append("\n");
         //popefavor
         for(int i=0;i<25;i++){
             if(i==6||i==13||i==21){
-                b.append(Color.ANSI_BLUE.escape()+" ╔════════╗ ");
+                b.append(Color.ANSI_BLUE.escape()).append(" ╔════════╗ ");
             }else if(i==7 || i==14 || i==22) b.append("");
             else b.append("     ");
         }
         b.append("\n");
         for(int i=0;i<25;i++){
             if(i==6) {
-                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 2 + Color.ANSI_BLUE.escape() + "  "+popeFavor.get(1).label+Color.ANSI_BLUE.escape()+"  ║ ");
+                b.append(Color.ANSI_BLUE.escape()).append(" ║  ").append(Color.ANSI_YELLOW.escape()).append(2).append(Color.ANSI_BLUE.escape()).append("  ").append(popeFavor.get(1).label).append(Color.ANSI_BLUE.escape()).append("  ║ ");
             }else if(i==13) {
-                b.append(Color.ANSI_BLUE.escape()+" ║  " + Color.ANSI_YELLOW.escape() + 3 + Color.ANSI_BLUE.escape()+"  "+popeFavor.get(2).label+Color.ANSI_BLUE.escape()+ "  ║ ");
+                b.append(Color.ANSI_BLUE.escape()).append(" ║  ").append(Color.ANSI_YELLOW.escape()).append(3).append(Color.ANSI_BLUE.escape()).append("  ").append(popeFavor.get(2).label).append(Color.ANSI_BLUE.escape()).append("  ║ ");
             }else if(i==21){
-                b.append(Color.ANSI_BLUE.escape()+" ║  "+Color.ANSI_YELLOW.escape()+4+Color.ANSI_BLUE.escape()+"  "+popeFavor.get(3).label+Color.ANSI_BLUE.escape()+"  ║ ");
+                b.append(Color.ANSI_BLUE.escape()).append(" ║  ").append(Color.ANSI_YELLOW.escape()).append(4).append(Color.ANSI_BLUE.escape()).append("  ").append(popeFavor.get(3).label).append(Color.ANSI_BLUE.escape()).append("  ║ ");
             }else if(i==7 || i==14 || i==22) b.append("");
             else b.append("     ");
         }
         b.append("\n");
         for(int i=0;i<25;i++){
             if(i==6||i==13||i==21){
-                b.append(Color.ANSI_BLUE.escape()+" ╚════════╝ ");
+                b.append(Color.ANSI_BLUE.escape()).append(" ╚════════╝ ");
             }else if(i==7 || i==14 || i==22) b.append("");
             else b.append("     ");
         }
