@@ -35,7 +35,7 @@ The following table shows the coverage of the main Packages in our project. The 
 
 
 #						  DEVELOPERS
-* [Riccardo Donati](https://github.com/riccardo-donati) :eyes:
+* [Riccardo Donati](https://github.com/riccardo-donati):fried_shrimp:
 * [Giacomo Dell'Agosto](https://github.com/GiacomoDA):pig:
 * [Davide Di Marco](https://github.com/Davidedm99):ribbon:
 
