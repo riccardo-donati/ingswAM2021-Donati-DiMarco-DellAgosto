@@ -20,11 +20,25 @@ public class Parser {
         List<String> resources = Arrays.asList("shield", "coin", "servant", "stone");
         List<String> colors = Stream.of(Color.values()).map(Enum::name).map(String::toLowerCase).collect(Collectors.toList());
 
-        string = string.toLowerCase();
         StringTokenizer tokenizer;
 
         if (string.equals(""))
             throw new IllegalCommandException();
+
+        if (string.startsWith("register")) {
+            tokenizer = new StringTokenizer(string.substring("register".length()));
+            try {
+                String nickname = tokenizer.nextToken();
+                if (!tokenizer.hasMoreElements()) {
+                    client.getClientModel().setNickname(nickname);
+                    return new RegisterResponse(nickname);
+                }
+            } catch (NoSuchElementException e) {
+                throw new IllegalCommandException();
+            }
+        }
+
+        string = string.toLowerCase();
 
         switch (string) {
             case "commands":
@@ -73,19 +87,6 @@ public class Parser {
             case "display productions":
                 System.out.println(client.getClientModel().getCurrentBoard().stringifyProductions());
                 return null;
-        }
-
-        if (string.startsWith("register")) {
-            tokenizer = new StringTokenizer(string.substring("register".length()));
-            try {
-                String nickname = tokenizer.nextToken();
-                if (!tokenizer.hasMoreElements()) {
-                    client.getClientModel().setNickname(nickname);
-                    return new RegisterResponse(nickname);
-                }
-            } catch (NoSuchElementException e) {
-                throw new IllegalCommandException();
-            }
         }
 
         if (string.startsWith("numberofplayers")) {

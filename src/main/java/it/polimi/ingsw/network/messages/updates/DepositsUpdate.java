@@ -21,6 +21,10 @@ public class DepositsUpdate implements Update{
         this.turnPhase=turnPhase;
     }
 
+    /**
+     * updates the given client model's deposits, extra deposits and strongbox
+     * @param clientModel update target
+     */
     @Override
     public void update(ClientModel clientModel) {
         for(ClientDeposit cd : deposits) {

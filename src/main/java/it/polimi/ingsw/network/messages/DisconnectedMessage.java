@@ -1,13 +1,12 @@
 package it.polimi.ingsw.network.messages;
 
-import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.Client;
 import it.polimi.ingsw.network.client.ClientModel.ClientModel;
 import it.polimi.ingsw.network.client.ClientVisitor;
 import it.polimi.ingsw.network.messages.updates.Update;
 
 public class DisconnectedMessage implements Update {
-    private String nickname;
+    private final String nickname;
 
     public DisconnectedMessage(String nickname){
         this.nickname=nickname;

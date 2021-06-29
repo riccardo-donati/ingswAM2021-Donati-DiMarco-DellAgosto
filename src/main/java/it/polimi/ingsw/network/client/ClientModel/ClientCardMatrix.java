@@ -7,7 +7,7 @@ import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.network.client.CLI.enums.Color;
 
 public class ClientCardMatrix {
-    protected Stack<DevelopmentCard>[][] cards;
+    private Stack<DevelopmentCard>[][] cards;
     private Integer discardedCards;
 
     public Integer getDiscardedCards() {

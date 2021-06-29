@@ -14,12 +14,13 @@ public class DepositUpdate implements Update {
         this.res=res;
     }
 
-    public int getIdDeposit() {
-        return idDeposit;
-    }
-
     public Resource getRes() {
         return res;
+    }
+
+    @Override
+    public void update(ClientModel clientModel) {
+        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().deposit(res, idDeposit);
     }
 
     @Override
@@ -30,10 +31,5 @@ public class DepositUpdate implements Update {
     @Override
     public void accept(ClientVisitor visitor, Client client) {
         visitor.visit(this, client);
-    }
-
-    @Override
-    public void update(ClientModel clientModel) {
-        clientModel.getBoards().get(clientModel.getCurrentNickname()).getDeposits().deposit(res, idDeposit);
     }
 }

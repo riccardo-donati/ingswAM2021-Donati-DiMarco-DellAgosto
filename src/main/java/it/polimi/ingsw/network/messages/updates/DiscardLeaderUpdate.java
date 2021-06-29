@@ -12,6 +12,11 @@ public class DiscardLeaderUpdate implements Update {
         this.index=index;
     }
 
+    /**
+     * updates the given client model following the discard of a leader card:
+     * adds 1 to current player's faith path and 
+     * @param clientModel update target
+     */
     @Override
     public void update(ClientModel clientModel) {
         clientModel.getCurrentBoard().getFaithPath().addToFaithPath(1);

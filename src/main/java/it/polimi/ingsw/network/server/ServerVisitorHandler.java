@@ -22,8 +22,13 @@ import java.util.stream.Collectors;
 public class ServerVisitorHandler implements ServerVisitor {
     private String nickname;
 
-    public  ServerVisitorHandler(Server server){
-    }
+    /**
+     * validation of registration info
+     * if the client is reconnecting, start its pinger (lobbies handled by server)
+     * if the client is new create new lobby or add it to the the empty one
+     * @param response client's registration message
+     * @param clientHandler client's client handler
+     */
     @Override
     public void visit(RegisterResponse response, ClientHandler clientHandler) {
         clientHandler.stopTimer();
@@ -50,7 +55,6 @@ public class ServerVisitorHandler implements ServerVisitor {
                 } catch (IllegalArgumentException e) {
                     return;
                 } catch (ReconnectionException e) {
-                    //clientHandler.getPinger().start();
                     clientHandler.stopPinger();
                     clientHandler.startPinger();
                     return;
@@ -77,10 +81,14 @@ public class ServerVisitorHandler implements ServerVisitor {
                     clientHandler.startPinger();
                 }
             }
-
         }
     }
 
+    /**
+     * if the client is not timed-out create new lobby
+     * @param response player's message
+     * @param clientHandler client's client handler
+     */
     @Override
     public void visit(PlayerNumberResponse response, ClientHandler clientHandler) {
         clientHandler.stopTimer();
@@ -103,6 +111,7 @@ public class ServerVisitorHandler implements ServerVisitor {
         //System.out.println(response.getMessage() + " " + clientHandler.getId());
         clientHandler.setPing(true);
     }
+
     @Override
     public void visit(ChooseLeadersCommand command, ClientHandler clientHandler) {
         try {

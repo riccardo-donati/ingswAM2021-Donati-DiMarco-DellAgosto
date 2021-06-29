@@ -7,7 +7,7 @@ import java.util.Objects;
 
 public class VirtualClient {
     @Expose
-    private String nickname;
+    private final String nickname;
     private ClientHandler clientHandler;
 
     public VirtualClient(String nickname ,ClientHandler clientHandler){
@@ -15,9 +15,12 @@ public class VirtualClient {
         this.clientHandler=clientHandler;
     }
 
+    /**
+     * send a message through the client handler's socket
+     * @param m message sent
+     */
     public void send(Message m){
         clientHandler.getOut().println(clientHandler.getGson().toJson(m,Message.class));
-        clientHandler.getOut().flush();
     }
 
     public String getNickname() {
