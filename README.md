@@ -9,6 +9,10 @@ Have fun with this Strategic Game! :octocat:
 
 <img src="https://cdn.discordapp.com/attachments/768097148477898822/859528426556620820/ciccia.jpg" width=300px height=400px align="right" />
 
+#               DOCUMENTATION
+
+You can check the project's documentation [here](https://riccardo-donati.github.io/)
+
 # 						  TEST CASES
 
 The following table shows the coverage of the main Packages in our project. The missing percentage in the classes are due to useless methods like getters, setters or other methods that are not directly useful to the main skeleton of the program. 
