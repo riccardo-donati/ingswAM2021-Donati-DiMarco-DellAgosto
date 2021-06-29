@@ -7,7 +7,7 @@ This is a turn based Board Game where you are in the shoes of a Florence citizen
 You can play with your friends in a max of 4 players match or, if you don't have any, play a Singleplayer game against Lorenzo Il Magnifico! <br>
 Have fun with this Strategic Game! :octocat:
 
-<img src="https://cdn.discordapp.com/attachments/768097148477898822/859528426556620820/ciccia.jpg" width=345px height=460 px align="right" />
+<img src="https://cdn.discordapp.com/attachments/768097148477898822/859528426556620820/ciccia.jpg" width=300px height=225px align="right" />
 
 # 						  TEST CASES
 
