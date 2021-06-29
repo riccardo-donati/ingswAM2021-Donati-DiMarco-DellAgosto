@@ -29,7 +29,7 @@ public class Warehouse {
      * initializing the maindepot with empty resourcetypes and
      * the map with the 4 resourcetype we want
      */
-    public Warehouse(){
+    protected Warehouse(){
         maindepot=new ArrayList<>();
         try {
             nDeposit++;
@@ -57,7 +57,7 @@ public class Warehouse {
      * @param res is the resource that i want to add
      * @throws IllegalResourceException if you try to add an illegal resource(RED, UNKNOWN, EMPTY, WHITE)
      */
-    public void addResourceInPending(ResourceType res) throws IllegalResourceException {
+    protected void addResourceInPending(ResourceType res) throws IllegalResourceException {
         if(pendingResources.containsKey(res)){
             pendingResources.replace(res,pendingResources.get(res)+1);
         }else{
@@ -77,7 +77,7 @@ public class Warehouse {
      * counts all the resources in the warehouse
      * @return map of all the resources in the warehouse
      */
-    public Map<ResourceType, Integer> getTotalResources() {
+    protected Map<ResourceType, Integer> getTotalResources() {
         Map<ResourceType, Integer> tempMap = new HashMap<>();
         List<Deposit> temp = new ArrayList<>(maindepot);
         temp.addAll(extradepots);
@@ -97,7 +97,7 @@ public class Warehouse {
      * counts the points generated from the resources in the warehouse and in the leaderdeposits
      * @return the points
      */
-    public Integer countWarehouseResource(){
+    protected Integer countWarehouseResource(){
         return getTotalResources().values().stream().reduce(0, Integer::sum);
     }
 
@@ -106,7 +106,7 @@ public class Warehouse {
      * @param res is the resource of the deposit that i want to create
      * @throws IllegalResourceException if you try to add and illegal deposit
      */
-    public void addExtraDepot(ResourceType res) throws IllegalResourceException {
+    protected void addExtraDepot(ResourceType res) throws IllegalResourceException {
         if(res==ResourceType.RED || res==ResourceType.EMPTY || res==ResourceType.UNKNOWN || res==ResourceType.WHITE){
             throw new IllegalResourceException();
         }else{
@@ -123,7 +123,7 @@ public class Warehouse {
         return extradepots;
     }
 
-    public void chooseResourceToDeposit(Integer id,ResourceType res) throws UnknownNotFoundException, FullSpaceException, IllegalResourceException {
+    protected void chooseResourceToDeposit(Integer id,ResourceType res) throws UnknownNotFoundException, FullSpaceException, IllegalResourceException {
         if(pendingResources.get(ResourceType.UNKNOWN)<=0) throw new UnknownNotFoundException();
         if(!pendingResources.containsKey(res) || res==ResourceType.WHITE || res==ResourceType.EMPTY) throw new IllegalResourceException();
         pendingResources.replace(ResourceType.UNKNOWN,pendingResources.get(ResourceType.UNKNOWN)-1);
@@ -135,7 +135,7 @@ public class Warehouse {
      * @param id is the id of the deposit
      * @param res is the type of the resource
      */
-    public void addResourceInDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException {
+    protected void addResourceInDeposit(Integer id,ResourceType res) throws IllegalResourceException, FullSpaceException {
         Integer n=pendingResources.get(res);
         if(n==null || res==ResourceType.WHITE || res==ResourceType.EMPTY)throw new IllegalResourceException("No such resource in pending");
         if(n>0) {
@@ -162,7 +162,7 @@ public class Warehouse {
      * @param id1 is the id of the from deposit
      * @param id2 is the id of the to deposit
      */
-    public void moveResource(Integer id1,Integer id2) throws FullSpaceException, IllegalResourceException, NonEmptyException {
+    protected void moveResource(Integer id1,Integer id2) throws FullSpaceException, IllegalResourceException, NonEmptyException {
         Deposit d1;
         Deposit d2;
         if(id1<=3) d1=maindepot.get(id1-1);
@@ -276,7 +276,7 @@ public class Warehouse {
      * @param res is the type of the resource i want to discard
      * @throws IllegalResourceException when there are no resources of res type in pending
      */
-    public void discardResource(ResourceType res) throws IllegalResourceException, DepositableResourceException {
+    protected void discardResource(ResourceType res) throws IllegalResourceException, DepositableResourceException {
         int n=pendingResources.get(res);
         if(n>0){
             boolean canDiscard = true;
@@ -305,14 +305,14 @@ public class Warehouse {
      * register an observer to the list
      * @param obs observer to add
      */
-    public void addObserver(BoardObserver obs){
+    protected void addObserver(BoardObserver obs){
         observers.add(obs);
     }
 
     /**
      * notify the registered obsrvers
      */
-    public void notifyObservers(){
+    protected void notifyObservers(){
         for(BoardObserver o : observers){
             o.updateDiscard(this);
         }
@@ -321,7 +321,7 @@ public class Warehouse {
     /**
      * visualize in console the state of the warehouse, useful for debugging
      */
-    public void visualize(){
+    protected void visualize(){
         System.out.println("PENDING");
         for (Map.Entry<ResourceType, Integer> entry : pendingResources.entrySet()) {
             System.out.println(entry.getKey() + "|" + entry.getValue());
@@ -351,7 +351,7 @@ public class Warehouse {
      * @param qt is the quantity of the converted resource
      * @throws NoWhiteResourceException if there aren't any white resource in pending
      */
-    public void replaceWhiteFromPending(ResourceType res,Integer qt) throws NoWhiteResourceException {
+    protected void replaceWhiteFromPending(ResourceType res,Integer qt) throws NoWhiteResourceException {
         if(pendingResources.containsKey(ResourceType.WHITE) && pendingResources.get(ResourceType.WHITE)>0){
             pendingResources.replace(ResourceType.WHITE,pendingResources.get(ResourceType.WHITE)-1);
             for(int i=0;i<qt;i++)
@@ -361,13 +361,13 @@ public class Warehouse {
         }
     }
 
-    public Map<ResourceType, Integer> getPendingResources() { return pendingResources; }
+    protected Map<ResourceType, Integer> getPendingResources() { return pendingResources; }
 
     /**
      * transforms the pending resources map into a list
      * @return the pending resources map as a list
      */
-    public List<ResourceType> getPendingList() {
+    protected List<ResourceType> getPendingList() {
         List<ResourceType> pending = new ArrayList<>();
         for (ResourceType key : pendingResources.keySet()){
             for (int i = 0; i < pendingResources.get(key); i++) {
@@ -381,7 +381,7 @@ public class Warehouse {
      * count the resource in pending
      * @return the sum of the resource of the map
      */
-    public int countPendingResources(){
+    protected int countPendingResources(){
         int sum=0;
         for (Map.Entry<ResourceType, Integer> entry : pendingResources.entrySet()) {
             sum+=entry.getValue();
@@ -394,7 +394,7 @@ public class Warehouse {
      * @param id is the id of the deposit
      * @return the removed resource
      */
-    public ResourceType removeResourceFromDeposit(Integer id) throws DepositNotExistingException, NonEmptyException {
+    protected ResourceType removeResourceFromDeposit(Integer id) throws DepositNotExistingException, NonEmptyException {
         Deposit d;
         ResourceType type = ResourceType.EMPTY;
 

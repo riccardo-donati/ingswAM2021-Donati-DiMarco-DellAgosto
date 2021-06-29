@@ -433,7 +433,6 @@ public abstract class Utilities {
         }
         s.setClientHandlerNickMap(new HashMap<>());
         s.setWaitingList(new ArrayList<>());
-        s.setGson(Utilities.initializeGsonMessage());
 
         //add the observers
         for(Controller c : s.getLobbies()){

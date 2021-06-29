@@ -68,6 +68,10 @@ public class CLI implements Client {
         this.currCommand = currCommand;
     }
 
+    /**
+     * wait for messages on the socket connection
+     * print incoming messages
+     */
     public void handleStdIn(){
         String line;
         while (!socket.isClosed()) {
@@ -87,6 +91,10 @@ public class CLI implements Client {
         }
     }
 
+    /**
+     * cli setup and start socket listener on a new thread
+     * handles socket disconnection
+     */
     public void run() {
         gson = Utilities.initializeGsonMessage();
 

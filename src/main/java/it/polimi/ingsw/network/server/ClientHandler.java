@@ -15,9 +15,9 @@ import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class ClientHandler implements Runnable {
-    private int id;
+    private final int id;
 
-    private Socket socket;
+    private final Socket socket;
     private Server server;
     private Thread pinger;
     private Thread timer;
@@ -30,7 +30,7 @@ public class ClientHandler implements Runnable {
     private boolean isConnected;
     private boolean ping;
     private boolean timeout;
-    private ServerVisitorHandler serverVisitorHandler;
+    private final ServerVisitorHandler serverVisitorHandler;
     private Controller lobby;
 
     private static int globalCounter = 0;
@@ -134,7 +134,7 @@ public class ClientHandler implements Runnable {
         this.socket = socket;
         this.server = server;
         this.isConnected = true;
-        this.serverVisitorHandler = new ServerVisitorHandler(server);
+        this.serverVisitorHandler = new ServerVisitorHandler();
         globalCounter++;
         this.id = globalCounter;
         this.timeout = false;

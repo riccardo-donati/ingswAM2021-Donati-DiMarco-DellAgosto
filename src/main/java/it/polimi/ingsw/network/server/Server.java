@@ -24,23 +24,25 @@ import java.util.Map;
 public class Server {
 
     @Expose
-    private int port;
+    private final int port;
     private ServerSocket serverSocket;
     @Expose
-    private List<VirtualClient> virtualClientList = new ArrayList<>();
+    private final List<VirtualClient> virtualClientList = new ArrayList<>();
     @Expose
-    private List<Controller> lobbies = new ArrayList<>();
-    private Gson gson;
+    private final List<Controller> lobbies = new ArrayList<>();
     private List<VirtualClient> waitingList = new ArrayList<>();
     private Map<Integer,String> clientHandlerNickMap = new HashMap<>();
     @Expose
-    private Map<String,Integer> nickLobbyMap = new HashMap<>();
+    private final Map<String,Integer> nickLobbyMap = new HashMap<>();
 
     public Server(int port) {
-        gson = Utilities.initializeGsonMessage();
         this.port = port;
     }
 
+    /**
+     * creates server socket and starts listening for connections
+     * when a client connects a new connection socket is created and a new client handler is started
+     */
     public void startServer() {
         try {
             serverSocket = new ServerSocket(port);
@@ -65,14 +67,9 @@ public class Server {
         }
     }
 
-    public void closeServer() {
-        try {
-            serverSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * save server status on a new json file
+     */
     public synchronized void saveServerStatus(){
         Gson gsonSave = Utilities.initializeGsonLoadAndSave();
 
@@ -97,9 +94,11 @@ public class Server {
         this.waitingList = waitingList;
     }
 
-    public synchronized void setGson(Gson gson){
-        this.gson=gson;
-    }
+    /**
+     * if the game has not started the connections is closed
+     * if the game has started, sets the players unavailable and notifies the lobby
+     * @param chId disconnected client handler's id
+     */
     public synchronized void handleDisconnection(Integer chId){
         String nick=clientHandlerNickMap.get(chId);
         if (nick != null){
@@ -130,6 +129,9 @@ public class Server {
         }
     }
 
+    /**
+     * @return id of the non-full lobby, -1 otherwise
+     */
     public synchronized int checkLobby(){
         for(Controller lobby : lobbies){
             if(!lobby.isFull())
@@ -138,6 +140,11 @@ public class Server {
         return -1;
     }
 
+    /**
+     *
+     * @param id lobby's id
+     * @return reference to the corresponding lobby
+     */
     public synchronized Controller searchLobby(int id){
         for(Controller lobby : lobbies){
             if(lobby.getIdLobby() == id){
@@ -146,13 +153,21 @@ public class Server {
         }
         return null;
     }
+
+    /**
+     * removes a lobby from the list of lobbies
+     * @param c lobby to be removed
+     */
     public synchronized void removeLobby(Controller c){
-        if(c!=null && lobbies.contains(c)) lobbies.remove(c);
+        if (c!=null) lobbies.remove(c);
     }
 
+    /**
+     * removes a virtual client from client handlers map and lobbies map
+     * @param vc virtual client to be removed
+     */
     public synchronized void unregisterClient(VirtualClient vc){
-        if(virtualClientList.contains(vc))
-            virtualClientList.remove(vc);
+        virtualClientList.remove(vc);
         try {
             if (clientHandlerNickMap.get(vc.getClientHandler().getId()) != null)
                 clientHandlerNickMap.remove(vc.getClientHandler().getId());
@@ -162,6 +177,10 @@ public class Server {
         System.out.println("Unregister client "+vc.getNickname());
     }
 
+    /**
+     * removes a virtual client from its lobby, if the lobby is empty it gets deleted
+     * @param chId virtual client's id
+     */
     public synchronized void removeVirtualClient(Integer chId){
         if(clientHandlerNickMap.get(chId)!=null) {
             VirtualClient vcToRemove = searchVirtualClient(clientHandlerNickMap.get(chId));
@@ -171,7 +190,6 @@ public class Server {
                 int lobbyId=nickLobbyMap.remove(vcToRemove.getNickname());
                 Controller l=searchLobby(lobbyId);
                 l.removePlayer(vcToRemove);
-                //l.notifyLobby(new GenericMessage(vcToRemove.getNickname()+" disconnected!"));
                 if(l.getPlayersInLobby().size()==0){
                     lobbies.remove(l);
                 }else {
@@ -181,6 +199,11 @@ public class Server {
         }
     }
 
+    /**
+     *
+     * @param nick virtual client's nickname
+     * @return virtual client's reference
+     */
     public synchronized VirtualClient searchVirtualClient(String nick){
         for(VirtualClient vc : virtualClientList){
             if(vc.getNickname().equals(nick))
@@ -189,20 +212,23 @@ public class Server {
         return null;
     }
 
-    public synchronized VirtualClient searchVirtualClient(Integer idCH){
-        for(VirtualClient vc : virtualClientList){
-            if(vc.getClientHandler().getId() == idCH)
-                return vc;
-        }
-        return null;
-    }
-
+    /**
+     * swaps old virtual client with new virtual client after reconnection
+     * @param vc new virtual client
+     * @param oldVc old virtual client
+     */
     public synchronized void reconnect(VirtualClient vc,VirtualClient oldVc){
         clientHandlerNickMap.remove(oldVc.getClientHandler().getId());
         oldVc.setClientHandler(vc.getClientHandler());
         clientHandlerNickMap.put(oldVc.getClientHandler().getId(),oldVc.getNickname());
     }
 
+    /**
+     * handles client register response
+     * @param vc virtual client to be added
+     * @throws ReconnectionException when a client reconnects
+     * @throws IllegalArgumentException when the client's nickname is already taken
+     */
     public synchronized void addVirtualClient(VirtualClient vc) throws ReconnectionException, IllegalArgumentException {
         VirtualClient vLook = searchVirtualClient(vc.getNickname());
         if (vLook != null && vLook.getClientHandler() == null) {
@@ -265,18 +291,20 @@ public class Server {
         }
     }
 
-    public Map<Integer, String> getClientHandlerNickMap() {
-        return clientHandlerNickMap;
-    }
-
     public Map<String, Integer> getNickLobbyMap() {
         return nickLobbyMap;
     }
 
-    public List<VirtualClient> getVirtualClientList() {
-        return virtualClientList;
+    public List<Controller> getLobbies() {
+        return lobbies;
     }
 
+    /**
+     * creates new lobby and adds the client that created it
+     * if the lobby is full (singleplayer) the game starts
+     * @param nPlayers lobby size
+     * @param clientHandler client that created the lobby
+     */
     public synchronized void createNewLobby(int nPlayers, ClientHandler clientHandler){
         for(VirtualClient vc: waitingList) {
             if(vc.getClientHandler().equals(clientHandler)) {
@@ -291,13 +319,16 @@ public class Server {
                 vc.getClientHandler().send(new LobbyInfoMessage(users,newLobby.getnPlayers()));
                 if(newLobby.isFull()){
                     newLobby.start();
-                    //saveServerStatus();
                 }
                 return;
             }
         }
     }
 
+    /**
+     * creates server (new or from save) and starts it
+     * @param args used for restart after crash
+     */
     public static void main(String[] args) {
         if(args.length>0 && args[0].equals("crash")) {
             Server s = Utilities.loadServerStatus();
@@ -314,18 +345,14 @@ public class Server {
                 return;
             }
 
-            if (port < 1000 || port > 10000) {
-                System.err.println("The port number value has to be between 1000 and 9999");
+            if (port == null || port < 1000 || port > 10000) {
+                System.err.println("Not valid port number value");
                 System.err.println("Closing . . .");
                 return;
             } //else System.err.println("port number value loaded successfully\n");
 
             new Server(port).startServer();
         }
-    }
-
-    public List<Controller> getLobbies() {
-        return lobbies;
     }
 
 }
