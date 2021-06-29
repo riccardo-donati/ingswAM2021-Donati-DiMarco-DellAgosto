@@ -1,4 +1,4 @@
-package it.polimi.ingsw.network.messages;
+package it.polimi.ingsw.network.messages.updates;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.network.client.Client;
