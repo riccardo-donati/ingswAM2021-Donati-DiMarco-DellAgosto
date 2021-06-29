@@ -88,6 +88,20 @@ public class Controller implements GameObserver {
         this.disconnected = disconnected;
     }
 
+    /**
+     * for test purposes
+     * @param nPlayers number of players
+     * @param firstPlayer the creator of the lobby
+     */
+    public Controller(int nPlayers, VirtualClient firstPlayer){
+        this.idLobby = globalID;
+        globalID++;
+        this.nPlayers=nPlayers;
+        this.players.add(firstPlayer);
+        gson= Utilities.initializeGsonMessage();
+        gameState=GamePhase.NOTSTARTED;
+        disconnected=false;
+    }
     public Controller(int nPlayers, VirtualClient firstPlayer, Server server){
         this.idLobby = globalID;
         globalID++;
@@ -323,13 +337,6 @@ public class Controller implements GameObserver {
             return new ArrayList<>();
         }
     }
-    public synchronized void addPlayer(String nickname){
-        try {
-            game.addPlayer(nickname);
-        } catch (FullGameException e) {
-            e.printStackTrace();
-        }
-    }
     public synchronized List<ResourceDiscount> getPlayerDiscounts(String nickname){
         return game.getPlayerDiscounts(nickname);
     }
@@ -372,6 +379,7 @@ public class Controller implements GameObserver {
         }
         return clientStrongboxesMap;
     }
+
     public synchronized List<ClientDeposit> getCurrentWarehouse(){
         return Utilities.warehouseToListOfClientDeposits(game.getCurrentWarehouse());
     }
@@ -379,6 +387,16 @@ public class Controller implements GameObserver {
         return game.getCurrentActiveProductions();
     }
 
+    public void stopLobbyPingers(){
+        for(VirtualClient vc : players){
+            if(vc.getClientHandler()!=null)vc.getClientHandler().stopPinger();
+        }
+    }
+    public void startLobbyPingers(){
+        for(VirtualClient vc : players){
+            if(vc.getClientHandler()!=null)vc.getClientHandler().startPinger();
+        }
+    }
     //COMMANDS
     public synchronized void chooseLeader(List<String> l,String nickname) throws IllegalLeaderCardsException, IllegalActionException, NonEmptyException, NotYourTurnException, IllegalCommandException, WaitingReconnectionsException {
         if(!disconnected) {
@@ -400,7 +418,6 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
-
     public synchronized void chooseResourceToDeposit(Integer id,ResourceType res,String nickname) throws NotYourTurnException, UnknownNotFoundException, IllegalActionException, IllegalResourceException, FullSpaceException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
@@ -574,8 +591,6 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
-
-    //we're doing the same thing inside and outside the try catch
     public synchronized void activateProductions(String nickname) throws IllegalActionException, IllegalResourceException, ResourcesNotAvailableException, TooManyResourcesException, UnknownFoundException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
@@ -591,9 +606,6 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
-
-
-
     public synchronized void buyCard(Integer row,Integer col,Integer slot,String nickname) throws IllegalActionException, ResourcesNotAvailableException, TooManyResourcesException, IllegalSlotException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
@@ -636,16 +648,6 @@ public class Controller implements GameObserver {
             } else throw new NotYourTurnException();
         }else throw new WaitingReconnectionsException();
     }
-    public void stopLobbyPingers(){
-        for(VirtualClient vc : players){
-            vc.getClientHandler().stopPinger();
-        }
-    }
-    public void startLobbyPingers(){
-        for(VirtualClient vc : players){
-            vc.getClientHandler().startPinger();
-        }
-    }
     public synchronized void passTurn(String nickname) throws IllegalActionException, NotYourTurnException, WaitingReconnectionsException {
         if(!disconnected) {
             if (getCurrentNickname().equals(nickname)) {
@@ -655,7 +657,7 @@ public class Controller implements GameObserver {
                 //locally saving server
                 //im stopping the pingers because the server could be lock (choice of number of players)
                 stopLobbyPingers();
-                server.saveServerStatus();
+                if(server!=null) server.saveServerStatus();
                 startLobbyPingers();
                 //update
                 if (getnPlayers() == 1) {

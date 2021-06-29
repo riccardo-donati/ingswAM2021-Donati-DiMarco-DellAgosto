@@ -292,11 +292,9 @@ class PlayerTest {
                 }
         );
         assertEquals(nres-2,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
 
         player.revertPickUp();
         assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
     }
 
     @Test
@@ -313,7 +311,6 @@ class PlayerTest {
         player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
         player.getBoard().getWarehouse().addResourceInDeposit(4,ResourceType.GREY);
         int nres=player.getBoard().getWarehouse().countWarehouseResource();
-        player.getBoard().getWarehouse().visualize();
         assertDoesNotThrow(
                 ()->{
                     player.pickUpResourceFromWarehouse(2);
@@ -325,11 +322,9 @@ class PlayerTest {
         assertThrows(ResourcesNotAvailableException.class,
                 ()->player.pickUpResourceFromWarehouse(3));
         assertEquals(nres-4,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
 
         player.revertPickUp();
         assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
     }
 
     @Test
@@ -398,7 +393,6 @@ class PlayerTest {
         assertEquals(1,player.getBoard().getStrongBox().get(ResourceType.BLUE));
         assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
         assertEquals(nres-3,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
 
         player.revertPickUp();
         assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.YELLOW));
@@ -406,7 +400,6 @@ class PlayerTest {
         assertEquals(2,player.getBoard().getStrongBox().get(ResourceType.BLUE));
         assertEquals(0,player.getBoard().getStrongBox().get(ResourceType.VIOLET));
         assertEquals(nres,player.getBoard().getWarehouse().countWarehouseResource());
-        player.getBoard().getWarehouse().visualize();
     }
 
     @Test

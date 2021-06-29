@@ -20,7 +20,9 @@ public class VirtualClient {
      * @param m message sent
      */
     public void send(Message m){
-        clientHandler.getOut().println(clientHandler.getGson().toJson(m,Message.class));
+        if(clientHandler!=null) {
+            clientHandler.getOut().println(clientHandler.getGson().toJson(m, Message.class));
+        }
     }
 
     public String getNickname() {
@@ -43,5 +45,4 @@ public class VirtualClient {
         return Objects.equals(nickname, that.nickname) &&
                 Objects.equals(clientHandler, that.clientHandler);
     }
-
 }

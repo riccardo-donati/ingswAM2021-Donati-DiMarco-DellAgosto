@@ -24,7 +24,6 @@ class FaithPathTest {
         Random r = new Random();
         faithPath.addToPosition(r.nextInt(25));
         int position = faithPath.getPosition();
-        System.out.println(position);
         if(position >= 0 && position <= 2)
             assertEquals(0, faithPath.countFaithPoints());
         else if(position >= 3 && position <= 5)

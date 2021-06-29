@@ -34,7 +34,6 @@ public class UpdatesTest {
         cm.setPlayersOrder(new ArrayList<>());
         cm.getCardMatrix().setCards(Utilities.initializeCardMatrix(cm.getDevelopmentCards()));
         cm.getMarket().initializeMarbles();
-        //System.out.println(cm);
     }
     @Test
     public void TestSlotUpdate(){
@@ -44,7 +43,6 @@ public class UpdatesTest {
         su.update(cm);
         assertEquals(dc,cm.getCurrentBoard().getSlots().get(1).get(cm.getCurrentBoard().getSlots().get(1).size()-1));
         assertEquals(3,cm.getCardMatrix().getCards()[2][3].size());
-        //System.out.println(cm);
     }
     @Test
     public void TestWarehouseUpdate(){
@@ -75,7 +73,6 @@ public class UpdatesTest {
 
         DepositsUpdate whu=new DepositsUpdate(clientDeposits,strongbox, TurnPhase.ENDTURN);
         whu.update(cm);
-        System.out.println(cm);
     }
     @Test
     public void TestToggleProductionUpdate() throws IllegalResourceException {
@@ -95,19 +92,13 @@ public class UpdatesTest {
 
         ToggleProductionUpdate tpu=new ToggleProductionUpdate(activeProductions);
         tpu.update(cm);
-        System.out.println("Active Productions: ");
-        for(Production p : cm.getCurrentBoard().getActiveProductions()){
-            System.out.print("["+Utilities.stringify(p)+"]");
-        }
     }
     @Test
     public void TestPlayLeader(){
         cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("5L"));
-        System.out.println(cm);
         PlayLeaderUpdate plu=new PlayLeaderUpdate(0,"5L");
         assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInHand().get(0));
         plu.update(cm);
-        System.out.println(cm.getCurrentBoard().stringifyLeaders());
         assertEquals(cm.getLeaderCard("5L"),cm.getCurrentBoard().getLeadersInBoard().get(0));
     }
     @Test
@@ -117,10 +108,8 @@ public class UpdatesTest {
         //base prod input ? -> violet
         UnknownProductionUpdate upu1=new UnknownProductionUpdate(-1,ResourceType.VIOLET,'i');
         upu1.update(cm);
-        System.out.println(cm.getCurrentBoard().stringifyProductions());
         UnknownProductionUpdate upu2=new UnknownProductionUpdate(1,ResourceType.BLUE,'o');
         upu2.update(cm);
-        System.out.println(cm.getCurrentBoard().stringifyProductions());
         assertEquals(1,cm.getCurrentBoard().getBaseProduction().getInput().get(ResourceType.VIOLET));
         assertEquals(1,cm.getCurrentBoard().getExtraProductions().get(1).getOutput().get(ResourceType.BLUE));
     }
@@ -136,13 +125,11 @@ public class UpdatesTest {
         strongbox.put(Resource.SERVANT,0);
         strongbox.put(Resource.STONE,0);
         DepositsUpdate sbu=new DepositsUpdate(new ArrayList<>(),strongbox,TurnPhase.ENDTURN);
-        System.out.println(cm.getCurrentBoard().getDeposits());
         assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
         assertEquals(1,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
         sbu.update(cm);
         assertEquals(2,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.SHIELD));
         assertEquals(3,cm.getCurrentBoard().getDeposits().getStrongbox().get(Resource.COIN));
-        System.out.println(cm.getCurrentBoard().getDeposits());
     }
 
     @Test
@@ -151,17 +138,14 @@ public class UpdatesTest {
         cm.getCurrentBoard().addDiscount(ResourceType.GREY);
         ToggleDiscountUpdate tdu1=new ToggleDiscountUpdate(ResourceType.YELLOW);
         tdu1.update(cm);
-        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
         assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.YELLOW));
 
         ToggleDiscountUpdate tdu2=new ToggleDiscountUpdate(ResourceType.GREY);
         tdu2.update(cm);
         assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.GREY));
-        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
 
         tdu1.update(cm);
         assertEquals(1,cm.getCurrentBoard().getActiveDiscounts().get(ResourceType.GREY));
-        System.out.println(cm.getCurrentBoard().stringifyActiveDiscounts());
     }
 
     @Test
@@ -184,8 +168,6 @@ public class UpdatesTest {
         cm.getCurrentBoard().getLeadersInHand().add(cm.getLeaderCard("10L"));
         DiscardLeaderUpdate dlu=new DiscardLeaderUpdate(0);
         dlu.update(cm);
-        System.out.println(cm.getCurrentBoard().getFaithPath());
-        System.out.println(cm.getCurrentBoard().stringifyLeaders());
         assertEquals(0,cm.getCurrentBoard().getLeadersInHand().size());
         assertEquals(1,cm.getCurrentBoard().getFaithPath().getPosition());
 
@@ -212,8 +194,6 @@ public class UpdatesTest {
 
         PopeFavorUpdate fpu=new PopeFavorUpdate(faithPaths,popefavors,null);
         fpu.update(cm);
-        System.out.println(cm.getBoards().get("rick").getFaithPath());
-        System.out.println(cm.getBoards().get("dona").getFaithPath());
     }
     @Test
     public void TestPendingWithWhite(){
@@ -221,7 +201,6 @@ public class UpdatesTest {
         pending.add(ResourceType.YELLOW);
         pending.add(ResourceType.UNKNOWN);
         PendingResourcesUpdate prm =new PendingResourcesUpdate(pending);
-        System.out.println(prm.getMessage());
 
     }
     @Test
@@ -236,7 +215,6 @@ public class UpdatesTest {
         EndGameResultUpdate egru=new EndGameResultUpdate(result);
         egru.update(cm);
         assertEquals(cm.getGamePhase(), GamePhase.ENDGAME);
-        System.out.println(Utilities.stringify(egru.getResult()));
 
     }
 
@@ -390,10 +368,6 @@ public class UpdatesTest {
         ReconnectUpdate ru=new ReconnectUpdate(faithPaths,popefavors,null,strongboxes,warehouses,marbles,cardMatrix,playerOrder,currentNickname,slots,allLeadersInBoard,myLeadersInHand,GamePhase.ONGOING,new ArrayList<>(),new ArrayList<>(),new ArrayList<>(),new HashMap<>(),new HashMap<>(),new HashMap<>(),TurnPhase.STARTTURN,new HashMap<>(),new ArrayList<>(),new ArrayList<>());
         ru.update(cmnew);
 
-        System.out.println(cmnew);
-        System.out.println(cmnew.getBoards().get("dona"));
         cmnew.getBoards().get("rick").toggleDiscount(ResourceType.GREY);
-        System.out.println(cmnew.getBoards().get("rick").stringifyActiveDiscounts());
-        System.out.println(cmnew.getBoards().get("dona").stringifyProductions());
     }
 }

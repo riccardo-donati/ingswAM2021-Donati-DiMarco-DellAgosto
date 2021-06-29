@@ -79,6 +79,10 @@ public class ClientCardMatrix {
         return sb.toString();
     }
 
+    /**
+     * discard a card in the column
+     * @param column of the matrix
+     */
     public void discard(int column){
         for (int r=0; r < 3; r++) {
             if (cards[r][column].size() > 0) {
@@ -88,12 +92,6 @@ public class ClientCardMatrix {
             }
         }
     }
-
-//    public static void main(String[] args) {
-//        List<DevelopmentCard> list=Utilities.loadDevelopmentCardsFromJSON();
-//        ClientCardMatrix ccd = new ClientCardMatrix();
-//        ccd.pushCard(1, 1, list.get(2));
-//    }
 }
 
 

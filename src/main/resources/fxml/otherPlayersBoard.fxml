@@ -27,8 +27,11 @@
                <image>
                   <Image url="@../images/goBackArrow.png" />
                </image>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
             </ImageView>
-            <ImageView fitHeight="144.0" fitWidth="335.0" layoutX="458.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fitHeight="144.0" fitWidth="357.0" layoutX="458.0" layoutY="-4.0" pickOnBounds="true" preserveRatio="true">
                <image>
                   <Image url="@../images/logo.png" />
                </image>
@@ -54,17 +57,17 @@
             <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" pickOnBounds="true" preserveRatio="true" />
             <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="108.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="73.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="45.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
@@ -73,17 +76,17 @@
             </AnchorPane>
             <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="22.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
@@ -92,17 +95,17 @@
             </AnchorPane>
             <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="102.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="77.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="67.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="42.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="24.0" layoutY="39.0" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
@@ -271,10 +274,10 @@
                   <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
-            <ImageView id="res41" fx:id="resSlot41" fitHeight="34.0" fitWidth="34.0" layoutX="48.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView id="res42" fx:id="resSlot42" fitHeight="34.0" fitWidth="34.0" layoutX="98.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView id="res41" fx:id="resSlot51" fitHeight="34.0" fitWidth="34.0" layoutX="48.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
-            <ImageView id="res42" fx:id="resSlot52" fitHeight="34.0" fitWidth="34.0" layoutX="98.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res41" fx:id="resSlot41" fitHeight="30.0" fitWidth="30.0" layoutX="48.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res42" fx:id="resSlot42" fitHeight="30.0" fitWidth="30.0" layoutX="98.0" layoutY="158.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res41" fx:id="resSlot51" fitHeight="30.0" fitWidth="30.0" layoutX="48.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
+            <ImageView id="res42" fx:id="resSlot52" fitHeight="30.0" fitWidth="30.0" layoutX="98.0" layoutY="471.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <AnchorPane fx:id="hiddenPanel" layoutX="-273.0" layoutY="-6.0" prefHeight="807.0" prefWidth="265.0">

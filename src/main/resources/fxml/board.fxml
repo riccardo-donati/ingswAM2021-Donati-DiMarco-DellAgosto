@@ -228,17 +228,17 @@
             </ImageView>
             <Label fx:id="numberPickedCoins" alignment="CENTER" layoutX="214.0" layoutY="578.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font name="Gabriola" size="24.0" />
+                  <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
             <Label fx:id="numberPickedServants" alignment="CENTER" layoutX="303.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font name="Gabriola" size="24.0" />
+                  <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
             <Label fx:id="numberPickedShields" alignment="CENTER" layoutX="393.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font name="Gabriola" size="24.0" />
+                  <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
             <Button fx:id="production" layoutX="712.0" layoutY="560.0" mnemonicParsing="false" onAction="#produce" prefHeight="36.0" prefWidth="97.0" styleClass="record-sales" stylesheets="@../css/style.css" text="PRODUCE">
@@ -250,7 +250,7 @@
             <ImageView fx:id="resSlot1" fitHeight="30.0" fitWidth="27.0" layoutX="160.0" layoutY="216.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <Label fx:id="numberPickedStones" alignment="CENTER" layoutX="482.0" layoutY="577.0" prefHeight="54.0" prefWidth="65.0" textFill="WHITE">
                <font>
-                  <Font name="Gabriola" size="24.0" />
+                  <Font name="Gabriola" size="28.0" />
                </font>
             </Label>
             <ImageView fx:id="resSlot21" fitHeight="30.0" fitWidth="27.0" layoutX="141.0" layoutY="265.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
@@ -260,17 +260,17 @@
             <ImageView fx:id="resSlot33" fitHeight="30.0" fitWidth="27.0" layoutX="187.0" layoutY="313.0" onDragDetected="#moveRes" onDragDropped="#placeWarehouse" onDragOver="#acceptDrag" onMouseClicked="#clickedWarehouseRes" pickOnBounds="true" preserveRatio="true" />
             <AnchorPane fx:id="slot1" layoutX="386.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="74.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot11" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="74.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="44.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot12" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="44.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="14.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot13" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="DEFAULT" />
                      </cursor>
@@ -279,17 +279,17 @@
             </AnchorPane>
             <AnchorPane fx:id="slot2" layoutX="554.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="81.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot21" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="74.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="51.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot22" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="44.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="21.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot23" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
@@ -298,17 +298,17 @@
             </AnchorPane>
             <AnchorPane fx:id="slot3" layoutX="726.0" layoutY="182.0" prefHeight="310.0" prefWidth="158.0">
                <children>
-                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="74.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot31" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="74.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="44.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot32" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="44.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>
                   </ImageView>
-                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="28.0" layoutY="14.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
+                  <ImageView fx:id="slot33" fitHeight="176.0" fitWidth="130.0" layoutX="14.0" layoutY="14.0" onDragDropped="#placeSlot" onDragOver="#acceptDrag" onMouseClicked="#toggleProduction" pickOnBounds="true" preserveRatio="true">
                      <cursor>
                         <Cursor fx:constant="CLOSED_HAND" />
                      </cursor>

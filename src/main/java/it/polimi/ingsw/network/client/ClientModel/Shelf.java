@@ -2,10 +2,11 @@ package it.polimi.ingsw.network.client.ClientModel;
 
 import it.polimi.ingsw.network.client.CLI.enums.Resource;
 
+import java.util.Arrays;
+
 public class Shelf {
-    private Resource[] spaces;
-    private int n;
-    private int id;
+    private final Resource[] spaces;
+    private final int id;
 
     public Resource[] getSpaces() { return spaces; }
 
@@ -13,6 +14,10 @@ public class Shelf {
         return id;
     }
 
+    /**
+     * count the amount of empty spaces
+     * @return the count
+     */
     public Integer getEmpty(){
         int count=0;
         for(Resource r: spaces){
@@ -22,12 +27,18 @@ public class Shelf {
         return count;
     }
 
+    /**
+     * reset the spaces to EMPTY
+     */
     public void clear(){
-        for(int i=0;i<spaces.length;i++){
-            spaces[i]=Resource.EMPTY;
-        }
+        Arrays.fill(spaces, Resource.EMPTY);
     }
 
+    /**
+     *
+     * @param n is the size of the shelf
+     * @param id is the id of the shelf
+     */
     public Shelf(int n, int id){
         spaces=new Resource[n];
         for(int i=0;i<n;i++){
@@ -40,6 +51,11 @@ public class Shelf {
         spaces[index]=res;
     }
 
+    /**
+     * remove a resource from a shelf
+     * @param index is the index of the resource i want to remove
+     * @return the removed resource
+     */
     public Resource remove(int index){
         Resource res=spaces[index];
         spaces[index] = Resource.EMPTY;

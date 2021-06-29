@@ -74,6 +74,8 @@ public class BoardController extends ControllerGUI {
         toggledLeader2.setOpacity(0);
         extraProd1.setImage(null);
         extraProd2.setImage(null);
+        leaderCard1.setImage(null);
+        leaderCard2.setImage(null);
         leader1.setFill(Color.valueOf("#b0b3b5"));
         leader2.setFill(Color.valueOf("#b0b3b5"));
 
@@ -1482,6 +1484,17 @@ public class BoardController extends ControllerGUI {
         List<String> players = gui.getClientModel().getPlayersInOrder();
         List<String> disconnected=gui.getClientModel().getDisconnectedPlayers();
         players.remove(gui.getClientModel().getNickname());
+        if(players.size()==0){
+            player1Name.setText("");
+            p1Board.setOpacity(0);
+            p2Board.setOpacity(0);
+            p3Board.setOpacity(0);
+            disc1.setVisible(false);
+            disc3.setVisible(false);
+            disc2.setVisible(false);
+            player2Name.setText("");
+            player3Name.setText("");
+        }
         if(players.size()==1){
             player1Name.setText(players.get(0));
             disc1.setVisible(disconnected.contains(players.get(0)));

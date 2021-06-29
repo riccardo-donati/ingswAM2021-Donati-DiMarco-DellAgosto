@@ -289,6 +289,10 @@ public abstract class Game implements BoardObserver, PublicInterface {
 
     //----------------PublicInterface----------------------------------------------------------------------
     //CONTROLLER:
+
+    /**
+     * reset the reference of the currPlayer because the json can't save a reference
+     */
     public void resetCurrentPlayerRef(){
         for(Player p : players){
             if(p.getNickname().equals(currPlayer.getNickname()))
@@ -298,7 +302,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Map<String, LeaderCard> getNameLeaderCardMap() { return nameLeaderCardMap; }
     public Map<String,DevelopmentCard> getNameDevelopmentCardMap(){return nameDevelopmentCardMap;}
     /**
-     * usefulfor the controller
+     * useful for the controller whenever you need to reconnect a player
      * @return a map with the nickname and the faithpath position
      */
     public Map<String,Integer> getFaithPathsMap(){
@@ -308,6 +312,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return map;
     }
+
+    /**
+     * useful for the controller whenever you need to reconnect a player
+     * @return a map with all the information about the warehouses of the players
+     */
     public Map<String,Warehouse> getAllWarehouses(){
         Map<String,Warehouse> warehouseMap=new HashMap<>();
         for(Player p : players){
@@ -321,6 +330,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Map<String,Map<Integer,String>> getAllDiscardedCards(){
         return discardedCards;
     }
+
+    /**
+     * useful for the controller whenever you need to reconnect a player
+     * @return a map with all the information about the strongbox of the players
+     */
     public Map<String,Map<ResourceType,Integer>> getAllStrongboxes(){
         Map<String,Map<ResourceType,Integer>> strongboxMap=new HashMap<>();
         for(Player p : players){
@@ -331,6 +345,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Warehouse getCurrentWarehouse(){
        return currPlayer.getBoard().getWarehouse();
     }
+
+    /**
+     *
+     * @return the list of active productions of the current player
+     */
     public List<Production> getCurrentActiveProductions(){
         List<Production> productions=new ArrayList<>();
         if(currPlayer.getBoard().getBaseProduction().checkSelected()){
@@ -349,6 +368,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return productions;
     }
+
+    /**
+     *
+     * @return to the controller a list with the info about the marbles
+     */
     public List<ResourceType> getMarblesInList(){
         List<ResourceType> list=new ArrayList<>();
         Marble[][] marbles=market.getMarbles();
@@ -448,6 +472,11 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return allSlotsMap;
     }
+
+    /**
+     * useful fot the controller
+     * @return a map that links nicknames with list of leader cards name in board
+     */
     public Map<String,List<String>> getAllLeadersInBoard(){
         Map<String,List<String>> allLeadersInBoardMap=new HashMap<>();
         for(Player p : players){
@@ -459,6 +488,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return allLeadersInBoardMap;
     }
+
+    /**
+     * get the leaders in hand of the chosen player
+     * @param nickname is the nickname of the player
+     * @return a list of the leaders in hand names
+     */
     public List<String> getLeadersInHand(String nickname){
         List<String> listNamesLeaders=new ArrayList<>();
         for(Player p : players){
@@ -492,6 +527,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return list;
     }
+
+    /**
+     *
+     * @param nickname is the nickname of the chosen player
+     * @return return the discounts of the chosen nickname
+     */
     public List<ResourceDiscount> getPlayerDiscounts(String nickname){
         for(Player p : players){
             if(p.getNickname().equals(nickname)){
@@ -500,6 +541,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return new ArrayList<>();
     }
+
+    /**
+     *
+     * @param nickname is the nickname of the player
+     * @return a map of the picked resource
+     */
     public Map<Resource,Integer> getPlayerPickedResources(String nickname){
         Map<Resource,Integer> map=new HashMap<>();
         for(Player p : players){
@@ -594,6 +641,12 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return result;
     }
+
+    /**
+     *
+     * @param name is the nickname of the player
+     * @return a map with the productions of the selected players which contains an Unknown mark
+     */
     public Map<Integer,Production> getPlayerUnknownProductions(String name){
         Map<Integer,Production> map=new HashMap<>();
         for(Player p : players){
@@ -606,11 +659,20 @@ public abstract class Game implements BoardObserver, PublicInterface {
         }
         return map;
     }
+
+    /**
+     * disconnect all the players
+     */
     public void disconnectAllPlayers(){
         for(Player p : players){
             p.setActive(false);
         }
     }
+
+    /**
+     *
+     * @return a list with the nicknames of the active players
+     */
     public List<String> getActivePlayers(){
         List<String> actives=new ArrayList<>();
         for(Player p : players){
@@ -621,6 +683,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
     public Map<ResourceType,Integer> getCurrentStrongbox(){
         return currPlayer.getBoard().getStrongBox();
     }
+
     public Token getLastUsedToken(){
         return null;
     }
@@ -882,9 +945,6 @@ public abstract class Game implements BoardObserver, PublicInterface {
                     } catch (FullSpaceException | IllegalResourceException ignored) {
                     }
                 }
-                /*if(p.countSelectedProductions()>0){
-                    p.deSelectAllProductions();
-                }*/
                 p.resetPlayerProductions();
             }
         }

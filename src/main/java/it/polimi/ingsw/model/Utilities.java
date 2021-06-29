@@ -103,6 +103,12 @@ public  class Utilities {
 
         return g;
     }
+
+    /**
+     * copu a list of productions
+     * @param list to be copied
+     * @return the copied list
+     */
     public static List<Production> copyProductionsList(List<Production> list){
         List<Production>copied=new ArrayList<>();
         for(Production p : list){
@@ -111,6 +117,15 @@ public  class Utilities {
         }
         return copied;
     }
+
+    /**
+     * fill the player deposit for debug purposes
+     * @param p is the player
+     * @param warehouse true if you want to fill the warehouse too
+     * @param extradepots true if you want extradeposits
+     * @throws IllegalResourceException if resource problems
+     * @throws FullSpaceException
+     */
     public static void fillDeposits(Player p,boolean warehouse,boolean extradepots) throws IllegalResourceException, FullSpaceException {
         Map<ResourceType, Integer> resMap=new HashMap<>();
         resMap.put(ResourceType.YELLOW,999);
@@ -138,7 +153,6 @@ public  class Utilities {
                 p.getBoard().getWarehouse().addExtraDepot(ResourceType.BLUE);
 
                 p.getBoard().getWarehouse().getExtradepots().get(0).addResource(ResourceType.VIOLET);
-                //p.getBoard().getWarehouse().visualize();
             }
         }
     }
