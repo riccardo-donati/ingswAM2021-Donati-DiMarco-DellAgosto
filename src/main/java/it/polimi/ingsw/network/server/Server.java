@@ -10,7 +10,7 @@ import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
 import it.polimi.ingsw.network.exceptions.ReconnectionException;
 import it.polimi.ingsw.network.messages.*;
-import it.polimi.ingsw.network.messages.DisconnectedMessage;
+import it.polimi.ingsw.network.messages.updates.DisconnectedMessage;
 import it.polimi.ingsw.network.messages.updates.ReconnectMessage;
 
 import java.io.*;
@@ -252,8 +252,13 @@ public class Server {
             throw new IllegalArgumentException();
         } else if (vLook != null && !vLook.getClientHandler().isConnected()) {
             //player reconnecting after disconnection
-            reconnect(vc, vLook);
             Controller lobby = searchLobby(nickLobbyMap.get(vLook.getNickname()));
+            if(lobby.isDisconnected()){
+                //if the player disconnected after a server crash and before the reconnection of all players
+                vLook.setClientHandler(null);
+                addVirtualClient(vc);
+            }
+            reconnect(vc, vLook);
             vc.getClientHandler().setLobby(lobby);
             lobby.notifyLobby(new ReconnectMessage(vLook.getNickname()));
             lobby.reconnectPlayer(vc.getNickname());

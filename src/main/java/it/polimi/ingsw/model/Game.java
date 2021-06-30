@@ -615,7 +615,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
      * Factory method for the creation of the Game
      * @param nPlayers is the number of players
      * @return the Game instance
-     * @throws IllegalPlayersNumberException if nPlayers<1 or >4
+     * @throws IllegalPlayersNumberException if nPlayers less than 1 or more than 4
      */
     public static Game createGame(Integer nPlayers) throws IllegalPlayersNumberException {
         if(nPlayers==1) return new Singleplayer();

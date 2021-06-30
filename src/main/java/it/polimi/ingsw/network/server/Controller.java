@@ -73,6 +73,10 @@ public class Controller implements GameObserver {
         return names;
     }
 
+    public synchronized boolean isDisconnected() {
+        return disconnected;
+    }
+
     public synchronized   List<VirtualClient> getPlayersInLobby() { return players; }
 
     public synchronized boolean isFull(){

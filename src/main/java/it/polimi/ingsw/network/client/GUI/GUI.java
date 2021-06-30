@@ -119,6 +119,16 @@ public class GUI extends Application implements Client {
             Platform.runLater(new Thread(()->message.accept(clientVisitorHandler, this)));
         }
     }
+    @Override
+    public void stop(){
+        if(in!=null) in.close();
+        if(out!=null) out.close();
+        if(socket!=null) {
+            try {
+                socket.close();
+            } catch (IOException ignored) { }
+        }
+    }
 
     /**
      * when a player hits the login button it sets a connection based on the ip and port

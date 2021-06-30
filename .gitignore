@@ -9,5 +9,6 @@ target
 /src/main/it/polimi/ingsw/model/json/gameState
 
 serverStatus.json
-
+AM35.iml
 shade
+.idea

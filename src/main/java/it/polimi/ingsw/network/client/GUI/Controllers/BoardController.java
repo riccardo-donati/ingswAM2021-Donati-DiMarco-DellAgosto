@@ -826,7 +826,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * function that will update the result of the drag & drop event in the warehouse
+     * function that will update the result of the drag and drop event in the warehouse
      */
     public void updateWarehouse(){
         ClientDeposits clientDeposits=gui.getClientModel().getMyBoard().getDeposits();
@@ -1173,7 +1173,7 @@ public class BoardController extends ControllerGUI {
     /**
      * based on the drag event target, which is an empty Imageview that will be updated in future, i'll assign a value to a
      * integer slot. This slot identifies the warehouse position of the dropped pending resource.
-     * @param dragEvent this event identifies the end of a drag & drop event
+     * @param dragEvent this event identifies the end of a drag and drop event
      */
     public void placeWarehouse(DragEvent dragEvent){
         Integer slot=-1;
@@ -1255,7 +1255,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * moving a resource between shelves using drag & drop
+     * moving a resource between shelves using drag and drop
      * @param mouseEvent catches the drag event
      */
     public void moveRes(MouseEvent mouseEvent) {
@@ -1317,7 +1317,7 @@ public class BoardController extends ControllerGUI {
     }
 
     /**
-     * side function to check which resource is in a slot (index), just a graphic utility for drag & drop
+     * side function to check which resource is in a slot (index), just a graphic utility for drag and drop
      * @param index slot of the warehouse
      * @return the imageview if there is one of the relative resource
      */
@@ -1409,7 +1409,7 @@ public class BoardController extends ControllerGUI {
     /**
      * buy command that sends the row and column, saved previously in the beginning of the drag Event, and the cardSlot where
      * the card is dropped
-     * @param dragEvent the release of the card at the and of the drag & drop
+     * @param dragEvent the release of the card at the and of the drag and drop
      */
     public void placeSlot(DragEvent dragEvent) {
         Integer dCardSlot;

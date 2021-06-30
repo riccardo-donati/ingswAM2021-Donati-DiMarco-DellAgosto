@@ -22,7 +22,7 @@ import java.util.Map;
 public  class Utilities {
 
     /**
-     * Merges two Map<ResourceType, Integer> objects
+     * Merges two map of resourceType, Integer objects
      * @param mainMap map that is modified
      * @param mapToAdd map that is merged to the first one
      */
