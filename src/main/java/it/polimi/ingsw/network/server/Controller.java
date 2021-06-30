@@ -24,11 +24,11 @@ import java.util.*;
 
 public class Controller implements GameObserver {
     @Expose
-    private int idLobby;
+    private final int idLobby;
     @Expose
-    private int nPlayers;
+    private final int nPlayers;
     @Expose
-    private List<VirtualClient> players = new ArrayList<>();
+    private final List<VirtualClient> players = new ArrayList<>();
     @Expose
     private static int globalID = 0;
     private Gson gson;
