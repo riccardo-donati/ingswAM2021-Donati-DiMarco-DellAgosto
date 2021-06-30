@@ -13,6 +13,15 @@ Have fun with this Strategic Game! :octocat:
 
 You can check the project's documentation [here](https://riccardo-donati.github.io/)
 
+#               HOW TO RUN
+
+Once you downloaded this project open _cmd.exe_ and type:<br> _java -jar path-to-the-project/shade/AM35.jar_ <br>
+You'll be asket to choose between Running the server, the Client in CLI or GUI.
+Locally the Ip will be 120.0.0.1 and the port 1337.<br>
+If hosted type the Ip given by the host and leave 1337 as port number
+
+To show game icons perfectly in CLI is recomended to run it using WSL (Terminal Linux) and installing a font that supports Unicode.
+
 # 						  TEST CASES
 
 The following table shows the coverage of the main Packages in our project. The missing percentage in the classes are due to useless methods like getters, setters or other methods that are not directly useful to the main skeleton of the program. 
