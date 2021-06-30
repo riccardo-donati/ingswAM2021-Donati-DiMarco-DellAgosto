@@ -17,10 +17,9 @@ You can check the project's documentation [here](https://riccardo-donati.github.
 
 Once you downloaded this project open _cmd.exe_ and type:<br> _java -jar path-to-the-project/shade/AM35.jar_ <br>
 You'll be asket to choose between Running the server, the Client in CLI or GUI.
-Locally the Ip will be 120.0.0.1 and the port 1337.<br>
-If hosted type the Ip given by the host and leave 1337 as port number
+Locally the Ip will be 127.0.0.1 and the default port is 1337. <br>
 
-To show game icons perfectly in CLI is recomended to run it using WSL (Terminal Linux) and installing a font that supports Unicode.
+To show game icons perfectly in CLI is recomended to run it using WSL (Linux Terminal) and installing [this font](https://github.com/ingconti/W10JavaCLI/tree/master/font) to support supports Unicode.
 
 # 						  TEST CASES
 
