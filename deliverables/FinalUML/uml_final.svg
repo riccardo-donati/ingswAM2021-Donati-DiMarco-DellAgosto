@@ -1552,7 +1552,7 @@
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,3629,1413)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="164" clip-path="url(#clipPath27)" stroke="none"
-      >-activeProductions : List&lt;Productions&gt;</text
+      >-activeProductions : List&lt;Production&gt;</text
     ></g
     ><g font-size="11px" transform="matrix(1,0,0,1,3629,1413)" fill-opacity="1" fill="black" text-rendering="geometricPrecision" image-rendering="optimizeQuality" font-family="sans-serif" stroke="black" stroke-opacity="1"
     ><text x="2" xml:space="preserve" y="179" clip-path="url(#clipPath27)" stroke="none"
