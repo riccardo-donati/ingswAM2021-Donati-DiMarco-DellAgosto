@@ -1,5 +1,6 @@
 package it.polimi.ingsw.network.client.GUI.Controllers;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.image.ImageView;
@@ -20,7 +21,7 @@ public class ComunicationController {
         alert.initModality(Modality.APPLICATION_MODAL);
 
         alert.getDialogPane().setHeaderText(error);
-        alert.showAndWait();
+        Platform.runLater(new Thread(alert::showAndWait));
     }
 
     /**
@@ -35,7 +36,7 @@ public class ComunicationController {
         alert.initModality(Modality.APPLICATION_MODAL);
 
         alert.getDialogPane().setHeaderText(info);
-        alert.showAndWait();
+        Platform.runLater(new Thread(alert::showAndWait));
     }
 
     /**
@@ -54,7 +55,7 @@ public class ComunicationController {
         icon.setFitHeight(55);
         icon.setFitWidth(55);
         alert.getDialogPane().setGraphic(icon);
-        alert.showAndWait();
+        Platform.runLater(new Thread(alert::showAndWait));
     }
 
     /**
@@ -68,6 +69,6 @@ public class ComunicationController {
         alert.initOwner(stg);
         alert.initModality(Modality.APPLICATION_MODAL);
         alert.getDialogPane().setHeaderText("The end phase has begun! This is the last round!");
-        alert.showAndWait();
+        Platform.runLater(new Thread(alert::showAndWait));
     }
 }

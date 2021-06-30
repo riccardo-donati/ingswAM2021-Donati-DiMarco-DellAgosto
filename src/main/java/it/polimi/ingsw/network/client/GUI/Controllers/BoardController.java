@@ -798,6 +798,7 @@ public class BoardController extends ControllerGUI {
         extraProd1.setDisable(true);
         extraProd2.setDisable(true);
         hiddenUnknown.setDisable(true);
+        disc1.setDisable(true);
     }
 
     /**
