@@ -1,7 +1,5 @@
 package it.polimi.ingsw.network.client.CLI.enums;
 
-import it.polimi.ingsw.network.client.CLI.enums.Color;
-
 public enum Resource {
     COIN(Color.ANSI_YELLOW.escape()+"◉"+Color.RESET),
     SHIELD(Color.ANSI_BLUE.escape()+"▣"+Color.RESET),

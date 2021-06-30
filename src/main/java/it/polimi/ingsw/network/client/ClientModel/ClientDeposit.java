@@ -23,7 +23,4 @@ public class ClientDeposit {
         return resources;
     }
 
-    public void addResource(ResourceType res){
-        resources.add(Utilities.resourceTypeToResource(res));
-    }
 }

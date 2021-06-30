@@ -1,6 +1,5 @@
 package it.polimi.ingsw.network;
 
-import com.google.gson.stream.JsonReader;
 import it.polimi.ingsw.model.enums.Color;
 import it.polimi.ingsw.model.enums.ResourceType;
 import it.polimi.ingsw.model.enums.TurnPhase;

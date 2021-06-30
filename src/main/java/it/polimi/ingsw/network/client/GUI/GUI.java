@@ -122,9 +122,9 @@ public class GUI extends Application implements Client {
 
     /**
      * when a player hits the login button it sets a connection based on the ip and port
-     * @param serverIP ip setted in the login scene
-     * @param serverPortNumber port number setted in the login scene
-     * @return
+     * @param serverIP ip set in the login scene
+     * @param serverPortNumber port number set in the login scene
+     * @return true if the connection is successful, false otherwise
      */
     public boolean connect(String serverIP,Integer serverPortNumber){
         try {
