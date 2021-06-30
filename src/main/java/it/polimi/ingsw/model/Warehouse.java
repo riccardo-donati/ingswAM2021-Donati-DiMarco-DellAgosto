@@ -128,7 +128,13 @@ public class Warehouse {
         if(!pendingResources.containsKey(res) || res==ResourceType.WHITE || res==ResourceType.EMPTY) throw new IllegalResourceException();
         pendingResources.replace(ResourceType.UNKNOWN,pendingResources.get(ResourceType.UNKNOWN)-1);
         pendingResources.replace(res,pendingResources.get(res)+1);
-        addResourceInDeposit(id,res);
+        try {
+            addResourceInDeposit(id, res);
+        }catch(IllegalResourceException e){
+            pendingResources.replace(ResourceType.UNKNOWN,pendingResources.get(ResourceType.UNKNOWN)+1);
+            pendingResources.replace(res,pendingResources.get(res)-1);
+            throw new IllegalResourceException();
+        }
     }
     /**
      * add a resource from pending to a deposit
