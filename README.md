@@ -2,7 +2,7 @@
   <img src="https://i.imgur.com/dEBlhTL.png" width=500 height=200 px />
 </p>
 
-Masters of Renaissance is the final test of the teaching: "Software Engineering", course of the "Computer Science Degree" held at Politecnico di Milano during the Academic Year 2020/2021. <br>
+Masters of Renaissance is the final test of the _Software Engineering_ course part of the _Computer Science Degree_ at Politecnico di Milano during the Academic Year 2020/2021. <br>
 Masters of Renaissance is a turn-based board game where you play as an important Florence citizen: your goal is to collect and invest resources and improve your relations with the papacy. You can take resources from the Market, use resources to buy cards that will unlock powerful productions, advance in the faithpath and activate special power thanks to leader cards.
 You can play with your friends in a max of 4 players match or, if you don't have any, play a Singleplayer game against Lorenzo Il Magnifico! <br>
 Have fun with this strategic game! :octocat:
@@ -16,11 +16,14 @@ You can check the project's documentation [here](https://riccardo-donati.github.
 #               HOW TO RUN
 
 This game requires [Java SE JRE](https://www.oracle.com/it/java/technologies/javase-downloads.html) to run. <br>
-Download the project and type _java -jar [project_path]/shade/AM35.jar_ <br> in a terminal. <br>
+Download the project and use the following command in a terminal to run the game:
+````
+java -jar [project_path]/shade/AM35.jar
+````
 You'll be asked to choose between running the Server or the Client as either CLI or GUI.
 The server port is 1337 and locally its IP address is 127.0.0.1. <br>
 
-It is highly recommended to run the CLI version of the client through WSL (Linux Terminal) and use [this font](https://github.com/ingconti/W10JavaCLI/tree/master/font) that supports Unicode characters.<br>
+It is highly recommended to run the CLI version of the client through WSL (Linux Terminal) and use [this font](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/blob/master/src/main/resources/DejaVu%20Sans%20Mono%20for%20Powerline.ttf) that supports Unicode characters.<br>
 If you have troubles visualizing the game interface, try going into Properties->Layout and unckeck the _Wrap text output on resize_ option and increase the _Screen buffer size_ width to at least 237.<br>
 For input troubles try unchecking _Quick edit mode_ in Properties->Options.<br>
 
@@ -45,7 +48,7 @@ The following table shows the coverage of the main packages in our project. The 
 | Multiple Matches | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/blob/master/src/main/java/it/polimi/ingsw/network/server/Server.java) |
 | Persistence | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
 | Resilience to disconnections | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
-| Local Match | ![RED](http://placehold.it/15/f03c15/f03c15) |
+| Local Match | [![RED](http://placehold.it/15/f03c15/f03c15)]() |
 | Parameter Editor | [![RED](http://placehold.it/15/f03c15/f03c15)](https://media-cldnry.s-nbcnews.com/image/upload/t_focal-760x428,f_auto,q_auto:best/MSNBC/Components/Video/201609/a_ov_Pepe_160928.jpg) |
 
 ![GREEN](http://placehold.it/15/44bb44/44bb44) Implemented &nbsp;&nbsp;&nbsp;&nbsp;
