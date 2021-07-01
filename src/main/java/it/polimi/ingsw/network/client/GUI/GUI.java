@@ -1,6 +1,7 @@
 package it.polimi.ingsw.network.client.GUI;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import it.polimi.ingsw.model.DevelopmentCard;
 import it.polimi.ingsw.model.Result;
 import it.polimi.ingsw.model.enums.GamePhase;
@@ -115,8 +116,12 @@ public class GUI extends Application implements Client {
                 }
                 break;
             }
-            ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
-            Platform.runLater(new Thread(()->message.accept(clientVisitorHandler, this)));
+            try {
+                ClientMessage message = gson.fromJson(jsonString, ClientMessage.class);
+                Platform.runLater(new Thread(()->message.accept(clientVisitorHandler, this)));
+            }catch (JsonSyntaxException e ){
+                return;
+            }
         }
     }
     @Override

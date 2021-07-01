@@ -201,6 +201,10 @@ public class Server {
         }
     }
 
+    public List<VirtualClient> getWaitingList() {
+        return waitingList;
+    }
+
     /**
      *
      * @param nick virtual client's nickname

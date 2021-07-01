@@ -661,7 +661,7 @@ public class Controller implements GameObserver {
                 //locally saving server
                 //im stopping the pingers because the server could be lock (choice of number of players)
                 stopLobbyPingers();
-                if(server!=null) server.saveServerStatus();
+                if(server!=null && server.getWaitingList().size()==0) server.saveServerStatus();
                 startLobbyPingers();
                 //update
                 if (getnPlayers() == 1) {
