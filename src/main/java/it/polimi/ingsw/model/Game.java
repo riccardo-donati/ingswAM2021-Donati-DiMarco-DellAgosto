@@ -956,6 +956,7 @@ public abstract class Game implements BoardObserver, PublicInterface {
             p.getBoard().addObserver(this);
             p.getBoard().getFaithPath().addObserver(this);
             p.getBoard().getWarehouse().addObserver(this);
+            if(getBlackCrossFaithPath()!=null) getBlackCrossFaithPath().addObserver(this);
             if(p.getOrder().equals(currPlayer.getOrder()) && p.getNickname().equals(currPlayer.getNickname()))
                 setCurrPlayer(p);
         }
