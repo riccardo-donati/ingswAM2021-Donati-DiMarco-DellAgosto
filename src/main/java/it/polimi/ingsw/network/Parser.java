@@ -92,7 +92,7 @@ public class Parser {
             tokenizer = new StringTokenizer(string.substring("numberofplayers".length()));
             try {
                 int number = Integer.parseInt(tokenizer.nextToken());
-                if (!tokenizer.hasMoreElements() && number >= 1) {
+                if (!tokenizer.hasMoreElements() && number >= 1 && number<=4) {
                     return new PlayerNumberResponse(number);
                 }
             } catch (NoSuchElementException | NumberFormatException e) {

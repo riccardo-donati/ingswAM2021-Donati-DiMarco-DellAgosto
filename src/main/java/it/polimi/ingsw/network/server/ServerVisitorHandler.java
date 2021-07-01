@@ -69,13 +69,18 @@ public class ServerVisitorHandler implements ServerVisitor {
                     try {
                         String jsonString = clientHandler.getIn().nextLine();
                         message = clientHandler.getGson().fromJson(jsonString, ServerMessage.class);
-                        message.accept(clientHandler.getServerVisitorHandler(), clientHandler);
-                        System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
-
-                    } catch (NoSuchElementException ignored) {
+                        if(message instanceof PlayerNumberResponse) {
+                            PlayerNumberResponse pnr=(PlayerNumberResponse)message;
+                            if(pnr.getNPlayers()<1 || pnr.getNPlayers()>4) {
+                                clientHandler.send(new ErrorMessage("Invalid number of players!"));
+                                clientHandler.closeConnection();
+                                return;
+                            }
+                            pnr.accept(clientHandler.getServerVisitorHandler(), clientHandler);
+                            System.out.println(nickname + " created a new lobby for " + ((PlayerNumberResponse) message).getNPlayers() + " players");
+                        }
+                    } catch (NoSuchElementException | InterruptedException ignored) {
                     }
-
-
                 } else {
                     //clientHandler.getPinger().start();
                     clientHandler.startPinger();
@@ -100,7 +105,11 @@ public class ServerVisitorHandler implements ServerVisitor {
                 e.printStackTrace();
             }
         } else {
-            clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
+            try {
+                clientHandler.getServer().createNewLobby(response.getNPlayers(), clientHandler);
+            } catch (IllegalPlayersNumberException e) {
+                return;
+            }
             //clientHandler.getPinger().start();
             clientHandler.startPinger();
         }
@@ -128,6 +137,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | FullSpaceException | UnknownNotFoundException | IllegalResourceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -138,6 +149,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | IllegalActionException | NotYourTurnException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -148,6 +161,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | UnknownFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -158,6 +173,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | UnknownFoundException | IllegalActionException | NotYourTurnException | IllegalSlotException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -174,6 +191,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new DepositsUpdate(l.getCurrentWarehouse(),l.getCurrentStrongbox(),l.getTurnPhase()));
         }catch (IllegalActionException e){
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -184,6 +203,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | ResourcesNotAvailableException | NotYourTurnException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -194,6 +215,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | NonEmptyException | DepositNotExistingException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -204,6 +227,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalCommandException | IllegalResourceException | IllegalActionException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -214,6 +239,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | IllegalResourceException | NotYourTurnException | IllegalActionException | NonEmptyException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -224,6 +251,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalResourceException | DepositableResourceException | IllegalActionException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -234,6 +263,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalResourceException | IllegalActionException | FullSpaceException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -244,6 +275,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NotYourTurnException | IllegalActionException | ResourcesNotAvailableException | TooManyResourcesException | IllegalSlotException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -254,6 +287,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (NoWhiteResourceException | NotYourTurnException | IllegalResourceException | IllegalActionException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -264,6 +299,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalActionException | NotYourTurnException | IllegalCommandException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -274,6 +311,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalResourceException | UnknownNotFoundException | IllegalActionException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -286,6 +325,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         } catch (IndexOutOfBoundsException e){
             clientHandler.send(new ErrorMessage("Not in hand"));
+        }catch ( NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -298,6 +339,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             clientHandler.send(new ErrorMessage(e.getMessage()));
         } catch (IndexOutOfBoundsException e){
             clientHandler.send(new ErrorMessage("Not in hand"));
+        }catch ( NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 
@@ -308,6 +351,8 @@ public class ServerVisitorHandler implements ServerVisitor {
             command.doAction(l,nickname);
         } catch (IllegalCommandException | NotYourTurnException | IllegalActionException | DiscountNotFoundException | WaitingReconnectionsException e) {
             clientHandler.send(new ErrorMessage(e.getMessage()));
+        }catch (IndexOutOfBoundsException | NullPointerException e){
+            clientHandler.send(new ErrorMessage("Error!"));
         }
     }
 }

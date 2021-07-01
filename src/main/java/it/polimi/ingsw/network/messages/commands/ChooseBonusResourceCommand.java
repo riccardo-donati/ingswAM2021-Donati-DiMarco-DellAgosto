@@ -34,7 +34,7 @@ public class ChooseBonusResourceCommand implements Command {
     @Override
     public boolean check() {
         if(res==null || id==null) return false;
-        return id >= 1;
+        return id >= 1 && id<=3;
     }
 
     @Override

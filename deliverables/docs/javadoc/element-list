@@ -1,0 +1,17 @@
+it.polimi.ingsw
+it.polimi.ingsw.model
+it.polimi.ingsw.model.enums
+it.polimi.ingsw.model.exceptions
+it.polimi.ingsw.model.interfaces
+it.polimi.ingsw.network
+it.polimi.ingsw.network.client
+it.polimi.ingsw.network.client.CLI
+it.polimi.ingsw.network.client.CLI.enums
+it.polimi.ingsw.network.client.ClientModel
+it.polimi.ingsw.network.client.GUI
+it.polimi.ingsw.network.client.GUI.Controllers
+it.polimi.ingsw.network.exceptions
+it.polimi.ingsw.network.messages
+it.polimi.ingsw.network.messages.commands
+it.polimi.ingsw.network.messages.updates
+it.polimi.ingsw.network.server

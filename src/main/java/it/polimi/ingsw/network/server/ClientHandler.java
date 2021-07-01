@@ -138,23 +138,6 @@ public class ClientHandler implements Runnable {
         globalCounter++;
         this.id = globalCounter;
         this.timeout = false;
-       /* this.pinger = new Thread(() -> {
-            ping = true;
-            while (ping) {
-                try {
-                    ping = false;
-                    send(new PingRequest());
-                    Thread.sleep(1500);
-                } catch (InterruptedException e) {
-                    return;
-                }
-            }
-            System.out.println("Player disconnected");
-            server.handleDisconnection(id);
-            isConnected = false;
-        });
-
-        */
     }
 
     public void run() {
