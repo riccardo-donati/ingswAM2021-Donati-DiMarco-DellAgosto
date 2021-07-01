@@ -5,6 +5,7 @@ import com.google.gson.annotations.Expose;
 
 import it.polimi.ingsw.model.enums.GamePhase;
 import it.polimi.ingsw.model.exceptions.IllegalActionException;
+import it.polimi.ingsw.model.exceptions.IllegalPlayersNumberException;
 import it.polimi.ingsw.model.exceptions.WaitingReconnectionsException;
 import it.polimi.ingsw.network.Utilities;
 import it.polimi.ingsw.network.exceptions.NotYourTurnException;
@@ -184,6 +185,7 @@ public class Server {
     public synchronized void removeVirtualClient(Integer chId){
         if(clientHandlerNickMap.get(chId)!=null) {
             VirtualClient vcToRemove = searchVirtualClient(clientHandlerNickMap.get(chId));
+            if(vcToRemove==null) return;
             virtualClientList.remove(vcToRemove);
             clientHandlerNickMap.remove(chId);
             if(nickLobbyMap.get(vcToRemove.getNickname())!=null) {
@@ -310,7 +312,8 @@ public class Server {
      * @param nPlayers lobby size
      * @param clientHandler client that created the lobby
      */
-    public synchronized void createNewLobby(int nPlayers, ClientHandler clientHandler){
+    public synchronized void createNewLobby(int nPlayers, ClientHandler clientHandler) throws IllegalPlayersNumberException {
+        if(nPlayers<1 || nPlayers>4) throw new IllegalPlayersNumberException();
         for(VirtualClient vc: waitingList) {
             if(vc.getClientHandler().equals(clientHandler)) {
                 Controller newLobby = new Controller(nPlayers, vc,this);
