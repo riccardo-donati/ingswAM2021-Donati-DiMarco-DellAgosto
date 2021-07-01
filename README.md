@@ -3,9 +3,9 @@
 </p>
 
 Masters of Renaissance is the final test of the teaching: "Software Engineering", course of the "Computer Science Degree" held at Politecnico di Milano during the Academic Year 2020/2021. <br>
-This is a turn based Board Game where you are in the shoes of a Florence citizen and your goal is to collect and invest resources. You can take resources from the Market, use resources to buy cards that will help you to get more resource through productions, advance in the faithpath and activate special power thanks to Leader Cards.
+Masters of Renaissance is a turn-based board game where you play as an important Florence citizen: your goal is to collect and invest resources and improve your relations with the papacy. You can take resources from the Market, use resources to buy cards that will unlock powerful productions, advance in the faithpath and activate special power thanks to leader cards.
 You can play with your friends in a max of 4 players match or, if you don't have any, play a Singleplayer game against Lorenzo Il Magnifico! <br>
-Have fun with this Strategic Game! :octocat:
+Have fun with this strategic game! :octocat:
 
 <img src="https://cdn.discordapp.com/attachments/768097148477898822/859528426556620820/ciccia.jpg" width=300px height=400px align="right" />
 
@@ -15,24 +15,26 @@ You can check the project's documentation [here](https://riccardo-donati.github.
 
 #               HOW TO RUN
 
-Once you downloaded this project open _cmd.exe_ and type:<br> _java -jar path-to-the-project/shade/AM35.jar_ <br>
-You'll be asket to choose between running the Server, the Client in CLI or GUI.
-Locally the Ip will be 127.0.0.1 and the default port is 1337. <br>
+This game requires [Java SE JRE](https://www.oracle.com/it/java/technologies/javase-downloads.html) to run. <br>
+Download the project and type _java -jar [project_path]/shade/AM35.jar_ <br> in a terminal. <br>
+You'll be asked to choose between running the Server or the Client as either CLI or GUI.
+The server port is 1337 and locally its IP address is 127.0.0.1. <br>
 
-To show game icons perfectly in CLI is recomended to run it using WSL (Linux Terminal) and installing [this font](https://github.com/ingconti/W10JavaCLI/tree/master/font) that supports Unicode characters.<br>
-If you encounter troubles, try going to Terminal->Properties->Layout and unckeck the Wrap Text output on resize and increase the Width at least to: 237.<br>
-For input trouble try unchecking Quick Edit Mode in Options.<br>
+It is highly recommended to run the CLI version of the client through WSL (Linux Terminal) and use [this font](https://github.com/ingconti/W10JavaCLI/tree/master/font) that supports Unicode characters.<br>
+If you have troubles visualizing the game interface, try going into Properties->Layout and unckeck the _Wrap text output on resize_ option and increase the _Screen buffer size_ width to at least 237.<br>
+For input troubles try unchecking _Quick edit mode_ in Properties->Options.<br>
 
-# 						  TEST CASES
+# 						  TEST COVERAGE
 
-The following table shows the coverage of the main Packages in our project. The missing percentage in the classes are due to useless methods like getters, setters or other methods that are not directly useful to the main skeleton of the program. 
+The following table shows the coverage of the main packages in our project. The missing percentages are due getters, setters and other auxiliary methods. 
 
 | Package | Class | Methods | Lines |
- |:-----------------------|:------------------|:------------------------------------:|:-------------:|
- | Model | 95% (59/62) | 86% (341/393) | 86% (1648/1916) |
- | Controller | 100% (1/1) | 66% (64/96) | 48% (216/443) | 
+|:-----------------------|:------------------|:------------------------------------:|:-------------:|
+| Model | 95% (59/62) | 86% (341/393) | 86% (1648/1916) |
+| Controller | 100% (1/1) | 66% (64/96) | 48% (216/443) | 
 
 # 						  IMPLEMENTED FUNCTIONALITIES
+
 | Functionality | Status |
 |:--------------|:------:|
 | Basic Rules | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/model) |
@@ -43,16 +45,15 @@ The following table shows the coverage of the main Packages in our project. The 
 | Multiple Matches | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/blob/master/src/main/java/it/polimi/ingsw/network/server/Server.java) |
 | Persistence | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
 | Resilience to disconnections | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
-| Local Match | [![RED](http://placehold.it/15/f03c15/f03c15)]() |
+| Local Match | ![RED](http://placehold.it/15/f03c15/f03c15) |
 | Parameter Editor | [![RED](http://placehold.it/15/f03c15/f03c15)](https://media-cldnry.s-nbcnews.com/image/upload/t_focal-760x428,f_auto,q_auto:best/MSNBC/Components/Video/201609/a_ov_Pepe_160928.jpg) |
 
-### LEGEND
-[![GREEN](http://placehold.it/15/44bb44/44bb44)]() Implemented	&nbsp;&nbsp;&nbsp;&nbsp;[![YELLOW](http://placehold.it/15/ffdd00/ffdd00)]() Implementing&nbsp;&nbsp;&nbsp;&nbsp;[![RED](http://placehold.it/15/f03c15/f03c15)]() Not Implemented 
-
+![GREEN](http://placehold.it/15/44bb44/44bb44) Implemented &nbsp;&nbsp;&nbsp;&nbsp;
+![RED](http://placehold.it/15/f03c15/f03c15) Not Implemented
 
 
 #						  DEVELOPERS
-* [Riccardo Donati](https://github.com/riccardo-donati):man_with_turban:
-* [Giacomo Dell'Agosto](https://github.com/GiacomoDA):underage:
-* [Davide Di Marco](https://github.com/Davidedm99):ribbon:
 
+* [Riccardo Donati](https://github.com/riccardo-donati) :man_with_turban:
+* [Giacomo Dell'Agosto](https://github.com/GiacomoDA) :underage:
+* [Davide Di Marco](https://github.com/Davidedm99) :ribbon:
