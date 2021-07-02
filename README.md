@@ -49,7 +49,7 @@ The following table shows the coverage of the main packages in our project. The 
 | Persistence | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
 | Resilience to disconnections | [![GREEN](http://placehold.it/15/44bb44/44bb44)](https://github.com/riccardo-donati/ingswAM2021-Donati-DiMarco-DellAgosto/tree/master/src/main/java/it/polimi/ingsw/network/server) |
 | Local Match | [![RED](http://placehold.it/15/f03c15/f03c15)]() |
-| Parameter Editor | [![RED](http://placehold.it/15/f03c15/f03c15)](https://media-cldnry.s-nbcnews.com/image/upload/t_focal-760x428,f_auto,q_auto:best/MSNBC/Components/Video/201609/a_ov_Pepe_160928.jpg) |
+| Parameter Editor | [![RED](http://placehold.it/15/f03c15/f03c15)]() |
 
 [![GREEN](http://placehold.it/15/44bb44/44bb44)]() Implemented	&nbsp;&nbsp;&nbsp;&nbsp;
 [![YELLOW](http://placehold.it/15/ffdd00/ffdd00)]() Implementing&nbsp;&nbsp;&nbsp;&nbsp;
