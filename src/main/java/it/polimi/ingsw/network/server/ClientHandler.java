@@ -183,6 +183,7 @@ public class ClientHandler implements Runnable {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        server.removeFromWaitingList(id);
         System.out.println("Disconnected user with id: " + id);
     }
     public void closeConnection() throws InterruptedException {

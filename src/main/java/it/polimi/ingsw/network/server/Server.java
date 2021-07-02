@@ -204,7 +204,19 @@ public class Server {
     public List<VirtualClient> getWaitingList() {
         return waitingList;
     }
-
+    public synchronized void removeFromWaitingList(int chId){
+        int index=-1;
+        for(VirtualClient vc : waitingList){
+            if(vc.getClientHandler()!=null && vc.getClientHandler().getId()==chId)
+            {
+                index=waitingList.indexOf(vc);
+            }
+        }
+        if(index>=0) {
+            waitingList.remove(index);
+            System.out.println("Removed "+chId+" from waiting");
+        }
+    }
     /**
      *
      * @param nick virtual client's nickname
