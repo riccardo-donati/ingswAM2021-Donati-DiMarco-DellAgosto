@@ -7,7 +7,7 @@ Masters of Renaissance is a turn-based board game where you play as an important
 You can play with your friends in a max of 4 players match or, if you don't have any, play a Singleplayer game against Lorenzo Il Magnifico! <br>
 Have fun with this strategic game! :octocat:
 
-<img src="https://cdn.discordapp.com/attachments/768097148477898822/859528426556620820/ciccia.jpg" width=300px height=400px align="right" />
+<img src="https://www.goblins.net/files/styles/zoom/public/masters-renaissance-lorenzo-magnifico-card-game.jpg?itok=V7KU-iRT" width=300px height=400px align="right" />
 
 #               DOCUMENTATION
 
